@@ -15,7 +15,7 @@ export default function FAQ() {
     {
       question: {
         ar: 'ما الأنظمة السعودية التي تغطيها المنصة؟',
-        en: 'Which Saudi laws are covered?',
+        en: 'What Saudi regulations does the platform cover?',
       },
       answer: {
         ar: 'نغطي جميع القوانين التجارية الأساسية بما في ذلك قانون الشركات، قانون العمل، قانون التجارة الإلكترونية، وأنظمة الاستثمار الأجنبي. نحدث قاعدة البيانات باستمرار لتشمل التعديلات الجديدة.',
@@ -25,7 +25,7 @@ export default function FAQ() {
     {
       question: {
         ar: 'هل تدعم المنصة التفاوض باللغتين؟',
-        en: 'Does it support bilingual negotiations?',
+        en: 'Does the platform support bilingual negotiations?',
       },
       answer: {
         ar: 'نعم، منصتنا تدعم التفاوض بالعربية والإنجليزية بسلاسة. يمكن للأطراف التفاوض بأي لغة مع ترجمة فورية وحفظ لسياق المعاني القانونية الدقيقة.',
@@ -45,7 +45,7 @@ export default function FAQ() {
     {
       question: {
         ar: 'هل ستُحفظ البيانات في السعودية؟',
-        en: 'Will my data stay in Saudi?',
+        en: 'Will the data be stored in Saudi Arabia?',
       },
       answer: {
         ar: 'نعم تماماً. جميع البيانات محفوظة في مراكز بيانات معتمدة داخل المملكة العربية السعودية، مع امتثال كامل لأنظمة حماية البيانات المحلية ومعايير الأمان العالمية.',
