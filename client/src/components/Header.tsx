@@ -1,12 +1,10 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1749665092141.jpg';
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { key: 'product', ar: 'المنتج', en: 'Product', href: '#product' },
@@ -20,7 +18,6 @@ export default function Header() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-    setMobileMenuOpen(false);
   };
 
   return (
@@ -115,69 +112,11 @@ export default function Header() {
               </Button>
             </motion.div>
 
-            {/* Mobile menu button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="lg:hidden text-white"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <i className="fas fa-bars text-xl" />
-            </Button>
+
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden border-t border-grey"
-            >
-              <div className="px-2 pt-2 pb-3 space-y-1 bg-white">
-                {navItems.map((item) => (
-                  <button
-                    key={item.key}
-                    onClick={() => scrollToSection(item.href)}
-                    className="block w-full text-start px-3 py-2 text-navy hover:text-sky font-medium"
-                  >
-                    {t(item.ar, item.en)}
-                  </button>
-                ))}
-                <div className="px-3 py-2">
-                  <div className="flex items-center bg-grey rounded-full p-1">
-                    <Button
-                      variant={language === 'ar' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setLanguage('ar')}
-                      className={`flex-1 rounded-full ${
-                        language === 'ar'
-                          ? 'bg-navy text-white'
-                          : 'text-navy hover:bg-sky/20'
-                      }`}
-                    >
-                      العربية
-                    </Button>
-                    <Button
-                      variant={language === 'en' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setLanguage('en')}
-                      className={`flex-1 rounded-full ${
-                        language === 'en'
-                          ? 'bg-navy text-white'
-                          : 'text-navy hover:bg-sky/20'
-                      }`}
-                    >
-                      English
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
       </nav>
     </motion.header>
   );
