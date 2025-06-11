@@ -59,7 +59,7 @@ export default function FAQ() {
   };
 
   return (
-    <section className="py-20 lg:py-32 bg-white">
+    <section className="py-20 lg:py-32 bg-gray-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -67,10 +67,10 @@ export default function FAQ() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl lg:text-5xl font-space font-bold text-navy mb-6">
+          <h2 className="text-3xl lg:text-5xl font-space font-bold text-white mb-6">
             {t('أسئلة شائعة', 'Frequently Asked Questions')}
           </h2>
-          <p className="text-xl text-navy/70 font-inter">
+          <p className="text-xl text-gray-300 font-inter">
             {t('إجابات سريعة على الأسئلة الأكثر شيوعاً', 'Quick answers to common questions')}
           </p>
         </motion.div>
@@ -83,20 +83,20 @@ export default function FAQ() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white border border-grey/50 rounded-2xl overflow-hidden shadow-custom hover:shadow-custom-hover transition-all duration-300"
+              className="bg-gray-700/50 border border-gray-600 rounded-2xl overflow-hidden shadow-custom hover:shadow-custom-hover transition-all duration-300"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-8 py-6 text-right flex justify-between items-center hover:bg-navy/5 transition-colors"
+                className="w-full px-8 py-6 text-right flex justify-between items-center hover:bg-gray-600/30 transition-colors"
               >
                 <motion.div
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="flex items-center"
                 >
-                  <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-navy ml-4 rtl:ml-0 rtl:mr-4`} />
+                  <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-white ml-4 rtl:ml-0 rtl:mr-4`} />
                 </motion.div>
-                <h3 className="text-lg font-semibold text-navy">
+                <h3 className="text-lg font-semibold text-white">
                   {t(item.question.ar, item.question.en)}
                 </h3>
               </button>

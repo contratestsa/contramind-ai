@@ -180,7 +180,7 @@ export default function Waitlist() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
+                <Label className="block text-sm font-medium text-white mb-2">
                   {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
@@ -193,7 +193,7 @@ export default function Waitlist() {
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
+                <Label className="block text-sm font-medium text-white mb-2">
                   {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
@@ -208,7 +208,7 @@ export default function Waitlist() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-navy mb-2">
+              <Label className="block text-sm font-medium text-white mb-2">
                 {t('اسم الشركة', 'Company Name')}
               </Label>
               <Input
@@ -221,7 +221,7 @@ export default function Waitlist() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-navy mb-2">
+              <Label className="block text-sm font-medium text-white mb-2">
                 {t('المنصب', 'Job Title')}
               </Label>
               <Select value={formData.jobTitle} onValueChange={(value) => setFormData({ ...formData, jobTitle: value })}>
@@ -259,7 +259,7 @@ export default function Waitlist() {
           {/* Privacy & Stats */}
           <div className="mt-8 pt-6 border-t border-grey/50">
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-              <p className="text-sm text-navy/60">
+              <p className="text-sm text-gray-400">
                 {t(
                   'لن نشارك بريدك الإلكتروني أبداً. إلغاء الاشتراك في أي وقت.',
                   "We'll never share your email. Unsubscribe anytime."
