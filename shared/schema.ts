@@ -12,8 +12,8 @@ export const waitlistEntries = pgTable("waitlist_entries", {
   id: serial("id").primaryKey(),
   fullName: text("full_name").notNull(),
   email: text("email").notNull().unique(),
-  company: text("company"),
-  jobTitle: text("job_title"),
+  company: text("company").default(""),
+  jobTitle: text("job_title").default(""),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
