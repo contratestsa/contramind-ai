@@ -90,7 +90,7 @@ export default function Features() {
           >
             {t(
               'من ثلاثة أسابيع إلى ساعات',
-              'From Weeks to Hours – Transforming Contract Management'
+              'From Weeks to Hours → Transforming Contract Management'
             )}
           </motion.p>
         </motion.div>
