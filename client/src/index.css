@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(189, 70%, 11%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(189, 70%, 11%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(189, 70%, 11%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(189, 70%, 11%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(197, 65%, 84%);
+  --secondary-foreground: hsl(189, 70%, 11%);
+  --accent: hsl(197, 65%, 84%);
+  --accent-foreground: hsl(189, 70%, 11%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(189, 70%, 11%);
+  --radius: 12px;
+  
+  /* Custom ContraMind.ai brand colors */
+  --navy: hsl(189, 70%, 11%);
+  --sky: hsl(197, 65%, 84%);
+  --white: hsl(0, 0%, 100%);
+  --grey: hsl(0, 0%, 90%);
+  --shadow: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,.12);
+  --transition: .25s ease;
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(189, 70%, 11%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 12px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+  }
+
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="ltr"] {
+    text-align: left;
+  }
+}
+
+@layer components {
+  .font-space {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .font-inter {
+    font-family: 'Inter', sans-serif;
+  }
+
+  .font-arabic {
+    font-family: 'Noto Sans Arabic', sans-serif;
+  }
+
+  .rtl-transition {
+    transition: all 0.3s ease;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--sky) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .shadow-custom {
+    box-shadow: var(--shadow);
+  }
+
+  .shadow-custom-hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  .bg-navy {
+    background-color: var(--navy);
+  }
+
+  .bg-sky {
+    background-color: var(--sky);
+  }
+
+  .bg-grey {
+    background-color: var(--grey);
+  }
+
+  .text-navy {
+    color: var(--navy);
+  }
+
+  .text-sky {
+    color: var(--sky);
+  }
+
+  .border-grey {
+    border-color: var(--grey);
+  }
+
+  .rounded-custom {
+    border-radius: var(--radius);
+  }
+
+  [dir="rtl"] .flip-rtl {
+    transform: scaleX(-1);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
