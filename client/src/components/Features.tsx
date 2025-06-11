@@ -38,7 +38,7 @@ export default function Features() {
       icon: 'fas fa-handshake',
       title: { ar: 'مساعد التفاوض الذكي', en: 'Smart Negotiation Assistant' },
       description: {
-        ar: 'مساعدة ذكية في التفاوض مع اقتراحات فورية',
+        ar: 'تسريع عمليات التفاوض بين الفرق القانونية',
         en: 'Smart negotiation assistance with instant suggestions',
       },
     },
