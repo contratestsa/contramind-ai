@@ -26,7 +26,7 @@ export default function Header() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="bg-white shadow-custom sticky top-0 z-50"
+      className="bg-gray-800 shadow-custom sticky top-0 z-50"
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 lg:h-20">
@@ -37,7 +37,7 @@ export default function Header() {
             transition={{ delay: 0.2 }}
             className="flex items-center"
           >
-            <span className="text-2xl font-space font-bold text-navy">
+            <span className="text-2xl font-space font-bold text-white">
               ContraMind.ai
             </span>
           </motion.div>
@@ -52,7 +52,7 @@ export default function Header() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-navy hover:text-sky transition-colors duration-300 font-medium"
+                  className="text-white hover:text-sky transition-colors duration-300 font-medium"
                 >
                   {t(item.ar, item.en)}
                 </motion.button>
@@ -108,7 +108,7 @@ export default function Header() {
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden text-navy"
+              className="lg:hidden text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <i className="fas fa-bars text-xl" />

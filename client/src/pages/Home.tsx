@@ -11,7 +11,7 @@ export default function Home() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-white"
+      className="min-h-screen bg-gray-900"
     >
       <Header />
       <Hero />

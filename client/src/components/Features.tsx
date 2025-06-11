@@ -77,7 +77,7 @@ export default function Features() {
   ];
 
   return (
-    <section id="product" className="py-20 lg:py-32 bg-white">
+    <section id="product" className="py-20 lg:py-32 bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
@@ -88,13 +88,13 @@ export default function Features() {
         >
           <motion.h2
             variants={itemVariants}
-            className="text-3xl lg:text-5xl font-space font-bold text-navy mb-6"
+            className="text-3xl lg:text-5xl font-space font-bold text-white mb-6"
           >
             {t('ميزات متقدمة للمحترفين', 'Advanced Features for Professionals')}
           </motion.h2>
           <motion.p
             variants={itemVariants}
-            className="text-xl text-navy/70 font-inter max-w-3xl mx-auto"
+            className="text-xl text-gray-300 font-inter max-w-3xl mx-auto"
           >
             {t(
               'من ثلاثة أسابيع إلى ساعات - ثورة حقيقية في إدارة العقود',
@@ -113,7 +113,7 @@ export default function Features() {
           {/* Main Feature Card */}
           <motion.div
             variants={itemVariants}
-            className="bg-navy/5 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
+            className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-sky/10 rounded-full transform translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-500" />
             <div className="relative">
