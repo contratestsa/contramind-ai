@@ -50,7 +50,7 @@ export default function Hero() {
             >
               <p>
                 {t(
-                  'أول منصة إدارة عقود ذكية بالذكاء الاصطناعي في الشرق الأوسط وشمال أفريقيا—لإنشاء العقود والتفاوض والتوقيع بسرعة.',
+                  'أول منصة إدارة عقود ذكية بالذكاء الاصطناعي في الشرق الأوسط وشمال أفريقيا—لإنشاء العقود والتفاوض والتوقيع عليها.',
                   'First AI-powered smart contract management platform in the Middle East and North Africa—for creating, negotiating and signing contracts quickly.'
                 )}
               </p>
