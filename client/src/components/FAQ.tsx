@@ -59,7 +59,7 @@ export default function FAQ() {
   };
 
   return (
-    <section className="py-20 lg:py-32 bg-gray-800">
+    <section className="py-20 lg:py-32 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}

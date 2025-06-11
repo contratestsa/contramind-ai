@@ -122,7 +122,7 @@ export default function Waitlist() {
   ];
 
   return (
-    <section id="waitlist" className="py-20 lg:py-32 bg-gradient-to-br from-gray-800 to-gray-700">
+    <section id="waitlist" className="py-20 lg:py-32 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
