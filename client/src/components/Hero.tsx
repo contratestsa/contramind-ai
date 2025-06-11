@@ -62,7 +62,7 @@ export default function Hero() {
               <p>
                 {t(
                   'لإنشاء العقود والتفاوض والتوقيع عليها',
-                  'Streamline contract creation, negotiation, risk, and e-signatures'
+                  'Streamline contract creation, negotiation, risk, and esignatures'
                 )}
               </p>
 
@@ -81,7 +81,7 @@ export default function Hero() {
                 { ar: 'صياغة', en: 'Drafting' },
                 { ar: 'تفاوض', en: 'Negotiation' },
                 { ar: 'تحليل مخاطر', en: 'Risk' },
-                { ar: 'توقيع إلكتروني', en: 'E-Signing' },
+                { ar: 'توقيع إلكتروني', en: 'ESigning' },
               ].map((feature, index) => (
                 <motion.span
                   key={index}

@@ -60,10 +60,10 @@ export default function Features() {
     },
     {
       icon: 'fas fa-signature',
-      title: { ar: 'توقيع إلكتروني معتمد', en: 'Certified E-Signature' },
+      title: { ar: 'توقيع إلكتروني معتمد', en: 'Certified ESignature' },
       description: {
         ar: 'توقيع إلكتروني معتمد ومتوافق مع المعايير المحلية',
-        en: 'Certified e-signature compliant with local standards',
+        en: 'Certified esignature compliant with local standards',
       },
     },
   ];
