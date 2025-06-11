@@ -5,6 +5,11 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['Inter', 'Noto Sans Arabic', 'system-ui', 'sans-serif'],
+        'heading': ['Space Grotesk', 'system-ui', 'sans-serif'],
+        'arabic': ['Noto Sans Arabic', 'system-ui', 'sans-serif'],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

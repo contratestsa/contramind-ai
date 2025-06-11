@@ -88,7 +88,7 @@ export default function Features() {
         >
           <motion.h2
             variants={itemVariants}
-            className="text-3xl lg:text-5xl font-space font-bold text-white mb-6"
+            className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6"
           >
             {t('ميزات متقدمة للمحترفين', 'Advanced Features for Professionals')}
           </motion.h2>

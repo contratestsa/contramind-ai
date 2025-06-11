@@ -66,7 +66,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-4xl lg:text-6xl font-space font-bold mb-6 leading-tight"
+              className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight"
             >
               <span className="gradient-text">
                 {t('أول منصة ذكية', 'First AI-Native')}
@@ -81,7 +81,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-xl lg:text-2xl text-sky/90 mb-8 font-inter leading-relaxed"
+              className="text-xl lg:text-2xl text-sky/90 mb-8 font-sans leading-relaxed"
             >
               {t('صياغة، تفاوض وتوقيع أسرع مع الذكاء الاصطناعي', 'Draft, Negotiate & Sign Faster with AI')}
             </motion.p>

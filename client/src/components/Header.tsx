@@ -37,7 +37,7 @@ export default function Header() {
             transition={{ delay: 0.2 }}
             className="flex items-center"
           >
-            <span className="text-2xl font-space font-bold text-white">
+            <span className="text-2xl font-heading font-bold text-white">
               ContraMind.ai
             </span>
           </motion.div>
