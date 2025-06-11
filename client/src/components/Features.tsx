@@ -142,7 +142,7 @@ export default function Features() {
                 <i className="fas fa-cogs text-2xl text-white" />
               </div>
               <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
-                {t('مراجعة مؤتمتة', 'Automated Manual Review')}
+                {t('مراجعة مؤتمتة', 'Automated Review')}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(

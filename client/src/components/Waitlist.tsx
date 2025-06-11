@@ -143,7 +143,7 @@ export default function Waitlist() {
           <p className="text-xl text-gray-300 font-sans mb-8">
             {t(
               'احصل على وصول مبكر لتحليل المخاطر ومساعد التفاوض',
-              'Get your unique experience now with Risk Analysis + Negotiation Copilot'
+              'Get early access to risk analysis and negotiation assistant'
             )}
           </p>
 
