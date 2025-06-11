@@ -111,7 +111,7 @@ export default function FAQ() {
                     className="overflow-hidden"
                   >
                     <div className="px-8 pb-6">
-                      <p className="text-navy/70 leading-relaxed">
+                      <p className="text-gray-300 leading-relaxed">
                         {t(item.answer.ar, item.answer.en)}
                       </p>
                     </div>
