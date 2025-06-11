@@ -44,7 +44,7 @@ export default function FAQ() {
     },
     {
       question: {
-        ar: 'هل بياناتي ستبقى في السعودية؟',
+        ar: 'هل ستُحفظ البيانات في السعودية؟',
         en: 'Will my data stay in Saudi?',
       },
       answer: {
