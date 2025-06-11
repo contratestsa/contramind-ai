@@ -27,16 +27,8 @@ export default function Features() {
 
   const features = [
     {
-      icon: 'fas fa-shield-alt',
-      title: { ar: 'حافظ على الامتثال بشكل مستمر', en: 'Stay compliant continuously' },
-      description: {
-        ar: 'مراقبة تلقائية للامتثال التنظيمي وفقاً للقوانين المحلية',
-        en: 'Automatic regulatory compliance monitoring per local laws',
-      },
-    },
-    {
-      icon: 'fas fa-edit',
-      title: { ar: 'مساعد الصياغة بالذكاء الاصطناعي', en: 'Ready AI Draft Assist' },
+      icon: 'fas fa-robot',
+      title: { ar: 'صياغة بالذكاء الاصطناعي', en: 'AI-Powered Drafting' },
       description: {
         ar: 'إنشاء مسودات عقود احترافية بنقرة واحدة',
         en: 'Generate professional contract drafts with one click',
@@ -44,7 +36,7 @@ export default function Features() {
     },
     {
       icon: 'fas fa-handshake',
-      title: { ar: 'مساعد التفاوض التجريبي', en: 'Alpha Negotiation Copilot' },
+      title: { ar: 'مساعد التفاوض الذكي', en: 'Smart Negotiation Assistant' },
       description: {
         ar: 'مساعدة ذكية في التفاوض مع اقتراحات فورية',
         en: 'Smart negotiation assistance with instant suggestions',
@@ -52,7 +44,7 @@ export default function Features() {
     },
     {
       icon: 'fas fa-search',
-      title: { ar: 'تحليل مخاطر متخصص بالسعودية', en: 'PoC Saudi-Specific Risk Analysis' },
+      title: { ar: 'تحليل مخاطر سعودي', en: 'Saudi-specific Risk Analysis' },
       description: {
         ar: 'تحليل شامل للمخاطر وفقاً للقوانين السعودية',
         en: 'Comprehensive risk analysis per Saudi regulations',
@@ -60,7 +52,7 @@ export default function Features() {
     },
     {
       icon: 'fas fa-clipboard-check',
-      title: { ar: 'مراقبة الامتثال التنظيمي حسب الخطة', en: 'Road-map Regulatory Compliance Monitor' },
+      title: { ar: 'مراقبة تنظيمية', en: 'Regulatory Monitoring' },
       description: {
         ar: 'متابعة مستمرة للامتثال والتحديثات التنظيمية',
         en: 'Continuous compliance tracking and regulatory updates',
@@ -68,7 +60,7 @@ export default function Features() {
     },
     {
       icon: 'fas fa-signature',
-      title: { ar: 'توقيع إلكتروني أصلي وجاهز', en: 'Ready Native E-Signature' },
+      title: { ar: 'توقيع إلكتروني معتمد', en: 'Certified E-Signature' },
       description: {
         ar: 'توقيع إلكتروني معتمد ومتوافق مع المعايير المحلية',
         en: 'Certified e-signature compliant with local standards',

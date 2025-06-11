@@ -137,7 +137,7 @@ export default function Waitlist() {
           </div>
 
           <h2 className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6">
-            {t('انضم لقائمة الانتظار المبكر', 'Join Early-Access Waitlist')}
+            {t('احصل على وصول مبكر', 'Gain Early Access')}
           </h2>
 
           <p className="text-xl text-gray-300 font-sans mb-8">
@@ -248,9 +248,8 @@ export default function Waitlist() {
               ) : (
                 <>
                   <span>
-                    {t('انضم لقائمة الانتظار المجانية', 'Join Free Waitlist')}
+                    {t('سجّل الآن', 'Register Now')}
                   </span>
-                  <i className="fas fa-arrow-left mr-2 rtl:mr-0 rtl:ml-2 flip-rtl" />
                 </>
               )}
             </Button>

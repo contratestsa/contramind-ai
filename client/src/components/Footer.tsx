@@ -6,16 +6,9 @@ export default function Footer() {
 
   const companyLinks = [
     { ar: 'من نحن', en: 'About Us', href: '#' },
-    { ar: 'الفريق', en: 'Team', href: '#' },
-    { ar: 'الوظائف', en: 'Careers', href: '#' },
-    { ar: 'الأخبار', en: 'News', href: '#' },
-  ];
-
-  const productLinks = [
     { ar: 'الميزات', en: 'Features', href: '#' },
-    { ar: 'الأسعار', en: 'Pricing', href: '#' },
     { ar: 'الأمان', en: 'Security', href: '#' },
-    { ar: 'التكامل', en: 'Integrations', href: '#' },
+    { ar: 'اتصل بنا', en: 'Contact', href: '#' },
   ];
 
   const socialLinks = [
@@ -24,16 +17,12 @@ export default function Footer() {
     { icon: 'fas fa-envelope', href: '#' },
   ];
 
-  const bottomLinks = [
-    { ar: 'سياسة الخصوصية', en: 'Privacy Policy', href: '#' },
-    { ar: 'شروط الاستخدام', en: 'Terms of Service', href: '#' },
-    { ar: 'اتصل بنا', en: 'Contact', href: '#' },
-  ];
+
 
   return (
     <footer className="bg-navy text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Company Info */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -46,8 +35,8 @@ export default function Footer() {
             </div>
             <p className="text-gray-300 text-lg mb-6 max-w-md">
               {t(
-                'أول منصة ذكية لإدارة دورة حياة العقود مصممة خصيصاً لمنطقة الشرق الأوسط وشمال أفريقيا',
-                'The first AI-native Contract Lifecycle Management platform designed specifically for the MENA region'
+                'منصة متخصصة لإدارة دورة حياة العقود',
+                'AI-powered legal contract lifecycle platform'
               )}
             </p>
             <div className="flex space-x-4 rtl:space-x-reverse">
@@ -89,29 +78,7 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Product Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-          >
-            <h4 className="font-semibold text-lg mb-6">
-              {t('المنتج', 'Product')}
-            </h4>
-            <ul className="space-y-3">
-              {productLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    {t(link.ar, link.en)}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+
         </div>
 
         {/* Bottom Footer */}
@@ -130,15 +97,15 @@ export default function Footer() {
               )}
             </p>
             <div className="flex space-x-6 rtl:space-x-reverse text-sm">
-              {bottomLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  {t(link.ar, link.en)}
-                </a>
-              ))}
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                {t('سياسة الخصوصية', 'Privacy Policy')}
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                {t('شروط الاستخدام', 'Terms of Service')}
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                {t('اتصل بنا', 'Contact')}
+              </a>
             </div>
           </div>
         </motion.div>
