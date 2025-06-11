@@ -80,7 +80,7 @@ export default function Hero() {
               {[
                 { ar: 'صياغة', en: 'Drafting' },
                 { ar: 'تفاوض', en: 'Negotiation' },
-                { ar: 'مخاطر', en: 'Risk' },
+                { ar: 'تحليل مخاطر', en: 'Risk' },
                 { ar: 'توقيع إلكتروني', en: 'E-Signing' },
               ].map((feature, index) => (
                 <motion.span
