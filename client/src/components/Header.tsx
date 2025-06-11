@@ -99,18 +99,7 @@ export default function Header() {
               </Button>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Button 
-                onClick={() => window.open('https://calendly.com/contramind-demo', '_blank')}
-                className="bg-navy text-white hover:bg-navy/90 rounded-custom shadow-custom hover:shadow-custom-hover"
-              >
-                {t('احجز عرض توضيحي', 'Book Demo')}
-              </Button>
-            </motion.div>
+
 
 
           </div>

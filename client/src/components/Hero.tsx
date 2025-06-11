@@ -13,7 +13,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-gray-900 via-navy to-gray-800 text-white overflow-hidden">
+    <section className="relative bg-navy text-white overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute inset-0" style={{
