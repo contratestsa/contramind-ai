@@ -77,7 +77,7 @@ export default function Features() {
   ];
 
   return (
-    <section id="product" className="py-20 lg:py-32 bg-gray-800">
+    <section id="product" className="py-20 lg:py-32 bg-navy">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
