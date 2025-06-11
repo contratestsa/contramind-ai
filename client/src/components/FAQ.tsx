@@ -8,7 +8,7 @@ interface FAQItem {
 }
 
 export default function FAQ() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqItems: FAQItem[] = [
@@ -87,7 +87,7 @@ export default function FAQ() {
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-8 py-6 text-right flex justify-between items-center hover:bg-gray-600/30 transition-colors"
+                className="w-full px-8 py-6 flex justify-between items-center hover:bg-gray-600/30 transition-colors"
               >
                 <motion.div
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
@@ -96,7 +96,7 @@ export default function FAQ() {
                 >
                   <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-white ml-4 rtl:ml-0 rtl:mr-4`} />
                 </motion.div>
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className={`text-lg font-semibold text-white ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   {t(item.question.ar, item.question.en)}
                 </h3>
               </button>
@@ -111,7 +111,7 @@ export default function FAQ() {
                     className="overflow-hidden"
                   >
                     <div className="px-8 pb-6">
-                      <p className="text-gray-300 leading-relaxed">
+                      <p className={`text-gray-300 leading-relaxed ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                         {t(item.answer.ar, item.answer.en)}
                       </p>
                     </div>
