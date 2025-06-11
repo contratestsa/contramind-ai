@@ -69,7 +69,7 @@ export default function Hero() {
               className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight"
             >
               <span className="gradient-text">
-                {t('أول منصة ذكية قانونية', 'First AI-Native Legal')}
+                {t('أول منصة ذكية قانونية', 'First Legal AI Native')}
               </span>
               <br />
               <span>
