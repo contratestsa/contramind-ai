@@ -41,6 +41,17 @@ export default function Hero() {
               </span>
             </motion.div>
 
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight"
+            >
+              <span className="gradient-text">
+                {t('أول منصة قانونية ذكية لإدارة العقود في المنطقة', 'The Premier AI-Powered Legal Contract Management Platform in MENA')}
+              </span>
+            </motion.h1>
+
             {/* Platform Description */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -56,17 +67,6 @@ export default function Hero() {
               </p>
 
             </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight"
-            >
-              <span className="gradient-text">
-                {t('أول منصة قانونية ذكية لإدارة العقود في المنطقة', 'The Premier AI-Powered Legal Contract Management Platform in MENA')}
-              </span>
-            </motion.h1>
 
 
 
