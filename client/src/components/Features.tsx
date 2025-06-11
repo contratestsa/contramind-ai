@@ -28,7 +28,7 @@ export default function Features() {
   const features = [
     {
       icon: 'fas fa-robot',
-      title: { ar: 'صياغة بالذكاء الاصطناعي', en: 'AI-Powered Drafting' },
+      title: { ar: 'صياغة العقود بالذكاءالاصطناعي', en: 'AI-Powered Drafting' },
       description: {
         ar: 'إنشاء مسودات عقود احترافية بنقرة واحدة',
         en: 'Generate professional contract drafts with one click',
