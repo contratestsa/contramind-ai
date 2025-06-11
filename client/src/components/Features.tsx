@@ -52,7 +52,7 @@ export default function Features() {
     },
     {
       icon: 'fas fa-clipboard-check',
-      title: { ar: 'مراقبة تنظيمية', en: 'Regulatory Monitoring' },
+      title: { ar: 'مراقبة الإمتثال', en: 'Regulatory Monitoring' },
       description: {
         ar: 'متابعة مستمرة للامتثال والتحديثات التنظيمية',
         en: 'Continuous compliance tracking and regulatory updates',
