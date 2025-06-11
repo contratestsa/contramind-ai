@@ -24,7 +24,7 @@ export default function FAQ() {
     },
     {
       question: {
-        ar: 'هل يدعم التفاوض باللغتين؟',
+        ar: 'هل تدعم المنصة التفاوض باللغتين؟',
         en: 'Does it support bilingual negotiations?',
       },
       answer: {
