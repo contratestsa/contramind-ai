@@ -47,23 +47,7 @@ export default function Header() {
             </div>
           </motion.div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:block">
-            <div className="flex items-center space-x-8 rtl:space-x-reverse">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.key}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-white hover:text-sky transition-colors duration-300 font-medium"
-                >
-                  {t(item.ar, item.en)}
-                </motion.button>
-              ))}
-            </div>
-          </div>
+
 
           {/* Language Toggle & CTA */}
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
