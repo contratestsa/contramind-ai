@@ -77,14 +77,7 @@ export default function Hero() {
               </span>
             </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="text-xl lg:text-2xl text-sky/90 mb-8 font-sans leading-relaxed"
-            >
-              {t('صياغة، تفاوض وتوقيع عليها مع الذكاء الاصطناعي', 'Draft, Negotiate & Sign Faster with AI')}
-            </motion.p>
+
 
             {/* Feature Highlights */}
             <motion.div
