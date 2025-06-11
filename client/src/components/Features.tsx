@@ -97,8 +97,8 @@ export default function Features() {
             className="text-xl text-gray-300 font-sans max-w-3xl mx-auto"
           >
             {t(
-              'من ثلاثة أسابيع إلى ساعات - ثورة حقيقية في إدارة العقود',
-              'From three weeks to hours - a true revolution in contract management'
+              'من ثلاثة أسابيع إلى ساعات',
+              'From Weeks to Hours – Transforming Contract Management'
             )}
           </motion.p>
         </motion.div>
@@ -122,14 +122,14 @@ export default function Features() {
               </div>
               <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
                 {t(
-                  'تقليص مدة التفاوض من ثلاثة أسابيع إلى ساعات',
-                  'Three-week negotiations reduced to hours'
+                  'تسريع التفاوض',
+                  'Accelerate Negotiation'
                 )}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(
-                  'مساعد التفاوض يقدم اقتراحات ومقترحات مضادة على مستوى البنود فوراً',
-                  'Negotiation Copilot surfaces clause-level suggestions instantly'
+                  'اقتراحات ذكية ومقترحات مضادة',
+                  'Smart proposal & counterproposal suggestions'
                 )}
               </p>
               <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
@@ -150,12 +150,12 @@ export default function Features() {
                 <i className="fas fa-cogs text-2xl text-white" />
               </div>
               <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
-                {t('مراجعة يدوية مُؤتمتة', 'Manual review, automated')}
+                {t('مراجعة مؤتمتة', 'Automated Manual Review')}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(
-                  'أداة واحدة موحدة: صياغة، تفاوض، تقييم المخاطر، توقيع',
-                  'One unified tool: Draft, negotiate, assess risk, sign'
+                  'أداة واحدة: صياغة ← تفاوض ← تحليل ← توقيع',
+                  'One tool: Draft → Negotiate → Analyze → Sign'
                 )}
               </p>
               <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">

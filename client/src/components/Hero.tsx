@@ -50,8 +50,8 @@ export default function Hero() {
             >
               <p>
                 {t(
-                  'أول منصة إدارة عقود ذكية بالذكاء الاصطناعي في الشرق الأوسط وشمال أفريقيا،لإنشاء العقود والتفاوض والتوقيع عليها.',
-                  'First AI-powered smart contract management platform in the Middle East and North Africa—for creating, negotiating and signing contracts quickly.'
+                  'لإنشاء العقود والتفاوض والتوقيع عليها',
+                  'Streamline contract creation, negotiation, risk, and e-signatures'
                 )}
               </p>
 
@@ -64,11 +64,7 @@ export default function Hero() {
               className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight"
             >
               <span className="gradient-text">
-                {t('أول منصة ذكية قانونية', 'First Legal AI Native')}
-              </span>
-              <br />
-              <span>
-                {t('لإدارة العقود في المنطقة', 'CLM for MENA')}
+                {t('أول منصة قانونية ذكية لإدارة العقود في المنطقة', 'The Premier AI-Powered Legal Contract Management Platform in MENA')}
               </span>
             </motion.h1>
 
@@ -82,10 +78,10 @@ export default function Hero() {
               className="flex flex-wrap justify-center gap-4 mb-8 text-sm"
             >
               {[
-                { ar: 'صياغة آلية', en: 'Automated Drafting' },
-                { ar: 'تفاوض ذكي', en: 'Smart Negotiation' },
-                { ar: 'تقييم المخاطر', en: 'Risk Assessment' },
-                { ar: 'توقيع إلكتروني', en: 'E-Signatures' },
+                { ar: 'صياغة', en: 'Drafting' },
+                { ar: 'تفاوض', en: 'Negotiation' },
+                { ar: 'مخاطر', en: 'Risk' },
+                { ar: 'توقيع إلكتروني', en: 'E-Signing' },
               ].map((feature, index) => (
                 <motion.span
                   key={index}
@@ -109,9 +105,8 @@ export default function Hero() {
                 className="bg-sky text-navy px-8 py-4 rounded-custom font-semibold text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group"
               >
                 <span>
-                  {t('انضم لقائمة الانتظار المبكر', 'Join Early-Access Waitlist')}
+                  {t('انضم لقائمة الانتظار ⟶', 'Join the Early Access Waitlist ⟶')}
                 </span>
-                <i className="fas fa-arrow-left mr-2 rtl:mr-0 rtl:ml-2 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform flip-rtl" />
               </Button>
             </motion.div>
           </motion.div>
