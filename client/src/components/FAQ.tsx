@@ -14,7 +14,7 @@ export default function FAQ() {
   const faqItems: FAQItem[] = [
     {
       question: {
-        ar: 'أي القوانين السعودية مشمولة؟',
+        ar: 'ما الأنظمة السعودية التي تغطيها المنصة؟',
         en: 'Which Saudi laws are covered?',
       },
       answer: {
