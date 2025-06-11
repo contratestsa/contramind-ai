@@ -89,16 +89,16 @@ export default function FAQ() {
                 onClick={() => toggleFAQ(index)}
                 className="w-full px-8 py-6 flex justify-between items-center hover:bg-gray-600/30 transition-colors"
               >
+                <h3 className={`text-lg font-semibold text-white ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                  {t(item.question.ar, item.question.en)}
+                </h3>
                 <motion.div
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="flex items-center"
                 >
-                  <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-white ml-4 rtl:ml-0 rtl:mr-4`} />
+                  <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-white`} />
                 </motion.div>
-                <h3 className={`text-lg font-semibold text-white ${language === 'ar' ? 'text-right' : 'text-left'}`}>
-                  {t(item.question.ar, item.question.en)}
-                </h3>
               </button>
               
               <AnimatePresence>
