@@ -13,22 +13,22 @@
   --card-foreground: hsl(189, 70%, 11%);
   --border: hsl(20, 5.9%, 90%);
   --input: hsl(20, 5.9%, 90%);
-  --primary: hsl(189, 70%, 11%);
+  --primary: #0C2836;
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(197, 65%, 84%);
-  --secondary-foreground: hsl(189, 70%, 11%);
-  --accent: hsl(197, 65%, 84%);
-  --accent-foreground: hsl(189, 70%, 11%);
+  --secondary: #B7DEE8;
+  --secondary-foreground: #0C2836;
+  --accent: #B7DEE8;
+  --accent-foreground: #0C2836;
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
-  --ring: hsl(189, 70%, 11%);
+  --ring: #0C2836;
   --radius: 12px;
   
   /* Custom ContraMind.ai brand colors */
-  --navy: hsl(189, 70%, 11%);
-  --sky: hsl(197, 65%, 84%);
+  --navy: #0C2836;
+  --sky: #B7DEE8;
   --white: hsl(0, 0%, 100%);
-  --grey: hsl(0, 0%, 90%);
+  --grey: #E6E6E6;
   --shadow: 0 4px 12px rgba(0,0,0,.08);
   --shadow-hover: 0 8px 24px rgba(0,0,0,.12);
   --transition: .25s ease;
@@ -45,7 +45,7 @@
   --card-foreground: hsl(0, 0%, 98%);
   --border: hsl(240, 3.7%, 15.9%);
   --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(189, 70%, 11%);
+  --primary: #0C2836;
   --primary-foreground: hsl(0, 0%, 100%);
   --secondary: hsl(240, 3.7%, 15.9%);
   --secondary-foreground: hsl(0, 0%, 98%);
@@ -85,7 +85,7 @@
   }
 
   .font-arabic {
-    font-family: 'Noto Sans Arabic', sans-serif;
+    font-family: 'Almarai', sans-serif;
   }
 
   .rtl-transition {
