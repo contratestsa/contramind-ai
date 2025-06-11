@@ -21,14 +21,12 @@ export default function Hero() {
         }} />
       </div>
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content */}
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div className="text-center">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center lg:text-right"
           >
             {/* Launch Offer Badge */}
             <motion.div
@@ -93,7 +91,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="flex flex-wrap justify-center lg:justify-end gap-4 mb-8 text-sm"
+              className="flex flex-wrap justify-center gap-4 mb-8 text-sm"
             >
               {[
                 { ar: 'صياغة آلية', en: 'Automated Drafting' },
@@ -130,51 +128,7 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Dashboard Mockup */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative"
-          >
-            <motion.div
-              whileHover={{ rotate: 0 }}
-              className="relative bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 transition-transform duration-500"
-            >
-              <div className="bg-grey/30 rounded-lg h-64 lg:h-80 flex items-center justify-center">
-                <div className="text-center">
-                  <i className="fas fa-file-contract text-6xl text-navy/20 mb-4" />
-                  <p className="text-navy/60 font-medium">
-                    {t('واجهة منصة ContraMind.ai', 'ContraMind.ai Platform Interface')}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                  <div className="w-3 h-3 bg-red-400 rounded-full" />
-                  <div className="w-3 h-3 bg-yellow-400 rounded-full" />
-                  <div className="w-3 h-3 bg-green-400 rounded-full" />
-                </div>
-                <div className="text-xs text-navy/40 font-mono">app.contramind.ai</div>
-              </div>
-            </motion.div>
 
-            {/* Floating Elements */}
-            <motion.div
-              animate={{ y: [-10, 10, -10] }}
-              transition={{ repeat: Infinity, duration: 3 }}
-              className="absolute -top-4 -right-4 bg-sky/20 backdrop-blur-sm rounded-xl p-3"
-            >
-              <i className="fas fa-robot text-sky text-xl" />
-            </motion.div>
-            <motion.div
-              animate={{ y: [10, -10, 10] }}
-              transition={{ repeat: Infinity, duration: 3, delay: 1 }}
-              className="absolute -bottom-4 -left-4 bg-white/20 backdrop-blur-sm rounded-xl p-3"
-            >
-              <i className="fas fa-shield-alt text-white text-xl" />
-            </motion.div>
-          </motion.div>
         </div>
       </div>
     </section>
