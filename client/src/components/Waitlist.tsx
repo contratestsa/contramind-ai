@@ -137,7 +137,7 @@ export default function Waitlist() {
           </div>
 
           <h2 className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6">
-            {t('احصل على وصول مبكر', 'Gain Early Access')}
+            {t('احصل على تجبتك الفريده الآن', 'Gain Early Access')}
           </h2>
 
           <p className="text-xl text-gray-300 font-sans mb-8">
