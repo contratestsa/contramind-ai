@@ -43,6 +43,19 @@ export default function Hero() {
               </span>
             </motion.div>
 
+            {/* Platform Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-lg lg:text-xl text-sky/90 mb-6 font-arabic leading-relaxed"
+            >
+              {t(
+                'أول منصة إدارة عقود ذكية بالذكاء الاصطناعي في الشرق الأوسط وشمال أفريقيا— لإنشاء العقود والتفاوض والتوقيع بسرعة',
+                'First AI-powered smart contract management platform in the Middle East and North Africa— for creating, negotiating and signing contracts quickly'
+              )}
+            </motion.p>
+
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
