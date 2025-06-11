@@ -123,7 +123,7 @@ export default function Footer() {
           className="border-t border-gray-700 mt-12 pt-8"
         >
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-            <p className="text-sky/60 text-sm">
+            <p className="text-gray-400 text-sm">
               {t(
                 '© 2025 ContraMind Inc. جميع الحقوق محفوظة.',
                 '© 2025 ContraMind Inc. All rights reserved.'
@@ -134,7 +134,7 @@ export default function Footer() {
                 <a
                   key={index}
                   href={link.href}
-                  className="text-sky/60 hover:text-sky transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
                   {t(link.ar, link.en)}
                 </a>
