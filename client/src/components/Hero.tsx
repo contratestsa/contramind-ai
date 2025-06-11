@@ -50,16 +50,11 @@ export default function Hero() {
             >
               <p>
                 {t(
-                  'أول منصة إدارة عقود ذكية بالذكاء الاصطناعي في الشرق الأوسط وشمال أفريقيا—لإنشاء العقود والتفاوض والتوقيع عليها.',
+                  'أول منصة إدارة عقود ذكية بالذكاء الاصطناعي في الشرق الأوسط وشمال أفريقيا،لإنشاء العقود والتفاوض والتوقيع عليها.',
                   'First AI-powered smart contract management platform in the Middle East and North Africa—for creating, negotiating and signing contracts quickly.'
                 )}
               </p>
-              <p>
-                {t(
-                  'نبسّط إنشاء العقود، التفاوض، تقييم المخاطر، الامتثال، والتوقيع الإلكتروني—باللغتين العربية والإنجليزية، ومتوافق مع الأنظمة المحلية.',
-                  'We simplify contract creation, negotiation, risk assessment, compliance, and e-signatures—in Arabic and English, compliant with local regulations.'
-                )}
-              </p>
+
             </motion.div>
 
             <motion.h1
