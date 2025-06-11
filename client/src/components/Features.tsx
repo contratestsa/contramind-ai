@@ -120,7 +120,7 @@ export default function Features() {
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(
-                  'اقتراحات ذكية ومقترحات مضادة',
+                  'اقتراحات فورية ومتخصصة',
                   'Smart proposal & counterproposal suggestions'
                 )}
               </p>
