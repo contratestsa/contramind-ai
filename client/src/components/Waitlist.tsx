@@ -122,7 +122,7 @@ export default function Waitlist() {
   ];
 
   return (
-    <section id="waitlist" className="py-20 lg:py-32 bg-gradient-to-br from-navy/5 to-sky/10">
+    <section id="waitlist" className="py-20 lg:py-32 bg-gradient-to-br from-gray-800 to-gray-700">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -131,16 +131,16 @@ export default function Waitlist() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center bg-sky/20 text-navy px-4 py-2 rounded-full text-sm font-medium mb-6">
+          <div className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6">
             <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
             <span>{t('قريباً', 'Coming Soon')}</span>
           </div>
 
-          <h2 className="text-3xl lg:text-5xl font-space font-bold text-navy mb-6">
+          <h2 className="text-3xl lg:text-5xl font-space font-bold text-white mb-6">
             {t('انضم لقائمة الانتظار المبكر', 'Join Early-Access Waitlist')}
           </h2>
 
-          <p className="text-xl text-navy/70 font-inter mb-8">
+          <p className="text-xl text-gray-300 font-inter mb-8">
             {t(
               'احصل على وصول مبكر لتحليل المخاطر ومساعد التفاوض',
               'Get early access to Risk Analysis + Negotiation Copilot'
@@ -154,16 +154,16 @@ export default function Waitlist() {
             viewport={{ once: true }}
             className="bg-white rounded-2xl p-6 shadow-custom mb-8 max-w-md mx-auto"
           >
-            <div className="text-sm text-navy/60 mb-2">
+            <div className="text-sm text-gray-400 mb-2">
               {t('متبقي على الإطلاق', 'Time until launch')}
             </div>
-            <div className="text-2xl font-space font-bold text-navy">
+            <div className="text-2xl font-space font-bold text-gray-800">
               <span>{countdown.days.toString().padStart(2, '0')}</span>:
               <span>{countdown.hours.toString().padStart(2, '0')}</span>:
               <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
               <span>{countdown.seconds.toString().padStart(2, '0')}</span>
             </div>
-            <div className="text-xs text-navy/50 mt-1">
+            <div className="text-xs text-gray-500 mt-1">
               {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
             </div>
           </motion.div>

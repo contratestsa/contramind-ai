@@ -118,15 +118,15 @@ export default function Features() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-sky/10 rounded-full transform translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-500" />
             <div className="relative">
               <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-clock text-2xl text-navy" />
+                <i className="fas fa-clock text-2xl text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-space font-bold text-navy mb-4">
+              <h3 className="text-2xl lg:text-3xl font-space font-bold text-white mb-4">
                 {t(
                   'تقليص مدة التفاوض من ثلاثة أسابيع إلى ساعات',
                   'Three-week negotiations reduced to hours'
                 )}
               </h3>
-              <p className="text-navy/70 text-lg mb-6">
+              <p className="text-gray-300 text-lg mb-6">
                 {t(
                   'مساعد التفاوض يقدم اقتراحات ومقترحات مضادة على مستوى البنود فوراً',
                   'Negotiation Copilot surfaces clause-level suggestions instantly'
@@ -142,23 +142,23 @@ export default function Features() {
           {/* Secondary Feature Card */}
           <motion.div
             variants={itemVariants}
-            className="bg-sky/10 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
+            className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
           >
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-navy/10 rounded-full transform -translate-x-12 translate-y-12 group-hover:scale-110 transition-transform duration-500" />
             <div className="relative">
               <div className="w-16 h-16 bg-navy/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-cogs text-2xl text-navy" />
+                <i className="fas fa-cogs text-2xl text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-space font-bold text-navy mb-4">
+              <h3 className="text-2xl lg:text-3xl font-space font-bold text-white mb-4">
                 {t('مراجعة يدوية مُؤتمتة', 'Manual review, automated')}
               </h3>
-              <p className="text-navy/70 text-lg mb-6">
+              <p className="text-gray-300 text-lg mb-6">
                 {t(
                   'أداة واحدة موحدة: صياغة، تفاوض، تقييم المخاطر، توقيع',
                   'One unified tool: Draft, negotiate, assess risk, sign'
                 )}
               </p>
-              <div className="flex items-center text-navy font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
+              <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
                 <span>{t('استكشف الأدوات', 'Explore Tools')}</span>
                 <i className="fas fa-arrow-left mr-2 rtl:mr-0 rtl:ml-2 flip-rtl" />
               </div>
@@ -178,15 +178,15 @@ export default function Features() {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="text-center p-6 rounded-2xl hover:bg-navy/5 transition-all duration-300 hover:shadow-custom group"
+              className="text-center p-6 rounded-2xl hover:bg-gray-700/30 transition-all duration-300 hover:shadow-custom group"
             >
               <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                <i className={`${feature.icon} text-2xl text-navy`} />
+                <i className={`${feature.icon} text-2xl text-white`} />
               </div>
-              <h4 className="text-xl font-space font-semibold text-navy mb-3">
+              <h4 className="text-xl font-space font-semibold text-white mb-3">
                 {t(feature.title.ar, feature.title.en)}
               </h4>
-              <p className="text-navy/60">
+              <p className="text-gray-300">
                 {t(feature.description.ar, feature.description.en)}
               </p>
             </motion.div>
