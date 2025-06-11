@@ -42,25 +42,7 @@ export default function Hero() {
             </motion.div>
 
             {/* Platform Description */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-lg lg:text-xl text-sky/90 mb-6 font-arabic leading-relaxed space-y-4"
-            >
-              <p>
-                {t(
-                  'أول منصة إدارة عقود ذكية بالذكاء الاصطناعي في الشرق الأوسط وشمال أفريقيا—لإنشاء العقود والتفاوض والتوقيع عليها.',
-                  'First AI-powered smart contract management platform in the Middle East and North Africa—for creating, negotiating and signing contracts quickly.'
-                )}
-              </p>
-              <p>
-                {t(
-                  'نبسّط إنشاء العقود، التفاوض، تقييم المخاطر، الامتثال، والتوقيع الإلكتروني—باللغتين العربية والإنجليزية، ومتوافق مع الأنظمة المحلية.',
-                  'We simplify contract creation, negotiation, risk assessment, compliance, and e-signatures—in Arabic and English, compliant with local regulations.'
-                )}
-              </p>
-            </motion.div>
+
 
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
