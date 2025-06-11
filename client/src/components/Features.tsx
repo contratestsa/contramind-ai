@@ -44,7 +44,7 @@ export default function Features() {
     },
     {
       icon: 'fas fa-search',
-      title: { ar: 'تحليل مخاطر سعودي', en: 'Saudi-specific Risk Analysis' },
+      title: { ar: 'تحليل مخاطر', en: 'Saudi-specific Risk Analysis' },
       description: {
         ar: 'تحليل شامل للمخاطر وفقاً للقوانين السعودية',
         en: 'Comprehensive risk analysis per Saudi regulations',
