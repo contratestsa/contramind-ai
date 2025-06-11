@@ -1,0 +1,133 @@
+Create a modern, professional Arabic-first bilingual homepage for ContraMind.ai, the first AI-native Contract Lifecycle Management (CLM) platform specifically designed for the MENA region. The platform automates the complete contract lifecycle—from drafting, negotiation, and risk assessment, to regulatory compliance and e-signatures—in Arabic and English, fully aligned with local regulations.
+
+Company Context:
+
+ContraMind.ai is pioneering the automation of contract lifecycle management tailored exclusively for businesses and legal teams operating in MENA. Built with deep regional expertise, it streamlines processes, enhances compliance, and significantly reduces legal risks.
+
+Technical Requirements:
+
+Framework: React/TypeScript
+
+Styling: Tailwind CSS
+
+Animations: Framer Motion
+
+Accessibility: Semantic HTML, accessibility optimization
+
+Brand Identity & Design System:
+
+:root {
+  --navy: #0C2836;
+  --sky: #B7DEE8;
+  --white: #FFFFFF;
+  --grey: #E6E6E6;
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,.12);
+  --transition: .25s ease;
+}
+
+Typography:
+
+Headings: Space Grotesk
+
+Body Text: Inter
+
+Arabic Font: Noto Sans Arabic
+
+Complete Bilingual Implementation:
+
+Default: Arabic (RTL)
+
+Secondary: English (LTR)
+
+React context-based language switching
+
+Full cultural localization
+
+Page Structure & Content:
+
+Header/Navigation:
+
+ContraMind.ai logo
+
+Navigation menu: المنتج | الأسعار | العملاء | اتصل بنا / Product | Pricing | Customers | Contact
+
+Language toggle: العربية | English
+
+Primary CTA: تجربة مجانية / Start Free Trial
+
+Hero Section:
+
+Headline (Arabic): احصل على 3 أشهر مجاناً عند الإطلاق
+
+Headline (English): Get 3 Months Free at Launch
+
+Sub-headline: The First AI-Native CLM for MENA—Draft, Negotiate & Sign Faster.
+
+Feature Highlights: Automated drafting, negotiation, risk assessment, compliance & e-signatures
+
+Button: Join the Early-Access Waitlist ⟶
+
+Features Section:
+
+تقليص مدة التفاوض من ثلاثة أسابيع إلى ساعات / Three-week negotiations reduced to hours
+
+مساعد التفاوض يقدم اقتراحات ومقترحات مضادة على مستوى البنود فوراً / Negotiation Copilot surfaces clause-level suggestions instantly
+
+مراجعة يدوية مُؤتمتة / Manual review, automated
+
+أداة واحدة موحدة: صياغة، تفاوض، تقييم المخاطر، توقيع / One unified tool: Draft, negotiate, assess risk, sign
+
+حافظ على الامتثال بشكل مستمر / Stay compliant continuously
+
+مساعد الصياغة بالذكاء الاصطناعي / Ready AI Draft Assist
+
+مساعد التفاوض التجريبي / Alpha Negotiation Copilot
+
+تحليل مخاطر متخصص بالسعودية / PoC Saudi-Specific Risk Analysis
+
+مراقبة الامتثال التنظيمي حسب الخطة / Road-map Regulatory Compliance Monitor
+
+توقيع إلكتروني أصلي وجاهز / Ready Native E-Signature
+
+Early-Access Waitlist Section:
+
+Timer for Risk Analysis + Negotiation Copilot PoC availability (~30 days)
+
+Join Waitlist CTA
+
+Privacy assurance: "We’ll never share your email. Unsubscribe anytime."
+
+Live count: "🎉 217 professionals have joined today"
+
+FAQ Section:
+
+أي القوانين السعودية مشمولة؟ / Which Saudi laws are covered?
+
+هل يدعم التفاوض باللغتين؟ / Does it support bilingual negotiations?
+
+ما هي الدول التالية في المنطقة؟ / Which MENA jurisdictions next?
+
+هل بياناتي ستبقى في السعودية؟ / Will my data stay in Saudi?
+
+Footer:
+
+Company logo
+
+Organized links: الشركة | المنتج | الموارد
+
+© 2025 ContraMind Inc. All rights reserved.
+
+Key Features:
+
+Smooth bilingual Arabic-English switching
+
+RTL/LTR transitions
+
+Responsive design
+
+Framer Motion animations
+
+Cultural adaptation for the MENA market
+
