@@ -37,9 +37,16 @@ export default function Header() {
             transition={{ delay: 0.2 }}
             className="flex items-center"
           >
-            <span className="text-2xl font-heading font-bold text-white">
-              ContraMind.ai
-            </span>
+            <div className="flex items-center space-x-3 rtl:space-x-reverse">
+              <img 
+                src="/attached_assets/CMYK_Logo Design - ContraMind (V001)-10_1749665092141.jpg" 
+                alt="ContraMind.ai Logo" 
+                className="w-8 h-8"
+              />
+              <span className="text-2xl font-heading font-bold text-white">
+                ContraMind.ai
+              </span>
+            </div>
           </motion.div>
 
           {/* Desktop Navigation */}
