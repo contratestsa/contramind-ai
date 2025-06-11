@@ -42,7 +42,7 @@ export default function Footer() {
             className="lg:col-span-2"
           >
             <div className="mb-6">
-              <span className="text-2xl font-space font-bold">ContraMind.ai</span>
+              <span className="text-2xl font-heading font-bold">ContraMind.ai</span>
             </div>
             <p className="text-gray-300 text-lg mb-6 max-w-md">
               {t(

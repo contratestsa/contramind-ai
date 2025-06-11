@@ -67,10 +67,10 @@ export default function FAQ() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl lg:text-5xl font-space font-bold text-white mb-6">
+          <h2 className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6">
             {t('أسئلة شائعة', 'Frequently Asked Questions')}
           </h2>
-          <p className="text-xl text-gray-300 font-inter">
+          <p className="text-xl text-gray-300 font-sans">
             {t('إجابات سريعة على الأسئلة الأكثر شيوعاً', 'Quick answers to common questions')}
           </p>
         </motion.div>

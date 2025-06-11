@@ -136,11 +136,11 @@ export default function Waitlist() {
             <span>{t('قريباً', 'Coming Soon')}</span>
           </div>
 
-          <h2 className="text-3xl lg:text-5xl font-space font-bold text-white mb-6">
+          <h2 className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6">
             {t('انضم لقائمة الانتظار المبكر', 'Join Early-Access Waitlist')}
           </h2>
 
-          <p className="text-xl text-gray-300 font-inter mb-8">
+          <p className="text-xl text-gray-300 font-sans mb-8">
             {t(
               'احصل على وصول مبكر لتحليل المخاطر ومساعد التفاوض',
               'Get early access to Risk Analysis + Negotiation Copilot'

@@ -94,7 +94,7 @@ export default function Features() {
           </motion.h2>
           <motion.p
             variants={itemVariants}
-            className="text-xl text-gray-300 font-inter max-w-3xl mx-auto"
+            className="text-xl text-gray-300 font-sans max-w-3xl mx-auto"
           >
             {t(
               'من ثلاثة أسابيع إلى ساعات - ثورة حقيقية في إدارة العقود',
@@ -120,7 +120,7 @@ export default function Features() {
               <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <i className="fas fa-clock text-2xl text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-space font-bold text-white mb-4">
+              <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
                 {t(
                   'تقليص مدة التفاوض من ثلاثة أسابيع إلى ساعات',
                   'Three-week negotiations reduced to hours'
@@ -149,7 +149,7 @@ export default function Features() {
               <div className="w-16 h-16 bg-navy/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <i className="fas fa-cogs text-2xl text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-space font-bold text-white mb-4">
+              <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
                 {t('مراجعة يدوية مُؤتمتة', 'Manual review, automated')}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
