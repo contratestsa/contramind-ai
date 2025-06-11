@@ -31,7 +31,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-navy text-white py-16">
+    <footer className="bg-gray-900 text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Company Info */}
@@ -44,7 +44,7 @@ export default function Footer() {
             <div className="mb-6">
               <span className="text-2xl font-space font-bold">ContraMind.ai</span>
             </div>
-            <p className="text-sky/80 text-lg mb-6 max-w-md">
+            <p className="text-gray-300 text-lg mb-6 max-w-md">
               {t(
                 'أول منصة ذكية لإدارة دورة حياة العقود مصممة خصيصاً لمنطقة الشرق الأوسط وشمال أفريقيا',
                 'The first AI-native Contract Lifecycle Management platform designed specifically for the MENA region'
@@ -57,9 +57,9 @@ export default function Footer() {
                   href={social.href}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-10 h-10 bg-sky/20 rounded-full flex items-center justify-center hover:bg-sky/30 transition-colors"
+                  className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
                 >
-                  <i className={`${social.icon} text-sky`} />
+                  <i className={`${social.icon} text-white`} />
                 </motion.a>
               ))}
             </div>
@@ -80,7 +80,7 @@ export default function Footer() {
                 <li key={index}>
                   <a
                     href={link.href}
-                    className="text-sky/80 hover:text-sky transition-colors"
+                    className="text-gray-300 hover:text-white transition-colors"
                   >
                     {t(link.ar, link.en)}
                   </a>
@@ -104,7 +104,7 @@ export default function Footer() {
                 <li key={index}>
                   <a
                     href={link.href}
-                    className="text-sky/80 hover:text-sky transition-colors"
+                    className="text-gray-300 hover:text-white transition-colors"
                   >
                     {t(link.ar, link.en)}
                   </a>
@@ -120,7 +120,7 @@ export default function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.6 }}
-          className="border-t border-sky/20 mt-12 pt-8"
+          className="border-t border-gray-700 mt-12 pt-8"
         >
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
             <p className="text-sky/60 text-sm">
