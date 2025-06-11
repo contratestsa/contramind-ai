@@ -28,7 +28,7 @@ export default function Features() {
   const features = [
     {
       icon: 'fas fa-robot',
-      title: { ar: 'صياغة العقود بالذكاءالاصطناعي', en: 'AI-Powered Drafting' },
+      title: { ar: 'صياغة العقود بالذكاءالاصطناعي', en: 'AI Contract Drafting' },
       description: {
         ar: 'إنشاء مسودات عقود احترافية بنقرة واحدة',
         en: 'Generate professional contract drafts with one click',
@@ -39,12 +39,12 @@ export default function Features() {
       title: { ar: 'مساعد التفاوض الذكي', en: 'Smart Negotiation Assistant' },
       description: {
         ar: 'تسريع عمليات التفاوض بين الفرق القانونية',
-        en: 'Smart negotiation assistance with instant suggestions',
+        en: 'Accelerate negotiation processes between legal teams',
       },
     },
     {
       icon: 'fas fa-search',
-      title: { ar: 'تحليل مخاطر', en: 'Saudi-specific Risk Analysis' },
+      title: { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
       description: {
         ar: 'تحليل شامل للمخاطر وفقاً للقوانين السعودية',
         en: 'Comprehensive risk analysis per Saudi regulations',
@@ -52,7 +52,7 @@ export default function Features() {
     },
     {
       icon: 'fas fa-clipboard-check',
-      title: { ar: 'مراقبة الإمتثال', en: 'Regulatory Monitoring' },
+      title: { ar: 'مراقبة الإمتثال', en: 'Compliance Monitoring' },
       description: {
         ar: 'متابعة مستمرة للامتثال والتحديثات التنظيمية',
         en: 'Continuous compliance tracking and regulatory updates',
@@ -121,7 +121,7 @@ export default function Features() {
               <p className="text-gray-300 text-lg mb-6">
                 {t(
                   'اقتراحات فورية ومتخصصة',
-                  'Smart proposal & counterproposal suggestions'
+                  'Instant & specialized suggestions'
                 )}
               </p>
               <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
