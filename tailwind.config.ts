@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['Inter', 'Noto Sans Arabic', 'system-ui', 'sans-serif'],
-        'heading': ['Space Grotesk', 'system-ui', 'sans-serif'],
-        'arabic': ['Noto Sans Arabic', 'system-ui', 'sans-serif'],
+        'sans': ['Inter', 'Almarai', 'system-ui', 'sans-serif'],
+        'heading': ['Space Grotesk', 'Almarai', 'system-ui', 'sans-serif'],
+        'arabic': ['Almarai', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",

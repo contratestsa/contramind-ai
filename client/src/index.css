@@ -88,6 +88,37 @@
     font-family: 'Almarai', sans-serif;
   }
 
+  /* Typography Classes for Specific Font Requirements */
+  .font-heading-en {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400; /* Regular */
+  }
+  
+  .font-heading-en-medium {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500; /* Medium */
+  }
+
+  .font-body-en {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500; /* Medium */
+  }
+
+  .font-body-en-semibold {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600; /* SemiBold */
+  }
+
+  .font-arabic-regular {
+    font-family: 'Almarai', sans-serif;
+    font-weight: 400; /* Regular */
+  }
+
+  .font-arabic-bold {
+    font-family: 'Almarai', sans-serif;
+    font-weight: 700; /* Bold */
+  }
+
   .rtl-transition {
     transition: all 0.3s ease;
   }
