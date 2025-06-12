@@ -80,13 +80,13 @@ export default function Features() {
         >
           <motion.h2
             variants={itemVariants}
-            className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6"
+            className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6"
           >
             {t('ميزات متقدمة للمحترفين', 'Advanced Features for Professionals')}
           </motion.h2>
           <motion.p
             variants={itemVariants}
-            className="text-xl text-gray-300 font-sans max-w-3xl mx-auto"
+            className="text-xl text-gray-300 font-arabic-body max-w-3xl mx-auto"
           >
             {t(
               'من ثلاثة أسابيع إلى ساعات',
@@ -112,13 +112,13 @@ export default function Features() {
               <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <i className="fas fa-clock text-2xl text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
+              <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white mb-4">
                 {t(
                   'عزّز إنتاجية أعمالك',
                   'Enhance Your Business Productivity'
                 )}
               </h3>
-              <p className="text-gray-300 text-lg mb-6">
+              <p className="text-gray-300 text-lg mb-6 font-arabic-body">
                 {t(
                   'عن طريق ادارة المهام وتوزيعها بسهولة، وتتبّعها٫وتسهيل عمليات التفاوض.',
                   'Through easy task management and distribution, tracking them, and facilitating negotiation processes.'
@@ -141,10 +141,10 @@ export default function Features() {
               <div className="w-16 h-16 bg-navy/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <i className="fas fa-cogs text-2xl text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
+              <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white mb-4">
                 {t('مراجعة قانونية وتحليل المخاطر', 'Legal Review and Risk Analysis')}
               </h3>
-              <p className="text-gray-300 text-lg mb-6">
+              <p className="text-gray-300 text-lg mb-6 font-arabic-body">
                 {t(
                   'أداة واحدة: صياغة ← تفاوض ← مراجعة← تحليل مخاطر ← توقيع  ← حفظ',
                   'One tool: Draft → Negotiate → Review → Risk Analysis → Sign → Save'
