@@ -35,7 +35,6 @@ export default function Hero() {
               transition={{ delay: 0.2 }}
               className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6 glass-effect"
             >
-              <i className="fas fa-star ml-2 rtl:ml-0 rtl:mr-2" />
               <span>
                 {t('احصل على 3 أشهر مجاناً عند الإطلاق', 'Get 3 Months Free at Launch')}
               </span>
