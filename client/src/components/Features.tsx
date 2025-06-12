@@ -114,13 +114,13 @@ export default function Features() {
               </div>
               <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
                 {t(
-                  'تسريع التفاوض',
+                  'عزّز إنتاجية أعمالك',
                   'Accelerate Negotiation'
                 )}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(
-                  'اقتراحات فورية ومتخصصة',
+                  'عن طريق ادارة المهام وتوزيعها بسهولة، وتتبّعها٫وتسهيل عمليات التفاوض.',
                   'Instant & specialized suggestions'
                 )}
               </p>
@@ -142,11 +142,11 @@ export default function Features() {
                 <i className="fas fa-cogs text-2xl text-white" />
               </div>
               <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
-                {t('مراجعة مؤتمتة', 'Automated Review')}
+                {t('مراجعة قانونية وتحليل المخاطر', 'Automated Review')}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(
-                  'أداة واحدة: صياغة ← تفاوض ← تحليل ← توقيع',
+                  'أداة واحدة: صياغة ← تفاوض ← مراجعة← تحليل مخاطر ← توقيع  ← حفظ',
                   'One tool: Draft → Negotiate → Analyze → Sign'
                 )}
               </p>

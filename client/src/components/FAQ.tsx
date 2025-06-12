@@ -14,7 +14,7 @@ export default function FAQ() {
   const faqItems: FAQItem[] = [
     {
       question: {
-        ar: 'ما الأنظمة السعودية التي تغطيها المنصة؟',
+        ar: 'ما الأنظمة القانونية التي تغطيها المنصة',
         en: 'What Saudi regulations does the platform cover?',
       },
       answer: {
