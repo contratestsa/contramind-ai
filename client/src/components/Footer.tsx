@@ -35,8 +35,8 @@ export default function Footer() {
             </div>
             <p className="text-gray-300 text-lg mb-6 max-w-md">
               {t(
-                'منصة متخصصة لإدارة دورة حياة العقود',
-                'AI-powered legal contract lifecycle platform'
+                'منصة متخصصة لإدارة ومراجعة العقود',
+                'Specialized platform for contract management and review'
               )}
             </p>
             <div className="flex space-x-4 rtl:space-x-reverse">
