@@ -68,10 +68,53 @@
 
   [dir="rtl"] {
     text-align: right;
+    font-family: 'Almarai', sans-serif;
   }
 
   [dir="ltr"] {
     text-align: left;
+    font-family: 'Inter', 'Space Grotesk', sans-serif;
+  }
+
+  /* Arabic text alignment and spacing */
+  .arabic-text {
+    font-family: 'Almarai', sans-serif;
+    text-align: right;
+    direction: rtl;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+    word-spacing: 0.1em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-feature-settings: "liga", "kern";
+    font-feature-settings: "liga", "kern";
+  }
+
+  /* English text alignment */
+  .english-text {
+    font-family: 'Inter', sans-serif;
+    text-align: left;
+    direction: ltr;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Arabic paragraph spacing */
+  [dir="rtl"] p {
+    text-align: right;
+    line-height: 1.75;
+    word-spacing: 0.05em;
+  }
+
+  /* Arabic heading alignment */
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] h5,
+  [dir="rtl"] h6 {
+    text-align: right;
+    line-height: 1.4;
+    font-weight: 700;
   }
 }
 
@@ -112,11 +155,46 @@
   .font-arabic-regular {
     font-family: 'Almarai', sans-serif;
     font-weight: 400; /* Regular */
+    text-align: right;
+    direction: rtl;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+    word-spacing: 0.05em;
+    text-rendering: optimizeLegibility;
   }
 
   .font-arabic-bold {
     font-family: 'Almarai', sans-serif;
     font-weight: 700; /* Bold */
+    text-align: right;
+    direction: rtl;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    word-spacing: 0.05em;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Additional Arabic font weights */
+  .font-arabic-medium {
+    font-family: 'Almarai', sans-serif;
+    font-weight: 600;
+    text-align: right;
+    direction: rtl;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    word-spacing: 0.05em;
+    text-rendering: optimizeLegibility;
+  }
+
+  .font-arabic-light {
+    font-family: 'Almarai', sans-serif;
+    font-weight: 300;
+    text-align: right;
+    direction: rtl;
+    line-height: 1.9;
+    letter-spacing: 0.03em;
+    word-spacing: 0.05em;
+    text-rendering: optimizeLegibility;
   }
 
   .rtl-transition {
@@ -132,6 +210,22 @@
     font-weight: 900;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Arabic text improvements */
+  [dir="rtl"] .gradient-text {
+    font-family: 'Almarai', sans-serif;
+    font-weight: 700;
+    text-align: right;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  [dir="ltr"] .gradient-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    text-align: left;
+    line-height: 1.4;
   }
 
   .glass-effect {
