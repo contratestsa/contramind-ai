@@ -67,10 +67,10 @@ export default function FAQ() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6">
+          <h2 className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6">
             {t('أسئلة شائعة', 'Frequently Asked Questions')}
           </h2>
-          <p className="text-xl text-gray-300 font-sans">
+          <p className="text-xl text-gray-300 font-arabic-body">
             {t('إجابات سريعة على الأسئلة الأكثر شيوعاً', 'Quick answers to common questions')}
           </p>
         </motion.div>
@@ -89,7 +89,7 @@ export default function FAQ() {
                 onClick={() => toggleFAQ(index)}
                 className="w-full px-8 py-6 flex justify-between items-center hover:bg-gray-600/30 transition-colors"
               >
-                <h3 className={`text-lg font-semibold text-white ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                <h3 className={`text-lg font-arabic-body-bold text-white ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   {t(item.question.ar, item.question.en)}
                 </h3>
                 <motion.div
@@ -111,7 +111,7 @@ export default function FAQ() {
                     className="overflow-hidden"
                   >
                     <div className="px-8 pb-6">
-                      <p className={`text-gray-300 leading-relaxed ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                      <p className={`text-gray-300 leading-relaxed font-arabic-body ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                         {t(item.answer.ar, item.answer.en)}
                       </p>
                     </div>

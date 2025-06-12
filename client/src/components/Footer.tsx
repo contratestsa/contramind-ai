@@ -31,9 +31,9 @@ export default function Footer() {
             className="lg:col-span-2"
           >
             <div className="mb-6">
-              <span className="text-2xl font-heading font-bold">ContraMind.ai</span>
+              <span className="text-2xl font-arabic-heading-bold">ContraMind.ai</span>
             </div>
-            <p className="text-gray-300 text-lg mb-6 max-w-md">
+            <p className="text-gray-300 text-lg mb-6 max-w-md font-arabic-body">
               {t(
                 'منصة متخصصة لإدارة ومراجعة العقود',
                 'AI-powered legal contract lifecycle platform'
@@ -61,7 +61,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            <h4 className="font-semibold text-lg mb-6">
+            <h4 className="font-arabic-body-bold text-lg mb-6">
               {t('الشركة', 'Company')}
             </h4>
             <ul className="space-y-3">

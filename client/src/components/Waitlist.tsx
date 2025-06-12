@@ -136,7 +136,7 @@ export default function Waitlist() {
             <span>{t('قريباً', 'Coming Soon')}</span>
           </div>
 
-          <h2 className="text-3xl lg:text-5xl font-heading font-bold text-white mb-6">
+          <h2 className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6">
             {t('احصل على تجربتك الفريدة الآن', 'Get Early Access')}
           </h2>
 
@@ -149,7 +149,7 @@ export default function Waitlist() {
             viewport={{ once: true }}
             className="bg-white rounded-2xl p-6 shadow-custom mb-8 max-w-md mx-auto"
           >
-            <div className="text-sm text-gray-400 mb-2">
+            <div className="text-sm text-gray-400 mb-2 font-arabic-body">
               {t('متبقي على الإطلاق', 'Time until launch')}
             </div>
             <div className="text-2xl font-space font-bold text-gray-800">
@@ -158,7 +158,7 @@ export default function Waitlist() {
               <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
               <span>{countdown.seconds.toString().padStart(2, '0')}</span>
             </div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-xs text-gray-500 mt-1 font-arabic-body">
               {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
             </div>
           </motion.div>
