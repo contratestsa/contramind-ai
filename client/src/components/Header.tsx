@@ -39,7 +39,7 @@ export default function Header() {
               <img 
                 src={logoImage} 
                 alt="ContraMind.ai Logo" 
-                className="w-64 h-16 object-contain object-left"
+                className="w-72 h-18 object-contain object-left"
               />
             </div>
           </motion.div>
