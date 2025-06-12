@@ -51,21 +51,7 @@ export default function Hero() {
               </span>
             </motion.h1>
 
-            {/* Platform Description */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-lg lg:text-xl text-sky/90 mb-6 font-arabic leading-relaxed space-y-4"
-            >
-              <p>
-                {t(
-                  'لإنشاء العقود والتفاوض والتوقيع عليها',
-                  'Streamline contract creation, negotiation, risk, and esignatures'
-                )}
-              </p>
 
-            </motion.div>
 
 
 
