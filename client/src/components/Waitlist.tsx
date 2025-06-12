@@ -140,12 +140,7 @@ export default function Waitlist() {
             {t('احصل على تجربتك الفريدة الآن', 'Get Early Access')}
           </h2>
 
-          <p className="text-xl text-gray-300 font-sans mb-8">
-            {t(
-              'احصل على وصول مبكر لتحليل المخاطر ومساعد التفاوض',
-              'Get early access to risk analysis and negotiation assistant'
-            )}
-          </p>
+
 
           {/* Countdown Timer */}
           <motion.div
