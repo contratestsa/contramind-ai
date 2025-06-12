@@ -18,7 +18,7 @@ export default function FAQ() {
         en: 'What Saudi regulations does the platform cover?',
       },
       answer: {
-        ar: 'نغطي جميع القوانين التجارية الأساسية بما في ذلك قانون الشركات، قانون العمل، قانون التجارة الإلكترونية، وأنظمة الاستثمار الأجنبي. نحدث قاعدة البيانات باستمرار لتشمل التعديلات الجديدة.',
+        ar: 'نغطي جميع القوانين التجارية الأساسية بما في ذلك قانون الشركات، قانون العمل، قانون التجارة الإلكترونية، وأنظمة الاستثمار الأجنبي ، وجميع القوانين المتعلقه بالعقود.ونقوم بتحديث قاعدة البيانات باستمرار لتشمل جميع التعديلات الجديدة.',
         en: 'We cover all fundamental commercial laws including Companies Law, Labor Law, E-Commerce Law, and Foreign Investment regulations. Our database is continuously updated with new amendments.',
       },
     },
@@ -44,7 +44,7 @@ export default function FAQ() {
     },
     {
       question: {
-        ar: 'هل ستُحفظ البيانات في السعودية؟',
+        ar: 'هل تلتزم المنصة بقوانين حماية البيانات المحلية والدولية ؟',
         en: 'Will the data be stored in Saudi Arabia?',
       },
       answer: {
