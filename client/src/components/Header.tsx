@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
-import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1749665092141.jpg';
+import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -37,7 +37,7 @@ export default function Header() {
           >
             <div className="flex items-center space-x-3 rtl:space-x-reverse">
               <img 
-                src="/attached_assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png" 
+                src={logoImage} 
                 alt="ContraMind.ai Logo" 
                 className="w-32 h-8"
               />
