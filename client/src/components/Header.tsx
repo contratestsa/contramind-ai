@@ -41,9 +41,6 @@ export default function Header() {
                 alt="ContraMind.ai Logo" 
                 className="w-8 h-8"
               />
-              <span className="text-2xl font-heading font-bold text-white">
-                ContraMind.ai
-              </span>
             </div>
           </motion.div>
 
