@@ -37,9 +37,9 @@ export default function Header() {
           >
             <div className="flex items-center space-x-3 rtl:space-x-reverse">
               <img 
-                src={logoImage} 
+                src="/attached_assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png" 
                 alt="ContraMind.ai Logo" 
-                className="w-8 h-8"
+                className="w-32 h-8"
               />
             </div>
           </motion.div>
