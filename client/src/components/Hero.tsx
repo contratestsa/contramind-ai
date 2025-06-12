@@ -47,7 +47,7 @@ export default function Hero() {
               className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight"
             >
               <span className="gradient-text">
-                {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The Premier AI-Powered Legal Contract Management Platform in MENA')}
+                {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'First Legal Platform for Contract Management and Review Supporting Arabic Using Artificial Intelligence')}
               </span>
             </motion.h1>
 

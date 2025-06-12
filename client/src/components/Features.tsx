@@ -115,13 +115,13 @@ export default function Features() {
               <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
                 {t(
                   'عزّز إنتاجية أعمالك',
-                  'Accelerate Negotiation'
+                  'Enhance Your Business Productivity'
                 )}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(
                   'عن طريق ادارة المهام وتوزيعها بسهولة، وتتبّعها٫وتسهيل عمليات التفاوض.',
-                  'Instant & specialized suggestions'
+                  'Through easy task management and distribution, tracking them, and facilitating negotiation processes.'
                 )}
               </p>
               <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
@@ -142,12 +142,12 @@ export default function Features() {
                 <i className="fas fa-cogs text-2xl text-white" />
               </div>
               <h3 className="text-2xl lg:text-3xl font-heading font-bold text-white mb-4">
-                {t('مراجعة قانونية وتحليل المخاطر', 'Automated Review')}
+                {t('مراجعة قانونية وتحليل المخاطر', 'Legal Review and Risk Analysis')}
               </h3>
               <p className="text-gray-300 text-lg mb-6">
                 {t(
                   'أداة واحدة: صياغة ← تفاوض ← مراجعة← تحليل مخاطر ← توقيع  ← حفظ',
-                  'One tool: Draft → Negotiate → Analyze → Sign'
+                  'One tool: Draft → Negotiate → Review → Risk Analysis → Sign → Save'
                 )}
               </p>
               <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
