@@ -44,7 +44,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight mt-36"
+              className="text-4xl lg:text-6xl font-heading font-bold mb-6 leading-tight"
             >
               <span className="gradient-text">
                 {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'First Legal Platform for Contract Management and Review Supporting Arabic Using Artificial Intelligence')}
