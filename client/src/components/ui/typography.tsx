@@ -53,28 +53,28 @@ function getTypographyClasses(variant: string, isArabic: boolean): string {
   const baseClasses = 'leading-relaxed';
   
   if (isArabic) {
-    // Arabic typography using Almarai
+    // Arabic typography using Almarai for all purposes
     switch (variant) {
       case 'h1':
-        return cn(baseClasses, 'font-arabic-bold text-4xl lg:text-6xl');
+        return cn(baseClasses, 'font-arabic-heading-bold text-4xl lg:text-6xl');
       case 'h2':
-        return cn(baseClasses, 'font-arabic-bold text-3xl lg:text-5xl');
+        return cn(baseClasses, 'font-arabic-heading-bold text-3xl lg:text-5xl');
       case 'h3':
-        return cn(baseClasses, 'font-arabic-bold text-2xl lg:text-4xl');
+        return cn(baseClasses, 'font-arabic-heading-bold text-2xl lg:text-4xl');
       case 'h4':
-        return cn(baseClasses, 'font-arabic-bold text-xl lg:text-3xl');
+        return cn(baseClasses, 'font-arabic-heading-bold text-xl lg:text-3xl');
       case 'h5':
-        return cn(baseClasses, 'font-arabic-bold text-lg lg:text-2xl');
+        return cn(baseClasses, 'font-arabic-heading-bold text-lg lg:text-2xl');
       case 'h6':
-        return cn(baseClasses, 'font-arabic-bold text-base lg:text-xl');
+        return cn(baseClasses, 'font-arabic-heading text-base lg:text-xl');
       case 'body-large':
-        return cn(baseClasses, 'font-arabic-regular text-lg');
+        return cn(baseClasses, 'font-arabic-body text-lg');
       case 'body':
-        return cn(baseClasses, 'font-arabic-regular text-base');
+        return cn(baseClasses, 'font-arabic-body text-base');
       case 'caption':
-        return cn(baseClasses, 'font-arabic-regular text-sm');
+        return cn(baseClasses, 'font-arabic-body text-sm');
       default:
-        return cn(baseClasses, 'font-arabic-regular text-base');
+        return cn(baseClasses, 'font-arabic-body text-base');
     }
   } else {
     // English typography using Space Grotesk for headings, Inter for body

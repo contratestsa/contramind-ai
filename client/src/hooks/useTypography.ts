@@ -12,10 +12,10 @@ export function useTypography(): TypographyClasses {
 
   if (language === 'ar') {
     return {
-      heading: 'font-arabic-regular',
-      headingMedium: 'font-arabic-bold',
-      body: 'font-arabic-regular',
-      bodySemiBold: 'font-arabic-bold',
+      heading: 'font-arabic-heading',
+      headingMedium: 'font-arabic-heading-bold',
+      body: 'font-arabic-body',
+      bodySemiBold: 'font-arabic-body-bold',
     };
   }
 
@@ -36,14 +36,14 @@ export function getTypographyClass(
 
   switch (element) {
     case 'heading':
-      return isArabic ? 'font-arabic-regular' : 'font-heading-en';
+      return isArabic ? 'font-arabic-heading' : 'font-heading-en';
     case 'heading-medium':
-      return isArabic ? 'font-arabic-bold' : 'font-heading-en-medium';
+      return isArabic ? 'font-arabic-heading-bold' : 'font-heading-en-medium';
     case 'body':
-      return isArabic ? 'font-arabic-regular' : 'font-body-en';
+      return isArabic ? 'font-arabic-body' : 'font-body-en';
     case 'body-semibold':
-      return isArabic ? 'font-arabic-bold' : 'font-body-en-semibold';
+      return isArabic ? 'font-arabic-body-bold' : 'font-body-en-semibold';
     default:
-      return isArabic ? 'font-arabic-regular' : 'font-body-en';
+      return isArabic ? 'font-arabic-body' : 'font-body-en';
   }
 }

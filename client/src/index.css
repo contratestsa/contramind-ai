@@ -109,12 +109,13 @@
     font-weight: 600; /* SemiBold */
   }
 
-  .font-arabic-regular {
+  /* Arabic - All Purposes using Almarai */
+  .font-arabic-regular, .font-arabic-heading, .font-arabic-body {
     font-family: 'Almarai', sans-serif;
     font-weight: 400; /* Regular */
   }
 
-  .font-arabic-bold {
+  .font-arabic-bold, .font-arabic-heading-bold, .font-arabic-body-bold {
     font-family: 'Almarai', sans-serif;
     font-weight: 700; /* Bold */
   }
