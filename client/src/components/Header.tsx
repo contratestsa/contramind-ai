@@ -27,7 +27,7 @@ export default function Header() {
       className="bg-navy shadow-custom sticky top-0 z-50"
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-18 lg:h-22">
+        <div className="flex justify-between items-center h-20 lg:h-24">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -39,7 +39,7 @@ export default function Header() {
               <img 
                 src={logoImage} 
                 alt="ContraMind.ai Logo" 
-                className="w-40 h-10 object-contain"
+                className="w-56 h-14 object-contain"
               />
             </div>
           </motion.div>
