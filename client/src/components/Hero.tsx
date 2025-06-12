@@ -45,7 +45,7 @@ export default function Hero() {
               transition={{ delay: 0.4 }}
               className="text-4xl lg:text-6xl font-heading font-bold leading-tight pt-[12px] pb-[12px] pl-[-3px] pr-[-3px] ml-[-22px] mr-[-22px] mt-[19px] mb-[19px]"
             >
-              <span className="gradient-text mt-[40px] mb-[40px] pt-[8px] pb-[8px]">
+              <span className="gradient-text ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[75px] pb-[75px] mt-[28px] mb-[28px]">
                 {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review Supporting Arabic Language')}
               </span>
             </motion.h1>
