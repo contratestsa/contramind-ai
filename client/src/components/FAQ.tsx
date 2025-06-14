@@ -62,6 +62,16 @@ export default function FAQ() {
         en: 'Absolutely. All data is stored in certified data centers within Saudi Arabia, with full compliance to local data protection regulations and international security standards. We use advanced encryption technologies during data transmission and storage, and comply with the Global Personal Data Protection Framework (GDPR) and local laws in Saudi Arabia (PDPL). We also conduct regular security testing to ensure a trusted and secure environment.',
       },
     },
+    {
+      question: {
+        ar: 'هل يمكن دمج ContraMind بسهولة في أنظمة العمل الحالية لدي؟',
+        en: 'Can ContraMind be easily integrated into my existing work systems?',
+      },
+      answer: {
+        ar: 'نعم، تم تصميم ContraMind للتكامل السلس مع أنظمة العمل المختلفة. نوفر واجهات برمجة تطبيقات (APIs) شاملة وموصلات جاهزة للأنظمة الشائعة مثل Microsoft Office، Google Workspace، وأنظمة إدارة الوثائق المختلفة. كما نقدم دعماً فنياً متخصصاً لضمان عملية دمج سلسة دون تعطيل سير العمل الحالي.',
+        en: 'Yes, ContraMind is designed for seamless integration with various work systems. We provide comprehensive APIs and ready-made connectors for popular systems like Microsoft Office, Google Workspace, and various document management systems. We also offer specialized technical support to ensure smooth integration without disrupting your current workflow.',
+      },
+    },
   ];
 
   const toggleFAQ = (index: number) => {
