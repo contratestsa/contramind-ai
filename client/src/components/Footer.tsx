@@ -7,9 +7,9 @@ export default function Footer() {
 
 
   const socialLinks = [
-    { icon: 'fab fa-linkedin', href: '#' },
-    { icon: 'fab fa-twitter', href: '#' },
-    { icon: 'fas fa-envelope', href: '#' },
+    { icon: 'fab fa-linkedin', href: 'https://www.linkedin.com/company/contramind-ai/' },
+    { icon: 'fab fa-twitter', href: 'https://x.com/ContraMindAI' },
+    { icon: 'fab fa-instagram', href: 'https://www.instagram.com/contramindai/' },
   ];
 
 
