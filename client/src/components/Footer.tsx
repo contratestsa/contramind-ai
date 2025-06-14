@@ -4,12 +4,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 export default function Footer() {
   const { t } = useLanguage();
 
-  const companyLinks = [
-    { ar: 'من نحن', en: 'About Us', href: '#' },
-    { ar: 'الميزات', en: 'Features', href: '#' },
-    { ar: 'الأمان', en: 'Security', href: '#' },
-    { ar: 'اتصل بنا', en: 'Contact', href: '#' },
-  ];
+
 
   const socialLinks = [
     { icon: 'fab fa-linkedin', href: '#' },
@@ -22,24 +17,24 @@ export default function Footer() {
   return (
     <footer className="bg-navy text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-1 gap-8 lg:gap-12">
           {/* Company Info */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-2"
+            className="text-center"
           >
             <div className="mb-6">
               <span className="text-2xl font-arabic-heading-bold">ContraMind.ai</span>
             </div>
-            <p className="text-gray-300 text-lg mb-6 max-w-md font-arabic-body">
+            <p className="text-gray-300 text-lg mb-6 max-w-md mx-auto font-arabic-body">
               {t(
                 'منصة متخصصة لإدارة ومراجعة العقود',
                 'AI-powered legal contract lifecycle platform'
               )}
             </p>
-            <div className="flex space-x-4 rtl:space-x-reverse">
+            <div className="flex justify-center space-x-4 rtl:space-x-reverse">
               {socialLinks.map((social, index) => (
                 <motion.a
                   key={index}
@@ -54,29 +49,7 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* Company Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <h4 className="font-arabic-body-bold text-lg mb-6">
-              {t('الشركة', 'Company')}
-            </h4>
-            <ul className="space-y-3">
-              {companyLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    {t(link.ar, link.en)}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+
 
 
         </div>
