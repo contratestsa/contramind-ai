@@ -47,7 +47,7 @@ export default function Features() {
       title: { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
       description: {
         ar: 'تحليل شامل للمخاطر وفقاً للقوانين السعودية',
-        en: 'Comprehensive risk analysis per Saudi regulations',
+        en: 'Comprehensive risk analysis with Saudi regulations',
       },
     },
     {
