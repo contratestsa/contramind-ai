@@ -58,8 +58,8 @@ export default function FAQ() {
         en: 'Are my information and data safe and well-protected with ContraMind?',
       },
       answer: {
-        ar: 'نعم تماماً. جميع البيانات محفوظة في مراكز بيانات معتمدة داخل المملكة العربية السعودية، مع امتثال كامل لأنظمة حماية البيانات المحلية ومعايير الأمان العالمية.',
-        en: 'Absolutely. All data is stored in certified data centers within Saudi Arabia, with full compliance to local data protection regulations and international security standards.',
+        ar: 'نعم تماماً. جميع البيانات محفوظة في مراكز بيانات معتمدة داخل المملكة العربية السعودية، مع امتثال كامل لأنظمة حماية البيانات المحلية ومعايير الأمان العالمية،إذ نستخدم تقنيات التشفير المتقدمة أثناء نقل البيانات وتخزينها، ونلتزم بإطار عمل حماية البيانات الشخصية العالمي (GDPR) والقوانين المحلية في المملكة العربية السعودية( PDPL). كما نجري اختبارات أمنية دورية لضمان بيئة موثوقة ومحكمة.',
+        en: 'Absolutely. All data is stored in certified data centers within Saudi Arabia, with full compliance to local data protection regulations and international security standards. We use advanced encryption technologies during data transmission and storage, and comply with the Global Personal Data Protection Framework (GDPR) and local laws in Saudi Arabia (PDPL). We also conduct regular security testing to ensure a trusted and secure environment.',
       },
     },
   ];
