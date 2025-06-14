@@ -34,12 +34,12 @@ export default function FAQ() {
     },
     {
       question: {
-        ar: 'هل تدعم المنصة التفاوض باللغتين؟',
-        en: 'Does the platform support bilingual negotiations?',
+        ar: 'هل تدعم ContraMind مراجعة وتحليل العقود باللغة العربية بشكل احترافي؟',
+        en: 'Does ContraMind support professional contract review and analysis in Arabic?',
       },
       answer: {
-        ar: 'نعم، منصتنا تدعم التفاوض بالعربية والإنجليزية بسلاسة. يمكن للأطراف التفاوض بأي لغة مع ترجمة فورية وحفظ لسياق المعاني القانونية الدقيقة.',
-        en: 'Yes, our platform supports seamless Arabic-English negotiations. Parties can negotiate in either language with instant translation while preserving precise legal context and meaning.',
+        ar: 'نعم بالتأكيد. ContraMind هي أول منصة ذكاء اصطناعي متخصصة في مراجعة وتحليل العقود باللغة العربية. نستخدم نماذج ذكاء اصطناعي مدربة خصيصاً على النصوص القانونية العربية والمصطلحات التجارية المحلية، مما يضمن فهماً دقيقاً للسياق القانوني والثقافي. المنصة تحلل العقود العربية بدقة عالية وتقدم تقارير شاملة بالعربية مع اقتراحات لتحسين البنود والشروط.',
+        en: 'Absolutely. ContraMind is the first AI platform specialized in Arabic contract review and analysis. We use AI models specifically trained on Arabic legal texts and local commercial terminology, ensuring precise understanding of legal and cultural context. The platform analyzes Arabic contracts with high accuracy and provides comprehensive reports in Arabic with suggestions for improving terms and conditions.',
       },
     },
     {
