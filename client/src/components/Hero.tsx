@@ -34,7 +34,7 @@ export default function Hero() {
               transition={{ delay: 0.2 }}
               className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6 glass-effect"
             >
-              <span className="animate-pulse glow-text text-[#f7fafa] font-bold">
+              <span className="animate-pulse glow-text font-bold text-[#f0f2f2]">
                 {t('احصل على 3 أشهر مجاناً عند الإطلاق', 'Get 3 Months Free at Launch')}
               </span>
             </motion.div>
