@@ -39,7 +39,7 @@ export default function Features() {
       title: { ar: 'مساعد التفاوض الذكي', en: 'Smart Negotiation Assistant' },
       description: {
         ar: 'تسريع عمليات التفاوض بين الفرق القانونية',
-        en: 'Accelerate negotiation processes between legal teams',
+        en: 'Accelerate negotiation processes between Corporate Teams',
       },
     },
     {
