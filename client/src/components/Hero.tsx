@@ -72,7 +72,7 @@ export default function Hero() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.9 + index * 0.1 }}
-                  className="bg-white/10 px-3 py-1 rounded-full"
+                  className="bg-white/10 px-3 py-1 rounded-full font-bold"
                 >
                   {t(feature.ar, feature.en)}
                 </motion.span>
