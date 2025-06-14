@@ -5,13 +5,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -114,12 +108,7 @@ export default function Waitlist() {
     joinWaitlistMutation.mutate(formData);
   };
 
-  const jobTitleOptions = [
-    { ar: 'محامي', en: 'Legal Counsel' },
-    { ar: 'مدير قانوني', en: 'Legal Manager' },
-    { ar: 'مدير عام', en: 'General Manager' },
-    { ar: 'أخرى', en: 'Other' },
-  ];
+
 
   return (
     <section id="waitlist" className="py-20 lg:py-32 bg-navy">
@@ -221,18 +210,13 @@ export default function Waitlist() {
               <Label className="block text-sm font-medium text-white mb-2">
                 {t('المنصب', 'Job Title')}
               </Label>
-              <Select value={formData.jobTitle} onValueChange={(value) => setFormData({ ...formData, jobTitle: value })}>
-                <SelectTrigger className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors">
-                  <SelectValue placeholder={t('اختر منصبك', 'Select your role')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {jobTitleOptions.map((option, index) => (
-                    <SelectItem key={index} value={t(option.ar, option.en)}>
-                      {t(option.ar, option.en)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                type="text"
+                value={formData.jobTitle}
+                onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
+                placeholder={t('منصبك الوظيفي', 'Your job title')}
+                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors"
+              />
             </div>
 
             <Button
