@@ -136,7 +136,7 @@ export default function Waitlist() {
             <span>{t('قريباً', 'Coming Soon')}</span>
           </div>
 
-          <h2 className="lg:text-5xl font-arabic-heading-bold text-white mb-6 text-[25px]">
+          <h2 className="lg:text-5xl font-arabic-heading-bold text-white mb-6 text-[20px]">
             {t('للحصول على اشتراك مجاني لمدة ٣ أشهر\n سجل الآن', 'Get 3 Months Free Subscription\nRegister Now')}
           </h2>
 
