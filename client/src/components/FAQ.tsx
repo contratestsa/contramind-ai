@@ -14,6 +14,16 @@ export default function FAQ() {
   const faqItems: FAQItem[] = [
     {
       question: {
+        ar: 'كيف تُسهل ContraMind مهمة مراجعة وتحليل العقود؟',
+        en: 'How does ContraMind facilitate contract review and analysis?',
+      },
+      answer: {
+        ar: 'تستخدم ContraMind تقنيات الذكاء الاصطناعي المتقدمة لتحليل العقود تلقائياً وتحديد النقاط الحرجة والمخاطر المحتملة. تقوم المنصة بمراجعة شاملة للبنود والشروط، وتقدم تقارير مفصلة حول المخاطر القانونية، وتقترح تعديلات لتحسين العقد وحماية مصالحك.',
+        en: 'ContraMind uses advanced AI technologies to automatically analyze contracts and identify critical points and potential risks. The platform provides comprehensive review of terms and conditions, delivers detailed reports on legal risks, and suggests modifications to improve the contract and protect your interests.',
+      },
+    },
+    {
+      question: {
         ar: 'ما الأنظمة القانونية التي تغطيها المنصة؟',
         en: 'What legal systems does the platform cover?',
       },
