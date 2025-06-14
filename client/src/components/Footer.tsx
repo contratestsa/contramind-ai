@@ -7,7 +7,7 @@ export default function Footer() {
 
 
   const socialLinks = [
-    { icon: 'fab fa-linkedin', href: 'https://www.linkedin.com/company/contramind-ai/' },
+    { icon: 'fab fa-linkedin', href: 'https://linkedin.com/company/contramind-ai' },
     { icon: 'fab fa-twitter', href: 'https://x.com/ContraMindAI' },
     { icon: 'fab fa-instagram', href: 'https://www.instagram.com/contramindai/' },
   ];
@@ -39,6 +39,8 @@ export default function Footer() {
                 <motion.a
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
