@@ -121,7 +121,7 @@ export default function Features() {
               <p className="text-gray-300 text-lg mb-6 font-arabic-body">
                 {t(
                   'عن طريق ادارة المهام وتوزيعها بسهولة، وتتبّعها٫وتسهيل عمليات التفاوض.',
-                  'Through easy task management and distribution, tracking them, and facilitating negotiation processes.'
+                  'Streamline task management and distribution, enhance progress tracking, and accelerate negotiation workflows.'
                 )}
               </p>
               <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
