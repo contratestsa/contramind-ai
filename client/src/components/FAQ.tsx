@@ -54,8 +54,8 @@ export default function FAQ() {
     },
     {
       question: {
-        ar: 'هل تلتزم المنصة بقوانين حماية البيانات المحلية والدولية ؟',
-        en: 'Does the platform comply with local and international data protection laws?',
+        ar: 'هل معلوماتي وبياناتي آمنة ومحفوظة جيدًا لدى ContraMind؟',
+        en: 'Are my information and data safe and well-protected with ContraMind?',
       },
       answer: {
         ar: 'نعم تماماً. جميع البيانات محفوظة في مراكز بيانات معتمدة داخل المملكة العربية السعودية، مع امتثال كامل لأنظمة حماية البيانات المحلية ومعايير الأمان العالمية.',
