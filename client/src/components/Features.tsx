@@ -31,7 +31,7 @@ export default function Features() {
       title: { ar: 'صياغة العقود بالذكاءالاصطناعي', en: 'AI Contract Drafting' },
       description: {
         ar: 'إنشاء مسودات عقود احترافية بنقرة واحدة',
-        en: 'Generate professional contract drafts with one click',
+        en: 'Generate professional contract drafts with only one click',
       },
     },
     {
