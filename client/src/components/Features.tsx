@@ -63,7 +63,7 @@ export default function Features() {
       title: { ar: 'توقيع إلكتروني معتمد', en: 'Certified ESignature' },
       description: {
         ar: 'توقيع إلكتروني معتمد ومتوافق مع المعايير المحلية',
-        en: 'Certified esignature compliant with local standards',
+        en: 'Certified esignature compliant with local regulations',
       },
     },
   ];
