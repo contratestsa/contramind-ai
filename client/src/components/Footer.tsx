@@ -96,17 +96,7 @@ export default function Footer() {
                 '© 2025 ContraMind Inc. All rights reserved.'
               )}
             </p>
-            <div className="flex space-x-6 rtl:space-x-reverse text-sm">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                {t('سياسة الخصوصية', 'Privacy Policy')}
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                {t('شروط الاستخدام', 'Terms of Service')}
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                {t('اتصل بنا', 'Contact')}
-              </a>
-            </div>
+
           </div>
         </motion.div>
       </div>
