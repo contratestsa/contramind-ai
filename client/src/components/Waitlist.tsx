@@ -208,18 +208,32 @@ export default function Waitlist() {
               </div>
             </div>
 
-            <div>
-              <Label className="block text-sm font-medium text-navy mb-2">
-                {t('رقم الهاتف', 'Phone Number')} *
-              </Label>
-              <Input
-                type="tel"
-                value={formData.phoneNumber}
-                onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                placeholder={t('+966501234567', '+966501234567')}
-                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white text-black"
-                required
-              />
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <Label className="block text-sm font-medium text-navy mb-2">
+                  {t('رقم الهاتف', 'Phone Number')} *
+                </Label>
+                <Input
+                  type="tel"
+                  value={formData.phoneNumber}
+                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                  placeholder={t('+966501234567', '+966501234567')}
+                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white text-black"
+                  required
+                />
+              </div>
+              <div>
+                <Label className="block text-sm font-medium text-navy mb-2">
+                  {t('اسم الشركة', 'Company Name')}
+                </Label>
+                <Input
+                  type="text"
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  placeholder={t('شركتك', 'Your company')}
+                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white text-black"
+                />
+              </div>
             </div>
 
             {/* Success Message */}
@@ -244,19 +258,6 @@ export default function Waitlist() {
                 </p>
               </motion.div>
             )}
-
-            <div>
-              <Label className="block text-sm font-medium text-navy mb-2">
-                {t('اسم الشركة', 'Company Name')}
-              </Label>
-              <Input
-                type="text"
-                value={formData.company}
-                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                placeholder={t('شركتك', 'Your company')}
-                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white text-black"
-              />
-            </div>
 
             <div>
               <Label className="block text-sm font-medium text-navy mb-2">
