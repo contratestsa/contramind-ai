@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,16 @@ export default function Waitlist() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Fetch waitlist count
+  const { data: waitlistCount } = useQuery({
+    queryKey: ['/api/waitlist/count'],
+    queryFn: async () => {
+      const response = await fetch('/api/waitlist/count');
+      const data = await response.json();
+      return data.count || 0;
+    },
+  });
   
   const [formData, setFormData] = useState<WaitlistData>({
     fullName: '',
@@ -54,6 +64,7 @@ export default function Waitlist() {
         company: '',
         jobTitle: '',
       });
+      // Invalidate and refetch the waitlist count after successful registration
       queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
     },
     onError: () => {
@@ -248,7 +259,7 @@ export default function Waitlist() {
               <div className="flex items-center text-sm text-sky font-medium">
                 <i className="fas fa-users ml-2 rtl:ml-0 rtl:mr-2" />
                 <span>
-                  {t('🎉 217 محترف انضم اليوم', '🎉 217 professionals joined today')}
+                  {t(`🎉 ${waitlistCount || 0} محترف انضم`, `🎉 ${waitlistCount || 0} professionals joined`)}
                 </span>
               </div>
             </div>
