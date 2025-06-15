@@ -166,7 +166,7 @@ export default function Waitlist() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <Label className="block text-sm font-medium text-white mb-2">
+                <Label className="block text-sm font-medium text-navy mb-2">
                   {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
@@ -174,12 +174,12 @@ export default function Waitlist() {
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   placeholder={t('اسمك الكامل', 'Your full name')}
-                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors"
+                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white"
                   required
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-white mb-2">
+                <Label className="block text-sm font-medium text-navy mb-2">
                   {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
@@ -194,7 +194,7 @@ export default function Waitlist() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-white mb-2">
+              <Label className="block text-sm font-medium text-navy mb-2">
                 {t('اسم الشركة', 'Company Name')}
               </Label>
               <Input
@@ -202,12 +202,12 @@ export default function Waitlist() {
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 placeholder={t('شركتك', 'Your company')}
-                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors"
+                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white"
               />
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-white mb-2">
+              <Label className="block text-sm font-medium text-navy mb-2">
                 {t('المنصب', 'Job Title')}
               </Label>
               <Input
@@ -215,7 +215,7 @@ export default function Waitlist() {
                 value={formData.jobTitle}
                 onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
                 placeholder={t('منصبك الوظيفي', 'Your job title')}
-                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors"
+                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white"
               />
             </div>
 
