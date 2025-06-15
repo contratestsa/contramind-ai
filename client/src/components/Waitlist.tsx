@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,17 @@ export default function Waitlist() {
     email: '',
     company: '',
     jobTitle: '',
+  });
+
+  // Fetch the actual waitlist count from the database
+  const { data: waitlistCount } = useQuery({
+    queryKey: ['/api/waitlist/count'],
+    queryFn: async () => {
+      const response = await fetch('/api/waitlist/count');
+      if (!response.ok) throw new Error('Failed to fetch waitlist count');
+      const data = await response.json();
+      return data.count;
+    },
   });
 
   const [countdown, setCountdown] = useState({
@@ -248,7 +259,10 @@ export default function Waitlist() {
               <div className="flex items-center text-sm text-sky font-medium">
                 <i className="fas fa-users ml-2 rtl:ml-0 rtl:mr-2" />
                 <span>
-                  {t('🎉 217 محترف انضم اليوم', '🎉 217 professionals joined today')}
+                  {t(
+                    `🎉 ${waitlistCount || 0} محترف انضم اليوم`,
+                    `🎉 ${waitlistCount || 0} professionals joined today`
+                  )}
                 </span>
               </div>
             </div>
