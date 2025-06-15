@@ -17,7 +17,7 @@ interface LanguageProviderProps {
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguage] = React.useState<Language>('ar');
-  const dir = language === 'ar' ? 'rtl' : 'ltr';
+  const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
 
   const t = React.useCallback((ar: string, en: string) => {
     return language === 'ar' ? ar : en;
@@ -40,7 +40,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     setLanguage,
     t,
     dir
-  }), [language, setLanguage, t, dir]);
+  }), [language, t, dir]);
 
   return (
     <LanguageContext.Provider value={contextValue}>
