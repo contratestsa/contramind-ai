@@ -172,7 +172,7 @@ export default function Waitlist() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-grey rounded-2xl p-8 lg:p-12 shadow-custom-hover"
+          className="bg-sky/20 rounded-2xl p-8 lg:p-12 shadow-custom-hover"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
