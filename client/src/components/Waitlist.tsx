@@ -178,7 +178,7 @@ export default function Waitlist() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="bg-white rounded-2xl p-8 lg:p-12 shadow-custom-hover"
         >
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="waitlist-form space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <Label className="block text-sm font-medium text-navy mb-2">

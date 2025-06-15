@@ -34,6 +34,19 @@
   --transition: .25s ease;
 }
 
+/* Force input text to be black */
+.waitlist-form input[type="text"],
+.waitlist-form input[type="email"], 
+.waitlist-form input[type="tel"] {
+  color: #000000 !important;
+}
+
+.waitlist-form input[type="text"]:focus,
+.waitlist-form input[type="email"]:focus,
+.waitlist-form input[type="tel"]:focus {
+  color: #000000 !important;
+}
+
 .dark {
   --background: #0C2836;
   --foreground: hsl(0, 0%, 98%);
