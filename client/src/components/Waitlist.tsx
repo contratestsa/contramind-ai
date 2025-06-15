@@ -172,12 +172,12 @@ export default function Waitlist() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-navy/90 rounded-2xl p-8 lg:p-12 shadow-custom-hover"
+          className="bg-grey rounded-2xl p-8 lg:p-12 shadow-custom-hover"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <Label className="block text-sm font-medium text-white mb-2">
+                <Label className="block text-sm font-medium text-navy mb-2">
                   {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
@@ -190,7 +190,7 @@ export default function Waitlist() {
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-white mb-2">
+                <Label className="block text-sm font-medium text-navy mb-2">
                   {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
@@ -205,7 +205,7 @@ export default function Waitlist() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-white mb-2">
+              <Label className="block text-sm font-medium text-navy mb-2">
                 {t('اسم الشركة', 'Company Name')}
               </Label>
               <Input
@@ -218,7 +218,7 @@ export default function Waitlist() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-white mb-2">
+              <Label className="block text-sm font-medium text-navy mb-2">
                 {t('المنصب', 'Job Title')}
               </Label>
               <Input
@@ -250,7 +250,7 @@ export default function Waitlist() {
           {/* Privacy & Stats */}
           <div className="mt-8 pt-6 border-t border-grey/50">
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-gray-600">
                 {t(
                   'لن نشارك بريدك الإلكتروني أبداً. إلغاء الاشتراك في أي وقت.',
                   "We'll never share your email. Unsubscribe anytime."
