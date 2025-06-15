@@ -64,14 +64,13 @@ export default function Footer() {
           transition={{ delay: 0.6 }}
           className="border-t border-gray-700 mt-12 pt-8"
         >
-          <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-            <p className="text-gray-400 text-sm">
+          <div className="flex justify-center items-center">
+            <p className="text-gray-400 text-sm text-center">
               {t(
                 '© 2025 ContraMind Inc. جميع الحقوق محفوظة.',
                 '© 2025 ContraMind Inc. All rights reserved.'
               )}
             </p>
-
           </div>
         </motion.div>
       </div>
