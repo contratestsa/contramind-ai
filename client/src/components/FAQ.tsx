@@ -11,73 +11,33 @@ export default function FAQ() {
 
   const faqItems: FAQItem[] = [
     {
-      question: {
-        ar: 'كيف تُسهل ContraMind مهمة مراجعة وتحليل العقود؟',
-        en: 'How does ContraMind facilitate contract review and analysis?',
-      },
-      answer: {
-        ar: 'تستخدم ContraMind تقنيات الذكاء الاصطناعي المتقدمة لتحليل العقود تلقائياً وتحديد النقاط الحرجة والمخاطر المحتملة. تقوم المنصة بمراجعة شاملة للبنود والشروط، وتقدم تقارير مفصلة حول المخاطر القانونية، وتقترح تعديلات لتحسين العقد وحماية مصالحك.',
-        en: 'ContraMind uses advanced AI technologies to automatically analyze contracts and identify critical points and potential risks. The platform provides comprehensive review of terms and conditions, delivers detailed reports on legal risks, and suggests modifications to improve the contract and protect your interests.',
-      },
+      question: 'كيف تُسهل ContraMind مهمة مراجعة وتحليل العقود؟',
+      answer: 'تستخدم ContraMind تقنيات الذكاء الاصطناعي المتقدمة لمراجعة العقود تلقائياً، تحديد النقاط الحرجة، تسليط الضوء على المخاطر المحتملة، وتقديم توصيات لتحسين شروط العقد. هذا يوفر الوقت ويقلل من الأخطاء البشرية.'
     },
     {
-      question: {
-        ar: 'ما الأنظمة القانونية التي تغطيها المنصة؟',
-        en: 'What legal systems does the platform cover?',
-      },
-      answer: {
-        ar: 'نغطي جميع القوانين التجارية الأساسية بما في ذلك قانون الشركات، قانون العمل، قانون التجارة الإلكترونية، وأنظمة الاستثمار الأجنبي ، وجميع القوانين المتعلقه بالعقود.ونقوم بتحديث قاعدة البيانات باستمرار لتشمل جميع التعديلات الجديدة.',
-        en: 'We cover all fundamental commercial laws including Companies Law, Labor Law, E-Commerce Law, Foreign Investment regulations, and all contract-related laws. We continuously update our database to include all new amendments.',
-      },
+      question: 'هل تدعم المنصة اللغة العربية بشكل كامل؟',
+      answer: 'نعم، ContraMind هي أول منصة قانونية تدعم اللغة العربية بشكل كامل. يمكنها معالجة وتحليل العقود المكتوبة بالعربية، وتقديم التوصيات والتقارير باللغة العربية أيضاً.'
     },
     {
-      question: {
-        ar: 'هل تدعم ContraMind مراجعة وتحليل العقود باللغة العربية بشكل احترافي؟',
-        en: 'Does ContraMind support professional contract review and analysis in Arabic?',
-      },
-      answer: {
-        ar: 'نعم بالتأكيد. ContraMind هي أول منصة ذكاء اصطناعي متخصصة في مراجعة وتحليل العقود باللغة العربية. نستخدم نماذج ذكاء اصطناعي مدربة خصيصاً على النصوص القانونية العربية والمصطلحات التجارية المحلية، مما يضمن فهماً دقيقاً للسياق القانوني والثقافي. المنصة تحلل العقود العربية بدقة عالية وتقدم تقارير شاملة بالعربية مع اقتراحات لتحسين البنود والشروط.',
-        en: 'Absolutely. ContraMind is the first AI platform specialized in Arabic contract review and analysis. We use AI models specifically trained on Arabic legal texts and local commercial terminology, ensuring precise understanding of legal and cultural context. The platform analyzes Arabic contracts with high accuracy and provides comprehensive reports in Arabic with suggestions for improving terms and conditions.',
-      },
+      question: 'ما هي أنواع العقود التي تدعمها المنصة؟',
+      answer: 'تدعم ContraMind جميع أنواع العقود التجارية والقانونية، بما في ذلك عقود البيع والشراء، عقود العمل، عقود الشراكة، عقود الخدمات، وعقود التوريد. كما تتكيف مع القوانين المحلية لدول الخليج والشرق الأوسط.'
     },
     {
-      question: {
-        ar: 'ما هي الدول التالية في المنطقة؟',
-        en: 'Which MENA jurisdictions next?',
-      },
-      answer: {
-        ar: 'خطتنا التوسعية تشمل دولة الإمارات العربية المتحدة أولاً، تليها مصر والأردن والكويت. نهدف لتغطية 12 دولة في المنطقة خلال السنتين القادمتين.',
-        en: 'Our expansion roadmap includes UAE first, followed by Egypt, Jordan, and Kuwait. We aim to cover 12 MENA countries within the next two years.',
-      },
+      question: 'كيف تضمن المنصة أمان وسرية البيانات؟',
+      answer: 'نحن نلتزم بأعلى معايير الأمان والخصوصية. جميع البيانات مُشفرة ومحمية بتقنيات أمان متقدمة. نحن متوافقون مع معايير الأمان الدولية ولا نشارك بياناتك مع أي طرف ثالث.'
     },
     {
-      question: {
-        ar: 'هل معلوماتي وبياناتي آمنة ومحفوظة جيدًا لدى ContraMind؟',
-        en: 'Are my information and data safe and well-protected with ContraMind?',
-      },
-      answer: {
-        ar: 'نعم تماماً. جميع البيانات محفوظة في مراكز بيانات معتمدة داخل المملكة العربية السعودية، مع امتثال كامل لأنظمة حماية البيانات المحلية ومعايير الأمان العالمية،إذ نستخدم تقنيات التشفير المتقدمة أثناء نقل البيانات وتخزينها، ونلتزم بإطار عمل حماية البيانات الشخصية العالمي (GDPR) والقوانين المحلية في المملكة العربية السعودية( PDPL). كما نجري اختبارات أمنية دورية لضمان بيئة موثوقة ومحكمة.',
-        en: 'Absolutely. All data is stored in certified data centers within Saudi Arabia, with full compliance to local data protection regulations and international security standards. We use advanced encryption technologies during data transmission and storage, and comply with the Global Personal Data Protection Framework (GDPR) and local laws in Saudi Arabia (PDPL). We also conduct regular security testing to ensure a trusted and secure environment.',
-      },
+      question: 'متى سيتم إطلاق المنصة؟',
+      answer: 'نخطط لإطلاق النسخة التجريبية في الربع الأول من 2024. المنضمون لقائمة الانتظار سيحصلون على وصول مبكر للمنصة وعروض خاصة للاشتراك.'
     },
     {
-      question: {
-        ar: 'هل يمكن دمج ContraMind بسهولة في أنظمة العمل الحالية لدي؟',
-        en: 'Can ContraMind be easily integrated into my existing work systems?',
-      },
-      answer: {
-        ar: 'نعم، تم تصميم ContraMind للتكامل السلس مع أنظمة العمل المختلفة. نوفر واجهات برمجة تطبيقات (APIs) شاملة وموصلات جاهزة للأنظمة الشائعة مثل Microsoft Office، Google Workspace، وأنظمة إدارة الوثائق المختلفة. كما نقدم دعماً فنياً متخصصاً لضمان عملية دمج سلسة دون تعطيل سير العمل الحالي.',
-        en: 'Yes, ContraMind is designed for seamless integration with various work systems. We provide comprehensive APIs and ready-made connectors for popular systems like Microsoft Office, Google Workspace, and various document management systems. We also offer specialized technical support to ensure smooth integration without disrupting your current workflow.',
-      },
-    },
+      question: 'هل يمكن للشركات الكبيرة استخدام المنصة؟',
+      answer: 'بالطبع! ContraMind مصممة للشركات من جميع الأحجام. نوفر حلول مخصصة للشركات الكبيرة تشمل إمكانيات إدارة متقدمة، تكامل مع الأنظمة الحالية، ودعم فني مخصص.'
+    }
   ];
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <section className="py-20 lg:py-32 bg-navy">
+    <section className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -85,52 +45,58 @@ export default function FAQ() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6">
-            {t('أسئلة شائعة', 'Frequently Asked Questions')}
+          <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">
+            الأسئلة الشائعة
           </h2>
-          <p className="text-xl text-gray-300 font-arabic-body">
-            {t('إجابات سريعة على الأسئلة الأكثر شيوعاً', 'Quick answers to common questions')}
+          <p className="text-xl text-gray-600">
+            إجابات على أهم الأسئلة حول منصة ContraMind.ai
           </p>
         </motion.div>
 
-        <div className="space-y-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="space-y-4"
+        >
           {faqItems.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-700/50 border border-gray-600 rounded-2xl overflow-hidden shadow-custom hover:shadow-custom-hover transition-all duration-300"
+              className="border border-gray-200 rounded-lg overflow-hidden"
             >
               <button
-                onClick={() => toggleFAQ(index)}
-                className="w-full px-8 py-6 flex justify-between items-center hover:bg-gray-600/30 transition-colors"
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full text-right p-6 bg-grey/10 hover:bg-grey/20 transition-colors"
               >
-                <h3 className={`text-lg font-arabic-body-bold text-white ${language === 'ar' ? 'text-right' : 'text-left'}`}>
-                  {t(item.question.ar, item.question.en)}
-                </h3>
-                <motion.div
-                  animate={{ rotate: openIndex === index ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex items-center"
-                >
-                  <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-white`} />
-                </motion.div>
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-semibold text-navy">
+                    {item.question}
+                  </h3>
+                  <motion.div
+                    animate={{ rotate: openIndex === index ? 45 : 0 }}
+                    className="text-navy text-2xl font-bold"
+                  >
+                    +
+                  </motion.div>
+                </div>
               </button>
               
               <AnimatePresence>
                 {openIndex === index && (
                   <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    initial={{ height: 0 }}
+                    animate={{ height: 'auto' }}
+                    exit={{ height: 0 }}
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-8 pb-6">
-                      <p className={`text-gray-300 leading-relaxed font-arabic-body ${language === 'ar' ? 'text-right' : 'text-left'}`}>
-                        {t(item.answer.ar, item.answer.en)}
+                    <div className="p-6 bg-white border-t border-gray-200">
+                      <p className="text-gray-600 leading-relaxed">
+                        {item.answer}
                       </p>
                     </div>
                   </motion.div>
@@ -138,7 +104,7 @@ export default function FAQ() {
               </AnimatePresence>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

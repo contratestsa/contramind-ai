@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 
 export default function Features() {
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -25,71 +24,43 @@ export default function Features() {
 
   const features = [
     {
-      icon: 'fas fa-robot',
-      title: { ar: 'صياغة العقود بالذكاءالاصطناعي', en: 'AI Contract Drafting' },
-      description: {
-        ar: 'إنشاء مسودات عقود احترافية بنقرة واحدة',
-        en: 'Generate professional contract drafts with only one click',
-      },
+      title: 'مراجعة وتحليل العقود بذكاء',
+      description: 'تحليل شامل للعقود باستخدام الذكاء الاصطناعي لتحديد المخاطر والثغرات',
+      icon: '📋'
     },
     {
-      icon: 'fas fa-handshake',
-      title: { ar: 'مساعد التفاوض الذكي', en: 'Smart Negotiation Assistant' },
-      description: {
-        ar: 'تسريع عمليات التفاوض بين الإدارات في الشركة',
-        en: 'Accelerate negotiation processes between Corporate Teams',
-      },
+      title: 'صياغة عقود احترافية',
+      description: 'إنشاء عقود قانونية متوافقة مع الأنظمة المحلية والدولية',
+      icon: '✍️'
     },
     {
-      icon: 'fas fa-search',
-      title: { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
-      description: {
-        ar: 'تحليل شامل للمخاطر وفقاً للقوانين السعودية',
-        en: 'Comprehensive risk analysis with Saudi regulations',
-      },
-    },
-    {
-      icon: 'fas fa-clipboard-check',
-      title: { ar: 'مراقبة الإمتثال', en: 'Compliance Monitoring' },
-      description: {
-        ar: 'متابعة مستمرة للامتثال والتحديثات التنظيمية',
-        en: 'Continuous compliance tracking and regulatory updates',
-      },
-    },
-    {
-      icon: 'fas fa-signature',
-      title: { ar: 'توقيع إلكتروني معتمد', en: 'Certified ESignature' },
-      description: {
-        ar: 'توقيع إلكتروني معتمد ومتوافق مع المعايير المحلية',
-        en: 'Certified esignature compliant with local regulations',
-      },
-    },
+      title: 'إدارة دورة حياة العقود',
+      description: 'تتبع العقود من الإنشاء إلى التنفيذ مع تنبيهات للمواعيد المهمة',
+      icon: '🔄'
+    }
   ];
 
   return (
-    <section id="product" className="py-20 lg:py-32 bg-navy">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           variants={containerVariants}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
           <motion.h2
             variants={itemVariants}
-            className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6"
+            className="text-3xl lg:text-4xl font-bold text-navy mb-4"
           >
-            {t('ميزات متقدمة للمحترفين', 'Advanced Features for Professionals')}
+            ميزات ContraMind.ai
           </motion.h2>
           <motion.p
             variants={itemVariants}
-            className="text-xl text-gray-300 font-arabic-body max-w-3xl mx-auto"
+            className="text-xl text-gray-600 max-w-3xl mx-auto"
           >
-            {t(
-              'من ثلاثة أسابيع إلى ساعات',
-              'From Weeks to Hours → Transforming Contract Management'
-            )}
+            منصة شاملة لإدارة العقود مدعومة بالذكاء الاصطناعي
           </motion.p>
         </motion.div>
 
@@ -98,87 +69,17 @@ export default function Features() {
           whileInView="visible"
           viewport={{ once: true }}
           variants={containerVariants}
-          className="grid lg:grid-cols-2 gap-12 mb-20"
-        >
-          {/* Main Feature Card */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-sky/10 rounded-full transform translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-500" />
-            <div className="relative">
-              <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-clock text-2xl text-white" />
-              </div>
-              <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white mb-4">
-                {t(
-                  'عزّز إنتاجية أعمالك',
-                  'Enhance Your Business Productivity'
-                )}
-              </h3>
-              <p className="text-gray-300 text-lg mb-6 font-arabic-body">
-                {t(
-                  'عن طريق ادارة المهام وتوزيعها بسهولة، وتتبّعها٫وتسهيل عمليات التفاوض.',
-                  'Streamline task management and distribution, enhance progress tracking, and accelerate negotiation workflows.'
-                )}
-              </p>
-              <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
-                <span>{t('اكتشف المزيد', 'Learn More')}</span>
-                <i className="fas fa-arrow-left mr-2 rtl:mr-0 rtl:ml-2 flip-rtl" />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Secondary Feature Card */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
-          >
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-navy/10 rounded-full transform -translate-x-12 translate-y-12 group-hover:scale-110 transition-transform duration-500" />
-            <div className="relative">
-              <div className="w-16 h-16 bg-navy/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-cogs text-2xl text-white" />
-              </div>
-              <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white mb-4">
-                {t('مراجعة قانونية وتحليل المخاطر', 'Legal Review and Risk Analysis')}
-              </h3>
-              <p className="text-gray-300 text-lg mb-6 font-arabic-body">
-                {t(
-                  'أداة واحدة: صياغة ← تفاوض ← مراجعة← تحليل مخاطر ← توقيع  ← حفظ',
-                  'One tool: Draft → Negotiate → Review → Risk Analysis → Sign → Save'
-                )}
-              </p>
-              <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
-                <span>{t('استكشف الأدوات', 'Explore Tools')}</span>
-                <i className="fas fa-arrow-left mr-2 rtl:mr-0 rtl:ml-2 flip-rtl" />
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Feature Grid */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={containerVariants}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid md:grid-cols-3 gap-8"
         >
           {features.map((feature, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              className="text-center p-6 rounded-2xl hover:bg-gray-700/30 transition-all duration-300 hover:shadow-custom group"
+              className="bg-grey/10 p-8 rounded-2xl text-center hover:shadow-lg transition-shadow"
             >
-              <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                <i className={`${feature.icon} text-2xl text-white`} />
-              </div>
-              <h4 className="text-xl font-space font-semibold text-white mb-3">
-                {t(feature.title.ar, feature.title.en)}
-              </h4>
-              <p className="text-gray-300">
-                {t(feature.description.ar, feature.description.en)}
-              </p>
+              <div className="text-4xl mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-bold text-navy mb-4">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>
