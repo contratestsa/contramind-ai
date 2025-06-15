@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo, createContext } from 'react';
+import { useState, useCallback, useEffect, useMemo, createContext } from 'react';
 
 export type Language = 'ar' | 'en';
 
