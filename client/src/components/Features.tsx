@@ -147,10 +147,7 @@ export default function Features() {
                   'One tool: Draft → Negotiate → Review → Risk Analysis → Sign → Save'
                 )}
               </p>
-              <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
-                <span>{t('استكشف الأدوات', 'Explore Tools')}</span>
-                <i className="fas fa-arrow-left mr-2 rtl:mr-0 rtl:ml-2 flip-rtl" />
-              </div>
+
             </div>
           </motion.div>
         </motion.div>
