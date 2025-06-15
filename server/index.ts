@@ -56,25 +56,9 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Try port 5000 first, then fallback to available port
-  const preferredPort = 5000;
-  const port = process.env.PORT || preferredPort;
+  const port = process.env.PORT || 5000;
   
-  const startServer = (portToTry: number) => {
-    server.listen({
-      port: portToTry,
-      host: "0.0.0.0",
-    }, () => {
-      log(`serving on port ${portToTry}`);
-    }).on('error', (err: any) => {
-      if (err.code === 'EADDRINUSE') {
-        log(`Port ${portToTry} is busy, trying port ${portToTry + 1}`);
-        startServer(portToTry + 1);
-      } else {
-        throw err;
-      }
-    });
-  };
-  
-  startServer(Number(port));
+  server.listen(port, "0.0.0.0", () => {
+    log(`serving on port ${port}`, "express");
+  });
 })();
