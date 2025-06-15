@@ -124,10 +124,7 @@ export default function Features() {
                   'Streamline task management and distribution, enhance progress tracking, and accelerate negotiation workflows.'
                 )}
               </p>
-              <div className="flex items-center text-sky font-semibold group-hover:translate-x-2 rtl:group-hover:-translate-x-2 transition-transform duration-300">
-                <span>{t('اكتشف المزيد', 'Learn More')}</span>
-                <i className="fas fa-arrow-left mr-2 rtl:mr-0 rtl:ml-2 flip-rtl" />
-              </div>
+
             </div>
           </motion.div>
 
