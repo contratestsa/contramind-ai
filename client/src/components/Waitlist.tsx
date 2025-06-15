@@ -12,6 +12,7 @@ import { apiRequest } from '@/lib/queryClient';
 interface WaitlistData {
   fullName: string;
   email: string;
+  phoneNumber: string;
   company: string;
   jobTitle: string;
 }
@@ -24,6 +25,7 @@ export default function Waitlist() {
   const [formData, setFormData] = useState<WaitlistData>({
     fullName: '',
     email: '',
+    phoneNumber: '',
     company: '',
     jobTitle: '',
   });
@@ -58,6 +60,7 @@ export default function Waitlist() {
       setFormData({
         fullName: '',
         email: '',
+        phoneNumber: '',
         company: '',
         jobTitle: '',
       });
@@ -106,7 +109,7 @@ export default function Waitlist() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.email || !formData.fullName) {
+    if (!formData.email || !formData.fullName || !formData.phoneNumber) {
       toast({
         title: t('بيانات مطلوبة', 'Required fields'),
         description: t(
@@ -203,6 +206,20 @@ export default function Waitlist() {
                   required
                 />
               </div>
+            </div>
+
+            <div>
+              <Label className="block text-sm font-medium text-navy mb-2">
+                {t('رقم الهاتف', 'Phone Number')} *
+              </Label>
+              <Input
+                type="tel"
+                value={formData.phoneNumber}
+                onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                placeholder={t('+966501234567', '+966501234567')}
+                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white text-black"
+                required
+              />
             </div>
 
             {/* Success Message */}

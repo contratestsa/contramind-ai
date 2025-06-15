@@ -12,6 +12,7 @@ export const waitlistEntries = pgTable("waitlist_entries", {
   id: serial("id").primaryKey(),
   fullName: text("full_name").notNull(),
   email: text("email").notNull().unique(),
+  phoneNumber: text("phone_number").notNull(),
   company: text("company").default(""),
   jobTitle: text("job_title").default(""),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -25,6 +26,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertWaitlistSchema = createInsertSchema(waitlistEntries).pick({
   fullName: true,
   email: true,
+  phoneNumber: true,
   company: true,
   jobTitle: true,
 });
