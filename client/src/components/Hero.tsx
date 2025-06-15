@@ -1,10 +1,7 @@
 import { motion } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 
 export default function Hero() {
-  const { t } = useLanguage();
-
   const scrollToWaitlist = () => {
     const element = document.querySelector('#waitlist');
     if (element) {
@@ -35,7 +32,7 @@ export default function Hero() {
               className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6 glass-effect"
             >
               <span className="animate-pulse glow-text font-bold text-[#f0f2f2]">
-                {t('احصل على 3 أشهر مجاناً عند الإطلاق', 'Get 3 Months Free at Launch')}
+                احصل على 3 أشهر مجاناً عند الإطلاق
               </span>
             </motion.div>
 
@@ -46,13 +43,9 @@ export default function Hero() {
               className="text-4xl lg:text-6xl font-arabic-heading-bold leading-loose pt-[12px] pb-[12px] pl-[-3px] pr-[-3px] ml-[-22px] mr-[-22px] mt-[19px] mb-[19px]"
             >
               <span className="gradient-text ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[75px] pb-[75px] mt-[28px] mb-[28px]">
-                {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review,Supporting Arabic Language')}
+                أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي
               </span>
             </motion.h1>
-
-
-
-
 
             {/* Feature Highlights */}
             <motion.div
@@ -61,12 +54,7 @@ export default function Hero() {
               transition={{ delay: 0.8 }}
               className="flex flex-wrap justify-center gap-4 mb-8 text-sm"
             >
-              {[
-                { ar: 'صياغة', en: 'Drafting' },
-                { ar: 'تفاوض', en: 'Negotiation' },
-                { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
-                { ar: 'توقيع إلكتروني', en: 'ESigning' },
-              ].map((feature, index) => (
+              {['صياغة', 'تفاوض', 'تحليل مخاطر', 'توقيع إلكتروني'].map((feature, index) => (
                 <motion.span
                   key={index}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -74,7 +62,7 @@ export default function Hero() {
                   transition={{ delay: 0.9 + index * 0.1 }}
                   className="bg-white/10 px-3 py-1 rounded-full font-bold"
                 >
-                  {t(feature.ar, feature.en)}
+                  {feature}
                 </motion.span>
               ))}
             </motion.div>
@@ -83,19 +71,21 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2 }}
+              className="space-y-4"
             >
               <Button
+                size="lg"
                 onClick={scrollToWaitlist}
-                className="bg-sky text-navy px-8 py-4 rounded-custom font-semibold text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group ml-[-4px] mr-[-4px] pl-[100px] pr-[100px]"
+                className="bg-sky hover:bg-sky/90 text-navy font-bold px-8 py-3 rounded-full text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
               >
-                <span className="text-[26px] font-arabic-body-bold">
-                  {t('انضم لقائمة الإنتظار ⟶', 'Join the Early Access Waitlist ⟶')}
-                </span>
+                انضم لقائمة الانتظار
               </Button>
+              
+              <p className="text-grey/80 text-sm">
+                انضم إلى أكثر من 500+ محامي ومستشار قانوني
+              </p>
             </motion.div>
           </motion.div>
-
-
         </div>
       </div>
     </section>
