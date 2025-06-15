@@ -1,14 +1,15 @@
 export type Language = 'ar' | 'en';
 
-// Simple language hook without useState to avoid React hooks issues
+// Static language utility without hooks
+export const language: Language = 'ar';
+
+export const t = (ar: string, en: string) => {
+  return language === 'ar' ? ar : en;
+};
+
+export const dir = language === 'ar' ? 'rtl' : 'ltr';
+
+// Simple function for components to use
 export function useSimpleLanguage() {
-  const language: Language = 'ar'; // Fixed to Arabic for now
-  
-  const t = (ar: string, en: string) => {
-    return language === 'ar' ? ar : en;
-  };
-  
-  const dir = language === 'ar' ? 'rtl' : 'ltr';
-  
   return { language, t, dir };
 }

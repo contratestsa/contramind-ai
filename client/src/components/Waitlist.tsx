@@ -1,62 +1,15 @@
 import { motion } from 'framer-motion';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
-
-interface WaitlistData {
-  fullName: string;
-  email: string;
-  company: string;
-  jobTitle: string;
-}
-
 export default function Waitlist() {
   const { t } = useSimpleLanguage();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-
-  const joinWaitlistMutation = useMutation({
-    mutationFn: async (data: WaitlistData) => {
-      const response = await apiRequest('POST', '/api/waitlist', data);
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: t('تم الانضمام بنجاح!', 'Successfully joined!'),
-        description: t(
-          'شكراً لانضمامك! سنتواصل معك قريباً.',
-          'Thank you for joining! We\'ll be in touch soon.'
-        ),
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
-    },
-    onError: () => {
-      toast({
-        title: t('حدث خطأ', 'Error occurred'),
-        description: t(
-          'حدث خطأ أثناء الانضمام. يرجى المحاولة مرة أخرى.',
-          'An error occurred while joining. Please try again.'
-        ),
-        variant: 'destructive',
-      });
-    },
-  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data: WaitlistData = {
-      fullName: formData.get('fullName') as string,
-      email: formData.get('email') as string,
-      company: formData.get('company') as string,
-      jobTitle: formData.get('jobTitle') as string,
-    };
-    joinWaitlistMutation.mutate(data);
+    alert(t('شكراً لاهتمامك! سيتم تفعيل النموذج قريباً.', 'Thank you for your interest! Form will be activated soon.'));
   };
 
   return (
@@ -201,13 +154,9 @@ export default function Waitlist() {
 
               <Button
                 type="submit"
-                disabled={joinWaitlistMutation.isPending}
                 className="w-full bg-gold hover:bg-gold/90 text-navy font-arabic-body-bold py-4 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                {joinWaitlistMutation.isPending 
-                  ? t('جارٍ الانضمام...', 'Joining...') 
-                  : t('انضم إلى قائمة الانتظار', 'Join Waitlist')
-                }
+                {t('انضم إلى قائمة الانتظار', 'Join Waitlist')}
               </Button>
             </form>
 
