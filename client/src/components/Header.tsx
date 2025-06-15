@@ -61,7 +61,7 @@ export default function Header() {
               >
                 <span
                   className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-all duration-300 ease-in-out ${
-                    language === 'ar' ? 'translate-x-6 rtl:translate-x-1' : 'translate-x-1 rtl:translate-x-6'
+                    language === 'ar' ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
               </button>
