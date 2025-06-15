@@ -3,7 +3,6 @@ import { createServer, type Server } from "http";
 import { z } from "zod";
 import { storage } from "./storage";
 import { insertWaitlistSchema } from "@shared/schema";
-import { sendEmail, createWaitlistConfirmationEmail } from "./emailService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
@@ -11,25 +10,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertWaitlistSchema.parse(req.body);
       const entry = await storage.createWaitlistEntry(validatedData);
-      
-      // Send confirmation email
-      const emailContent = createWaitlistConfirmationEmail(
-        entry.fullName, 
-        entry.email,
-        'en' // Default to English, can be enhanced to detect language from request
-      );
-      
-      // Send email asynchronously - don't block the response
-      sendEmail({
-        to: entry.email,
-        from: 'noreply@contramind.ai', // You can change this to your verified sender
-        subject: emailContent.subject,
-        text: emailContent.text,
-        html: emailContent.html
-      }).catch(error => {
-        console.error('Failed to send confirmation email:', error);
-      });
-      
       res.json({ success: true, entry: { id: entry.id, createdAt: entry.createdAt } });
     } catch (error) {
       if (error instanceof z.ZodError) {
