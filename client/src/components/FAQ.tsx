@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 
@@ -9,7 +8,7 @@ interface FAQItem {
 
 export default function FAQ() {
   const { t, language } = useSimpleLanguage();
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  let openIndex: number | null = null; // Simplified without useState
 
   const faqItems: FAQItem[] = [
     {
@@ -75,7 +74,7 @@ export default function FAQ() {
   ];
 
   const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
+    // Simplified without state - FAQ items will be static for now
   };
 
   return (
