@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
@@ -19,6 +20,20 @@ export default function Waitlist() {
   const { t } = useSimpleLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  const [formData, setFormData] = useState<WaitlistData>({
+    fullName: '',
+    email: '',
+    company: '',
+    jobTitle: '',
+  });
+
+  const [countdown, setCountdown] = useState({
+    days: 30,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   const joinWaitlistMutation = useMutation({
     mutationFn: async (data: WaitlistData) => {
@@ -32,6 +47,12 @@ export default function Waitlist() {
           'شكراً لانضمامك! سنتواصل معك قريباً.',
           'Thank you for joining! We\'ll be in touch soon.'
         ),
+      });
+      setFormData({
+        fullName: '',
+        email: '',
+        company: '',
+        jobTitle: '',
       });
       queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
     },
@@ -47,178 +68,192 @@ export default function Waitlist() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 30);
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate.getTime() - now;
+
+      if (distance > 0) {
+        setCountdown({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
+      } else {
+        clearInterval(timer);
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data: WaitlistData = {
-      fullName: formData.get('fullName') as string,
-      email: formData.get('email') as string,
-      company: formData.get('company') as string,
-      jobTitle: formData.get('jobTitle') as string,
-    };
-    joinWaitlistMutation.mutate(data);
+    if (!formData.email || !formData.fullName) {
+      toast({
+        title: t('بيانات مطلوبة', 'Required fields'),
+        description: t(
+          'يرجى ملء جميع الحقول المطلوبة',
+          'Please fill in all required fields'
+        ),
+        variant: 'destructive',
+      });
+      return;
+    }
+    joinWaitlistMutation.mutate(formData);
   };
 
+
+
   return (
-    <section id="waitlist" className="py-20 lg:py-32 bg-gradient-to-br from-navy to-purple-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Content */}
+    <section id="waitlist" className="py-20 lg:py-32 bg-navy">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
+            <span>{t('قريباً', 'Coming Soon')}</span>
+          </div>
+
+          <h2 className="lg:text-5xl font-arabic-heading-bold text-white mb-6 whitespace-pre-line text-[25px]">
+            {t('للحصول على اشتراك مجاني لمدة ٣أشهر   سجل الآن', 'Get 3 Months Free Subscription   Register Now')}
+          </h2>
+
+
+
+
+
+          {/* Countdown Timer */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ scale: 0.9 }}
+            whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            className="bg-white rounded-2xl p-6 shadow-custom mb-8 max-w-md mx-auto"
           >
-            <h2 className="text-4xl lg:text-6xl font-arabic-heading-bold text-white mb-6">
-              {t('انضم إلى قائمة الانتظار', 'Join the Waitlist')}
-            </h2>
-            <p className="text-xl text-gray-300 mb-8 font-arabic-body">
-              {t(
-                'كن من أوائل المستفيدين من ثورة الذكاء الاصطناعي في الخدمات القانونية. احصل على وصول مبكر وخصومات حصرية.',
-                'Be among the first to benefit from the AI revolution in legal services. Get early access and exclusive discounts.'
-              )}
-            </p>
-
-            {/* Countdown Timer */}
-            <div className="mb-8">
-              <h3 className="text-lg font-arabic-body-bold text-white mb-4">
-                {t('الإطلاق المتوقع خلال:', 'Expected launch in:')}
-              </h3>
-              <div className="flex gap-4">
-                <div className="text-center bg-white/10 rounded-lg p-3 min-w-[80px]">
-                  <div className="text-2xl font-bold text-white">30</div>
-                  <div className="text-sm text-gray-300">{t('يوم', 'Days')}</div>
-                </div>
-                <div className="text-center bg-white/10 rounded-lg p-3 min-w-[80px]">
-                  <div className="text-2xl font-bold text-white">0</div>
-                  <div className="text-sm text-gray-300">{t('ساعة', 'Hours')}</div>
-                </div>
-                <div className="text-center bg-white/10 rounded-lg p-3 min-w-[80px]">
-                  <div className="text-2xl font-bold text-white">0</div>
-                  <div className="text-sm text-gray-300">{t('دقيقة', 'Minutes')}</div>
-                </div>
-                <div className="text-center bg-white/10 rounded-lg p-3 min-w-[80px]">
-                  <div className="text-2xl font-bold text-white">0</div>
-                  <div className="text-sm text-gray-300">{t('ثانية', 'Seconds')}</div>
-                </div>
-              </div>
+            <div className="text-sm text-gray-400 mb-2 font-arabic-body">
+              {t('متبقي على الإطلاق', 'Time until launch')}
             </div>
-
-            {/* Benefits */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
-                  <i className="fas fa-check text-navy text-sm"></i>
-                </div>
-                <span className="text-gray-300 font-arabic-body">
-                  {t('وصول مبكر حصري للمنصة', 'Exclusive early access to the platform')}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
-                  <i className="fas fa-check text-navy text-sm"></i>
-                </div>
-                <span className="text-gray-300 font-arabic-body">
-                  {t('خصم 50% على الاشتراك الأول', '50% discount on first subscription')}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
-                  <i className="fas fa-check text-navy text-sm"></i>
-                </div>
-                <span className="text-gray-300 font-arabic-body">
-                  {t('دعم فني متخصص', 'Specialized technical support')}
-                </span>
-              </div>
+            <div className="text-2xl font-space font-bold text-gray-800">
+              <span>{countdown.days.toString().padStart(2, '0')}</span>:
+              <span>{countdown.hours.toString().padStart(2, '0')}</span>:
+              <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
+              <span>{countdown.seconds.toString().padStart(2, '0')}</span>
+            </div>
+            <div className="text-xs text-gray-500 mt-1 font-arabic-body">
+              {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
             </div>
           </motion.div>
+        </motion.div>
 
-          {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20"
-          >
-            <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Waitlist Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-white rounded-2xl p-8 lg:p-12 shadow-custom-hover"
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="fullName" className="text-white font-arabic-body-bold">
-                  {t('الاسم الكامل', 'Full Name')}
+                <Label className="block text-sm font-medium text-white mb-2">
+                  {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
-                  id="fullName"
-                  name="fullName"
                   type="text"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  placeholder={t('اسمك الكامل', 'Your full name')}
+                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors"
                   required
-                  className="mt-2 bg-white/20 border-white/30 text-white placeholder:text-gray-300 focus:border-gold focus:ring-gold"
-                  placeholder={t('اكتب اسمك الكامل', 'Enter your full name')}
                 />
               </div>
-
               <div>
-                <Label htmlFor="email" className="text-white font-arabic-body-bold">
-                  {t('البريد الإلكتروني', 'Email Address')}
+                <Label className="block text-sm font-medium text-white mb-2">
+                  {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
-                  id="email"
-                  name="email"
                   type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="email@company.com"
+                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-[#ffffff]"
                   required
-                  className="mt-2 bg-white/20 border-white/30 text-white placeholder:text-gray-300 focus:border-gold focus:ring-gold"
-                  placeholder={t('your@email.com', 'your@email.com')}
                 />
               </div>
+            </div>
 
-              <div>
-                <Label htmlFor="company" className="text-white font-arabic-body-bold">
-                  {t('الشركة', 'Company')}
-                </Label>
-                <Input
-                  id="company"
-                  name="company"
-                  type="text"
-                  required
-                  className="mt-2 bg-white/20 border-white/30 text-white placeholder:text-gray-300 focus:border-gold focus:ring-gold"
-                  placeholder={t('اسم شركتك', 'Your company name')}
-                />
-              </div>
+            <div>
+              <Label className="block text-sm font-medium text-white mb-2">
+                {t('اسم الشركة', 'Company Name')}
+              </Label>
+              <Input
+                type="text"
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                placeholder={t('شركتك', 'Your company')}
+                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors"
+              />
+            </div>
 
-              <div>
-                <Label htmlFor="jobTitle" className="text-white font-arabic-body-bold">
-                  {t('المسمى الوظيفي', 'Job Title')}
-                </Label>
-                <Input
-                  id="jobTitle"
-                  name="jobTitle"
-                  type="text"
-                  required
-                  className="mt-2 bg-white/20 border-white/30 text-white placeholder:text-gray-300 focus:border-gold focus:ring-gold"
-                  placeholder={t('مسماك الوظيفي', 'Your job title')}
-                />
-              </div>
+            <div>
+              <Label className="block text-sm font-medium text-white mb-2">
+                {t('المنصب', 'Job Title')}
+              </Label>
+              <Input
+                type="text"
+                value={formData.jobTitle}
+                onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
+                placeholder={t('منصبك الوظيفي', 'Your job title')}
+                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors"
+              />
+            </div>
 
-              <Button
-                type="submit"
-                disabled={joinWaitlistMutation.isPending}
-                className="w-full bg-gold hover:bg-gold/90 text-navy font-arabic-body-bold py-4 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                {joinWaitlistMutation.isPending 
-                  ? t('جارٍ الانضمام...', 'Joining...') 
-                  : t('انضم إلى قائمة الانتظار', 'Join Waitlist')
-                }
-              </Button>
-            </form>
-
-            <p className="text-sm text-gray-400 text-center mt-6 font-arabic-body">
-              {t(
-                'سنحترم خصوصيتك ولن نشارك بياناتك مع أطراف ثالثة',
-                'We respect your privacy and will not share your data with third parties'
+            <Button
+              type="submit"
+              disabled={joinWaitlistMutation.isPending}
+              className="w-full bg-navy text-white py-4 px-6 rounded-custom font-semibold text-lg hover:bg-navy/90 transition-all duration-300 shadow-custom hover:shadow-custom-hover"
+            >
+              {joinWaitlistMutation.isPending ? (
+                <i className="fas fa-spinner fa-spin mr-2 rtl:mr-0 rtl:ml-2" />
+              ) : (
+                <>
+                  <span>
+                    {t('سجّل الآن', 'Register Now')}
+                  </span>
+                </>
               )}
-            </p>
-          </motion.div>
-        </div>
+            </Button>
+          </form>
+
+          {/* Privacy & Stats */}
+          <div className="mt-8 pt-6 border-t border-grey/50">
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+              <p className="text-sm text-gray-400">
+                {t(
+                  'لن نشارك بريدك الإلكتروني أبداً. إلغاء الاشتراك في أي وقت.',
+                  "We'll never share your email. Unsubscribe anytime."
+                )}
+              </p>
+              <div className="flex items-center text-sm text-sky font-medium">
+                <i className="fas fa-users ml-2 rtl:ml-0 rtl:mr-2" />
+                <span>
+                  {t('🎉 217 محترف انضم اليوم', '🎉 217 professionals joined today')}
+                </span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
