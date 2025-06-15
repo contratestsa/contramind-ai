@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useCallback, useEffect, useMemo, createContext } from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -9,21 +9,21 @@ interface LanguageContextType {
   dir: 'rtl' | 'ltr';
 }
 
-export const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined);
+export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 interface LanguageProviderProps {
   children: React.ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = React.useState<Language>('ar');
+  const [language, setLanguage] = useState<Language>('ar');
   const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
 
-  const t = React.useCallback((ar: string, en: string) => {
+  const t = useCallback((ar: string, en: string) => {
     return language === 'ar' ? ar : en;
   }, [language]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = dir;
     document.documentElement.classList.add('rtl-transition');
@@ -35,7 +35,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     return () => clearTimeout(timer);
   }, [language, dir]);
 
-  const contextValue = React.useMemo(() => ({
+  const contextValue = useMemo(() => ({
     language,
     setLanguage,
     t,
