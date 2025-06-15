@@ -34,13 +34,14 @@
   --transition: .25s ease;
 }
 
-/* Force input text to be black */
+/* Force input text to be black with maximum specificity */
 .waitlist-form input,
 .waitlist-form input[type="text"],
 .waitlist-form input[type="email"], 
 .waitlist-form input[type="tel"] {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
+  caret-color: #000000 !important;
 }
 
 .waitlist-form input:focus,
@@ -49,22 +50,45 @@
 .waitlist-form input[type="tel"]:focus {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
+  caret-color: #000000 !important;
 }
 
-/* Override any Tailwind or component library styling */
-.waitlist-form input.text-black {
+.waitlist-form input:active,
+.waitlist-form input[type="text"]:active,
+.waitlist-form input[type="email"]:active,
+.waitlist-form input[type="tel"]:active {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-/* Global override for any input in the waitlist form */
-form.waitlist-form * {
-  color: inherit;
+/* Override any framework styling with maximum specificity */
+form.waitlist-form input,
+form.waitlist-form input[type="text"],
+form.waitlist-form input[type="email"],
+form.waitlist-form input[type="tel"] {
+  color: rgb(0, 0, 0) !important;
+  -webkit-text-fill-color: rgb(0, 0, 0) !important;
+  --tw-text-opacity: 1 !important;
+  text-color: black !important;
 }
 
-form.waitlist-form input {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+/* Ultimate override for all possible states */
+.waitlist-form input::placeholder {
+  color: #d1d5db !important;
+  opacity: 1 !important;
+}
+
+.waitlist-form input::-webkit-input-placeholder {
+  color: #d1d5db !important;
+}
+
+.waitlist-form input::-moz-placeholder {
+  color: #d1d5db !important;
+  opacity: 1 !important;
+}
+
+.waitlist-form input:-ms-input-placeholder {
+  color: #d1d5db !important;
 }
 
 .dark {
