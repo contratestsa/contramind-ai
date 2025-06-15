@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,16 +20,6 @@ export default function Waitlist() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-  // Fetch waitlist count
-  const { data: waitlistCount } = useQuery({
-    queryKey: ['/api/waitlist/count'],
-    queryFn: async () => {
-      const response = await fetch('/api/waitlist/count');
-      const data = await response.json();
-      return data.count || 0;
-    },
-  });
   
   const [formData, setFormData] = useState<WaitlistData>({
     fullName: '',
@@ -64,7 +54,6 @@ export default function Waitlist() {
         company: '',
         jobTitle: '',
       });
-      // Invalidate and refetch the waitlist count after successful registration
       queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
     },
     onError: () => {
@@ -172,12 +161,12 @@ export default function Waitlist() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-grey rounded-2xl p-8 lg:p-12 shadow-custom-hover"
+          className="bg-white rounded-2xl p-8 lg:p-12 shadow-custom-hover"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
+                <Label className="block text-sm font-medium text-white mb-2">
                   {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
@@ -190,7 +179,7 @@ export default function Waitlist() {
                 />
               </div>
               <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
+                <Label className="block text-sm font-medium text-white mb-2">
                   {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
@@ -205,7 +194,7 @@ export default function Waitlist() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-navy mb-2">
+              <Label className="block text-sm font-medium text-white mb-2">
                 {t('اسم الشركة', 'Company Name')}
               </Label>
               <Input
@@ -218,7 +207,7 @@ export default function Waitlist() {
             </div>
 
             <div>
-              <Label className="block text-sm font-medium text-navy mb-2">
+              <Label className="block text-sm font-medium text-white mb-2">
                 {t('المنصب', 'Job Title')}
               </Label>
               <Input
@@ -250,7 +239,7 @@ export default function Waitlist() {
           {/* Privacy & Stats */}
           <div className="mt-8 pt-6 border-t border-grey/50">
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-400">
                 {t(
                   'لن نشارك بريدك الإلكتروني أبداً. إلغاء الاشتراك في أي وقت.',
                   "We'll never share your email. Unsubscribe anytime."
@@ -259,7 +248,7 @@ export default function Waitlist() {
               <div className="flex items-center text-sm text-sky font-medium">
                 <i className="fas fa-users ml-2 rtl:ml-0 rtl:mr-2" />
                 <span>
-                  {t(`🎉 ${waitlistCount || 0} محترف انضم`, `🎉 ${waitlistCount || 0} professionals joined`)}
+                  {t('🎉 217 محترف انضم اليوم', '🎉 217 professionals joined today')}
                 </span>
               </div>
             </div>
