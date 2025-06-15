@@ -74,21 +74,21 @@ form.waitlist-form input[type="tel"] {
 
 /* Ultimate override for all possible states */
 .waitlist-form input::placeholder {
-  color: #d1d5db !important;
+  color: #9CA3AF !important;
   opacity: 1 !important;
 }
 
 .waitlist-form input::-webkit-input-placeholder {
-  color: #d1d5db !important;
+  color: #9CA3AF !important;
 }
 
 .waitlist-form input::-moz-placeholder {
-  color: #d1d5db !important;
+  color: #9CA3AF !important;
   opacity: 1 !important;
 }
 
 .waitlist-form input:-ms-input-placeholder {
-  color: #d1d5db !important;
+  color: #9CA3AF !important;
 }
 
 .dark {
