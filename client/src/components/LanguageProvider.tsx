@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from 'react';
+import { createContext, ReactNode, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -9,23 +9,35 @@ interface LanguageContextType {
   dir: 'rtl' | 'ltr';
 }
 
-// Simple static context value to avoid React hooks issues
-const staticContextValue: LanguageContextType = {
-  language: 'ar',
-  setLanguage: () => {},
-  t: (ar: string, en: string) => ar,
-  dir: 'rtl'
-};
-
-export const LanguageContext = createContext<LanguageContextType | undefined>(staticContextValue);
+export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
+  const [language, setLanguage] = useState<Language>('ar');
+
+  const t = (ar: string, en: string) => {
+    return language === 'ar' ? ar : en;
+  };
+
+  const dir = language === 'ar' ? 'rtl' : 'ltr';
+
+  useEffect(() => {
+    document.documentElement.setAttribute('dir', dir);
+    document.documentElement.setAttribute('lang', language);
+  }, [language, dir]);
+
+  const contextValue: LanguageContextType = {
+    language,
+    setLanguage,
+    t,
+    dir
+  };
+
   return (
-    <LanguageContext.Provider value={staticContextValue}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );
