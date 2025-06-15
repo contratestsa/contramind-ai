@@ -260,15 +260,16 @@ export default function Waitlist() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-green-50 border border-green-200 rounded-custom p-6 text-center mb-6"
+                className="bg-green-100 border-2 border-green-300 rounded-custom p-6 text-center mb-6"
+                style={{ backgroundColor: '#dcfce7', borderColor: '#86efac' }}
               >
                 <div className="flex items-center justify-center mb-3">
-                  <i className="fas fa-check-circle text-green-500 text-3xl mr-3 rtl:mr-0 rtl:ml-3" />
-                  <h3 className="text-xl font-semibold text-green-800">
+                  <i className="fas fa-check-circle text-green-600 text-3xl mr-3 rtl:mr-0 rtl:ml-3" />
+                  <h3 className="text-xl font-bold text-green-900" style={{ color: '#14532d' }}>
                     {t('تم الانضمام بنجاح!', 'Successfully joined!')}
                   </h3>
                 </div>
-                <p className="text-green-700 text-lg">
+                <p className="text-green-800 text-lg font-medium" style={{ color: '#166534' }}>
                   {t(
                     'شكراً لانضمامك! سنتواصل معك قريباً.',
                     'Thank you for joining! We\'ll be in touch soon.'
