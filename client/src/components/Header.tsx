@@ -50,21 +50,23 @@ export default function Header() {
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
             {/* Language Switch Toggle */}
             <div className="flex items-center space-x-3 rtl:space-x-reverse">
-              <span className={`text-sm font-medium transition-colors ${language === 'en' ? 'text-white' : 'text-sky/60'}`}>
+              <span className={`text-xs font-medium transition-colors ${language === 'en' ? 'text-white' : 'text-sky/60'}`}>
                 EN
               </span>
               <button
                 onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-                className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky/20 transition-colors focus:outline-none focus:ring-2 focus:ring-sky focus:ring-offset-2 focus:ring-offset-navy"
+                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky/50 focus:ring-offset-2 focus:ring-offset-navy ${
+                  language === 'ar' ? 'bg-sky' : 'bg-sky/30'
+                }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-all duration-300 ease-in-out ${
                     language === 'ar' ? 'translate-x-6 rtl:translate-x-1' : 'translate-x-1 rtl:translate-x-6'
                   }`}
                 />
               </button>
-              <span className={`text-sm font-medium transition-colors ${language === 'ar' ? 'text-white' : 'text-sky/60'}`}>
-                العربية
+              <span className={`text-xs font-medium transition-colors ${language === 'ar' ? 'text-white' : 'text-sky/60'}`}>
+                عربي
               </span>
             </div>
           </div>
