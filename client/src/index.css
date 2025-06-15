@@ -35,16 +35,36 @@
 }
 
 /* Force input text to be black */
+.waitlist-form input,
 .waitlist-form input[type="text"],
 .waitlist-form input[type="email"], 
 .waitlist-form input[type="tel"] {
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
+.waitlist-form input:focus,
 .waitlist-form input[type="text"]:focus,
 .waitlist-form input[type="email"]:focus,
 .waitlist-form input[type="tel"]:focus {
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* Override any Tailwind or component library styling */
+.waitlist-form input.text-black {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* Global override for any input in the waitlist form */
+form.waitlist-form * {
+  color: inherit;
+}
+
+form.waitlist-form input {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 .dark {
