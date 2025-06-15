@@ -55,12 +55,12 @@ export default function Header() {
               </span>
               <button
                 onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky/50 focus:ring-offset-2 focus:ring-offset-navy ${
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky/50 focus:ring-offset-2 focus:ring-offset-navy ${
                   language === 'ar' ? 'bg-sky' : 'bg-sky/30'
                 }`}
               >
                 <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-all duration-300 ease-in-out ${
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-all duration-300 ease-in-out ${
                     language === 'ar' ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
