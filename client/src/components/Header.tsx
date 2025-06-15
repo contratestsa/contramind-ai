@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 
 export default function Header() {
-  const { language, t } = useSimpleLanguage();
+  const { language, setLanguage, t } = useLanguage();
 
   const navItems = [
     { key: 'product', ar: 'المنتج', en: 'Product', href: '#product' },
@@ -51,6 +51,7 @@ export default function Header() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
               className="rounded-full bg-navy text-white border-sky hover:bg-navy/90"
             >
               {t('العربية', 'English')}

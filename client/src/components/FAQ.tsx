@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface FAQItem {
   question: { ar: string; en: string };
@@ -8,7 +8,7 @@ interface FAQItem {
 }
 
 export default function FAQ() {
-  const { t, language } = useSimpleLanguage();
+  const { t, language } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqItems: FAQItem[] = [
