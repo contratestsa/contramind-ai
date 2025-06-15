@@ -2,7 +2,9 @@
 
 import * as React from "react"
 
-// Simple tooltip components without provider for this application
+// Simple tooltip components for this application
+const TooltipProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>
+
 const Tooltip = ({ children }: { children: React.ReactNode }) => <>{children}</>
 
 const TooltipTrigger = React.forwardRef<
@@ -25,4 +27,4 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = "TooltipContent"
 
-export { Tooltip, TooltipTrigger, TooltipContent }
+export { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent }
