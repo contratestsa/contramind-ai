@@ -240,29 +240,6 @@ export default function Waitlist() {
               </div>
             </div>
 
-            {/* Success Message */}
-            {showSuccessMessage && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-green-50 border border-green-200 rounded-custom p-4 text-center"
-              >
-                <div className="flex items-center justify-center mb-2">
-                  <i className="fas fa-check-circle text-green-500 text-2xl mr-3 rtl:mr-0 rtl:ml-3" />
-                  <h3 className="text-lg font-semibold text-green-800">
-                    {t('تم الانضمام بنجاح!', 'Successfully joined!')}
-                  </h3>
-                </div>
-                <p className="text-green-700">
-                  {t(
-                    'شكراً لانضمامك! سنتواصل معك قريباً.',
-                    'Thank you for joining! We\'ll be in touch soon.'
-                  )}
-                </p>
-              </motion.div>
-            )}
-
             <div>
               <Label className="block text-sm font-medium text-navy mb-2">
                 {t('المنصب', 'Job Title')}
@@ -276,6 +253,29 @@ export default function Waitlist() {
                 style={{ color: '#000000', WebkitTextFillColor: '#000000' }}
               />
             </div>
+
+            {/* Success Message */}
+            {showSuccessMessage && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-green-50 border border-green-200 rounded-custom p-6 text-center mb-6"
+              >
+                <div className="flex items-center justify-center mb-3">
+                  <i className="fas fa-check-circle text-green-500 text-3xl mr-3 rtl:mr-0 rtl:ml-3" />
+                  <h3 className="text-xl font-semibold text-green-800">
+                    {t('تم الانضمام بنجاح!', 'Successfully joined!')}
+                  </h3>
+                </div>
+                <p className="text-green-700 text-lg">
+                  {t(
+                    'شكراً لانضمامك! سنتواصل معك قريباً.',
+                    'Thank you for joining! We\'ll be in touch soon.'
+                  )}
+                </p>
+              </motion.div>
+            )}
 
             <Button
               type="submit"
