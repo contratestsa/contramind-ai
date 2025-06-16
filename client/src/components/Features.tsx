@@ -116,14 +116,14 @@ export default function Features() {
                 <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white">
                   {t(
                     'عزّز إنتاجية أعمالك مع ContraMind',
-                    'Enhance Your Legal Business Productivity with ContraMind'
+                    'Enhance Your Business Productivity with ContraMind'
                   )}
                 </h3>
               </div>
               <p className="text-gray-300 text-lg mb-6 font-arabic-body text-justify">
                 {t(
                   'نوفر لك منصة متكاملة لإدارة وتوزيع المهام بكل سهولة، مع متابعة دقيقة لتقدم العمل، مما يتيح لفريقك التركيز على ما يهم فعلاً. نُسهل لك عمليات التفاوض المعقدة، ونقدّم حلول ذكية تدعم اتخاذ القرارات القانونية بثقة ووضوح ، لتختصر الوقت والجهد في كل مرحلة من مراحل إبرام العقد. مع ContraMind، أنت في قلب كل خطوة، تحكم ووضوح وكفاءة، لضمان سير أعمالك القانونية بكفاءة وشفافية مستمرة.',
-                  'ContraMind\'s integrated platform combines the power of artificial intelligence with legal best practices to deliver comprehensive contract management solutions. From intelligent contract drafting to advanced negotiation, through precise legal review and comprehensive risk analysis, to certified electronic signature and secure storage - all in one place while ensuring compliance with Saudi regulations.'
+                  'We provide you with an integrated platform for managing and distributing tasks with ease, along with precise progress tracking that allows your team to focus on what truly matters. We simplify complex negotiation processes and offer smart solutions that support confident and clear legal decision-making, saving time and effort at every stage of contract completion. With ContraMind, you are at the heart of every step, with control, clarity, and efficiency, ensuring your legal work runs smoothly with continuous transparency.'
                 )}
               </p>
 
@@ -142,13 +142,13 @@ export default function Features() {
                   <i className="fas fa-cogs text-2xl text-white" />
                 </div>
                 <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white">
-                  {t('مراجعة قانونية دقيقة وتحليل مخاطر متكامل', 'Legal Review and Risk Analysis')}
+                  {t('مراجعة قانونية دقيقة وتحليل مخاطر متكامل', 'Precise Legal Review and Comprehensive Risk Analysis')}
                 </h3>
               </div>
               <p className="text-gray-300 text-lg mb-6 font-arabic-body text-justify">
                 {t(
                   'توفّر لك ContraMind منصة متطورة تجمع جميع مراحل إدارة العقود في مكان واحد، بدءًا من صياغة الوثائق وصولاً إلى التفاوض، المراجعة، تحليل المخاطر، التوقيع، الحفظ، ثم الإدارة المستمرة.تم تصميم حلولنا لتسهيل أعمالك، من خلال تمكين فريقك من التركيز على اتخاذ القرارات بثقة، مع تقليل المخاطر وتحقيق أعلى مستويات الكفاءة.نرافقك في كل خطوة، لنضمن لك نتائج دقيقة ومستدامة بشفافية كاملة.',
-                  'One tool: Draft → Negotiate → Review → Risk Analysis → Sign → Save'
+                  'ContraMind provides you with an advanced platform that brings together all stages of contract management in one place, from document drafting to negotiation, review, risk analysis, signing, storage, and ongoing management. Our solutions are designed to facilitate your work by enabling your team to focus on making decisions with complete confidence, while reducing risks and achieving the highest levels of efficiency. We accompany you at every step to ensure accurate and sustainable results with complete transparency.'
                 )}
               </p>
 
