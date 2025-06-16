@@ -109,15 +109,17 @@ export default function Features() {
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-sky/10 rounded-full transform translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-500" />
             <div className="relative">
-              <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-clock text-2xl text-white" />
+              <div className="flex items-center mb-6">
+                <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center ml-4 rtl:ml-0 rtl:mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <i className="fas fa-clock text-2xl text-white" />
+                </div>
+                <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white">
+                  {t(
+                    'عزّز بإنتاجية أعمالك القانونية مع ContraMind',
+                    'Enhance Your Legal Business Productivity with ContraMind'
+                  )}
+                </h3>
               </div>
-              <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white mb-4">
-                {t(
-                  'عزّز إنتاجية أعمالك',
-                  'Enhance Your Business Productivity'
-                )}
-              </h3>
               <p className="text-gray-300 text-lg mb-6 font-arabic-body">
                 {t(
                   'عن طريق ادارة المهام وتوزيعها بسهولة، وتتبّعها٫وتسهيل عمليات التفاوض.',
