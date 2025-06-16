@@ -145,7 +145,7 @@ export default function Features() {
                   {t('مراجعة قانونية دقيقة وتحليل مخاطر متكامل', 'Precise Legal Review and Comprehensive Risk Analysis')}
                 </h3>
               </div>
-              <p className="text-gray-300 text-lg mb-6 font-arabic-body text-start">
+              <p className="text-gray-300 text-lg mb-6 font-arabic-body text-justify">
                 {t(
                   'توفّر لك ContraMind منصة متطورة تجمع جميع مراحل إدارة العقود في مكان واحد، بدءًا من صياغة الوثائق وصولاً إلى التفاوض، المراجعة، تحليل المخاطر، التوقيع، الحفظ، ثم الإدارة المستمرة.تم تصميم حلولنا لتسهيل أعمالك، من خلال تمكين فريقك من التركيز على اتخاذ القرارات بثقة، مع تقليل المخاطر وتحقيق أعلى مستويات الكفاءة.نرافقك في كل خطوة، لنضمن لك نتائج دقيقة ومستدامة بشفافية كاملة.',
                   'ContraMind provides you with an advanced platform that brings together all stages of contract management in one place, from document drafting to negotiation, review, risk analysis, signing, storage, and ongoing management. Our solutions are designed to facilitate your work by enabling your team to focus on making decisions with complete confidence, while reducing risks and achieving the highest levels of efficiency. We accompany you at every step to ensure accurate and sustainable results with complete transparency.'
