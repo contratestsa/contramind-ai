@@ -115,15 +115,15 @@ export default function Features() {
                 </div>
                 <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white">
                   {t(
-                    'عزّز بإنتاجية أعمالك القانونية مع ContraMind',
+                    'عزّز إنتاجية أعمالك القانونية مع ContraMind',
                     'Enhance Your Legal Business Productivity with ContraMind'
                   )}
                 </h3>
               </div>
-              <p className="text-gray-300 text-lg mb-6 font-arabic-body">
+              <p className="text-gray-300 text-lg mb-6 font-arabic-body text-justify">
                 {t(
-                  'عن طريق ادارة المهام وتوزيعها بسهولة، وتتبّعها٫وتسهيل عمليات التفاوض.',
-                  'Streamline task management and distribution, enhance progress tracking, and accelerate negotiation workflows.'
+                  'نوفر لك منصة متكاملة لإدارة وتوزيع المهام بكل سهولة، مع متابعة دقيقة لتقدم العمل، مما يتيح لفريقك التركيز على ما يهم فعلاً. نُسهل لك عمليات التفاوض المعقدة، ونقدّم حلول ذكية تدعم اتخاذ القرارات القانونية بثقة ووضوح ، لتختصر الوقت والجهد في كل مرحلة من مراحل إبرام عقودك. مع ContraMind، أنت في قلب كل خطوة، تحكم ووضوح وكفاءة، لضمان سير أعمالك القانونية بكفاءة وشفافية مستمرة.',
+                  'ContraMind\'s integrated platform combines the power of artificial intelligence with legal best practices to deliver comprehensive contract management solutions. From intelligent contract drafting to advanced negotiation, through precise legal review and comprehensive risk analysis, to certified electronic signature and secure storage - all in one place while ensuring compliance with Saudi regulations.'
                 )}
               </p>
 
