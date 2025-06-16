@@ -87,7 +87,7 @@ export default function Hero() {
             >
               <Button
                 onClick={scrollToWaitlist}
-                className="bg-sky text-navy px-8 py-4 rounded-custom font-semibold text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group ml-[-4px] mr-[-4px] pl-[100px] pr-[100px]"
+                className="bg-sky text-navy px-8 py-4 rounded-custom font-semibold text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group ml-[-4px] mr-[-4px] pl-[86px] pr-[86px]"
               >
                 <span className="text-[26px] font-arabic-body-bold">
                   {t('انضم لقائمة الإنتظار ⟶', 'Join the Early Access Waitlist ⟶')}
