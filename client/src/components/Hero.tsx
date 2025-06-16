@@ -66,7 +66,7 @@ export default function Hero() {
                 { ar: 'تفاوض', en: 'Negotiation' },
                 { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
                 { ar: 'توقيع إلكتروني', en: 'ESigning' },
-                { ar: 'تتبع', en: 'Tracking' },
+                { ar: 'متابعة', en: 'Tracking' },
               ].map((feature, index) => (
                 <motion.span
                   key={index}
