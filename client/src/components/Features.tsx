@@ -120,7 +120,7 @@ export default function Features() {
                   )}
                 </h3>
               </div>
-              <p className="text-gray-300 text-lg mb-6 font-arabic-body text-start">
+              <p className="text-gray-300 text-lg mb-6 font-arabic-body text-justify">
                 {t(
                   'نوفر لك منصة متكاملة لإدارة وتوزيع المهام بكل سهولة، مع متابعة دقيقة لتقدم العمل، مما يتيح لفريقك التركيز على ما يهم فعلاً. نُسهل لك عمليات التفاوض المعقدة، ونقدّم حلول ذكية تدعم اتخاذ القرارات القانونية بثقة ووضوح ، لتختصر الوقت والجهد في كل مرحلة من مراحل إبرام العقد. مع ContraMind، أنت في قلب كل خطوة، تحكم ووضوح وكفاءة، لضمان سير أعمالك القانونية بكفاءة وشفافية مستمرة.',
                   'We provide you with an integrated platform for managing and distributing tasks with ease, along with precise progress tracking that allows your team to focus on what truly matters. We simplify complex negotiation processes and offer smart solutions that support confident and clear legal decision-making, saving time and effort at every stage of contract completion. With ContraMind, you are at the heart of every step, with control, clarity, and efficiency, ensuring your legal work runs smoothly with continuous transparency.'
