@@ -1,4 +1,4 @@
-import { users, waitlistEntries, type User, type InsertUser, type WaitlistEntry, type InsertWaitlistEntry } from "@shared/schema";
+import { users, waitlistEntries, contactMessages, type User, type InsertUser, type WaitlistEntry, type InsertWaitlistEntry, type ContactMessage, type InsertContactMessage } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -9,6 +9,7 @@ export interface IStorage {
   createWaitlistEntry(entry: InsertWaitlistEntry): Promise<WaitlistEntry>;
   getWaitlistCount(): Promise<number>;
   getWaitlistEntries(): Promise<WaitlistEntry[]>;
+  createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -46,6 +47,7 @@ export class DatabaseStorage implements IStorage {
       .values({
         fullName: insertEntry.fullName,
         email: insertEntry.email,
+        phoneNumber: insertEntry.phoneNumber,
         company: insertEntry.company || "",
         jobTitle: insertEntry.jobTitle || "",
       })
