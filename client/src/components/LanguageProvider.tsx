@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useState, useEffect } from 'react';
+import React from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -9,10 +9,10 @@ interface LanguageContextType {
   dir: 'rtl' | 'ltr';
 }
 
-export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+export const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined);
 
 interface LanguageProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
@@ -29,7 +29,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     document.documentElement.setAttribute('lang', language);
   }, [language, dir]);
 
-  const contextValue: LanguageContextType = React.useMemo(() => ({
+  const contextValue = React.useMemo(() => ({
     language,
     setLanguage,
     t,
