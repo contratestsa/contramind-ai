@@ -15,21 +15,32 @@ export async function sendWelcomeEmail({ email, fullName, waitlistPosition }: Em
   const htmlContent = getEnglishEmailTemplate(fullName, waitlistPosition);
   const textContent = getEnglishTextTemplate(fullName, waitlistPosition);
 
-  try {
-    const data = await resend.emails.send({
-      from: 'ContraMind Team <onboarding@resend.dev>',
-      to: [email],
-      subject,
-      html: htmlContent,
-      text: textContent,
-    });
+  // Try with custom domain first, fallback to default domain
+  const fromAddresses = [
+    'ContraMind Team <noreply@contramind.ai>',
+    'ContraMind Team <onboarding@resend.dev>'
+  ];
 
-    console.log('Email sent successfully:', data);
-    return { success: true, data };
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return { success: false, error };
+  for (const fromAddress of fromAddresses) {
+    try {
+      const data = await resend.emails.send({
+        from: fromAddress,
+        to: [email],
+        subject,
+        html: htmlContent,
+        text: textContent,
+      });
+
+      console.log(`Email sent successfully from ${fromAddress}:`, data);
+      return { success: true, data };
+    } catch (error) {
+      console.log(`Failed to send from ${fromAddress}:`, error);
+      continue;
+    }
   }
+
+  console.error('All email attempts failed');
+  return { success: false, error: 'Unable to send email from any configured domain' };
 }
 
 function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): string {
