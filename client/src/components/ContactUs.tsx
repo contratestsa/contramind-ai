@@ -87,7 +87,7 @@ export default function ContactUs({ children }: ContactUsProps) {
           </button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-white text-slate-900">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             {t('اتصل بنا', 'Contact Us')}
