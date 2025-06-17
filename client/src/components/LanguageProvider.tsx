@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState, useEffect } from 'react';
+import React, { createContext, ReactNode, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -16,25 +16,25 @@ interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = useState<Language>('ar');
+  const [language, setLanguage] = React.useState<Language>('ar');
 
-  const t = (ar: string, en: string) => {
+  const t = React.useCallback((ar: string, en: string) => {
     return language === 'ar' ? ar : en;
-  };
+  }, [language]);
 
   const dir = language === 'ar' ? 'rtl' : 'ltr';
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.documentElement.setAttribute('dir', dir);
     document.documentElement.setAttribute('lang', language);
   }, [language, dir]);
 
-  const contextValue: LanguageContextType = {
+  const contextValue: LanguageContextType = React.useMemo(() => ({
     language,
     setLanguage,
     t,
     dir
-  };
+  }), [language, setLanguage, t, dir]);
 
   return (
     <LanguageContext.Provider value={contextValue}>
