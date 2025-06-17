@@ -3,7 +3,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const scrollToWaitlist = () => {
     const element = document.querySelector('#waitlist');
@@ -43,7 +43,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-4xl lg:text-6xl font-arabic-heading-bold leading-loose pt-[12px] pb-[12px] pl-[-3px] pr-[-3px] ml-[-22px] mr-[-22px] mt-[19px] mb-[19px]"
+              className={`text-4xl lg:text-6xl leading-loose pt-[12px] pb-[12px] pl-[-3px] pr-[-3px] ml-[-22px] mr-[-22px] mt-[19px] mb-[19px] ${language === 'ar' ? 'font-arabic-heading-bold' : 'font-heading font-bold'}`}
             >
               <span className="gradient-text ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[75px] pb-[75px] mt-[28px] mb-[28px]">
                 {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review,Supporting Arabic Language')}
