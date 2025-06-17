@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 
 interface FAQItem {
   question: { ar: string; en: string };

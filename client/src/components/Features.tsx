@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 
 export default function Features() {
   const { t } = useLanguage();
