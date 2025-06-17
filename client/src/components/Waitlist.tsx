@@ -52,10 +52,7 @@ export default function Waitlist() {
 
   const joinWaitlistMutation = useMutation({
     mutationFn: async (data: WaitlistData) => {
-      const response = await apiRequest('POST', '/api/waitlist', {
-        ...data,
-        language: language
-      });
+      const response = await apiRequest('POST', '/api/waitlist', data);
       return response.json();
     },
     onSuccess: () => {

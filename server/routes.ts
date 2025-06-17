@@ -15,14 +15,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get current waitlist count for position
       const waitlistCount = await storage.getWaitlistCount();
       
-      // Get language from request headers or body
-      const language = req.body.language || req.headers['accept-language']?.includes('ar') ? 'ar' : 'en';
-      
       // Send welcome email
       const emailResult = await sendWelcomeEmail({
         email: entry.email,
         fullName: entry.fullName,
-        language: language as 'ar' | 'en',
         waitlistPosition: waitlistCount
       });
       
