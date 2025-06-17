@@ -2,8 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
 import { storage } from "./storage";
-import { insertWaitlistSchema } from "@shared/schema";
-import { sendWelcomeEmail } from "./emailService";
+import { insertWaitlistSchema, insertContactSchema } from "@shared/schema";
+import { sendWelcomeEmail, sendContactEmail } from "./emailService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
@@ -81,6 +81,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         message: "Internal server error" 
       });
+    }
+  });
+
+  // Contact form endpoint
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const validatedData = insertContactSchema.parse(req.body);
+      
+      // Save message to database
+      const message = await storage.createContactMessage(validatedData);
+      
+      // Send emails
+      const emailResult = await sendContactEmail({
+        name: validatedData.name,
+        email: validatedData.email,
+        subject: validatedData.subject,
+        message: validatedData.message,
+      });
+      
+      res.json({ 
+        success: true, 
+        message: "Message sent successfully",
+        id: message.id 
+      });
+    } catch (error) {
+      console.error("Contact form error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ 
+          message: "Invalid data", 
+          errors: error.errors 
+        });
+      } else {
+        res.status(500).json({ 
+          message: "Failed to send message" 
+        });
+      }
     }
   });
 

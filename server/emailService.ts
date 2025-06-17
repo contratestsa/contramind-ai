@@ -10,6 +10,13 @@ interface EmailData {
   waitlistPosition: number;
 }
 
+interface ContactEmailData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 export async function sendWelcomeEmail({ email, fullName, waitlistPosition }: EmailData) {
   const subject = `Welcome to ContraMind - You're #${waitlistPosition} on the waitlist`;
   const htmlContent = getEnglishEmailTemplate(fullName, waitlistPosition);
@@ -155,5 +162,137 @@ Thank you for your interest in ContraMind.
 
 ---
 This email was sent because you joined our waitlist at contramind.ai
+  `;
+}
+
+export async function sendContactEmail({ name, email, subject, message }: ContactEmailData) {
+  // Send email to ContraMind team
+  const toTeamEmail = await resend.emails.send({
+    from: 'ContraMind Team <noreply@contramind.ai>',
+    to: ['ceo@contramind.com'],
+    subject: `Contact Form: ${subject}`,
+    html: getContactEmailTemplate(name, email, subject, message),
+    text: getContactTextTemplate(name, email, subject, message),
+  });
+
+  // Send confirmation email to user
+  const toUserEmail = await resend.emails.send({
+    from: 'ContraMind Team <noreply@contramind.ai>',
+    to: [email],
+    subject: 'Message Received - ContraMind Team',
+    html: getContactConfirmationTemplate(name),
+    text: getContactConfirmationTextTemplate(name),
+  });
+
+  return { toTeamEmail, toUserEmail };
+}
+
+function getContactEmailTemplate(name: string, email: string, subject: string, message: string): string {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Form Message</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f9fafb;">
+    <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;">
+        <div style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); padding: 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
+                New Contact Message
+            </h1>
+        </div>
+        <div style="padding: 40px 30px;">
+            <h2 style="color: #0C2836; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">
+                Contact Details
+            </h2>
+            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                <p style="margin: 0 0 10px 0; color: #374151;"><strong>Name:</strong> ${name}</p>
+                <p style="margin: 0 0 10px 0; color: #374151;"><strong>Email:</strong> ${email}</p>
+                <p style="margin: 0; color: #374151;"><strong>Subject:</strong> ${subject}</p>
+            </div>
+            <h3 style="color: #0C2836; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                Message
+            </h3>
+            <div style="background-color: #f0f9ff; border-left: 4px solid #B7DEE8; padding: 20px; border-radius: 0 8px 8px 0;">
+                <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0; white-space: pre-wrap;">${message}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+}
+
+function getContactTextTemplate(name: string, email: string, subject: string, message: string): string {
+  return `
+New Contact Message - ContraMind
+
+Contact Details:
+Name: ${name}
+Email: ${email}
+Subject: ${subject}
+
+Message:
+${message}
+
+---
+Sent from ContraMind Contact Form
+  `;
+}
+
+function getContactConfirmationTemplate(name: string): string {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Message Received</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f9fafb;">
+    <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;">
+        <div style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); padding: 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
+                Message Received
+            </h1>
+        </div>
+        <div style="padding: 40px 30px;">
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Dear ${name},
+            </p>
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Thank you for contacting ContraMind. We have received your message and will get back to you within 24 hours.
+            </p>
+            <div style="background-color: #f0f9ff; border-left: 4px solid #B7DEE8; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
+                <p style="color: #0C2836; font-size: 16px; margin: 0;">
+                    <strong>Our team is committed to providing you with the best support for your legal technology needs.</strong>
+                </p>
+            </div>
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
+                Best regards,<br>
+                The ContraMind Team
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+}
+
+function getContactConfirmationTextTemplate(name: string): string {
+  return `
+Message Received - ContraMind
+
+Dear ${name},
+
+Thank you for contacting ContraMind. We have received your message and will get back to you within 24 hours.
+
+Our team is committed to providing you with the best support for your legal technology needs.
+
+Best regards,
+The ContraMind Team
+
+---
+ContraMind.ai - AI-Powered Legal Contract Management
   `;
 }

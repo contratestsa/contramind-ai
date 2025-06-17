@@ -68,6 +68,19 @@ export class DatabaseStorage implements IStorage {
       .from(waitlistEntries)
       .orderBy(waitlistEntries.createdAt);
   }
+
+  async createContactMessage(insertMessage: InsertContactMessage): Promise<ContactMessage> {
+    const [message] = await db
+      .insert(contactMessages)
+      .values({
+        name: insertMessage.name,
+        email: insertMessage.email,
+        subject: insertMessage.subject,
+        message: insertMessage.message,
+      })
+      .returning();
+    return message;
+  }
 }
 
 export const storage = new DatabaseStorage();
