@@ -50,10 +50,6 @@ export default function Hero() {
               </span>
             </motion.h1>
 
-
-
-
-
             {/* Feature Highlights */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -95,8 +91,6 @@ export default function Hero() {
               </Button>
             </motion.div>
           </motion.div>
-
-
         </div>
       </div>
     </section>
