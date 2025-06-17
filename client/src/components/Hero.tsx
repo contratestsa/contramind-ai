@@ -20,7 +20,7 @@ export default function Hero() {
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23B7DEE8' fillOpacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
         }} />
       </div>
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-32">
         <div className="text-center">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -43,10 +43,10 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-4xl lg:text-6xl font-arabic-heading-bold leading-loose pt-[12px] pb-[12px] pl-[-3px] pr-[-3px] ml-[-22px] mr-[-22px] mt-[19px] mb-[19px]"
+              className="text-3xl sm:text-4xl lg:text-6xl font-arabic-heading-bold leading-tight sm:leading-snug lg:leading-relaxed mb-6 sm:mb-8 px-2 sm:px-0"
             >
-              <span className="gradient-text ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[75px] pb-[75px] mt-[28px] mb-[28px]">
-                {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review,Supporting Arabic Language')}
+              <span className="gradient-text block">
+                {t('أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review, Supporting Arabic Language')}
               </span>
             </motion.h1>
 
