@@ -17,7 +17,7 @@ export async function sendWelcomeEmail({ email, fullName, waitlistPosition }: Em
 
   try {
     const data = await resend.emails.send({
-      from: 'ContraMind Team <onboarding@resend.dev>',
+      from: 'ContraMind Team <noreply@contramind.ai>',
       to: [email],
       subject,
       html: htmlContent,
