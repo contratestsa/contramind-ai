@@ -22,14 +22,14 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     return language === 'ar' ? ar : en;
   }, [language]);
 
-  const dir = language === 'ar' ? 'rtl' : 'ltr';
+  const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
 
   React.useEffect(() => {
     document.documentElement.setAttribute('dir', dir);
     document.documentElement.setAttribute('lang', language);
   }, [language, dir]);
 
-  const contextValue = React.useMemo(() => ({
+  const contextValue: LanguageContextType = React.useMemo(() => ({
     language,
     setLanguage,
     t,
