@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { createContext, useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -9,39 +9,39 @@ interface LanguageContextType {
   dir: 'rtl' | 'ltr';
 }
 
-const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 interface LanguageProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-function LanguageProvider({ children }: LanguageProviderProps): React.JSX.Element {
-  const [language, setLanguage] = React.useState<Language>('ar');
+function LanguageProvider({ children }: LanguageProviderProps) {
+  const [language, setLanguage] = useState<Language>('ar');
 
-  const t = React.useCallback((ar: string, en: string): string => {
+  const t = useCallback((ar: string, en: string): string => {
     return language === 'ar' ? ar : en;
   }, [language]);
 
-  const dir: 'rtl' | 'ltr' = React.useMemo(() => {
+  const dir: 'rtl' | 'ltr' = useMemo(() => {
     return language === 'ar' ? 'rtl' : 'ltr';
   }, [language]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.documentElement.setAttribute('dir', dir);
     document.documentElement.setAttribute('lang', language);
   }, [language, dir]);
 
-  const contextValue = React.useMemo<LanguageContextType>(() => ({
+  const contextValue = useMemo<LanguageContextType>(() => ({
     language,
     setLanguage,
     t,
     dir
   }), [language, setLanguage, t, dir]);
 
-  return React.createElement(
-    LanguageContext.Provider,
-    { value: contextValue },
-    children
+  return (
+    <LanguageContext.Provider value={contextValue}>
+      {children}
+    </LanguageContext.Provider>
   );
 }
 
