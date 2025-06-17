@@ -18,7 +18,7 @@ interface WaitlistData {
 }
 
 export default function Waitlist() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
