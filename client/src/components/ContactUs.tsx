@@ -38,11 +38,15 @@ export default function ContactUs({ children }: ContactUsProps) {
 
   const mutation = useMutation({
     mutationFn: async (data: ContactFormData) => {
-      return apiRequest('/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -75,14 +79,12 @@ export default function ContactUs({ children }: ContactUsProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-9 w-9 p-0 hover:bg-slate-100 dark:hover:bg-slate-800"
-          >
+          <button className="flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 text-white">
             <Mail className="h-4 w-4" />
-            <span className="sr-only">{t('اتصل بنا', 'Contact Us')}</span>
-          </Button>
+            <span className="text-sm font-medium hidden sm:inline">
+              {t('اتصل بنا', 'Contact Us')}
+            </span>
+          </button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

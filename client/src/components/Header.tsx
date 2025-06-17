@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, Globe, Flag } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
+import ContactUs from '@/components/ContactUs';
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -63,8 +64,11 @@ export default function Header() {
 
 
 
-          {/* Language Toggle & CTA */}
+          {/* Contact Us & Language Toggle */}
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
+            {/* Contact Us Icon */}
+            <ContactUs />
+            
             {/* Language Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
