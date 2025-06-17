@@ -48,15 +48,22 @@ export default function Waitlist() {
     seconds: 0,
   });
 
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
   const joinWaitlistMutation = useMutation({
     mutationFn: async (data: WaitlistData) => {
-      const response = await apiRequest('POST', '/api/waitlist', data);
+      const response = await apiRequest('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to join waitlist');
+      }
+      
       return response.json();
     },
-    onSuccess: () => {
-      setShowSuccessMessage(true);
+    onSuccess: (data) => {
       setFormData({
         fullName: '',
         email: '',
@@ -64,25 +71,27 @@ export default function Waitlist() {
         company: '',
         jobTitle: '',
       });
+      
       queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
       
-      // Hide success message after 5 seconds
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-      }, 5000);
-    },
-    onError: () => {
       toast({
-        title: t('حدث خطأ', 'Error occurred'),
+        title: t('تم التسجيل بنجاح!', 'Successfully Registered!'),
         description: t(
-          'حدث خطأ أثناء الانضمام. يرجى المحاولة مرة أخرى.',
-          'An error occurred while joining. Please try again.'
+          `أنت رقم ${data.waitlistPosition} في قائمة الانتظار. سنتواصل معك قريباً!`,
+          `You are #${data.waitlistPosition} on the waitlist. We'll contact you soon!`
         ),
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t('خطأ في التسجيل', 'Registration Error'),
+        description: error.message,
         variant: 'destructive',
       });
     },
   });
 
+  // Countdown timer effect
   useEffect(() => {
     const targetDate = new Date();
     targetDate.setDate(targetDate.getDate() + 30);
@@ -123,8 +132,6 @@ export default function Waitlist() {
     joinWaitlistMutation.mutate(formData);
   };
 
-
-
   return (
     <section id="waitlist" className="py-12 sm:py-20 lg:py-32 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -135,7 +142,7 @@ export default function Waitlist() {
           transition={{ duration: 0.8 }}
           className="text-center mb-8 sm:mb-12"
         >
-          <div className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6">
+          <div className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
             <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
             <span>{t('قريباً', 'Coming Soon')}</span>
           </div>
@@ -144,21 +151,17 @@ export default function Waitlist() {
             {t('للحصول على اشتراك مجاني لمدة ٣أشهر   سجل الآن', 'Get 3 Months Free Subscription   Register Now')}
           </h2>
 
-
-
-
-
           {/* Countdown Timer */}
           <motion.div
             initial={{ scale: 0.9 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            className="bg-white rounded-2xl p-6 shadow-custom mb-8 max-w-md mx-auto"
+            className="bg-white rounded-2xl p-4 sm:p-6 shadow-custom mb-6 sm:mb-8 max-w-md mx-auto"
           >
-            <div className="text-sm text-gray-400 mb-2 font-arabic-body">
+            <div className="text-xs sm:text-sm text-gray-400 mb-2 font-arabic-body">
               {t('متبقي على الإطلاق', 'Time until launch')}
             </div>
-            <div className="text-2xl font-space font-bold text-gray-800">
+            <div className="text-xl sm:text-2xl font-space font-bold text-gray-800">
               <span>{countdown.days.toString().padStart(2, '0')}</span>:
               <span>{countdown.hours.toString().padStart(2, '0')}</span>:
               <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
@@ -176,145 +179,119 @@ export default function Waitlist() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-white rounded-2xl p-8 lg:p-12 shadow-custom-hover"
+          className="bg-white rounded-2xl p-6 sm:p-8 lg:p-12 shadow-custom-hover"
         >
-          <form onSubmit={handleSubmit} className="waitlist-form space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
+          <div className="flex items-center justify-between mb-6 sm:mb-8">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-arabic-heading-bold text-gray-800">
+              {t('انضم إلى قائمة الانتظار', 'Join the Waitlist')}
+            </h3>
+            <div className="bg-sky text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full">
+              <span className="text-xs sm:text-sm font-bold">
+                {waitlistCount ? `#${waitlistCount + 1}` : '#1'}
+              </span>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-sm font-semibold text-gray-700">
                   {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
+                  id="fullName"
                   type="text"
                   value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  placeholder={t('اسمك الكامل', 'Your full name')}
-                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white !text-black placeholder:text-gray-400"
-                  style={{ color: '#000000', WebkitTextFillColor: '#000000' }}
+                  onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
                   required
                 />
               </div>
-              <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">
                   {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
+                  id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="email@company.com"
-                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white !text-black placeholder:text-gray-400"
-                  style={{ color: '#000000', WebkitTextFillColor: '#000000' }}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  placeholder={t('example@domain.com', 'example@domain.com')}
                   required
                 />
               </div>
-            </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-700">
                   {t('رقم الهاتف', 'Phone Number')} *
                 </Label>
                 <Input
+                  id="phoneNumber"
                   type="tel"
                   value={formData.phoneNumber}
-                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                  placeholder={t('+966501234567', '+966501234567')}
-                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white !text-black placeholder:text-gray-400"
-                  style={{ color: '#000000', WebkitTextFillColor: '#000000' }}
+                  onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  placeholder={t('+966 50 123 4567', '+966 50 123 4567')}
                   required
                 />
               </div>
-              <div>
-                <Label className="block text-sm font-medium text-navy mb-2">
-                  {t('اسم الشركة', 'Company Name')}
+
+              <div className="space-y-2">
+                <Label htmlFor="company" className="text-sm font-semibold text-gray-700">
+                  {t('الشركة', 'Company')}
                 </Label>
                 <Input
+                  id="company"
                   type="text"
                   value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  placeholder={t('شركتك', 'Your company')}
-                  className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white !text-black placeholder:text-gray-400"
-                  style={{ color: '#000000', WebkitTextFillColor: '#000000' }}
+                  onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  placeholder={t('اسم الشركة', 'Company name')}
+                />
+              </div>
+
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="jobTitle" className="text-sm font-semibold text-gray-700">
+                  {t('المسمى الوظيفي', 'Job Title')}
+                </Label>
+                <Input
+                  id="jobTitle"
+                  type="text"
+                  value={formData.jobTitle}
+                  onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  placeholder={t('محامي، مستشار قانوني، إلخ...', 'Lawyer, Legal Advisor, etc...')}
                 />
               </div>
             </div>
-
-            <div>
-              <Label className="block text-sm font-medium text-navy mb-2">
-                {t('المنصب', 'Job Title')}
-              </Label>
-              <Input
-                type="text"
-                value={formData.jobTitle}
-                onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
-                placeholder={t('منصبك الوظيفي', 'Your job title')}
-                className="w-full px-4 py-3 border border-grey rounded-custom focus:ring-2 focus:ring-sky focus:border-sky transition-colors bg-white !text-black placeholder:text-gray-400"
-                style={{ color: '#000000', WebkitTextFillColor: '#000000' }}
-              />
-            </div>
-
-            {/* Success Message */}
-            {showSuccessMessage && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-green-100 border-2 border-green-300 rounded-custom p-6 text-center mb-6"
-                style={{ backgroundColor: '#dcfce7', borderColor: '#86efac' }}
-              >
-                <div className="flex items-center justify-center mb-3">
-                  <i className="fas fa-check-circle text-green-600 text-3xl mr-3 rtl:mr-0 rtl:ml-3" />
-                  <h3 className="text-xl font-bold text-green-900" style={{ color: '#14532d' }}>
-                    {t('تم الانضمام بنجاح!', 'Successfully joined!')}
-                  </h3>
-                </div>
-                <p className="text-green-800 text-lg font-medium" style={{ color: '#166534' }}>
-                  {t(
-                    'شكراً لانضمامك! سنتواصل معك قريباً.',
-                    'Thank you for joining! We\'ll be in touch soon.'
-                  )}
-                </p>
-              </motion.div>
-            )}
 
             <Button
               type="submit"
               disabled={joinWaitlistMutation.isPending}
-              className="w-full bg-navy text-white py-4 px-6 rounded-custom font-semibold text-lg hover:bg-navy/90 transition-all duration-300 shadow-custom hover:shadow-custom-hover"
+              className="w-full bg-sky text-navy px-6 py-3 sm:py-4 rounded-custom font-semibold text-sm sm:text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover disabled:opacity-50"
             >
               {joinWaitlistMutation.isPending ? (
-                <i className="fas fa-spinner fa-spin mr-2 rtl:mr-0 rtl:ml-2" />
+                <span className="flex items-center justify-center">
+                  <i className="fas fa-spinner fa-spin mr-2 rtl:mr-0 rtl:ml-2" />
+                  {t('جاري التسجيل...', 'Registering...')}
+                </span>
               ) : (
-                <>
-                  <span>
-                    {t('سجّل الآن', 'Register Now')}
-                  </span>
-                </>
+                <span className="font-arabic-body-bold">
+                  {t('انضم إلى قائمة الانتظار مجاناً', 'Join the Waitlist for Free')}
+                </span>
               )}
             </Button>
-          </form>
 
-          {/* Privacy & Stats */}
-          <div className="mt-8 pt-6 border-t border-grey/50">
-            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-              <p className="text-sm text-gray-400">
-                {t(
-                  'لن نشارك بريدك الإلكتروني أبداً. إلغاء الاشتراك في أي وقت.',
-                  "We'll never share your email. Unsubscribe anytime."
-                )}
-              </p>
-              <div className="flex items-center text-sm text-sky font-medium">
-                <i className="fas fa-users ml-2 rtl:ml-0 rtl:mr-2" />
-                <span>
-                  {t(
-                    `🎉 ${waitlistCount || 0} محترف انضم اليوم`,
-                    `🎉 ${waitlistCount || 0} professionals joined today`
-                  )}
-                </span>
-              </div>
-            </div>
-          </div>
+            <p className="text-xs sm:text-sm text-gray-500 text-center mt-4">
+              {t(
+                'بالتسجيل، توافق على شروط الخدمة وسياسة الخصوصية',
+                'By registering, you agree to our Terms of Service and Privacy Policy'
+              )}
+            </p>
+          </form>
         </motion.div>
       </div>
     </section>
