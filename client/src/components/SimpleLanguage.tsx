@@ -23,10 +23,7 @@ interface SimpleLanguageProviderProps {
 export class SimpleLanguageProvider extends React.Component<SimpleLanguageProviderProps, { language: Language }> {
   constructor(props: SimpleLanguageProviderProps) {
     super(props);
-    // Detect browser language and set Arabic if browser language is Arabic, otherwise English
-    const browserLanguage = navigator.language.toLowerCase();
-    const isArabic = browserLanguage.startsWith('ar');
-    this.state = { language: isArabic ? 'ar' : 'en' };
+    this.state = { language: 'ar' };
   }
 
   componentDidMount() {

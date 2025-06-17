@@ -1,4 +1,5 @@
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { motion } from 'framer-motion';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Globe, Flag } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -6,7 +7,7 @@ import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_174973
 import ContactUs from '@/components/ContactUs';
 
 export default function Header() {
-  const { language, setLanguage, t } = useSimpleLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,11 +39,20 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-navy shadow-custom sticky top-0 z-50">
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className="bg-navy shadow-custom sticky top-0 z-50"
+    >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 lg:h-24">
           {/* Logo */}
-          <div className="flex items-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center"
+          >
             <div className="flex items-center space-x-3 rtl:space-x-reverse overflow-hidden">
               <img 
                 src={logoImage} 
@@ -50,7 +60,9 @@ export default function Header() {
                 className="w-72 h-18 object-contain object-left ml-[-9px] mr-[-9px] pt-[-27px] pb-[-27px] mt-[-59px] mb-[-59px] pl-[37px] pr-[37px]"
               />
             </div>
-          </div>
+          </motion.div>
+
+
 
           {/* Contact Us & Language Toggle */}
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
@@ -115,7 +127,9 @@ export default function Header() {
             </div>
           </div>
         </div>
+
+
       </nav>
-    </header>
+    </motion.header>
   );
 }

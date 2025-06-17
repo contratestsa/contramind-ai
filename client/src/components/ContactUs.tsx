@@ -87,7 +87,7 @@ export default function ContactUs({ children }: ContactUsProps) {
           </button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white text-slate-900">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             {t('اتصل بنا', 'Contact Us')}
@@ -105,7 +105,6 @@ export default function ContactUs({ children }: ContactUsProps) {
                   <FormControl>
                     <Input 
                       placeholder={t('الاسم الكامل', 'Full Name')} 
-                      className="bg-[#f0f3f5]"
                       {...field} 
                     />
                   </FormControl>
@@ -124,7 +123,6 @@ export default function ContactUs({ children }: ContactUsProps) {
                     <Input 
                       type="email"
                       placeholder={t('البريد الإلكتروني', 'Email Address')} 
-                      className="bg-[#f0f3f5]"
                       {...field} 
                     />
                   </FormControl>
@@ -142,7 +140,6 @@ export default function ContactUs({ children }: ContactUsProps) {
                   <FormControl>
                     <Input 
                       placeholder={t('موضوع الرسالة', 'Message Subject')} 
-                      className="bg-[#f0f3f5]"
                       {...field} 
                     />
                   </FormControl>
@@ -160,7 +157,7 @@ export default function ContactUs({ children }: ContactUsProps) {
                   <FormControl>
                     <Textarea 
                       placeholder={t('اكتب رسالتك هنا...', 'Write your message here...')} 
-                      className="min-h-[100px] bg-[#f0f3f5]"
+                      className="min-h-[100px]"
                       {...field} 
                     />
                   </FormControl>
@@ -174,7 +171,6 @@ export default function ContactUs({ children }: ContactUsProps) {
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                className="text-white border-white hover:bg-white hover:text-slate-900"
               >
                 {t('إلغاء', 'Cancel')}
               </Button>

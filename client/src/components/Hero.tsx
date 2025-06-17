@@ -1,8 +1,9 @@
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { motion } from 'framer-motion';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 
 export default function Hero() {
-  const { t, language } = useSimpleLanguage();
+  const { t } = useLanguage();
 
   const scrollToWaitlist = () => {
     const element = document.querySelector('#waitlist');
@@ -12,60 +13,90 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-navy overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-sky/10 rounded-full blur-xl" />
-        <div className="absolute bottom-20 right-10 w-48 h-48 bg-sky/5 rounded-full blur-2xl" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-sky/5 to-transparent rounded-full blur-3xl" />
+    <section className="relative bg-navy text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23B7DEE8' fillOpacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }} />
       </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="mb-8">
-          <div className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-8">
-            <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
-            <span>{t('قريباً', 'Coming Soon')}</span>
-          </div>
-
-          <h1 className={`text-4xl lg:text-6xl leading-loose pt-[12px] pb-[12px] pl-[-3px] pr-[-3px] ml-[-22px] mr-[-22px] mt-[19px] mb-[19px] ${language === 'ar' ? 'font-arabic-heading-bold' : 'font-heading font-bold'}`}>
-            <span className="gradient-text ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[75px] pb-[75px] mt-[28px] mb-[28px]">
-              {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management & Review, Supporting Arabic Language')}
-            </span>
-          </h1>
-
-          <p className={`text-xl text-gray-300 ${language === 'ar' ? 'font-arabic-body' : 'font-body'} max-w-3xl mx-auto mb-12`}>
-            {t(
-              'ثلاثة أشهر مجاناً عند الإطلاق - كن من أوائل المستخدمين',
-              'Get 3 months free at launch - Be among the first users'
-            )}
-          </p>
-
-          {/* Feature Highlights */}
-          <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm">
-            {[
-              { ar: 'صياغة', en: 'Drafting' },
-              { ar: 'تفاوض', en: 'Negotiation' },
-              { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
-              { ar: 'توقيع إلكتروني', en: 'ESigning' },
-              { ar: 'متابعة', en: 'Tracking' },
-            ].map((feature, index) => (
-              <span
-                key={index}
-                className="bg-white/10 px-3 py-1 rounded-full font-bold"
-              >
-                {t(feature.ar, feature.en)}
-              </span>
-            ))}
-          </div>
-
-          <Button
-            onClick={scrollToWaitlist}
-            size="lg"
-            className="bg-sky hover:bg-sky/90 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-custom hover:shadow-custom-hover transition-all duration-300"
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            {t('انضم إلى قائمة الانتظار', 'Join Waitlist')}
-            <i className="fas fa-arrow-left ml-2 rtl:ml-0 rtl:mr-2 rtl:rotate-180" />
-          </Button>
+            {/* Launch Offer Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6 glass-effect"
+            >
+              <span className="animate-pulse glow-text font-bold text-[#f0f2f2]">
+                {t('احصل على 3 أشهر مجاناً عند الإطلاق', 'Get 3 Months Free at Launch')}
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-4xl lg:text-6xl font-arabic-heading-bold leading-loose pt-[12px] pb-[12px] pl-[-3px] pr-[-3px] ml-[-22px] mr-[-22px] mt-[19px] mb-[19px]"
+            >
+              <span className="gradient-text ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[75px] pb-[75px] mt-[28px] mb-[28px]">
+                {t(' أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review,Supporting Arabic Language')}
+              </span>
+            </motion.h1>
+
+
+
+
+
+            {/* Feature Highlights */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="flex flex-wrap justify-center gap-4 mb-8 text-sm"
+            >
+              {[
+                { ar: 'صياغة', en: 'Drafting' },
+                { ar: 'تفاوض', en: 'Negotiation' },
+                { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
+                { ar: 'توقيع إلكتروني', en: 'ESigning' },
+                { ar: 'متابعة', en: 'Tracking' },
+              ].map((feature, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.9 + index * 0.1 }}
+                  className="bg-white/10 px-3 py-1 rounded-full font-bold"
+                >
+                  {t(feature.ar, feature.en)}
+                </motion.span>
+              ))}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+            >
+              <Button
+                onClick={scrollToWaitlist}
+                className="bg-sky text-navy px-4 sm:px-8 lg:px-[86px] py-3 sm:py-4 rounded-custom font-semibold text-sm sm:text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group"
+              >
+                <span className="text-lg sm:text-xl lg:text-[26px] font-arabic-body-bold">
+                  {t('انضم لقائمة الإنتظار ⟶', 'Join the Early Access Waitlist ⟶')}
+                </span>
+              </Button>
+            </motion.div>
+          </motion.div>
+
+
         </div>
       </div>
     </section>
