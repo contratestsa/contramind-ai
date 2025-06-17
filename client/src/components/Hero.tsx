@@ -32,7 +32,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center bg-sky/20 text-sky px-4 py-2 rounded-full text-sm font-medium mb-6 glass-effect"
+              className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6 glass-effect"
             >
               <span className="animate-pulse glow-text font-bold text-[#f0f2f2]">
                 {t('احصل على 3 أشهر مجاناً عند الإطلاق', 'Get 3 Months Free at Launch')}
@@ -59,7 +59,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="flex flex-wrap justify-center gap-4 mb-8 text-sm"
+              className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-xs sm:text-sm px-4 sm:px-0"
             >
               {[
                 { ar: 'صياغة', en: 'Drafting' },
@@ -73,7 +73,7 @@ export default function Hero() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.9 + index * 0.1 }}
-                  className="bg-white/10 px-3 py-1 rounded-full font-bold"
+                  className="bg-white/10 px-2 sm:px-3 py-1 rounded-full font-bold text-xs sm:text-sm"
                 >
                   {t(feature.ar, feature.en)}
                 </motion.span>
@@ -87,9 +87,9 @@ export default function Hero() {
             >
               <Button
                 onClick={scrollToWaitlist}
-                className="bg-sky text-navy px-4 sm:px-8 lg:px-[86px] py-3 sm:py-4 rounded-custom font-semibold text-sm sm:text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group"
+                className="bg-sky text-navy px-6 sm:px-8 lg:px-[86px] py-3 sm:py-4 rounded-custom font-semibold hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group mx-4 sm:mx-0"
               >
-                <span className="text-lg sm:text-xl lg:text-[26px] font-arabic-body-bold">
+                <span className="text-sm sm:text-lg lg:text-[26px] font-arabic-body-bold">
                   {t('انضم لقائمة الإنتظار ⟶', 'Join the Early Access Waitlist ⟶')}
                 </span>
               </Button>
