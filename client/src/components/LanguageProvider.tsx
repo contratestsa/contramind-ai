@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
+import React from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -9,40 +9,63 @@ interface LanguageContextType {
   dir: 'rtl' | 'ltr';
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = React.createContext<LanguageContextType>({
+  language: 'ar',
+  setLanguage: () => {},
+  t: (ar: string, en: string) => ar,
+  dir: 'rtl'
+});
 
 interface LanguageProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = useState<Language>('ar');
+export class LanguageProvider extends React.Component<LanguageProviderProps, { language: Language }> {
+  constructor(props: LanguageProviderProps) {
+    super(props);
+    this.state = {
+      language: 'ar'
+    };
+  }
 
-  const t = useCallback((ar: string, en: string): string => {
-    return language === 'ar' ? ar : en;
-  }, [language]);
+  componentDidMount() {
+    this.updateDocument();
+  }
 
-  const dir: 'rtl' | 'ltr' = useMemo(() => {
-    return language === 'ar' ? 'rtl' : 'ltr';
-  }, [language]);
+  componentDidUpdate() {
+    this.updateDocument();
+  }
 
-  useEffect(() => {
+  updateDocument = () => {
+    const dir = this.state.language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.setAttribute('dir', dir);
-    document.documentElement.setAttribute('lang', language);
-  }, [language, dir]);
+    document.documentElement.setAttribute('lang', this.state.language);
+  }
 
-  const contextValue = useMemo<LanguageContextType>(() => ({
-    language,
-    setLanguage,
-    t,
-    dir
-  }), [language, setLanguage, t, dir]);
+  setLanguage = (language: Language) => {
+    this.setState({ language });
+  }
 
-  return (
-    <LanguageContext.Provider value={contextValue}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  t = (ar: string, en: string): string => {
+    return this.state.language === 'ar' ? ar : en;
+  }
+
+  render() {
+    const dir = this.state.language === 'ar' ? 'rtl' : 'ltr';
+    
+    const contextValue: LanguageContextType = {
+      language: this.state.language,
+      setLanguage: this.setLanguage,
+      t: this.t,
+      dir
+    };
+
+    return (
+      <LanguageContext.Provider value={contextValue}>
+        {this.props.children}
+      </LanguageContext.Provider>
+    );
+  }
 }
 
 export { LanguageContext };

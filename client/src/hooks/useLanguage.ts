@@ -1,7 +1,7 @@
-import { useContext } from 'react';
-import { SimpleLanguageContext } from '@/components/SimpleLanguage';
+import React from 'react';
+import { LanguageContext } from '@/components/LanguageProvider';
 
 export function useLanguage() {
-  const context = useContext(SimpleLanguageContext);
+  const context = React.useContext(LanguageContext);
   return context;
 }
