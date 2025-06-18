@@ -46,7 +46,7 @@ export default function Hero() {
               className="text-3xl sm:text-4xl lg:text-6xl leading-[1.1] sm:leading-[1.1] lg:leading-[1.1] mb-6 sm:mb-8 px-2 sm:px-0 text-center"
               style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
             >
-              <span className="gradient-text block whitespace-pre-line">
+              <span className="gradient-text block whitespace-pre-line text-center">
                 <span style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Space Grotesk', sans-serif", fontWeight: 700 }}>
                   {t('أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review, Supporting Arabic Language')}
                 </span>
