@@ -43,7 +43,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-3xl sm:text-4xl lg:text-6xl leading-[1.1] sm:leading-[1.1] lg:leading-[1.1] mb-6 sm:mb-8 px-2 sm:px-0"
+              className="text-3xl sm:text-4xl lg:text-6xl leading-[1.1] sm:leading-[1.1] lg:leading-[1.1] mb-6 sm:mb-8 px-2 sm:px-0 text-center"
               style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
             >
               <span className="gradient-text block whitespace-pre-line">
