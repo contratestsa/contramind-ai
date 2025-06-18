@@ -139,7 +139,7 @@ export default function Features() {
             <div className="relative">
               <div className="flex items-center mb-6">
                 <div className="w-16 h-16 bg-navy/20 rounded-2xl flex items-center justify-center ml-4 rtl:ml-0 rtl:mr-4 group-hover:scale-110 transition-transform duration-300">
-                  <i className="fas fa-cogs text-2xl text-white" />
+                  <i className="fas fa-cogs text-2xl text-white ml-[7px] mr-[7px] pl-[7px] pr-[7px] mt-[6px] mb-[6px] pt-[12px] pb-[12px]" />
                 </div>
                 <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white">
                   {t('مراجعة قانونية دقيقة وتحليل مخاطر متكامل', 'Precise Legal Review and Comprehensive Risk Analysis')}
