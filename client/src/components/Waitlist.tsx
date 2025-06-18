@@ -5,6 +5,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PartyPopper } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -186,7 +187,8 @@ export default function Waitlist() {
               {t('انضم إلى قائمة الانتظار', 'Join the Waitlist')}
             </h3>
             <div className="bg-[#e6f0f5] text-[#0c2836] px-3 sm:px-4 py-1 sm:py-2 rounded-full">
-              <span className="text-xs sm:text-sm font-bold">
+              <span className="text-xs sm:text-sm font-bold flex items-center gap-1">
+                <PartyPopper className="w-3 h-3 sm:w-4 sm:h-4" />
                 {waitlistCount ? `#${waitlistCount + 1}` : '#1'}
               </span>
             </div>
