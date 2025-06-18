@@ -180,7 +180,7 @@ export default function Waitlist() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-white rounded-2xl p-6 sm:p-8 lg:p-12 shadow-custom-hover"
+          className="bg-white rounded-2xl p-6 sm:p-8 lg:p-12 shadow-custom-hover text-[#141414]"
         >
 
 
