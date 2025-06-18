@@ -96,8 +96,8 @@ export default function Waitlist() {
 
   // Countdown timer effect
   useEffect(() => {
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 30);
+    // Set a fixed target date for launch (e.g., July 18, 2025)
+    const targetDate = new Date('2025-07-18T00:00:00');
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
