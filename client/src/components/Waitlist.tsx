@@ -64,23 +64,25 @@ export default function Waitlist() {
       
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
+      const userName = variables.fullName;
+      
+      queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
+      
+      toast({
+        title: t('تم التسجيل بنجاح!', 'Registration Confirmed'),
+        description: t(
+          `مرحباً ${userName}، أنت رقم ${data.entry?.id || data.waitlistPosition} في قائمة الانتظار لمنصة ContraMind AI. سيتم التواصل معك قريباً مع تحديثات حصرية حول الإطلاق.`,
+          `Welcome ${userName}! You are number ${data.entry?.id || data.waitlistPosition} on the ContraMind AI waitlist. You'll receive exclusive updates about our launch soon.`
+        ),
+      });
+      
       setFormData({
         fullName: '',
         email: '',
         phoneNumber: '',
         company: '',
         jobTitle: '',
-      });
-      
-      queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
-      
-      toast({
-        title: t('تم التسجيل بنجاح!', 'Successfully Registered!'),
-        description: t(
-          `أنت رقم ${data.waitlistPosition} في قائمة الانتظار. سنتواصل معك قريباً!`,
-          `You are #${data.waitlistPosition} on the waitlist. We'll contact you soon!`
-        ),
       });
     },
     onError: (error: Error) => {
