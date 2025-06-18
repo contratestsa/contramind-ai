@@ -274,7 +274,7 @@ export default function Waitlist() {
                 </span>
               ) : (
                 <span className="font-arabic-body-bold">
-                  {t('سجل الآن', 'Join the Waitlist for Free')}
+                  {t('سجل الآن', 'Register Now')}
                 </span>
               )}
             </Button>
