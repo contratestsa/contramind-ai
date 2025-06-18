@@ -289,7 +289,7 @@ export default function Waitlist() {
               <span>🔒</span>
               <span>
                 {t(
-                  'بالتسجيل، أنت توافق على قواعد الانتباهات في أن تحصل',
+                  'لو سجلت، يعني أنك موافق على قائمة الانتظار في أن يحصل',
                   'By registering, you agree to our Terms of Service and Privacy Policy'
                 )}
               </span>
