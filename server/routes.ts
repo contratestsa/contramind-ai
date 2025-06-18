@@ -100,21 +100,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: validatedData.message,
       });
       
-      if (!emailResult.success) {
-        console.error('Failed to send contact emails:', emailResult.error);
-        res.status(500).json({ 
-          message: "Message saved but failed to send emails",
-          id: message.id,
-          emailError: emailResult.error
-        });
-        return;
-      }
-      
       res.json({ 
         success: true, 
         message: "Message sent successfully",
-        id: message.id,
-        emailsSent: true
+        id: message.id 
       });
     } catch (error) {
       console.error("Contact form error:", error);
