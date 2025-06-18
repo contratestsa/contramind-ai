@@ -3,7 +3,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const scrollToWaitlist = () => {
     const element = document.querySelector('#waitlist');
