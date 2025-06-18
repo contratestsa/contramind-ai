@@ -1,7 +1,10 @@
 import { Resend } from 'resend';
 
 // Initialize Resend with API key
-const RESEND_API_KEY = process.env.RESEND_API_KEY || 're_Uenah5Xh_4JuS15Szx9VW72LizxVNqbVe';
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+if (!RESEND_API_KEY) {
+  console.error('RESEND_API_KEY environment variable is not set');
+}
 const resend = new Resend(RESEND_API_KEY);
 
 interface EmailData {
@@ -166,25 +169,57 @@ This email was sent because you joined our waitlist at contramind.ai
 }
 
 export async function sendContactEmail({ name, email, subject, message }: ContactEmailData) {
-  // Send email to ContraMind team
-  const toTeamEmail = await resend.emails.send({
-    from: 'ContraMind Team <noreply@contramind.ai>',
-    to: ['ceo@contramind.com'],
-    subject: `Contact Form: ${subject}`,
-    html: getContactEmailTemplate(name, email, subject, message),
-    text: getContactTextTemplate(name, email, subject, message),
-  });
+  console.log('=== CONTACT EMAIL SERVICE STARTING ===');
+  console.log(`API Key present: ${!!RESEND_API_KEY}`);
+  console.log(`Sending contact message: ${subject} from ${name} (${email})`);
+  
+  if (!RESEND_API_KEY) {
+    console.error('RESEND_API_KEY is missing - emails cannot be sent');
+    return {
+      success: false,
+      error: 'Email service not configured - missing API key'
+    };
+  }
 
-  // Send confirmation email to user
-  const toUserEmail = await resend.emails.send({
-    from: 'ContraMind Team <noreply@contramind.ai>',
-    to: [email],
-    subject: 'Message Received - ContraMind Team',
-    html: getContactConfirmationTemplate(name),
-    text: getContactConfirmationTextTemplate(name),
-  });
+  try {
+    // Send email to ContraMind team
+    console.log('Attempting to send email to team...');
+    const toTeamEmail = await resend.emails.send({
+      from: 'ContraMind Team <noreply@contramind.ai>',
+      to: ['ceo@contramind.com'],
+      subject: `Contact Form: ${subject}`,
+      html: getContactEmailTemplate(name, email, subject, message),
+      text: getContactTextTemplate(name, email, subject, message),
+    });
+    console.log('Email sent to team successfully:', JSON.stringify(toTeamEmail, null, 2));
 
-  return { toTeamEmail, toUserEmail };
+    // Send confirmation email to user
+    console.log('Attempting to send confirmation email to user...');
+    const toUserEmail = await resend.emails.send({
+      from: 'ContraMind Team <noreply@contramind.ai>',
+      to: [email],
+      subject: 'Message Received - ContraMind Team',
+      html: getContactConfirmationTemplate(name),
+      text: getContactConfirmationTextTemplate(name),
+    });
+    console.log('Confirmation email sent to user successfully:', JSON.stringify(toUserEmail, null, 2));
+
+    console.log('=== CONTACT EMAIL SERVICE COMPLETED SUCCESSFULLY ===');
+    return { 
+      success: true,
+      toTeamEmail, 
+      toUserEmail 
+    };
+  } catch (error) {
+    console.error('=== ERROR IN CONTACT EMAIL SERVICE ===');
+    console.error('Full error details:', error);
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
 }
 
 function getContactEmailTemplate(name: string, email: string, subject: string, message: string): string {
