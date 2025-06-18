@@ -185,7 +185,7 @@ export default function Waitlist() {
             <h3 className="text-xl sm:text-2xl lg:text-3xl font-arabic-heading-bold text-gray-800">
               {t('انضم إلى قائمة الانتظار', 'Join the Waitlist')}
             </h3>
-            <div className="bg-sky text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full">
+            <div className="bg-[#e6f0f5] text-[#0c2836] px-3 sm:px-4 py-1 sm:py-2 rounded-full">
               <span className="text-xs sm:text-sm font-bold">
                 {waitlistCount ? `#${waitlistCount + 1}` : '#1'}
               </span>
@@ -203,7 +203,7 @@ export default function Waitlist() {
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
                   required
                 />
@@ -218,7 +218,7 @@ export default function Waitlist() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('example@domain.com', 'example@domain.com')}
                   required
                 />
@@ -233,7 +233,7 @@ export default function Waitlist() {
                   type="tel"
                   value={formData.phoneNumber}
                   onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('+966 50 123 4567', '+966 50 123 4567')}
                   required
                 />
@@ -248,7 +248,7 @@ export default function Waitlist() {
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('اسم الشركة', 'Company name')}
                 />
               </div>
@@ -262,7 +262,7 @@ export default function Waitlist() {
                   type="text"
                   value={formData.jobTitle}
                   onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('محامي، مستشار قانوني، إلخ...', 'Lawyer, Legal Advisor, etc...')}
                 />
               </div>
@@ -271,7 +271,7 @@ export default function Waitlist() {
             <Button
               type="submit"
               disabled={joinWaitlistMutation.isPending}
-              className="w-full bg-sky text-navy px-6 py-3 sm:py-4 rounded-custom font-semibold text-sm sm:text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover disabled:opacity-50"
+              className="w-full px-6 py-3 sm:py-4 rounded-custom font-semibold text-sm sm:text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover disabled:opacity-50 bg-[#0c2836] text-[#e6f0f5]"
             >
               {joinWaitlistMutation.isPending ? (
                 <span className="flex items-center justify-center">
@@ -287,7 +287,7 @@ export default function Waitlist() {
 
             <p className="text-xs text-gray-400 text-center mt-4">
               {t(
-                'لن تشارك بريدك الإلكتروني أبداً لغاء الاشتراك في أي وقت. 🔐🔒 محفوظة لصدق اليوم',
+                'لن تشارك بريدك الإلكتروني أبداً، يمكنك الغاء الاشتراك في أي وقت. ',
                 'By registering, you agree to our Terms of Service and Privacy Policy'
               )}
             </p>
