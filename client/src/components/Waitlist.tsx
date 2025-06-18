@@ -281,7 +281,7 @@ export default function Waitlist() {
               <p className="text-xs text-gray-400">
                 {t(
                   'لن تشارك بريدك الإلكتروني أبداً، يمكنك الغاء الاشتراك في أي وقت. ',
-                  'By registering, you agree to our Terms of Service and Privacy Policy'
+                  'We\'ll never share your email. Unsubscribe anytime.'
                 )}
               </p>
               <div className="bg-[#e6f0f5] text-[#0c2836] px-3 py-1 rounded-full">

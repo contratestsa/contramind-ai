@@ -48,7 +48,7 @@ export default function Hero() {
             >
               <span className="gradient-text block whitespace-pre-line">
                 <span style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Space Grotesk', sans-serif", fontWeight: 700 }}>
-                  {t('أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for\nContract Management and\nReview, Supporting Arabic\nLanguage')}
+                  {t('أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review, Supporting Arabic Language')}
                 </span>
               </span>
             </motion.h1>

@@ -23,7 +23,28 @@ interface SimpleLanguageProviderProps {
 export class SimpleLanguageProvider extends React.Component<SimpleLanguageProviderProps, { language: Language }> {
   constructor(props: SimpleLanguageProviderProps) {
     super(props);
-    this.state = { language: 'ar' };
+    
+    // Detect browser language
+    const detectBrowserLanguage = (): Language => {
+      // Check localStorage first for user preference
+      const savedLanguage = localStorage.getItem('language');
+      if (savedLanguage === 'ar' || savedLanguage === 'en') {
+        return savedLanguage as Language;
+      }
+      
+      // Detect from browser language
+      const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
+      
+      // Check if browser language is Arabic
+      if (browserLanguage.startsWith('ar')) {
+        return 'ar';
+      }
+      
+      // Default to English for all other languages
+      return 'en';
+    };
+    
+    this.state = { language: detectBrowserLanguage() };
   }
 
   componentDidMount() {
@@ -42,6 +63,7 @@ export class SimpleLanguageProvider extends React.Component<SimpleLanguageProvid
 
   setLanguage = (language: Language) => {
     this.setState({ language });
+    localStorage.setItem('language', language);
   };
 
   t = (ar: string, en: string): string => {
