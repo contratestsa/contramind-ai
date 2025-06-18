@@ -285,7 +285,7 @@ export default function Waitlist() {
                 )}
               </p>
               <div className="bg-[#e6f0f5] text-[#0c2836] px-3 py-1 rounded-full">
-                <span className="text-xs font-bold flex items-center gap-1">
+                <span className="text-xs font-bold flex items-center gap-1 text-[#69a2bf]">
                   <PartyPopper className="w-3 h-3" />
                   {t(`محترف انضم اليوم ${waitlistCount ? waitlistCount + 1 : 1}`, `Professional joined today ${waitlistCount ? waitlistCount + 1 : 1}`)}
                 </span>
