@@ -43,10 +43,13 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-3xl sm:text-4xl lg:text-6xl font-heading-en leading-[1.1] sm:leading-[1.1] lg:leading-[1.1] mb-6 sm:mb-8 px-2 sm:px-0"
+              className="text-3xl sm:text-4xl lg:text-6xl leading-[1.1] sm:leading-[1.1] lg:leading-[1.1] mb-6 sm:mb-8 px-2 sm:px-0"
+              style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
             >
               <span className="gradient-text block whitespace-pre-line">
-                {t('أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for\nContract Management and\nReview, Supporting Arabic\nLanguage')}
+                <span style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Space Grotesk', sans-serif", fontWeight: 700 }}>
+                  {t('أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for\nContract Management and\nReview, Supporting Arabic\nLanguage')}
+                </span>
               </span>
             </motion.h1>
 
