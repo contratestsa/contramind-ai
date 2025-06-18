@@ -182,14 +182,7 @@ export default function Waitlist() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="bg-white rounded-2xl p-6 sm:p-8 lg:p-12 shadow-custom-hover"
         >
-          <div className="flex items-center justify-end mb-6 sm:mb-8">
-            <div className="bg-[#e6f0f5] text-[#0c2836] px-3 sm:px-4 py-1 sm:py-2 rounded-full">
-              <span className="text-xs sm:text-sm font-bold flex items-center gap-1">
-                <PartyPopper className="w-3 h-3 sm:w-4 sm:h-4" />
-                {t(`محترف انضم اليوم ${waitlistCount ? waitlistCount + 1 : 1}`, `Professional joined today ${waitlistCount ? waitlistCount + 1 : 1}`)}
-              </span>
-            </div>
-          </div>
+
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -284,12 +277,20 @@ export default function Waitlist() {
               )}
             </Button>
 
-            <p className="text-xs text-gray-400 text-center mt-4">
-              {t(
-                'لن تشارك بريدك الإلكتروني أبداً، يمكنك الغاء الاشتراك في أي وقت. ',
-                'By registering, you agree to our Terms of Service and Privacy Policy'
-              )}
-            </p>
+            <div className="flex items-center justify-between mt-4">
+              <p className="text-xs text-gray-400">
+                {t(
+                  'لن تشارك بريدك الإلكتروني أبداً، يمكنك الغاء الاشتراك في أي وقت. ',
+                  'By registering, you agree to our Terms of Service and Privacy Policy'
+                )}
+              </p>
+              <div className="bg-[#e6f0f5] text-[#0c2836] px-3 py-1 rounded-full">
+                <span className="text-xs font-bold flex items-center gap-1">
+                  <PartyPopper className="w-3 h-3" />
+                  {t(`محترف انضم اليوم ${waitlistCount ? waitlistCount + 1 : 1}`, `Professional joined today ${waitlistCount ? waitlistCount + 1 : 1}`)}
+                </span>
+              </div>
+            </div>
           </form>
         </motion.div>
       </div>
