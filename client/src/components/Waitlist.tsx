@@ -195,7 +195,7 @@ export default function Waitlist() {
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-sm font-semibold text-gray-700">
+                <Label htmlFor="fullName" className="text-sm font-semibold text-gray-300">
                   {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
@@ -210,7 +210,7 @@ export default function Waitlist() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">
+                <Label htmlFor="email" className="text-sm font-semibold text-gray-300">
                   {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
@@ -225,7 +225,7 @@ export default function Waitlist() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-700">
+                <Label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-300">
                   {t('رقم الهاتف', 'Phone Number')} *
                 </Label>
                 <Input
@@ -240,7 +240,7 @@ export default function Waitlist() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company" className="text-sm font-semibold text-gray-700">
+                <Label htmlFor="company" className="text-sm font-semibold text-gray-300">
                   {t('الشركة', 'Company')}
                 </Label>
                 <Input
@@ -254,7 +254,7 @@ export default function Waitlist() {
               </div>
 
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="jobTitle" className="text-sm font-semibold text-gray-700">
+                <Label htmlFor="jobTitle" className="text-sm font-semibold text-gray-300">
                   {t('المسمى الوظيفي', 'Job Title')}
                 </Label>
                 <Input
