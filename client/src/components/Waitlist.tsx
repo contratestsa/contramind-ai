@@ -189,7 +189,7 @@ export default function Waitlist() {
             <div className="bg-[#e6f0f5] text-[#0c2836] px-3 sm:px-4 py-1 sm:py-2 rounded-full">
               <span className="text-xs sm:text-sm font-bold flex items-center gap-1">
                 <PartyPopper className="w-3 h-3 sm:w-4 sm:h-4" />
-                {waitlistCount ? `#${waitlistCount + 1}` : '#1'}
+                {t(`محترف انضم اليوم ${waitlistCount ? waitlistCount + 1 : 1}`, `Professional joined today ${waitlistCount ? waitlistCount + 1 : 1}`)}
               </span>
             </div>
           </div>
@@ -282,7 +282,7 @@ export default function Waitlist() {
                 </span>
               ) : (
                 <span className="font-arabic-body-bold">
-                  {t('انضم إلى قائمة الانتظار مجاناً', 'Join the Waitlist for Free')}
+                  {t('سجل الآن', 'Join the Waitlist for Free')}
                 </span>
               )}
             </Button>
