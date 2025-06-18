@@ -10,10 +10,10 @@ interface SimpleLanguageContextType {
 }
 
 export const SimpleLanguageContext = React.createContext<SimpleLanguageContextType>({
-  language: 'ar',
+  language: 'en',
   setLanguage: () => {},
-  t: (ar: string, en: string) => ar,
-  dir: 'rtl'
+  t: (ar: string, en: string) => en,
+  dir: 'ltr'
 });
 
 interface SimpleLanguageProviderProps {
@@ -23,7 +23,7 @@ interface SimpleLanguageProviderProps {
 export class SimpleLanguageProvider extends React.Component<SimpleLanguageProviderProps, { language: Language }> {
   constructor(props: SimpleLanguageProviderProps) {
     super(props);
-    this.state = { language: 'ar' };
+    this.state = { language: 'en' };
   }
 
   componentDidMount() {
