@@ -285,14 +285,11 @@ export default function Waitlist() {
               )}
             </Button>
 
-            <p className="text-xs text-gray-400 text-center mt-4 flex items-center justify-center gap-1">
-              <span>🔒</span>
-              <span>
-                {t(
-                  'لو سجلت، يعني أنك موافق على قائمة الانتظار في أن يحصل',
-                  'By registering, you agree to our Terms of Service and Privacy Policy'
-                )}
-              </span>
+            <p className="text-xs text-gray-400 text-center mt-4">
+              {t(
+                'لن تشارك بريدك الإلكتروني أبداً لغاء الاشتراك في أي وقت. 🔐🔒 محفوظة لصدق اليوم',
+                'By registering, you agree to our Terms of Service and Privacy Policy'
+              )}
             </p>
           </form>
         </motion.div>
