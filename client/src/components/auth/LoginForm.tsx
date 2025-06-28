@@ -147,7 +147,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
   };
 
   return (
-    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#0d2836] pl-[30px] pr-[30px] mt-[-48px] mb-[-48px] ml-[-168px] mr-[-168px]" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#0d2836] pl-[30px] pr-[30px] ml-[-168px] mr-[-168px] pt-[0px] pb-[0px] mt-[-40px] mb-[-40px]" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-[400px] w-full space-y-8">
         
 
