@@ -60,7 +60,7 @@ export default function Header() {
               <img 
                 src={logoImage} 
                 alt="ContraMind.ai Logo" 
-                className="h-12 w-auto lg:h-14"
+                className="h-8 w-auto"
               />
             </button>
           </motion.div>
