@@ -69,7 +69,7 @@ const translations = {
 };
 
 export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) {
-  const [, setLocation] = useLocation();
+  const { navigateTo } = useLanguageAwareNavigation();
   const { toast } = useToast();
   const t = translations[locale];
   const isRTL = locale === "ar";
@@ -326,6 +326,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
                 type="button"
                 variant="outline"
                 className="border-[#E6E6E6] hover:bg-gray-50 flex items-center justify-center gap-2"
+                onClick={() => alert("Google login placeholder")}
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -340,12 +341,13 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
                 type="button"
                 variant="outline"
                 className="border-[#E6E6E6] hover:bg-gray-50 flex items-center justify-center gap-2"
+                onClick={() => alert("Microsoft login placeholder")}
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#0C2836">
-                  <path d="M23.64 12.204c0-.436-.036-.887-.098-1.345h-11.48v2.541h6.564c-.284 1.498-1.144 2.769-2.437 3.622v2.999h3.947c2.305-2.123 3.634-5.249 3.634-8.936z"/>
-                  <path d="M12.062 24c3.297 0 6.065-1.095 8.087-2.959l-3.947-2.999c-1.095.738-2.497 1.174-4.14 1.174-3.174 0-5.861-2.144-6.828-5.03h-4.073v3.098C3.24 21.348 7.317 24 12.062 24z"/>
-                  <path d="M5.234 14.186c-.244-.738-.383-1.523-.383-2.334s.139-1.596.383-2.334V6.42H1.161C.422 7.889 0 9.407 0 11.852s.422 3.963 1.161 5.432l4.073-3.098z"/>
-                  <path d="M12.062 4.653c1.789 0 3.398.615 4.661 1.823l3.497-3.497C18.122 1.186 15.354 0 12.062 0 7.317 0 3.24 2.652 1.161 6.42l4.073 3.098c.967-2.886 3.654-5.03 6.828-5.03z"/>
+                <svg className="w-4 h-4" viewBox="0 0 24 24">
+                  <path fill="#00BCF2" d="M0 0h11.377v11.372H0z"/>
+                  <path fill="#0078D4" d="M12.623 0H24v11.372H12.623z"/>
+                  <path fill="#00BCF2" d="M0 12.623h11.377V24H0z"/>
+                  <path fill="#40E0D0" d="M12.623 12.623H24V24H12.623z"/>
                 </svg>
                 <span className={isRTL ? 'font-[Almarai]' : 'font-[Inter]'}>{t.microsoft}</span>
               </Button>
@@ -356,11 +358,12 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
           <div className="mt-6 text-center">
             <p className={`text-gray-600 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
               {t.noAccount}{" "}
-              <Link href="/signup">
-                <a className={`font-semibold text-[#0C2836] hover:text-[#1a4a5c] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-                  {t.createAccount}
-                </a>
-              </Link>
+              <button 
+                onClick={() => navigateTo('/signup')}
+                className={`font-semibold text-[#0C2836] hover:text-[#1a4a5c] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}
+              >
+                {t.createAccount}
+              </button>
             </p>
           </div>
         </motion.div>

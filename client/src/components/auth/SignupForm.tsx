@@ -1,8 +1,9 @@
-import { useState } from "react";
+import * as React from "react";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
-import { Eye, EyeOff, Lock, Mail, User, Building, Briefcase, ArrowRight, ArrowLeft, Chrome, UserPlus, Check, X } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User, Building, Briefcase, ArrowRight, ArrowLeft, UserPlus, Check, X } from "lucide-react";
+import { useLanguageAwareNavigation } from "@/components/LanguageRouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -111,7 +112,7 @@ type FormData = InsertUser & {
 };
 
 export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps) {
-  const [, setLocation] = useLocation();
+  const { navigateTo } = useLanguageAwareNavigation();
   const { toast } = useToast();
   const t = translations[locale];
   const isRTL = locale === "ar";
@@ -168,7 +169,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
         description: t.canNowLogin,
         variant: "default",
       });
-      setLocation("/login");
+      navigateTo("/login");
     },
     onError: (error: any) => {
       toast({
