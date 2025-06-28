@@ -238,17 +238,9 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
   const passwordStrengthInfo = getPasswordStrengthText(passwordStrength);
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12`} dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 bg-[#0d2836]" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-[400px] w-full space-y-8">
-        {/* Language Toggle */}
-        <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'}`}>
-          <button
-            onClick={onLanguageToggle}
-            className="text-white/70 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
-          >
-            {locale === "ar" ? "English" : "عربي"}
-          </button>
-        </div>
+        
 
         {/* Header */}
         <motion.div
@@ -262,12 +254,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
               whileHover={{ scale: 1.05 }}
               className="inline-flex items-center justify-center mb-6 cursor-pointer"
             >
-              <img 
-                src={logoImage} 
-                alt="ContraMind"
-                className="h-16 w-auto"
-                style={{ padding: '8px' }} // 0.5× logomark height clearspace
-              />
+              
             </motion.div>
           </Link>
           
@@ -589,10 +576,8 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
           <div className="mt-6 text-center">
             <p className={`text-gray-600 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
               {t.alreadyHaveAccount}{" "}
-              <Link href="/login">
-                <a className={`font-semibold text-[#0C2836] hover:text-[#1a4a5c] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-                  {t.signIn}
-                </a>
+              <Link href="/login" className={`font-semibold text-[#0C2836] hover:text-[#1a4a5c] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                {t.signIn}
               </Link>
             </p>
           </div>

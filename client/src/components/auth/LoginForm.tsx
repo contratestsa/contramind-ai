@@ -281,10 +281,8 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
                 </Label>
               </div>
               
-              <Link href="/forgot-password">
-                <a className={`text-sm text-[#0C2836] hover:text-[#1a4a5c] font-medium ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-                  {t.forgotPassword}
-                </a>
+              <Link href="/forgot-password" className={`text-sm text-[#0C2836] hover:text-[#1a4a5c] font-medium ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                {t.forgotPassword}
               </Link>
             </div>
 
