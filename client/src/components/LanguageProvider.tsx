@@ -18,6 +18,32 @@ interface LanguageProviderProps {
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguage] = React.useState<Language>('ar');
 
+  React.useEffect(() => {
+    const detectBrowserLanguage = (): Language => {
+      if (typeof window === 'undefined') return 'ar';
+      
+      const savedLanguage = localStorage.getItem('language');
+      if (savedLanguage === 'ar' || savedLanguage === 'en') {
+        return savedLanguage as Language;
+      }
+      
+      const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
+      
+      if (browserLanguage.startsWith('ar')) {
+        return 'ar';
+      }
+      
+      return 'en';
+    };
+
+    setLanguage(detectBrowserLanguage());
+  }, []);
+
+  const setLanguageWithPersistence = React.useCallback((newLanguage: Language) => {
+    setLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage);
+  }, []);
+
   const t = React.useCallback((ar: string, en: string): string => {
     return language === 'ar' ? ar : en;
   }, [language]);
@@ -33,10 +59,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const contextValue = React.useMemo<LanguageContextType>(() => ({
     language,
-    setLanguage,
+    setLanguage: setLanguageWithPersistence,
     t,
     dir
-  }), [language, setLanguage, t, dir]);
+  }), [language, setLanguageWithPersistence, t, dir]);
 
   return (
     <LanguageContext.Provider value={contextValue}>
