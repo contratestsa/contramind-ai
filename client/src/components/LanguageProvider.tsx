@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -9,16 +9,16 @@ interface LanguageContextType {
   dir: 'rtl' | 'ltr';
 }
 
-const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined);
+export const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined);
 
 interface LanguageProviderProps {
   children: React.ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = useState<Language>('ar');
+  const [language, setLanguage] = React.useState<Language>('ar');
 
-  useEffect(() => {
+  React.useEffect(() => {
     const detectBrowserLanguage = (): Language => {
       if (typeof window === 'undefined') return 'ar';
       
@@ -29,35 +29,34 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       
       const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
       
-      if (browserLanguage.startsWith('ar')) {
-        return 'ar';
-      }
+      if (browserLanguage.startsWith('ar')) return 'ar';
+      if (browserLanguage.startsWith('en')) return 'en';
       
-      return 'en';
+      return 'ar';
     };
 
     setLanguage(detectBrowserLanguage());
   }, []);
 
-  const setLanguageWithPersistence = useCallback((newLanguage: Language) => {
+  const setLanguageWithPersistence = React.useCallback((newLanguage: Language) => {
     setLanguage(newLanguage);
     localStorage.setItem('language', newLanguage);
   }, []);
 
-  const t = useCallback((ar: string, en: string): string => {
+  const t = React.useCallback((ar: string, en: string): string => {
     return language === 'ar' ? ar : en;
   }, [language]);
 
-  const dir: 'rtl' | 'ltr' = useMemo(() => {
+  const dir: 'rtl' | 'ltr' = React.useMemo(() => {
     return language === 'ar' ? 'rtl' : 'ltr';
   }, [language]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.documentElement.setAttribute('dir', dir);
     document.documentElement.setAttribute('lang', language);
   }, [language, dir]);
 
-  const contextValue = useMemo<LanguageContextType>(() => ({
+  const contextValue = React.useMemo<LanguageContextType>(() => ({
     language,
     setLanguage: setLanguageWithPersistence,
     t,
@@ -71,4 +70,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   );
 }
 
-export { LanguageContext };
+export function useLanguage(): LanguageContextType {
+  const context = React.useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+}
