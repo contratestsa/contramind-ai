@@ -45,10 +45,10 @@ export default function Header() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="bg-navy shadow-custom sticky top-0 z-50 min-h-[220px] md:min-h-[260px] lg:min-h-[300px]"
+      className="bg-navy shadow-custom sticky top-0 z-50 min-h-[100px] md:min-h-[120px] lg:min-h-[140px]"
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-        <div className="flex justify-between items-center h-full min-h-[220px] md:min-h-[260px] lg:min-h-[300px]">
+        <div className="flex justify-between items-center h-full min-h-[100px] md:min-h-[120px] lg:min-h-[140px]">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -63,7 +63,7 @@ export default function Header() {
               <img 
                 src={logoImage} 
                 alt="ContraMind.ai Logo" 
-                className="h-48 md:h-56 lg:h-64 w-auto"
+                className="h-20 md:h-24 lg:h-28 w-auto"
               />
             </button>
           </motion.div>
