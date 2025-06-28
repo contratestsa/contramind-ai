@@ -318,9 +318,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
-                  errors.email ? "border-red-500" : ""
-                } ${isRTL ? 'text-right' : 'text-left'}`}
+                className="flex h-10 border text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded text-left bg-[#ffffff]"
                 placeholder={t.emailPlaceholder}
                 disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
