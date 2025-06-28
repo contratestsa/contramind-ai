@@ -4,12 +4,12 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **June 28, 2025**: Implemented brand-compliant logo sizing and header layout
-  - Updated logo to h-24 md:h-28 lg:h-32 (96-128px) for proper brand prominence
-  - Enhanced header with min-h-[120px] md:min-h-[140px] to accommodate larger logo
-  - Added proper spacing around logo with brand guideline compliance
-  - Updated all pages (Home, Login, Signup) with consistent large logo sizing
-  - Fixed React hook errors by converting class components to functional components
+- **June 28, 2025**: Fixed Microsoft logo issue in Sign Up page
+  - Identified incorrect Google logo being displayed on Microsoft button in SignupForm.tsx
+  - Replaced Google's multicolored SVG with proper Microsoft four-square logo design
+  - Applied correct Microsoft brand colors: #00BCF2, #0078D4, #40E0D0
+  - Resolved React hooks errors by removing problematic SimpleLanguage component
+  - Enhanced LanguageProvider with browser language detection and localStorage persistence
   - Standardized React imports across all components for stability
 
 ## Project Architecture
