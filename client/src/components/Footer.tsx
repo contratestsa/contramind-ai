@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import * as React from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 
 export default function Footer() {

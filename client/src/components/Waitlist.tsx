@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -23,7 +23,7 @@ export default function Waitlist() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [formData, setFormData] = useState<WaitlistData>({
+  const [formData, setFormData] = React.useState<WaitlistData>({
     fullName: '',
     email: '',
     phoneNumber: '',

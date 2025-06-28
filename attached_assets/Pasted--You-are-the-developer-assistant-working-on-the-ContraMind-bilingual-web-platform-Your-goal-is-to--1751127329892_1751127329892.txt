@@ -1,0 +1,190 @@
+
+
+You are the developer assistant working on the ContraMind bilingual web platform. Your goal is to fix major usability, layout, navigation, and branding issues across English and Arabic views. The application is a SaaS platform with login and signup forms, a landing page, and dual-language support. The current version has several broken behaviors and visual inconsistencies.
+
+⸻
+
+✅ Your Responsibilities
+
+1. Global Language-Aware Routing
+	•	When users are on ContraMind.ai/en, any navigation (Login, Sign Up) must route to the English versions (/en/login, /en/signup).
+	•	Likewise, ContraMind.ai/ar must route to Arabic versions (/ar/login, /ar/signup).
+	•	Language context should persist when navigating between pages.
+	•	Avoid hardcoded language fallbacks — use dynamic routing or i18n-aware router (e.g. Next.js i18n or Vue i18n).
+
+2. Header + Logo Consistency
+	•	Logo on Login/Sign Up is too small and not consistent with the homepage.
+	•	Implement a persistent site header:
+	•	Logo on the left (responsive)
+	•	Language switcher top-right
+	•	This header should appear on all pages — homepage, login, signup, contact.
+
+3. Layout + Responsiveness
+	•	Forms (login, signup) are too narrow on desktop. They appear mobile-styled in a desktop browser.
+	•	Expand form container width to 480–600px on screens wider than 768px.
+	•	Ensure full layout responsiveness (desktop/tablet/mobile breakpoints).
+
+4. Form Field Styling
+	•	Replace dark field backgrounds with light gray (#F1F3F5 or similar).
+	•	Placeholder text should be in muted gray (#9CA3AF).
+	•	Add visible :focus styles for accessibility.
+	•	All inputs must support LTR and RTL rendering.
+
+5. Social Login Buttons
+	•	Icons are incorrect:
+	•	Google sign-in uses a Chrome icon (wrong)
+	•	Microsoft sign-in uses a Google “G” (wrong)
+	•	Replace with correct brand icons:
+	•	Google → multicolored “G”
+	•	Microsoft → official logo
+	•	Also: Buttons have no functionality.
+	•	Integrate working auth actions (can mock it, or use placeholder for now).
+
+6. Language Switching
+	•	Language toggling is unreliable.
+	•	If a user is on /en and clicks Login, it should stay in English.
+	•	If on /ar and clicks Login, it should stay in Arabic.
+	•	Switching language should preserve the route context (e.g., /en/signup ↔ /ar/signup).
+
+⸻
+
+📌 Additional Fix (Based on User Feedback)
+
+“Also, I’m not sure if you recall this, but when I open the main website in English and navigate to the login or sign-up pages, it should take me to the English version of those pages. Currently, it redirects to the Arabic versions instead. Likewise, if I’m on the English login or sign-up page, it does not consistently take me to the correct English destination.
+
+This needs to be fixed. The website should have distinct routes:
+	•	English: ContraMind.ai/en
+	•	Arabic: ContraMind.ai/ar
+
+From there, sign-in and sign-up should match the selected language.”
+
+Implement full route separation with matching content localization.
+
+⸻
+
+🧪 Testing
+
+Before you’re done, test the following:
+	•	Desktop layout and spacing
+	•	Form field styling in both languages
+	•	Logo/header consistency
+	•	Navigation in both language paths
+	•	Language switcher behavior
+	•	Social buttons with mock click events or real OAuth
+
+Great! Here’s the full Replit Agent prompt tailored for a Next.js + Tailwind CSS project:
+
+⸻
+
+🧠 Replit Agent Prompt for Next.js + Tailwind CSS: Fix ContraMind Bilingual Website
+
+You are working on a bilingual web platform called ContraMind, built with Next.js and Tailwind CSS. Your job is to fix visual bugs, layout responsiveness, branding issues, and language-aware navigation for both English and Arabic versions of the site.
+
+⸻
+
+🔁 Framework & Stack
+	•	Framework: Next.js (App Router or Pages Router — detect automatically)
+	•	Styling: Tailwind CSS
+	•	Routing: Use Next.js i18n routing or custom locale logic if not set
+	•	Localization: Assume English (/en) and Arabic (/ar)
+
+⸻
+
+✅ Task Checklist
+
+1. Language-Aware Routing
+	•	Implement full i18n-aware routing using Next.js.
+	•	English pages must follow: /en, /en/login, /en/signup
+	•	Arabic pages must follow: /ar, /ar/login, /ar/signup
+	•	If a user clicks “Sign In” or “Sign Up” from an English page, they must go to the English version — and same for Arabic.
+	•	Switching languages should preserve page context.
+
+2. Header Consistency
+	•	Use a persistent <Header /> component with:
+	•	Top-left logo (not center)
+	•	Top-right language switcher (English | عربي)
+	•	“Contact”, “Sign Up”, and “Login” links in header
+	•	Header should be sticky or fixed at the top and appear on all routes (landing, auth, etc.)
+
+3. Logo + Branding Fixes
+	•	Logo on the auth pages is too small and not aligned with the homepage.
+	•	Update logo styling (w-[120px] or responsive h-auto) and use consistent placement across all views.
+	•	Background color and spacing should match homepage (no isolated, centered logo).
+
+4. Form Container Layout
+	•	The Sign Up and Login pages render narrow forms even on desktop.
+	•	Set a responsive container:
+
+<div className="w-full max-w-[600px] px-4 py-10 mx-auto">
+
+
+	•	Ensure padding and spacing match Tailwind best practices (space-y-6, rounded-2xl, etc.).
+
+5. Input Field Styling
+	•	Inputs currently use a dark background — this is incorrect.
+	•	Use:
+
+className="bg-gray-100 text-gray-800 placeholder-gray-400 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+
+
+	•	Apply RTL alignment conditionally using Tailwind’s dir variants or lang class selectors.
+
+6. Form Behavior
+	•	Use labeled inputs, ARIA attributes, and accessible placeholders.
+	•	Ensure tabbing works correctly and autofill behavior does not break the design.
+	•	Checkbox, password toggle, and “remember me” must support RTL layout properly.
+
+7. Social Login Buttons
+	•	Icons are wrong:
+	•	Google shows Chrome icon
+	•	Microsoft shows wrong G icon
+	•	Replace with correct SVGs:
+	•	Google: Google G icon
+	•	Microsoft: Microsoft logo
+	•	Structure:
+
+<button className="flex items-center justify-center gap-2 w-full border rounded-md py-3 text-sm font-medium">
+  <Image src="/google.svg" alt="Google" width={20} height={20} />
+  Continue with Google
+</button>
+
+
+	•	Add mock click handler if auth not integrated:
+
+const handleGoogleLogin = () => alert("Google login placeholder");
+
+
+
+8. Language Toggle Component
+	•	Add a LanguageToggle component:
+	•	Detect current locale (e.g., via useRouter().locale)
+	•	Allow switching between /en/... and /ar/...
+	•	Optionally store preferred language in localStorage
+
+⸻
+
+📌 Bug from User (Arabic ↔ English Mismatch)
+
+When I open the main site in English and go to login or sign-up, it still routes me to Arabic.
+Likewise, switching languages from login/signup doesn’t work.
+I want /en and /ar to be clearly separate, and each should route to the correct version of login or signup.
+
+✅ Fix this using Next.js routing with i18n, or create a custom router wrapper that parses and sets the locale based on the URL.
+
+⸻
+
+🧪 QA Checklist
+
+Test all the following:
+	•	✅ Sign In + Sign Up in both languages
+	•	✅ Language switching preserves route
+	•	✅ Layout expands properly on desktop
+	•	✅ Placeholder + field styles match brand
+	•	✅ Social buttons show correct icons
+	•	✅ Logo and header remain consistent
+	•	✅ Arabic and English forms fully mirror each other
+
+⸻
+
+Final output should be a responsive, clean, and bilingual experience that matches the ContraMind brand. Apply best practices for accessibility and localization.
+
