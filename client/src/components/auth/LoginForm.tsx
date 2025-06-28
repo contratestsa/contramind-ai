@@ -147,17 +147,9 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
   };
 
   return (
-    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#0d2836]" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#0d2836] pl-[30px] pr-[30px] mt-[-48px] mb-[-48px] ml-[-168px] mr-[-168px]" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-[400px] w-full space-y-8">
-        {/* Language Toggle */}
-        <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'}`}>
-          <button
-            onClick={onLanguageToggle}
-            className="text-white/70 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
-          >
-            {locale === "ar" ? "English" : "عربي"}
-          </button>
-        </div>
+        
 
         {/* Header */}
         <motion.div
@@ -166,19 +158,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <Link href="/">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="inline-flex items-center justify-center mb-6 cursor-pointer"
-            >
-              <img 
-                src={logoImage} 
-                alt="ContraMind"
-                className="h-16 w-auto"
-                style={{ padding: '8px' }} // 0.5× logomark height clearspace
-              />
-            </motion.div>
-          </Link>
+          
           
           <h1 className={`text-3xl font-bold text-white mb-2 ${isRTL ? 'font-[Almarai]' : 'font-[Space_Grotesk]'}`}>
             {t.signIn}
@@ -290,7 +270,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
             <Button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full bg-[#B7DEE8] hover:bg-[#a5c9d6] text-white font-semibold py-2 rounded transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full bg-[#B7DEE8] hover:bg-[#a5c9d6] text-[#0d2836] font-semibold py-2 rounded transition-all duration-300 flex items-center justify-center gap-2"
             >
               {loginMutation.isPending ? (
                 <div className="flex items-center gap-2">
