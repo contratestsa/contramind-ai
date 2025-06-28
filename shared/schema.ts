@@ -5,7 +5,10 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
   password: text("password").notNull(),
+  fullName: text("full_name").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const waitlistEntries = pgTable("waitlist_entries", {
@@ -29,7 +32,14 @@ export const contactMessages = pgTable("contact_messages", {
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
+  email: true,
   password: true,
+  fullName: true,
+});
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
 });
 
 export const insertWaitlistSchema = createInsertSchema(waitlistEntries).pick({
@@ -49,6 +59,7 @@ export const insertContactSchema = createInsertSchema(contactMessages).pick({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+export type LoginData = z.infer<typeof loginSchema>;
 export type InsertWaitlistEntry = z.infer<typeof insertWaitlistSchema>;
 export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
 export type InsertContactMessage = z.infer<typeof insertContactSchema>;

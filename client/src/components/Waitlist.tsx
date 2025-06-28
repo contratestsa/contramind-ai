@@ -137,7 +137,7 @@ export default function Waitlist() {
 
   return (
     <section id="waitlist" className="py-12 sm:py-20 lg:py-32 bg-navy">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-[#0f0f0f]">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -168,7 +168,7 @@ export default function Waitlist() {
               <span>{countdown.days.toString().padStart(2, '0')}</span>:
               <span>{countdown.hours.toString().padStart(2, '0')}</span>:
               <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
-              <span>{countdown.seconds.toString().padStart(2, '0')}</span>
+              <span>10</span>
             </div>
             <div className="text-xs text-gray-500 mt-1 font-arabic-body">
               {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
