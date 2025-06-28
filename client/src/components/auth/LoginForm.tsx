@@ -102,7 +102,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
         description: t.welcome,
         variant: "default",
       });
-      setLocation("/dashboard");
+      navigateTo("/dashboard");
     },
     onError: (error: any) => {
       toast({
