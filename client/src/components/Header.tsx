@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Globe, Flag } from 'lucide-react';
+import { ChevronDown, Globe, Flag, LogIn, UserPlus } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'wouter';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 
@@ -68,6 +69,30 @@ export default function Header() {
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
             {/* Contact Us Icon */}
             <ContactUs />
+            
+            {/* Authentication Links */}
+            <div className="flex items-center space-x-2 rtl:space-x-reverse">
+              <Link href="/login">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:text-white hover:bg-white/10 flex items-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  {t('تسجيل الدخول', 'Login')}
+                </Button>
+              </Link>
+              
+              <Link href="/signup">
+                <Button
+                  size="sm"
+                  className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  {t('إنشاء حساب', 'Sign Up')}
+                </Button>
+              </Link>
+            </div>
             
             {/* Language Dropdown */}
             <div className="relative" ref={dropdownRef}>
