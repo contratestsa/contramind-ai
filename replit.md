@@ -48,7 +48,7 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 - Consistent color scheme: light backgrounds (#f0f3f5), dark blue buttons (#0c2836)
 - Privacy messaging: "We'll never share your email. Unsubscribe anytime."
 - Fixed countdown timer instead of dynamic calculation
-- **Logo Brand Guidelines**: Dominant brand element sizing (h-48 md:h-56 lg:h-64) with massive header (220-300px) to serve as primary visual identifier matching brand prominence requirements
+- **Logo Brand Guidelines**: Exact sizing w-72 h-18 (288x72px) with object-contain and object-left positioning as specified by user requirements
 
 ## Technical Decisions
 - Browser language detection for initial language setting
