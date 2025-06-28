@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import * as React from 'react';
 
 export type Language = 'ar' | 'en';
 
 // Simple language hook with setLanguage function
 export function useSimpleLanguage() {
-  const [language, setLanguage] = useState<Language>('ar');
+  const [language, setLanguage] = React.useState<Language>('ar');
   
   const t = (ar: string, en: string) => {
     return language === 'ar' ? ar : en;
