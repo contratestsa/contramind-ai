@@ -195,9 +195,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className={`w-full py-3 px-4 bg-[#F1F3F5] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0C2836] focus:border-transparent text-gray-800 placeholder-gray-400 ${
-                  errors.email ? "border-red-500" : ""
-                } ${isRTL ? 'text-right' : 'text-left'}`}
+                className="flex h-10 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-3 px-4 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0C2836] focus:border-transparent text-gray-800 placeholder-gray-400 text-left bg-[#ffffff]"
                 placeholder={t.emailPlaceholder}
                 disabled={loginMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
