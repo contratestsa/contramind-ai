@@ -9,7 +9,7 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-[#f0f3f5]">
       <Header />
-      <div className="pt-[140px] md:pt-[160px] pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="pt-[170px] md:pt-[190px] lg:pt-[210px] pb-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-[600px] mx-auto">
           <LoginForm 
             locale={language} 
