@@ -8,6 +8,8 @@ import { Link } from 'wouter';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 
+import Logo_Design_ContraMind from "@assets/Logo_Design_ContraMind.png";
+
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { navigateTo } = useLanguageAwareNavigation();
@@ -61,9 +63,9 @@ export default function Header() {
               className="flex items-center p-4 md:p-6 -m-4 md:-m-6 rounded-lg hover:bg-white/5 transition-colors duration-200"
             >
               <img 
-                src={logoImage} 
+                src={Logo_Design_ContraMind} 
                 alt="ContraMind.ai Logo" 
-                className="w-72 h-18 object-contain object-left"
+                className="w-72 h-18 object-contain object-left ml-[0px] mr-[0px] pt-[-25px] pb-[-25px] pl-[0px] pr-[0px]"
               />
             </button>
           </motion.div>
