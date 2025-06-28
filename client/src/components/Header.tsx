@@ -56,11 +56,14 @@ export default function Header() {
             transition={{ delay: 0.2 }}
             className="flex items-center"
           >
-            <button onClick={() => navigateTo('/')} className="flex items-center">
+            <button 
+              onClick={() => navigateTo('/')} 
+              className="flex items-center p-4 md:p-6 -m-4 md:-m-6 rounded-lg hover:bg-white/5 transition-colors duration-200"
+            >
               <img 
                 src={logoImage} 
                 alt="ContraMind.ai Logo" 
-                className="h-16 w-auto"
+                className="h-16 md:h-20 lg:h-24 w-auto"
               />
             </button>
           </motion.div>
@@ -78,7 +81,7 @@ export default function Header() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-white hover:text-white hover:bg-white/10 flex items-center gap-2"
+                  className="text-white hover:text-white hover:bg-white/10 flex items-center gap-2 h-10 px-4"
                 >
                   <LogIn className="w-4 h-4" />
                   {t('تسجيل الدخول', 'Login')}
@@ -88,7 +91,7 @@ export default function Header() {
               <Link href="/signup">
                 <Button
                   size="sm"
-                  className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold"
+                  className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold h-10 px-4"
                 >
                   <UserPlus className="w-4 h-4" />
                   {t('إنشاء حساب', 'Sign Up')}
