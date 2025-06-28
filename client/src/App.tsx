@@ -1,7 +1,6 @@
 import React from "react";
 
-// Microsoft Logo Demonstration Component
-function MicrosoftLogoDemo() {
+function App() {
   return (
     <div style={{ padding: "40px", fontFamily: "Arial, sans-serif", maxWidth: "800px", margin: "0 auto" }}>
       <h1 style={{ color: "#0C2836", marginBottom: "30px" }}>Microsoft Logo Fix Demonstration</h1>
@@ -79,10 +78,6 @@ function MicrosoftLogoDemo() {
       </div>
     </div>
   );
-}
-
-function App() {
-  return <MicrosoftLogoDemo />;
 }
 
 export default App;
