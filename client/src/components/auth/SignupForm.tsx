@@ -238,7 +238,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
   const passwordStrengthInfo = getPasswordStrengthText(passwordStrength);
 
   return (
-    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 bg-[#0d2836]" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 bg-[#0d2836] pl-[90px] pr-[90px] ml-[-180px] mr-[-180px] mt-[-40px] mb-[-40px] pt-[0px] pb-[0px]" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-[400px] w-full space-y-8">
         
 
