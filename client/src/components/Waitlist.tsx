@@ -42,7 +42,7 @@ export default function Waitlist() {
     },
   });
 
-  const [countdown, setCountdown] = useState({
+  const [countdown, setCountdown] = React.useState({
     days: 30,
     hours: 0,
     minutes: 0,
@@ -95,7 +95,7 @@ export default function Waitlist() {
   });
 
   // Countdown timer effect
-  useEffect(() => {
+  React.useEffect(() => {
     // Set a fixed target date for launch (e.g., July 18, 2025)
     const targetDate = new Date('2025-07-18T00:00:00');
 

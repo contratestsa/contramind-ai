@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useLanguageAwareNavigation } from '@/components/LanguageRouter';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Globe, Flag, LogIn, UserPlus } from 'lucide-react';
 import { Link } from 'wouter';
@@ -9,6 +10,7 @@ import ContactUs from '@/components/ContactUs';
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
+  const { navigateTo } = useLanguageAwareNavigation();
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
