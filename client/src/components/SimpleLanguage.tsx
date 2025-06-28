@@ -20,70 +20,51 @@ interface SimpleLanguageProviderProps {
   children: React.ReactNode;
 }
 
-export class SimpleLanguageProvider extends React.Component<SimpleLanguageProviderProps, { language: Language }> {
-  constructor(props: SimpleLanguageProviderProps) {
-    super(props);
+export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
+  const detectBrowserLanguage = (): Language => {
+    if (typeof window === 'undefined') return 'ar';
     
-    // Detect browser language
-    const detectBrowserLanguage = (): Language => {
-      // Check localStorage first for user preference
-      const savedLanguage = localStorage.getItem('language');
-      if (savedLanguage === 'ar' || savedLanguage === 'en') {
-        return savedLanguage as Language;
-      }
-      
-      // Detect from browser language
-      const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
-      
-      // Check if browser language is Arabic
-      if (browserLanguage.startsWith('ar')) {
-        return 'ar';
-      }
-      
-      // Default to English for all other languages
-      return 'en';
-    };
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage === 'ar' || savedLanguage === 'en') {
+      return savedLanguage as Language;
+    }
     
-    this.state = { language: detectBrowserLanguage() };
-  }
+    const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
+    
+    if (browserLanguage.startsWith('ar')) {
+      return 'ar';
+    }
+    
+    return 'en';
+  };
+  
+  const [language, setLanguageState] = React.useState<Language>(detectBrowserLanguage);
 
-  componentDidMount() {
-    this.updateDocument();
-  }
-
-  componentDidUpdate() {
-    this.updateDocument();
-  }
-
-  updateDocument = () => {
-    const dir = this.state.language === 'ar' ? 'rtl' : 'ltr';
+  React.useEffect(() => {
+    const dir = language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.setAttribute('dir', dir);
-    document.documentElement.setAttribute('lang', this.state.language);
-  };
+    document.documentElement.setAttribute('lang', language);
+  }, [language]);
 
-  setLanguage = (language: Language) => {
-    this.setState({ language });
-    localStorage.setItem('language', language);
-  };
+  const setLanguage = React.useCallback((newLanguage: Language) => {
+    setLanguageState(newLanguage);
+    localStorage.setItem('language', newLanguage);
+  }, []);
 
-  t = (ar: string, en: string): string => {
-    return this.state.language === 'ar' ? ar : en;
-  };
+  const t = React.useCallback((ar: string, en: string): string => {
+    return language === 'ar' ? ar : en;
+  }, [language]);
 
-  render() {
-    const dir: 'rtl' | 'ltr' = this.state.language === 'ar' ? 'rtl' : 'ltr';
-    
-    const contextValue: SimpleLanguageContextType = {
-      language: this.state.language,
-      setLanguage: this.setLanguage,
-      t: this.t,
-      dir
-    };
+  const contextValue = React.useMemo<SimpleLanguageContextType>(() => ({
+    language,
+    setLanguage,
+    t,
+    dir: language === 'ar' ? 'rtl' : 'ltr'
+  }), [language, setLanguage, t]);
 
-    return (
-      <SimpleLanguageContext.Provider value={contextValue}>
-        {this.props.children}
-      </SimpleLanguageContext.Provider>
-    );
-  }
+  return (
+    <SimpleLanguageContext.Provider value={contextValue}>
+      {children}
+    </SimpleLanguageContext.Provider>
+  );
 }

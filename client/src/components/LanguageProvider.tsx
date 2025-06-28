@@ -22,7 +22,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     return language === 'ar' ? ar : en;
   }, [language]);
 
-  const dir: 'rtl' | 'ltr' = useMemo(() => {
+  const dir: 'rtl' | 'ltr' = React.useMemo(() => {
     return language === 'ar' ? 'rtl' : 'ltr';
   }, [language]);
 
@@ -31,7 +31,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     document.documentElement.setAttribute('lang', language);
   }, [language, dir]);
 
-  const contextValue = useMemo<LanguageContextType>(() => ({
+  const contextValue = React.useMemo<LanguageContextType>(() => ({
     language,
     setLanguage,
     t,
