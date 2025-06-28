@@ -504,7 +504,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
             <Button
               type="submit"
               disabled={signupMutation.isPending}
-              className="w-full bg-[#B7DEE8] hover:bg-[#a5c9d6] text-white font-semibold py-2 rounded transition-all duration-300 flex items-center justify-center gap-2 mt-6"
+              className="w-full bg-[#B7DEE8] hover:bg-[#a5c9d6] text-[#0d2836] font-semibold py-2 rounded transition-all duration-300 flex items-center justify-center gap-2 mt-6"
             >
               {signupMutation.isPending ? (
                 <div className="flex items-center gap-2">
