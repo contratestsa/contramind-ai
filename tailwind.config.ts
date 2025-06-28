@@ -9,6 +9,9 @@ export default {
         'sans': ['Inter', 'Almarai', 'system-ui', 'sans-serif'],
         'heading': ['Space Grotesk', 'Almarai', 'system-ui', 'sans-serif'],
         'arabic': ['Almarai', 'system-ui', 'sans-serif'],
+        'space-grotesk': ['Space Grotesk', 'system-ui', 'sans-serif'],
+        'inter': ['Inter', 'system-ui', 'sans-serif'],
+        'almarai': ['Almarai', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,6 +68,13 @@ export default {
           "accent-foreground": "var(--sidebar-accent-foreground)",
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
+        },
+        // ContraMind Design Tokens
+        'contraMind': {
+          'navy': '#0C2836',
+          'sky': '#B7DEE8',
+          'grey': '#E6E6E6',
+          'black': '#101920',
         },
       },
       keyframes: {
