@@ -56,13 +56,13 @@ export default function Header() {
             transition={{ delay: 0.2 }}
             className="flex items-center"
           >
-            <div className="flex items-center space-x-3 rtl:space-x-reverse overflow-hidden">
+            <button onClick={() => navigateTo('/')} className="flex items-center">
               <img 
                 src={logoImage} 
                 alt="ContraMind.ai Logo" 
-                className="w-72 h-18 object-contain object-left ml-[-9px] mr-[-9px] pt-[-27px] pb-[-27px] mt-[-59px] mb-[-59px] pl-[37px] pr-[37px]"
+                className="h-12 w-auto lg:h-14"
               />
-            </div>
+            </button>
           </motion.div>
 
 

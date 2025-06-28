@@ -1,18 +1,22 @@
-import { useState } from "react";
+import * as React from "react";
 import SignupForm from "@/components/auth/SignupForm";
-import { useSimpleLanguage } from "@/hooks/useSimpleLanguage";
+import { useLanguage } from "@/hooks/useLanguage";
+import Header from "@/components/Header";
 
 export default function Signup() {
-  const { language, setLanguage } = useSimpleLanguage();
-  
-  const handleLanguageToggle = () => {
-    setLanguage(language === "ar" ? "en" : "ar");
-  };
+  const { language } = useLanguage();
 
   return (
-    <SignupForm 
-      locale={language} 
-      onLanguageToggle={handleLanguageToggle} 
-    />
+    <div className="min-h-screen bg-[#f0f3f5]">
+      <Header />
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-[600px] mx-auto">
+          <SignupForm 
+            locale={language} 
+            onLanguageToggle={() => {}} 
+          />
+        </div>
+      </div>
+    </div>
   );
 }
