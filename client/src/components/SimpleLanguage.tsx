@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -21,24 +21,28 @@ interface SimpleLanguageProviderProps {
 }
 
 export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
-  const detectBrowserLanguage = (): Language => {
-    if (typeof window === 'undefined') return 'ar';
-    
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage === 'ar' || savedLanguage === 'en') {
-      return savedLanguage as Language;
-    }
-    
-    const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
-    
-    if (browserLanguage.startsWith('ar')) {
-      return 'ar';
-    }
-    
-    return 'en';
-  };
-  
-  const [language, setLanguageState] = React.useState<Language>(detectBrowserLanguage);
+  const [language, setLanguageState] = React.useState<Language>('ar');
+
+  React.useEffect(() => {
+    const detectBrowserLanguage = (): Language => {
+      if (typeof window === 'undefined') return 'ar';
+      
+      const savedLanguage = localStorage.getItem('language');
+      if (savedLanguage === 'ar' || savedLanguage === 'en') {
+        return savedLanguage as Language;
+      }
+      
+      const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
+      
+      if (browserLanguage.startsWith('ar')) {
+        return 'ar';
+      }
+      
+      return 'en';
+    };
+
+    setLanguageState(detectBrowserLanguage());
+  }, []);
 
   React.useEffect(() => {
     const dir = language === 'ar' ? 'rtl' : 'ltr';

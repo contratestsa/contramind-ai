@@ -3,7 +3,7 @@ import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { SimpleLanguageProvider } from "@/components/SimpleLanguage";
+import { LanguageProvider } from "@/components/LanguageProvider";
 import { LanguageRouter } from "@/components/LanguageRouter";
 import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
@@ -33,12 +33,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <SimpleLanguageProvider>
+        <LanguageProvider>
           <LanguageRouter>
             <Router />
             <Toaster />
           </LanguageRouter>
-        </SimpleLanguageProvider>
+        </LanguageProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
