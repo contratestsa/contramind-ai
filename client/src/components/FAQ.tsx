@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 
 interface FAQItem {
@@ -81,28 +80,19 @@ export default function FAQ() {
   return (
     <section className="py-20 lg:py-32 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6">
             {t('أسئلة شائعة', 'Frequently Asked Questions')}
           </h2>
           <p className="text-xl text-gray-300 font-arabic-body">
             {t('إجابات سريعة على الأسئلة الأكثر شيوعاً', 'Quick answers to common questions')}
           </p>
-        </motion.div>
+        </div>
 
         <div className="space-y-6">
           {faqItems.map((item, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
               className="bg-gray-700/50 border border-gray-600 rounded-2xl overflow-hidden shadow-custom hover:shadow-custom-hover transition-all duration-300"
             >
               <button
@@ -112,33 +102,21 @@ export default function FAQ() {
                 <h3 className={`text-lg font-arabic-body-bold text-white ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   {t(item.question.ar, item.question.en)}
                 </h3>
-                <motion.div
-                  animate={{ rotate: openIndex === index ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex items-center"
-                >
-                  <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-white`} />
-                </motion.div>
+                <div className="flex items-center">
+                  <i className={`fas ${openIndex === index ? 'fa-minus' : 'fa-plus'} text-white transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`} />
+                </div>
               </button>
               
-              <AnimatePresence>
-                {openIndex === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-8 pb-6">
-                      <p className="text-gray-300 leading-relaxed font-arabic-body text-justify">
-                        {t(item.answer.ar, item.answer.en)}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              {openIndex === index && (
+                <div className="overflow-hidden">
+                  <div className="px-8 pb-6">
+                    <p className="text-gray-300 leading-relaxed font-arabic-body text-justify">
+                      {t(item.answer.ar, item.answer.en)}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>

@@ -1,29 +1,7 @@
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 
 export default function Features() {
   const { t } = useLanguage();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-      },
-    },
-  };
 
   const features = [
     {
@@ -71,42 +49,21 @@ export default function Features() {
   return (
     <section id="product" className="py-20 lg:py-32 bg-navy">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={containerVariants}
-          className="text-center mb-20"
-        >
-          <motion.h2
-            variants={itemVariants}
-            className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6"
-          >
+        <div className="text-center mb-20">
+          <h2 className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6">
             {t('ميزات متقدمة للمحترفين', 'Advanced Features for Professionals')}
-          </motion.h2>
-          <motion.p
-            variants={itemVariants}
-            className="text-xl text-gray-300 font-arabic-body max-w-3xl mx-auto"
-          >
+          </h2>
+          <p className="text-xl text-gray-300 font-arabic-body max-w-3xl mx-auto">
             {t(
               'من ثلاثة أسابيع إلى ساعات',
               'From Weeks to Hours → Transforming Contract Management'
             )}
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={containerVariants}
-          className="grid lg:grid-cols-2 gap-12 mb-20"
-        >
+        <div className="grid lg:grid-cols-2 gap-12 mb-20">
           {/* Main Feature Card */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
-          >
+          <div className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300">
             <div className="absolute top-0 right-0 w-32 h-32 bg-sky/10 rounded-full transform translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-500" />
             <div className="relative">
               <div className="flex items-center mb-6">
@@ -126,15 +83,11 @@ export default function Features() {
                   'We provide you with an integrated platform for managing and distributing tasks with ease, along with precise task completion tracking that allows your team to focus on what truly matters. We simplify complex negotiation processes and offer smart solutions that support confident and informed legal decision making, saving time and effort at every stage of contract completion. With ContraMind, you are at the center of every step, with control, clarity, and efficiency, ensuring your legal runs smoothly and legally with continuous transparency.'
                 )}
               </p>
-
             </div>
-          </motion.div>
+          </div>
 
           {/* Secondary Feature Card */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300"
-          >
+          <div className="bg-gray-700/50 rounded-2xl p-8 lg:p-12 relative overflow-hidden group hover:shadow-custom-hover transition-all duration-300">
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-navy/10 rounded-full transform -translate-x-12 translate-y-12 group-hover:scale-110 transition-transform duration-500" />
             <div className="relative">
               <div className="flex items-center mb-6">
@@ -151,23 +104,15 @@ export default function Features() {
                   'ContraMind offers a comprehensive platform that integrates all stages of contract management in one location. From document drafting to negotiation, review, risk analysis, signing, storage, and management. This enables your team to focus on making decisions with complete confidence, while reducing risks and achieving the highest levels of efficiency. We support you at every stage to ensure accurate and sustainable outcomes with full transparency.'
                 )}
               </p>
-
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Feature Grid */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={containerVariants}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <motion.div
+            <div
               key={index}
-              variants={itemVariants}
               className="text-center p-6 rounded-2xl hover:bg-gray-700/30 transition-all duration-300 hover:shadow-custom group"
             >
               <div className="w-16 h-16 bg-sky/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
@@ -179,9 +124,9 @@ export default function Features() {
               <p className="text-gray-300">
                 {t(feature.description.ar, feature.description.en)}
               </p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
