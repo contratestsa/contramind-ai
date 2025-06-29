@@ -1,50 +1,37 @@
+import { useState, useEffect } from 'react';
 import { LanguageManager, type Language } from '@/components/SimpleLanguage';
 
 export type { Language };
 
-// Force refresh components when language changes
-let refreshTrigger = 0;
-const componentInstances = new Set<() => void>();
-
-LanguageManager.subscribe(() => {
-  refreshTrigger++;
-  // Force re-render all components using this hook
-  componentInstances.forEach(refresh => {
-    try {
-      refresh();
-    } catch (e) {
-      // Ignore refresh errors
-    }
-  });
-});
-
 export function useSimpleLanguage() {
-  // Force re-render function (dummy state to trigger updates)
-  const forceUpdate = () => {
-    // This will be called when language changes
-  };
+  const [language, setLanguageState] = useState<Language>(() => LanguageManager.getLanguage());
   
-  // Register this component for updates
-  if (typeof window !== 'undefined') {
-    componentInstances.add(forceUpdate);
-  }
+  useEffect(() => {
+    const unsubscribe = LanguageManager.subscribe((newLang) => {
+      setLanguageState(newLang);
+    });
+    
+    return unsubscribe;
+  }, []);
   
   const setLanguage = (lang: Language) => {
     LanguageManager.setLanguage(lang);
-    // Force immediate re-render by dispatching a custom event
+    // Force page reload for complete language switch
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
+      window.location.reload();
     }
   };
   
   const t = (ar: string, en: string) => {
-    return LanguageManager.t(ar, en);
+    return language === 'ar' ? ar : en;
   };
   
+  const dir = language === 'ar' ? 'rtl' as const : 'ltr' as const;
+  
   return { 
-    language: LanguageManager.getLanguage(), 
+    language, 
     setLanguage, 
     t, 
-    dir: LanguageManager.getDir() 
+    dir 
   };
 }

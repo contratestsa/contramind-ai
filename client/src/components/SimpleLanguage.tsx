@@ -1,10 +1,15 @@
-import { ReactNode } from 'react';
+import React, { ReactNode, createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'ar' | 'en';
 
-// Global language state
-let globalLanguage: Language = 'ar';
-const subscribers: Array<(lang: Language) => void> = [];
+interface LanguageContextType {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (ar: string, en: string) => string;
+  dir: 'rtl' | 'ltr';
+}
+
+const LanguageContext = createContext<LanguageContextType | null>(null);
 
 // Detect browser language on initial load
 const detectBrowserLanguage = (): Language => {
@@ -32,72 +37,56 @@ const detectBrowserLanguage = (): Language => {
   }
 };
 
-// Initialize global language
-globalLanguage = detectBrowserLanguage();
-
-// Language manager
-export const LanguageManager = {
-  getLanguage: () => globalLanguage,
-  
-  setLanguage: (lang: Language) => {
-    globalLanguage = lang;
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('language', lang);
-        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        document.documentElement.setAttribute('lang', lang);
-      } catch {}
-    }
-    subscribers.forEach(callback => callback(lang));
-  },
-  
-  subscribe: (callback: (lang: Language) => void) => {
-    subscribers.push(callback);
-    return () => {
-      const index = subscribers.indexOf(callback);
-      if (index !== -1) {
-        subscribers.splice(index, 1);
-      }
-    };
-  },
-  
-  t: (ar: string, en: string) => {
-    return globalLanguage === 'ar' ? ar : en;
-  },
-  
-  getDir: () => globalLanguage === 'ar' ? 'rtl' as const : 'ltr' as const
-};
-
 interface SimpleLanguageProviderProps {
   children: ReactNode;
 }
 
 export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
-  // Set initial document attributes
-  if (typeof window !== 'undefined') {
+  const [language, setLanguageState] = useState<Language>(() => detectBrowserLanguage());
+
+  useEffect(() => {
+    // Set document attributes when language changes
+    const dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.setAttribute('dir', dir);
+    document.documentElement.setAttribute('lang', language);
+    document.documentElement.setAttribute('data-language', language);
+  }, [language]);
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
     try {
-      const dir = LanguageManager.getDir();
-      const lang = LanguageManager.getLanguage();
-      document.documentElement.setAttribute('dir', dir);
-      document.documentElement.setAttribute('lang', lang);
-      document.documentElement.setAttribute('data-language', lang);
-      
-      // Set up language change listener
-      const handleLanguageChange = () => {
-        const newDir = LanguageManager.getDir();
-        const newLang = LanguageManager.getLanguage();
-        document.documentElement.setAttribute('dir', newDir);
-        document.documentElement.setAttribute('lang', newLang);
-        document.documentElement.setAttribute('data-language', newLang);
-        
-        // Force page reload to update all components
-        window.location.reload();
-      };
-      
-      // Listen for custom language change events
-      window.addEventListener('languageChanged', handleLanguageChange);
+      localStorage.setItem('language', lang);
     } catch {}
+    // Force page reload for complete language switch
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  };
+
+  const t = (ar: string, en: string) => {
+    return language === 'ar' ? ar : en;
+  };
+
+  const dir = language === 'ar' ? 'rtl' as const : 'ltr' as const;
+
+  const value: LanguageContextType = {
+    language,
+    setLanguage,
+    t,
+    dir
+  };
+
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage(): LanguageContextType {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a SimpleLanguageProvider');
   }
-  
-  return <>{children}</>;
+  return context;
 }
