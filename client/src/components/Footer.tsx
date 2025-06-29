@@ -1,10 +1,7 @@
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 
 export default function Footer() {
   const { t } = useLanguage();
-
-
 
   const socialLinks = [
     { icon: 'fab fa-linkedin', href: 'https://linkedin.com/company/contramind-ai' },
@@ -12,19 +9,12 @@ export default function Footer() {
     { icon: 'fab fa-instagram', href: 'https://www.instagram.com/contramindai/' },
   ];
 
-
-
   return (
     <footer className="bg-navy text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-1 gap-8 lg:gap-12">
           {/* Company Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
+          <div className="text-center">
             <div className="mb-6">
               <span className="text-2xl font-arabic-heading-bold">ContraMind.ai</span>
             </div>
@@ -36,34 +26,22 @@ export default function Footer() {
             </p>
             <div className="flex justify-center space-x-4 rtl:space-x-reverse">
               {socialLinks.map((social, index) => (
-                <motion.a
+                <a
                   key={index}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
                   className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
                 >
                   <i className={`${social.icon} text-white`} />
-                </motion.a>
+                </a>
               ))}
             </div>
-          </motion.div>
-
-
-
-
+          </div>
         </div>
 
         {/* Bottom Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.6 }}
-          className="border-t border-gray-700 mt-12 pt-8"
-        >
+        <div className="border-t border-gray-700 mt-12 pt-8">
           <div className="flex justify-center items-center">
             <p className="text-gray-400 text-sm text-center">
               {t(
@@ -72,7 +50,7 @@ export default function Footer() {
               )}
             </p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );
