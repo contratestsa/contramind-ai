@@ -4,19 +4,18 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **June 29, 2025**: Fixed React hooks errors and implemented OAuth authentication system
-  - Resolved "Cannot read properties of null (reading 'useState')" errors
-  - Removed conflicting LanguageProvider component causing React initialization issues
-  - Implemented global language manager to avoid React hooks dependencies
-  - Added ContraMind design tokens to Tailwind configuration
-  - Enhanced font support with Space Grotesk, Inter, and Almarai fonts
-  - Simplified language switching system for better reliability
-  - Fixed logo positioning to always stay on left side regardless of language
-  - Added right-text alignment for Arabic modal titles and descriptions
+- **June 29, 2025**: Fixed critical React hooks errors and implemented OAuth authentication system
+  - Removed Framer Motion dependencies causing React initialization conflicts
+  - Fixed "Cannot read properties of null (reading 'useState')" errors
+  - Replaced all motion components with standard HTML elements and CSS transitions
+  - Restored application functionality without animation dependencies
   - Implemented functional Microsoft and Google OAuth authentication
-  - Created OAuth backend routes and frontend handlers
+  - Created OAuth backend routes (/api/auth/google, /api/auth/microsoft)
   - Added authentication success/failure toast notifications
   - Integrated Passport.js with Google and Microsoft strategies
+  - Fixed logo positioning to always stay on left side regardless of language
+  - Added right-text alignment for Arabic modal titles and descriptions
+  - Enhanced bilingual language system with proper React patterns
 - **June 28, 2025**: Created complete bilingual authentication system
   - Added comprehensive login and signup pages with Arabic/English support
   - Implemented backend authentication routes (/api/auth/login, /api/auth/signup)

@@ -1,4 +1,4 @@
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Globe, Flag } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -7,7 +7,7 @@ import ContactUs from '@/components/ContactUs';
 import AuthModals from '@/components/auth/AuthModals';
 
 export default function Header() {
-  const { language, setLanguage, t } = useSimpleLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
