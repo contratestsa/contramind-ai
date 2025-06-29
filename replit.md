@@ -14,6 +14,9 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
   - Fixed logo positioning to always stay on left side regardless of language
   - Added right-text alignment for Arabic modal titles and descriptions
   - Implemented absolute positioning for header logo to override RTL layout
+  - Added functional Google and Microsoft OAuth authentication buttons
+  - Removed Framer Motion dependency for Replit compatibility
+  - Implemented OAuth redirect functionality for social login
 - **June 28, 2025**: Created complete bilingual authentication system
   - Added comprehensive login and signup pages with Arabic/English support
   - Implemented backend authentication routes (/api/auth/login, /api/auth/signup)
