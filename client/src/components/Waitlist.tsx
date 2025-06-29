@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -23,7 +23,7 @@ export default function Waitlist() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [formData, setFormData] = React.useState<WaitlistData>({
+  const [formData, setFormData] = useState<WaitlistData>({
     fullName: '',
     email: '',
     phoneNumber: '',
@@ -42,7 +42,7 @@ export default function Waitlist() {
     },
   });
 
-  const [countdown, setCountdown] = React.useState({
+  const [countdown, setCountdown] = useState({
     days: 30,
     hours: 0,
     minutes: 0,
@@ -95,7 +95,7 @@ export default function Waitlist() {
   });
 
   // Countdown timer effect
-  React.useEffect(() => {
+  useEffect(() => {
     // Set a fixed target date for launch (e.g., July 18, 2025)
     const targetDate = new Date('2025-07-18T00:00:00');
 

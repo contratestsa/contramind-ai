@@ -1,9 +1,8 @@
-import * as React from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
-import { Eye, EyeOff, Lock, Mail, User, Building, Briefcase, ArrowRight, ArrowLeft, UserPlus, Check, X } from "lucide-react";
-import { useLanguageAwareNavigation } from "@/components/LanguageRouter";
+import { Eye, EyeOff, Lock, Mail, User, Building, Briefcase, ArrowRight, ArrowLeft, Chrome, UserPlus, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -112,12 +111,12 @@ type FormData = InsertUser & {
 };
 
 export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps) {
-  const { navigateTo } = useLanguageAwareNavigation();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const t = translations[locale];
   const isRTL = locale === "ar";
   
-  const [formData, setFormData] = React.useState<FormData>({
+  const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
     password: "",
@@ -128,9 +127,9 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
     acceptTerms: false,
   });
   
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Password strength calculation
   const getPasswordStrength = (password: string) => {
@@ -169,7 +168,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
         description: t.canNowLogin,
         variant: "default",
       });
-      navigateTo("/login");
+      setLocation("/login");
     },
     onError: (error: any) => {
       toast({
@@ -238,9 +237,17 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
   const passwordStrengthInfo = getPasswordStrengthText(passwordStrength);
 
   return (
-    <div className="min-h-screen from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 pt-[0px] pb-[0px] mt-[-51px] mb-[-51px] bg-[#0d2836] pl-[0px] pr-[0px] ml-[-67px] mr-[-67px]" dir={isRTL ? "rtl" : "ltr"}>
+    <div className={`min-h-screen bg-gradient-to-br from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12`} dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-[400px] w-full space-y-8">
-        
+        {/* Language Toggle */}
+        <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'}`}>
+          <button
+            onClick={onLanguageToggle}
+            className="text-white/70 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
+          >
+            {locale === "ar" ? "English" : "عربي"}
+          </button>
+        </div>
 
         {/* Header */}
         <motion.div
@@ -254,7 +261,12 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
               whileHover={{ scale: 1.05 }}
               className="inline-flex items-center justify-center mb-6 cursor-pointer"
             >
-              
+              <img 
+                src={logoImage} 
+                alt="ContraMind"
+                className="h-16 w-auto"
+                style={{ padding: '8px' }} // 0.5× logomark height clearspace
+              />
             </motion.div>
           </Link>
           
@@ -293,7 +305,9 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
-                className="flex h-10 border text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded text-left bg-[#ffffff]"
+                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
+                  errors.fullName ? "border-red-500" : ""
+                } ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.fullNamePlaceholder}
                 disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
@@ -318,7 +332,9 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className="flex h-10 border text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded text-left bg-[#ffffff]"
+                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
+                  errors.email ? "border-red-500" : ""
+                } ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.emailPlaceholder}
                 disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
@@ -344,7 +360,9 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
-                  className="flex h-10 border text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded pr-10 text-left bg-[#ffffff]"
+                  className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'pl-10 text-right' : 'pr-10 text-left'} ${
+                    errors.password ? "border-red-500" : ""
+                  }`}
                   placeholder={t.passwordPlaceholder}
                   disabled={signupMutation.isPending}
                   dir={isRTL ? "rtl" : "ltr"}
@@ -404,7 +422,9 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                  className="flex h-10 border text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded pr-10 text-left bg-[#ffffff]"
+                  className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'pl-10 text-right' : 'pr-10 text-left'} ${
+                    errors.confirmPassword ? "border-red-500" : ""
+                  }`}
                   placeholder={t.confirmPasswordPlaceholder}
                   disabled={signupMutation.isPending}
                   dir={isRTL ? "rtl" : "ltr"}
@@ -451,7 +471,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="text"
                 value={formData.company}
                 onChange={(e) => handleInputChange("company", e.target.value)}
-                className="flex h-10 border text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded text-left bg-[#ffffff]"
+                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.companyPlaceholder}
                 disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
@@ -473,7 +493,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="text"
                 value={formData.jobTitle}
                 onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                className="flex h-10 border text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded text-left bg-[#ffffff]"
+                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.jobTitlePlaceholder}
                 disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
@@ -504,7 +524,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
             <Button
               type="submit"
               disabled={signupMutation.isPending}
-              className="w-full bg-[#B7DEE8] hover:bg-[#a5c9d6] text-[#0d2836] font-semibold py-2 rounded transition-all duration-300 flex items-center justify-center gap-2 mt-6"
+              className="w-full bg-[#B7DEE8] hover:bg-[#a5c9d6] text-white font-semibold py-2 rounded transition-all duration-300 flex items-center justify-center gap-2 mt-6"
             >
               {signupMutation.isPending ? (
                 <div className="flex items-center gap-2">
@@ -539,12 +559,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 variant="outline"
                 className="border-[#E6E6E6] hover:bg-gray-50 flex items-center justify-center gap-2"
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
+                <Chrome className="w-4 h-4" />
                 <span className={isRTL ? 'font-[Almarai]' : 'font-[Inter]'}>{t.google}</span>
               </Button>
               
@@ -553,11 +568,11 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 variant="outline"
                 className="border-[#E6E6E6] hover:bg-gray-50 flex items-center justify-center gap-2"
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24">
-                  <path fill="#00BCF2" d="M0 0h11.377v11.372H0z"/>
-                  <path fill="#0078D4" d="M12.623 0H24v11.372H12.623z"/>
-                  <path fill="#00BCF2" d="M0 12.623h11.377V24H0z"/>
-                  <path fill="#40E0D0" d="M12.623 12.623H24V24H12.623z"/>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#0C2836">
+                  <path d="M23.64 12.204c0-.436-.036-.887-.098-1.345h-11.48v2.541h6.564c-.284 1.498-1.144 2.769-2.437 3.622v2.999h3.947c2.305-2.123 3.634-5.249 3.634-8.936z"/>
+                  <path d="M12.062 24c3.297 0 6.065-1.095 8.087-2.959l-3.947-2.999c-1.095.738-2.497 1.174-4.14 1.174-3.174 0-5.861-2.144-6.828-5.03h-4.073v3.098C3.24 21.348 7.317 24 12.062 24z"/>
+                  <path d="M5.234 14.186c-.244-.738-.383-1.523-.383-2.334s.139-1.596.383-2.334V6.42H1.161C.422 7.889 0 9.407 0 11.852s.422 3.963 1.161 5.432l4.073-3.098z"/>
+                  <path d="M12.062 4.653c1.789 0 3.398.615 4.661 1.823l3.497-3.497C18.122 1.186 15.354 0 12.062 0 7.317 0 3.24 2.652 1.161 6.42l4.073 3.098c.967-2.886 3.654-5.03 6.828-5.03z"/>
                 </svg>
                 <span className={isRTL ? 'font-[Almarai]' : 'font-[Inter]'}>{t.microsoft}</span>
               </Button>
@@ -568,8 +583,10 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
           <div className="mt-6 text-center">
             <p className={`text-gray-600 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
               {t.alreadyHaveAccount}{" "}
-              <Link href="/login" className={`font-semibold text-[#0C2836] hover:text-[#1a4a5c] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-                {t.signIn}
+              <Link href="/login">
+                <a className={`font-semibold text-[#0C2836] hover:text-[#1a4a5c] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                  {t.signIn}
+                </a>
               </Link>
             </p>
           </div>

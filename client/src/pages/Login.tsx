@@ -1,22 +1,18 @@
-import * as React from "react";
+import { useState } from "react";
 import LoginForm from "@/components/auth/LoginForm";
-import { useLanguage } from "@/hooks/useLanguage";
-import Header from "@/components/Header";
+import { useSimpleLanguage } from "@/hooks/useSimpleLanguage";
 
 export default function Login() {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useSimpleLanguage();
+  
+  const handleLanguageToggle = () => {
+    setLanguage(language === "ar" ? "en" : "ar");
+  };
 
   return (
-    <div className="min-h-screen bg-[#f0f3f5]">
-      <Header />
-      <div className="py-12 px-4 sm:px-6 lg:px-8 bg-[#0d2836]">
-        <div className="w-full max-w-[600px] mx-auto">
-          <LoginForm 
-            locale={language} 
-            onLanguageToggle={() => {}} 
-          />
-        </div>
-      </div>
-    </div>
+    <LoginForm 
+      locale={language} 
+      onLanguageToggle={handleLanguageToggle} 
+    />
   );
 }

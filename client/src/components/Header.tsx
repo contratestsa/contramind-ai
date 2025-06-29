@@ -1,22 +1,18 @@
-import * as React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useLanguageAwareNavigation } from '@/components/LanguageRouter';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Globe, Flag, LogIn, UserPlus } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'wouter';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 
-import Logo_Design_ContraMind from "@assets/Logo_Design_ContraMind.png";
-
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
-  const { navigateTo } = useLanguageAwareNavigation();
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
@@ -58,16 +54,13 @@ export default function Header() {
             transition={{ delay: 0.2 }}
             className="flex items-center"
           >
-            <button 
-              onClick={() => navigateTo('/')} 
-              className="flex items-center p-4 md:p-6 -m-4 md:-m-6 rounded-lg hover:bg-white/5 transition-colors duration-200"
-            >
+            <div className="flex items-center space-x-3 rtl:space-x-reverse overflow-hidden">
               <img 
-                src={Logo_Design_ContraMind} 
+                src={logoImage} 
                 alt="ContraMind.ai Logo" 
-                className="w-72 h-18 object-contain object-left ml-[0px] mr-[0px] pt-[-25px] pb-[-25px] pl-[0px] pr-[0px]"
+                className="w-72 h-18 object-contain object-left ml-[-9px] mr-[-9px] pt-[-27px] pb-[-27px] mt-[-59px] mb-[-59px] pl-[37px] pr-[37px]"
               />
-            </button>
+            </div>
           </motion.div>
 
 
@@ -79,21 +72,21 @@ export default function Header() {
             
             {/* Authentication Links */}
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <Link href={language === 'en' ? '/en/login' : '/ar/login'}>
+              <Link href="/login">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-white hover:text-white hover:bg-white/10 flex items-center gap-2 h-10 px-4"
+                  className="text-white hover:text-white hover:bg-white/10 flex items-center gap-2"
                 >
                   <LogIn className="w-4 h-4" />
                   {t('تسجيل الدخول', 'Login')}
                 </Button>
               </Link>
               
-              <Link href={language === 'en' ? '/en/signup' : '/ar/signup'}>
+              <Link href="/signup">
                 <Button
                   size="sm"
-                  className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold h-10 px-4"
+                  className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold"
                 >
                   <UserPlus className="w-4 h-4" />
                   {t('إنشاء حساب', 'Sign Up')}
@@ -124,17 +117,6 @@ export default function Header() {
                     onClick={() => {
                       setLanguage('en');
                       setIsDropdownOpen(false);
-                      // Navigate to English version of current page
-                      const currentPath = window.location.pathname;
-                      if (currentPath.startsWith('/ar/')) {
-                        window.location.href = currentPath.replace('/ar/', '/en/');
-                      } else if (currentPath === '/ar') {
-                        window.location.href = '/en';
-                      } else if (currentPath === '/') {
-                        window.location.href = '/en';
-                      } else {
-                        window.location.href = '/en' + currentPath;
-                      }
                     }}
                     className={`w-full flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
                       language === 'en' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'
@@ -152,17 +134,6 @@ export default function Header() {
                     onClick={() => {
                       setLanguage('ar');
                       setIsDropdownOpen(false);
-                      // Navigate to Arabic version of current page
-                      const currentPath = window.location.pathname;
-                      if (currentPath.startsWith('/en/')) {
-                        window.location.href = currentPath.replace('/en/', '/ar/');
-                      } else if (currentPath === '/en') {
-                        window.location.href = '/ar';
-                      } else if (currentPath === '/') {
-                        window.location.href = '/ar';
-                      } else {
-                        window.location.href = '/ar' + currentPath;
-                      }
                     }}
                     className={`w-full flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
                       language === 'ar' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'

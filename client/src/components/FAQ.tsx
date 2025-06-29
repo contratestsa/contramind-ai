@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -9,7 +9,7 @@ interface FAQItem {
 
 export default function FAQ() {
   const { t, language } = useLanguage();
-  const [openIndex, setOpenIndex] = React.useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqItems: FAQItem[] = [
     {
