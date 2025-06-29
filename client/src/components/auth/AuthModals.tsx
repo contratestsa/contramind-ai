@@ -178,14 +178,14 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-right">
+            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-center">
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
             <div className="space-y-1">
               <p className="text-sm text-gray-600 text-right">
                 {t('مرحباً بعودتك إلى ContraMind', 'Welcome back to ContraMind')}
               </p>
-              <p className="text-xs text-gray-500 text-right">
+              <p className="text-xs text-gray-500 text-center">
                 {t('مستقبل القانون، مدعوم بالذكاء الاصطناعي', 'The Future of Law, Powered by AI')}
               </p>
             </div>
