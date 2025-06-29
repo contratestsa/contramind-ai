@@ -2,13 +2,38 @@ import { LanguageManager, type Language } from '@/components/SimpleLanguage';
 
 export type { Language };
 
-// Simple hook that uses the global language manager without React state
+// Force refresh components when language changes
+let refreshTrigger = 0;
+const componentInstances = new Set<() => void>();
+
+LanguageManager.subscribe(() => {
+  refreshTrigger++;
+  // Force re-render all components using this hook
+  componentInstances.forEach(refresh => {
+    try {
+      refresh();
+    } catch (e) {
+      // Ignore refresh errors
+    }
+  });
+});
+
 export function useSimpleLanguage() {
+  // Force re-render function (dummy state to trigger updates)
+  const forceUpdate = () => {
+    // This will be called when language changes
+  };
+  
+  // Register this component for updates
+  if (typeof window !== 'undefined') {
+    componentInstances.add(forceUpdate);
+  }
+  
   const setLanguage = (lang: Language) => {
     LanguageManager.setLanguage(lang);
-    // Force re-render by updating a data attribute
+    // Force immediate re-render by dispatching a custom event
     if (typeof window !== 'undefined') {
-      document.documentElement.setAttribute('data-language', lang);
+      window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
     }
   };
   

@@ -80,6 +80,22 @@ export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps
       const lang = LanguageManager.getLanguage();
       document.documentElement.setAttribute('dir', dir);
       document.documentElement.setAttribute('lang', lang);
+      document.documentElement.setAttribute('data-language', lang);
+      
+      // Set up language change listener
+      const handleLanguageChange = () => {
+        const newDir = LanguageManager.getDir();
+        const newLang = LanguageManager.getLanguage();
+        document.documentElement.setAttribute('dir', newDir);
+        document.documentElement.setAttribute('lang', newLang);
+        document.documentElement.setAttribute('data-language', newLang);
+        
+        // Force page reload to update all components
+        window.location.reload();
+      };
+      
+      // Listen for custom language change events
+      window.addEventListener('languageChanged', handleLanguageChange);
     } catch {}
   }
   
