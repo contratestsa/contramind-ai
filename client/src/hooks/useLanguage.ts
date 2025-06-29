@@ -1,7 +1,5 @@
-import { useContext } from 'react';
-import { SimpleLanguageContext } from '@/components/SimpleLanguage';
+import { useSimpleLanguageContext } from '@/components/SimpleLanguage';
 
 export function useLanguage() {
-  const context = useContext(SimpleLanguageContext);
-  return context;
+  return useSimpleLanguageContext();
 }

@@ -1,16 +1,8 @@
-import { useState } from 'react';
+import { useSimpleLanguageContext } from '@/components/SimpleLanguage';
 
 export type Language = 'ar' | 'en';
 
-// Simple language hook with setLanguage function
+// Hook that uses the SimpleLanguage context
 export function useSimpleLanguage() {
-  const [language, setLanguage] = useState<Language>('ar');
-  
-  const t = (ar: string, en: string) => {
-    return language === 'ar' ? ar : en;
-  };
-  
-  const dir = language === 'ar' ? 'rtl' : 'ltr';
-  
-  return { language, setLanguage, t, dir };
+  return useSimpleLanguageContext();
 }

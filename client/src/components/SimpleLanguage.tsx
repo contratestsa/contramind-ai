@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -9,81 +9,69 @@ interface SimpleLanguageContextType {
   dir: 'rtl' | 'ltr';
 }
 
-export const SimpleLanguageContext = React.createContext<SimpleLanguageContextType>({
-  language: 'ar',
-  setLanguage: () => {},
-  t: (ar: string, en: string) => ar,
-  dir: 'rtl'
-});
+const SimpleLanguageContext = createContext<SimpleLanguageContextType | undefined>(undefined);
 
 interface SimpleLanguageProviderProps {
   children: React.ReactNode;
 }
 
-export class SimpleLanguageProvider extends React.Component<SimpleLanguageProviderProps, { language: Language }> {
-  constructor(props: SimpleLanguageProviderProps) {
-    super(props);
+export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
+  // Detect browser language
+  const detectBrowserLanguage = (): Language => {
+    // Check localStorage first for user preference
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage === 'ar' || savedLanguage === 'en') {
+      return savedLanguage as Language;
+    }
     
-    // Detect browser language
-    const detectBrowserLanguage = (): Language => {
-      // Check localStorage first for user preference
-      const savedLanguage = localStorage.getItem('language');
-      if (savedLanguage === 'ar' || savedLanguage === 'en') {
-        return savedLanguage as Language;
-      }
-      
-      // Detect from browser language
-      const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
-      
-      // Check if browser language is Arabic
-      if (browserLanguage.startsWith('ar')) {
-        return 'ar';
-      }
-      
-      // Default to English for all other languages
-      return 'en';
-    };
+    // Detect from browser language
+    const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
     
-    this.state = { language: detectBrowserLanguage() };
-  }
+    // Check if browser language is Arabic
+    if (browserLanguage.startsWith('ar')) {
+      return 'ar';
+    }
+    
+    // Default to English for all other languages
+    return 'en';
+  };
 
-  componentDidMount() {
-    this.updateDocument();
-  }
+  const [language, setLanguageState] = useState<Language>(detectBrowserLanguage);
 
-  componentDidUpdate() {
-    this.updateDocument();
-  }
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem('language', lang);
+  };
 
-  updateDocument = () => {
-    const dir = this.state.language === 'ar' ? 'rtl' : 'ltr';
+  const t = (ar: string, en: string): string => {
+    return language === 'ar' ? ar : en;
+  };
+
+  const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
+
+  useEffect(() => {
     document.documentElement.setAttribute('dir', dir);
-    document.documentElement.setAttribute('lang', this.state.language);
+    document.documentElement.setAttribute('lang', language);
+  }, [language, dir]);
+
+  const contextValue: SimpleLanguageContextType = {
+    language,
+    setLanguage,
+    t,
+    dir
   };
 
-  setLanguage = (language: Language) => {
-    this.setState({ language });
-    localStorage.setItem('language', language);
-  };
+  return (
+    <SimpleLanguageContext.Provider value={contextValue}>
+      {children}
+    </SimpleLanguageContext.Provider>
+  );
+}
 
-  t = (ar: string, en: string): string => {
-    return this.state.language === 'ar' ? ar : en;
-  };
-
-  render() {
-    const dir: 'rtl' | 'ltr' = this.state.language === 'ar' ? 'rtl' : 'ltr';
-    
-    const contextValue: SimpleLanguageContextType = {
-      language: this.state.language,
-      setLanguage: this.setLanguage,
-      t: this.t,
-      dir
-    };
-
-    return (
-      <SimpleLanguageContext.Provider value={contextValue}>
-        {this.props.children}
-      </SimpleLanguageContext.Provider>
-    );
+export function useSimpleLanguageContext() {
+  const context = useContext(SimpleLanguageContext);
+  if (context === undefined) {
+    throw new Error('useSimpleLanguageContext must be used within a SimpleLanguageProvider');
   }
+  return context;
 }
