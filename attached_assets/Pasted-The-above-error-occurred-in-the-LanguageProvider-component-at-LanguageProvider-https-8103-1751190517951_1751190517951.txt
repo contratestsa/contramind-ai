@@ -1,0 +1,20 @@
+The above error occurred in the <LanguageProvider> component:
+
+    at LanguageProvider (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/src/components/LanguageProvider.tsx:20:36)
+    at TooltipProvider (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/src/components/ui/tooltip.tsx:19:28)
+    at QueryClientProvider (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=dea459e7:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+Cannot read properties of null (reading 'useState')
+at useState (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-QCHXOAYK.js?v=5148117b:1066:29)
+at LanguageProvider (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/src/components/LanguageProvider.tsx:22:35)
+at renderWithHooks (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:11548:26)
+at mountIndeterminateComponent (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:14926:21)
+at beginWork (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:15914:22)
+at beginWork$1 (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:19753:22)
+at performUnitOfWork (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:19198:20)
+at workLoopSync (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:19137:13)
+at renderRootSync (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:19116:15)
+at recoverFromConcurrentError (https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=dea459e7:18736:28)
