@@ -157,7 +157,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </Button>
         )}
       </div>
-
       {/* Signup Trigger */}
       <div onClick={() => setIsSignupOpen(true)}>
         {triggerSignupButton || (
@@ -170,7 +169,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </Button>
         )}
       </div>
-
       {/* Login Modal */}
       <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl">
@@ -292,7 +290,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </form>
         </DialogContent>
       </Dialog>
-
       {/* Signup Modal */}
       <Dialog open={isSignupOpen} onOpenChange={setIsSignupOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -302,11 +299,11 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2">
+            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-right">
               {t('إنشاء حساب', 'Create Account')}
             </DialogTitle>
             <div className="space-y-1">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 text-right">
                 {t('انضم إلى ContraMind واكتشف مستقبل التكنولوجيا القانونية', 'Join ContraMind and discover the future of legal technology')}
               </p>
               <p className="text-xs text-gray-500">
