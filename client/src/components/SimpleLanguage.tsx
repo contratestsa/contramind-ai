@@ -1,15 +1,9 @@
-import React, { ReactNode, createContext, useContext, useState, useEffect } from 'react';
+import { ReactNode } from 'react';
 
 export type Language = 'ar' | 'en';
 
-interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (ar: string, en: string) => string;
-  dir: 'rtl' | 'ltr';
-}
-
-const LanguageContext = createContext<LanguageContextType | null>(null);
+// Global language state
+let globalLanguage: Language = 'ar';
 
 // Detect browser language on initial load
 const detectBrowserLanguage = (): Language => {
@@ -37,56 +31,52 @@ const detectBrowserLanguage = (): Language => {
   }
 };
 
+// Initialize global language
+globalLanguage = detectBrowserLanguage();
+
+// Simple language manager
+export const LanguageManager = {
+  getLanguage: () => globalLanguage,
+  
+  setLanguage: (lang: Language) => {
+    globalLanguage = lang;
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('language', lang);
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        document.documentElement.setAttribute('lang', lang);
+        document.documentElement.setAttribute('data-language', lang);
+        
+        // Force page reload for complete language switch
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      } catch {}
+    }
+  },
+  
+  t: (ar: string, en: string) => {
+    return globalLanguage === 'ar' ? ar : en;
+  },
+  
+  getDir: () => globalLanguage === 'ar' ? 'rtl' as const : 'ltr' as const
+};
+
 interface SimpleLanguageProviderProps {
   children: ReactNode;
 }
 
 export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(() => detectBrowserLanguage());
-
-  useEffect(() => {
-    // Set document attributes when language changes
-    const dir = language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.setAttribute('dir', dir);
-    document.documentElement.setAttribute('lang', language);
-    document.documentElement.setAttribute('data-language', language);
-  }, [language]);
-
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
+  // Set initial document attributes
+  if (typeof window !== 'undefined') {
     try {
-      localStorage.setItem('language', lang);
+      const dir = LanguageManager.getDir();
+      const lang = LanguageManager.getLanguage();
+      document.documentElement.setAttribute('dir', dir);
+      document.documentElement.setAttribute('lang', lang);
+      document.documentElement.setAttribute('data-language', lang);
     } catch {}
-    // Force page reload for complete language switch
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
-  };
-
-  const t = (ar: string, en: string) => {
-    return language === 'ar' ? ar : en;
-  };
-
-  const dir = language === 'ar' ? 'rtl' as const : 'ltr' as const;
-
-  const value: LanguageContextType = {
-    language,
-    setLanguage,
-    t,
-    dir
-  };
-
-  return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
-  );
-}
-
-export function useLanguage(): LanguageContextType {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a SimpleLanguageProvider');
   }
-  return context;
+  
+  return <>{children}</>;
 }
