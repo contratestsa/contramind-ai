@@ -1,14 +1,13 @@
-import { motion } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Globe, Flag, LogIn, UserPlus } from 'lucide-react';
+import { ChevronDown, Globe, Flag } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'wouter';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
+import AuthModals from '@/components/auth/AuthModals';
 
 export default function Header() {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t } = useSimpleLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -40,20 +39,11 @@ export default function Header() {
   };
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="bg-navy shadow-custom sticky top-0 z-50"
-    >
+    <header className="bg-navy shadow-custom sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 lg:h-24">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex items-center"
-          >
+          <div className="flex items-center">
             <div className="flex items-center space-x-3 rtl:space-x-reverse overflow-hidden">
               <img 
                 src={logoImage} 
@@ -61,37 +51,16 @@ export default function Header() {
                 className="w-72 h-18 object-contain object-left ml-[-9px] mr-[-9px] pt-[-27px] pb-[-27px] mt-[-59px] mb-[-59px] pl-[37px] pr-[37px]"
               />
             </div>
-          </motion.div>
-
-
+          </div>
 
           {/* Contact Us & Language Toggle */}
           <div className="flex items-center space-x-4 rtl:space-x-reverse">
             {/* Contact Us Icon */}
             <ContactUs />
             
-            {/* Authentication Links */}
+            {/* Authentication Modals */}
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <Link href="/login">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white hover:text-white hover:bg-white/10 flex items-center gap-2"
-                >
-                  <LogIn className="w-4 h-4" />
-                  {t('تسجيل الدخول', 'Login')}
-                </Button>
-              </Link>
-              
-              <Link href="/signup">
-                <Button
-                  size="sm"
-                  className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  {t('إنشاء حساب', 'Sign Up')}
-                </Button>
-              </Link>
+              <AuthModals />
             </div>
             
             {/* Language Dropdown */}
@@ -152,9 +121,7 @@ export default function Header() {
             </div>
           </div>
         </div>
-
-
       </nav>
-    </motion.header>
+    </header>
   );
 }
