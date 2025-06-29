@@ -42,9 +42,9 @@ export default function Header() {
     <header className="bg-navy shadow-custom sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 lg:h-24">
-          {/* Logo */}
-          <div className="flex items-center">
-            <div className="flex items-center space-x-3 rtl:space-x-reverse overflow-hidden">
+          {/* Logo - Always positioned on the left regardless of language */}
+          <div className="flex items-center order-first">
+            <div className="flex items-center overflow-hidden">
               <img 
                 src={logoImage} 
                 alt="ContraMind.ai Logo" 
@@ -53,13 +53,13 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Contact Us & Language Toggle */}
-          <div className="flex items-center space-x-4 rtl:space-x-reverse">
+          {/* Contact Us & Language Toggle - Always positioned on the right */}
+          <div className="flex items-center space-x-4 order-last">
             {/* Contact Us Icon */}
             <ContactUs />
             
             {/* Authentication Modals */}
-            <div className="flex items-center space-x-2 rtl:space-x-reverse">
+            <div className="flex items-center space-x-2">
               <AuthModals />
             </div>
             
@@ -67,7 +67,7 @@ export default function Header() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 text-white"
+                className="flex items-center space-x-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 text-white"
               >
                 {language === 'ar' ? (
                   <Globe className="w-4 h-4" />
@@ -81,13 +81,13 @@ export default function Header() {
               </button>
               
               {isDropdownOpen && (
-                <div className="absolute top-full mt-2 right-0 rtl:right-auto rtl:left-0 bg-white rounded-lg shadow-lg border border-grey/20 py-1 min-w-[120px] z-50">
+                <div className="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-lg border border-grey/20 py-1 min-w-[120px] z-50">
                   <button
                     onClick={() => {
                       setLanguage('en');
                       setIsDropdownOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
+                    className={`w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
                       language === 'en' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'
                     }`}
                   >
@@ -104,7 +104,7 @@ export default function Header() {
                       setLanguage('ar');
                       setIsDropdownOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
+                    className={`w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
                       language === 'ar' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'
                     }`}
                   >
