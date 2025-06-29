@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 
 interface FAQItem {
@@ -81,12 +80,7 @@ export default function FAQ() {
   return (
     <section className="py-20 lg:py-32 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-6">
             {t('أسئلة شائعة', 'Frequently Asked Questions')}
           </h2>
