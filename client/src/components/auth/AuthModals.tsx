@@ -303,7 +303,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               {t('إنشاء حساب', 'Create Account')}
             </DialogTitle>
             <div className="space-y-1">
-              <p className="text-sm text-gray-600 text-right">
+              <p className="text-sm text-gray-600 text-center">
                 {t('انضم إلى ContraMind واكتشف مستقبل التكنولوجيا القانونية', 'Join ContraMind and discover the future of legal technology')}
               </p>
               <p className="text-xs text-gray-500 text-right">
