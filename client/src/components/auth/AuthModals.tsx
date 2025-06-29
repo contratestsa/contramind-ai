@@ -178,7 +178,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2">
+            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-right">
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
             <div className="space-y-1">
@@ -299,7 +299,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-right">
+            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-center">
               {t('إنشاء حساب', 'Create Account')}
             </DialogTitle>
             <div className="space-y-1">

@@ -11,6 +11,9 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
   - Added ContraMind design tokens to Tailwind configuration
   - Enhanced font support with Space Grotesk, Inter, and Almarai fonts
   - Simplified language switching system for better reliability
+  - Fixed logo positioning to always stay on left side regardless of language
+  - Added right-text alignment for Arabic modal titles and descriptions
+  - Implemented absolute positioning for header logo to override RTL layout
 - **June 28, 2025**: Created complete bilingual authentication system
   - Added comprehensive login and signup pages with Arabic/English support
   - Implemented backend authentication routes (/api/auth/login, /api/auth/signup)
