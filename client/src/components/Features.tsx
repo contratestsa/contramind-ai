@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 
 export default function Features() {

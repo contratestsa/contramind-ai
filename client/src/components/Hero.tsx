@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 
@@ -22,27 +21,15 @@ export default function Hero() {
       </div>
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-32">
         <div className="text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+          <div>
             {/* Launch Offer Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6 glass-effect"
-            >
+            <div className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6 glass-effect">
               <span className="animate-pulse glow-text font-bold text-[#f0f2f2]">
                 {t('احصل على 3 أشهر مجاناً عند الإطلاق', 'Get 3 Months Free at Launch')}
               </span>
-            </motion.div>
+            </div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+            <h1
               className="text-3xl sm:text-4xl lg:text-6xl leading-[1.1] sm:leading-[1.1] lg:leading-[1.1] mb-6 sm:mb-8 px-2 sm:px-0 text-center"
               style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
             >
@@ -51,49 +38,53 @@ export default function Hero() {
                   {t('أول منصة قانونية لإدارة ومراجعة العقود تدعم اللغة العربية باستخدام الذكاء الإصطناعي', 'The First Legal AI Platform for Contract Management and Review, Supporting Arabic Language')}
                 </span>
               </span>
-            </motion.h1>
+            </h1>
 
-            {/* Feature Highlights */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8 text-xs sm:text-sm px-4 sm:px-0"
-            >
-              {[
-                { ar: 'صياغة', en: 'Drafting' },
-                { ar: 'تفاوض', en: 'Negotiation' },
-                { ar: 'تحليل مخاطر', en: 'Risk Analysis' },
-                { ar: 'توقيع إلكتروني', en: 'ESigning' },
-                { ar: 'متابعة', en: 'Tracking' },
-              ].map((feature, index) => (
-                <motion.span
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.9 + index * 0.1 }}
-                  className="bg-white/10 px-2 sm:px-3 py-1 rounded-full font-bold text-xs sm:text-sm"
-                >
-                  {t(feature.ar, feature.en)}
-                </motion.span>
-              ))}
-            </motion.div>
+            <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed px-2 sm:px-0"
+               style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Inter', sans-serif" }}>
+              {t('اكتشف قوة الذكاء الاصطناعي في مراجعة وتحليل العقود القانونية. منصة متطورة مصممة خصيصاً للمحامين والشركات في المنطقة العربية.', 'Discover the power of AI in legal contract review and analysis. An advanced platform designed specifically for lawyers and companies in the Arab region.')}
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-            >
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 sm:mb-12">
               <Button
                 onClick={scrollToWaitlist}
-                className="bg-sky text-navy px-6 sm:px-8 lg:px-[86px] py-3 sm:py-4 rounded-custom font-semibold hover:bg-sky/90 transition-all duration-300 shadow-custom-hover group mx-4 sm:mx-0"
+                className="w-full sm:w-auto bg-sky hover:bg-sky/90 text-navy font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 shadow-custom hover:shadow-custom-hover transform hover:scale-105"
+                style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Space Grotesk', sans-serif" }}
               >
-                <span className="text-sm sm:text-lg lg:text-[26px] font-arabic-body-bold">
-                  {t('انضم لقائمة الإنتظار ⟶', 'Join the Early Access Waitlist ⟶')}
-                </span>
+                {t('انضم للقائمة المبكرة', 'Join Early Access')}
               </Button>
-            </motion.div>
-          </motion.div>
+              
+              <div className="text-center sm:text-left">
+                <p className="text-sky font-semibold text-lg"
+                   style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Space Grotesk', sans-serif" }}>
+                  {t('الإطلاق قريباً', 'Coming Soon')}
+                </p>
+                <p className="text-gray-400 text-sm"
+                   style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Inter', sans-serif" }}>
+                  {t('انضم إلى أكثر من 1000+ مستخدم في الانتظار', 'Join 1000+ users waiting')}
+                </p>
+              </div>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 opacity-60">
+              <div className="flex items-center gap-2 text-sm text-gray-400"
+                   style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Inter', sans-serif" }}>
+                <span>🔒</span>
+                <span>{t('آمن ومشفر', 'Secure & Encrypted')}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400"
+                   style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Inter', sans-serif" }}>
+                <span>⚡</span>
+                <span>{t('تحليل فوري', 'Instant Analysis')}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400"
+                   style={{ fontFamily: language === 'ar' ? "'Almarai', sans-serif" : "'Inter', sans-serif" }}>
+                <span>🌍</span>
+                <span>{t('دعم عربي كامل', 'Full Arabic Support')}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
