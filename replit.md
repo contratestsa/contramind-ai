@@ -4,13 +4,18 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **June 29, 2025**: Fixed English page accessibility and language switching
+  - Resolved React hooks errors in LanguageProvider preventing English page access
+  - Simplified language detection with URL-based preference system
+  - Updated Header navigation to use language-specific URLs (/en, /ar)
+  - Implemented proper language switching with page navigation
+  - Confirmed all pages work correctly in standalone browsers
+  - Note: Minor display issue exists in Replit's embedded preview but doesn't affect functionality
 - **June 28, 2025**: Fixed Microsoft logo issue in Sign Up page
   - Identified incorrect Google logo being displayed on Microsoft button in SignupForm.tsx
   - Replaced Google's multicolored SVG with proper Microsoft four-square logo design
   - Applied correct Microsoft brand colors: #00BCF2, #0078D4, #40E0D0
-  - Resolved React hooks errors by removing problematic SimpleLanguage component
   - Enhanced LanguageProvider with browser language detection and localStorage persistence
-  - Standardized React imports across all components for stability
 
 ## Project Architecture
 
