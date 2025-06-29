@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
@@ -137,7 +138,13 @@ export default function Waitlist() {
   return (
     <section id="waitlist" className="py-12 sm:py-20 lg:py-32 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-[#0f0f0f]">
-        <div className="text-center mb-8 sm:mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-8 sm:mb-12"
+        >
           <div className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
             <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
             <span>{t('قريباً', 'Coming Soon')}</span>
@@ -148,7 +155,12 @@ export default function Waitlist() {
           </h2>
 
           {/* Countdown Timer */}
-          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-custom mb-6 sm:mb-8 max-w-md mx-auto">
+          <motion.div
+            initial={{ scale: 0.9 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-2xl p-4 sm:p-6 shadow-custom mb-6 sm:mb-8 max-w-md mx-auto"
+          >
             <div className="text-xs sm:text-sm text-gray-400 mb-2 font-arabic-body">
               {t('متبقي على الإطلاق', 'Time until launch')}
             </div>
@@ -161,11 +173,17 @@ export default function Waitlist() {
             <div className="text-xs text-gray-500 mt-1 font-arabic-body">
               {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Waitlist Form */}
-        <div className="bg-white rounded-2xl p-6 sm:p-8 lg:p-12 shadow-custom-hover text-[#141414]">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-white rounded-2xl p-6 sm:p-8 lg:p-12 shadow-custom-hover text-[#141414]"
+        >
 
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
@@ -276,7 +294,7 @@ export default function Waitlist() {
               </div>
             </div>
           </form>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

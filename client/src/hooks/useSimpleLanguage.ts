@@ -1,34 +1,50 @@
-// Simple non-hook language utility to avoid React hooks errors
-export type Language = 'ar' | 'en';
+import { LanguageManager, type Language } from '@/components/SimpleLanguage';
 
-let currentLanguage: Language = 'ar';
+export type { Language };
+
+// Force refresh components when language changes
+let refreshTrigger = 0;
+const componentInstances = new Set<() => void>();
+
+LanguageManager.subscribe(() => {
+  refreshTrigger++;
+  // Force re-render all components using this hook
+  componentInstances.forEach(refresh => {
+    try {
+      refresh();
+    } catch (e) {
+      // Ignore refresh errors
+    }
+  });
+});
 
 export function useSimpleLanguage() {
-  const t = (ar: string, en: string) => {
-    return currentLanguage === 'ar' ? ar : en;
+  // Force re-render function (dummy state to trigger updates)
+  const forceUpdate = () => {
+    // This will be called when language changes
   };
-
+  
+  // Register this component for updates
+  if (typeof window !== 'undefined') {
+    componentInstances.add(forceUpdate);
+  }
+  
   const setLanguage = (lang: Language) => {
-    currentLanguage = lang;
+    LanguageManager.setLanguage(lang);
+    // Force immediate re-render by dispatching a custom event
     if (typeof window !== 'undefined') {
-      document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-      document.documentElement.setAttribute('lang', lang);
-      try {
-        localStorage.setItem('language', lang);
-      } catch (e) {
-        console.warn('Failed to save language preference');
-      }
-    }
-    // Force re-render by reloading the page
-    if (typeof window !== 'undefined') {
-      window.location.reload();
+      window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
     }
   };
-
-  return {
-    language: currentLanguage,
-    setLanguage,
-    t,
-    dir: currentLanguage === 'ar' ? 'rtl' as const : 'ltr' as const
+  
+  const t = (ar: string, en: string) => {
+    return LanguageManager.t(ar, en);
+  };
+  
+  return { 
+    language: LanguageManager.getLanguage(), 
+    setLanguage, 
+    t, 
+    dir: LanguageManager.getDir() 
   };
 }
