@@ -185,7 +185,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               <p className="text-sm text-gray-600 text-right">
                 {t('مرحباً بعودتك إلى ContraMind', 'Welcome back to ContraMind')}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 text-right">
                 {t('مستقبل القانون، مدعوم بالذكاء الاصطناعي', 'The Future of Law, Powered by AI')}
               </p>
             </div>
