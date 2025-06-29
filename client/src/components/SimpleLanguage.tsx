@@ -1,23 +1,16 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import { ReactNode } from 'react';
 
 export type Language = 'ar' | 'en';
 
-interface SimpleLanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (ar: string, en: string) => string;
-  dir: 'rtl' | 'ltr';
-}
+// Global language state
+let globalLanguage: Language = 'ar';
+const subscribers: Array<(lang: Language) => void> = [];
 
-const SimpleLanguageContext = createContext<SimpleLanguageContextType | undefined>(undefined);
-
-interface SimpleLanguageProviderProps {
-  children: React.ReactNode;
-}
-
-export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
-  // Detect browser language
-  const detectBrowserLanguage = (): Language => {
+// Detect browser language on initial load
+const detectBrowserLanguage = (): Language => {
+  if (typeof window === 'undefined') return 'ar';
+  
+  try {
     // Check localStorage first for user preference
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage === 'ar' || savedLanguage === 'en') {
@@ -34,44 +27,61 @@ export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps
     
     // Default to English for all other languages
     return 'en';
-  };
+  } catch {
+    return 'ar';
+  }
+};
 
-  const [language, setLanguageState] = useState<Language>(detectBrowserLanguage);
+// Initialize global language
+globalLanguage = detectBrowserLanguage();
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem('language', lang);
-  };
+// Language manager
+export const LanguageManager = {
+  getLanguage: () => globalLanguage,
+  
+  setLanguage: (lang: Language) => {
+    globalLanguage = lang;
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('language', lang);
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        document.documentElement.setAttribute('lang', lang);
+      } catch {}
+    }
+    subscribers.forEach(callback => callback(lang));
+  },
+  
+  subscribe: (callback: (lang: Language) => void) => {
+    subscribers.push(callback);
+    return () => {
+      const index = subscribers.indexOf(callback);
+      if (index !== -1) {
+        subscribers.splice(index, 1);
+      }
+    };
+  },
+  
+  t: (ar: string, en: string) => {
+    return globalLanguage === 'ar' ? ar : en;
+  },
+  
+  getDir: () => globalLanguage === 'ar' ? 'rtl' as const : 'ltr' as const
+};
 
-  const t = (ar: string, en: string): string => {
-    return language === 'ar' ? ar : en;
-  };
-
-  const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
-
-  useEffect(() => {
-    document.documentElement.setAttribute('dir', dir);
-    document.documentElement.setAttribute('lang', language);
-  }, [language, dir]);
-
-  const contextValue: SimpleLanguageContextType = {
-    language,
-    setLanguage,
-    t,
-    dir
-  };
-
-  return (
-    <SimpleLanguageContext.Provider value={contextValue}>
-      {children}
-    </SimpleLanguageContext.Provider>
-  );
+interface SimpleLanguageProviderProps {
+  children: ReactNode;
 }
 
-export function useSimpleLanguageContext() {
-  const context = useContext(SimpleLanguageContext);
-  if (context === undefined) {
-    throw new Error('useSimpleLanguageContext must be used within a SimpleLanguageProvider');
+export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
+  // Set initial document attributes
+  if (typeof window !== 'undefined') {
+    try {
+      const dir = LanguageManager.getDir();
+      const lang = LanguageManager.getLanguage();
+      document.documentElement.setAttribute('dir', dir);
+      document.documentElement.setAttribute('lang', lang);
+    } catch {}
   }
-  return context;
+  
+  return <>{children}</>;
 }
