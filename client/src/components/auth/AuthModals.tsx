@@ -182,7 +182,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
             <div className="space-y-1">
-              <p className="text-sm text-gray-600 text-right">
+              <p className="text-sm text-gray-600 text-center">
                 {t('مرحباً بعودتك إلى ContraMind', 'Welcome back to ContraMind')}
               </p>
               <p className="text-xs text-gray-500 text-center">
