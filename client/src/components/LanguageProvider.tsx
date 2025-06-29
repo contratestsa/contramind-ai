@@ -16,52 +16,47 @@ interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = React.useState<Language>('ar');
+  const [language, setLanguage] = React.useState<Language>(() => {
+    if (typeof window === 'undefined') return 'ar';
+    
+    // Check URL for language preference
+    const path = window.location.pathname;
+    if (path.startsWith('/en')) return 'en';
+    if (path.startsWith('/ar')) return 'ar';
+    
+    // Check localStorage
+    const saved = localStorage.getItem('language');
+    if (saved === 'en' || saved === 'ar') return saved as Language;
+    
+    // Default to Arabic
+    return 'ar';
+  });
 
-  React.useEffect(() => {
-    const detectBrowserLanguage = (): Language => {
-      if (typeof window === 'undefined') return 'ar';
-      
-      const savedLanguage = localStorage.getItem('language');
-      if (savedLanguage === 'ar' || savedLanguage === 'en') {
-        return savedLanguage as Language;
-      }
-      
-      const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
-      
-      if (browserLanguage.startsWith('ar')) return 'ar';
-      if (browserLanguage.startsWith('en')) return 'en';
-      
-      return 'ar';
-    };
-
-    setLanguage(detectBrowserLanguage());
-  }, []);
-
-  const setLanguageWithPersistence = React.useCallback((newLanguage: Language) => {
+  const setLanguageWithPersistence = (newLanguage: Language) => {
     setLanguage(newLanguage);
     localStorage.setItem('language', newLanguage);
-  }, []);
+    document.documentElement.setAttribute('dir', newLanguage === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', newLanguage);
+  };
 
-  const t = React.useCallback((ar: string, en: string): string => {
+  const t = (ar: string, en: string): string => {
     return language === 'ar' ? ar : en;
-  }, [language]);
+  };
 
-  const dir: 'rtl' | 'ltr' = React.useMemo(() => {
-    return language === 'ar' ? 'rtl' : 'ltr';
-  }, [language]);
+  const dir: 'rtl' | 'ltr' = language === 'ar' ? 'rtl' : 'ltr';
 
+  // Set initial document attributes
   React.useEffect(() => {
     document.documentElement.setAttribute('dir', dir);
     document.documentElement.setAttribute('lang', language);
   }, [language, dir]);
 
-  const contextValue = React.useMemo<LanguageContextType>(() => ({
+  const contextValue: LanguageContextType = {
     language,
     setLanguage: setLanguageWithPersistence,
     t,
     dir
-  }), [language, setLanguageWithPersistence, t, dir]);
+  };
 
   return (
     <LanguageContext.Provider value={contextValue}>

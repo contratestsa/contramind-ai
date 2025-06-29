@@ -79,7 +79,7 @@ export default function Header() {
             
             {/* Authentication Links */}
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <Link href="/login">
+              <Link href={language === 'en' ? '/en/login' : '/ar/login'}>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -90,7 +90,7 @@ export default function Header() {
                 </Button>
               </Link>
               
-              <Link href="/signup">
+              <Link href={language === 'en' ? '/en/signup' : '/ar/signup'}>
                 <Button
                   size="sm"
                   className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold h-10 px-4"
@@ -124,6 +124,17 @@ export default function Header() {
                     onClick={() => {
                       setLanguage('en');
                       setIsDropdownOpen(false);
+                      // Navigate to English version of current page
+                      const currentPath = window.location.pathname;
+                      if (currentPath.startsWith('/ar/')) {
+                        window.location.href = currentPath.replace('/ar/', '/en/');
+                      } else if (currentPath === '/ar') {
+                        window.location.href = '/en';
+                      } else if (currentPath === '/') {
+                        window.location.href = '/en';
+                      } else {
+                        window.location.href = '/en' + currentPath;
+                      }
                     }}
                     className={`w-full flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
                       language === 'en' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'
@@ -141,6 +152,17 @@ export default function Header() {
                     onClick={() => {
                       setLanguage('ar');
                       setIsDropdownOpen(false);
+                      // Navigate to Arabic version of current page
+                      const currentPath = window.location.pathname;
+                      if (currentPath.startsWith('/en/')) {
+                        window.location.href = currentPath.replace('/en/', '/ar/');
+                      } else if (currentPath === '/en') {
+                        window.location.href = '/ar';
+                      } else if (currentPath === '/') {
+                        window.location.href = '/ar';
+                      } else {
+                        window.location.href = '/ar' + currentPath;
+                      }
                     }}
                     className={`w-full flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
                       language === 'ar' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'

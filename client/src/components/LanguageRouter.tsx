@@ -18,12 +18,8 @@ export function LanguageRouter({ children }: { children: React.ReactNode }) {
       if (context && context.language !== urlLang) {
         context.setLanguage(urlLang);
       }
-    } else {
-      // If no language prefix, redirect to language-aware URL
-      const defaultLang = context ? context.language : 'ar';
-      const newPath = `/${defaultLang}${location}`;
-      setLocation(newPath, { replace: true });
     }
+    // Remove automatic redirection - let users access pages directly
   }, [location, context]);
 
   return <>{children}</>;
