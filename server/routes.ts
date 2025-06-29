@@ -4,6 +4,7 @@ import { z } from "zod";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail } from "./emailService";
+import passport from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
