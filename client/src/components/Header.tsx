@@ -41,9 +41,9 @@ export default function Header() {
   return (
     <header className="bg-navy shadow-custom sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20 lg:h-24">
+        <div className="flex items-center h-20 lg:h-24 pl-80">
           {/* Logo - Always positioned on the left regardless of language */}
-          <div className="flex items-center order-first">
+          <div className="flex items-center flex-shrink-0" style={{ position: 'absolute', left: '1rem', zIndex: 10 }}>
             <div className="flex items-center overflow-hidden">
               <img 
                 src={logoImage} 
@@ -54,7 +54,7 @@ export default function Header() {
           </div>
 
           {/* Contact Us & Language Toggle - Always positioned on the right */}
-          <div className="flex items-center space-x-4 order-last">
+          <div className="flex items-center space-x-4 ml-auto">
             {/* Contact Us Icon */}
             <ContactUs />
             
