@@ -263,18 +263,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 {t('أو استمر مع', 'Or continue with')}
               </p>
               <div className="flex gap-3 mt-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => window.location.href = '/api/auth/google'}
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                >
+                <Button variant="outline" className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]">
                   Google
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => window.location.href = '/api/auth/microsoft'}
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                >
+                <Button variant="outline" className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]">
                   Microsoft
                 </Button>
               </div>
@@ -459,18 +451,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 {t('أو استمر مع', 'Or continue with')}
               </p>
               <div className="flex gap-3 mt-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => window.location.href = '/api/auth/google'}
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                >
+                <Button variant="outline" className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]">
                   Google
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => window.location.href = '/api/auth/microsoft'}
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                >
+                <Button variant="outline" className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]">
                   Microsoft
                 </Button>
               </div>

@@ -4,7 +4,6 @@ import { z } from "zod";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail } from "./emailService";
-import passport from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
@@ -206,32 +205,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
   });
-
-  // Google OAuth routes
-  app.get("/api/auth/google", passport.authenticate('google', { 
-    scope: ['profile', 'email'] 
-  }));
-
-  app.get("/api/auth/google/callback", 
-    passport.authenticate('google', { failureRedirect: '/?error=google_auth_failed' }),
-    (req, res) => {
-      // Successful authentication, redirect to home with success
-      res.redirect('/?auth=success');
-    }
-  );
-
-  // Microsoft OAuth routes
-  app.get("/api/auth/microsoft", passport.authenticate('microsoft', {
-    scope: ['user.read']
-  }));
-
-  app.get("/api/auth/microsoft/callback",
-    passport.authenticate('microsoft', { failureRedirect: '/?error=microsoft_auth_failed' }),
-    (req, res) => {
-      // Successful authentication, redirect to home with success
-      res.redirect('/?auth=success');
-    }
-  );
 
   const httpServer = createServer(app);
   return httpServer;

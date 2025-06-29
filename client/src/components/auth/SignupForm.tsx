@@ -1,177 +1,244 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { Eye, EyeOff, Lock, Mail, User, Building, Briefcase, ArrowRight, ArrowLeft, Chrome, UserPlus, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { insertUserSchema } from "@shared/schema";
+import { insertUserSchema, type InsertUser } from "@shared/schema";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
-
-interface SignupData {
-  fullName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  company?: string;
-  jobTitle?: string;
-}
 
 interface SignupFormProps {
   locale: "en" | "ar";
   onLanguageToggle: () => void;
 }
 
+const translations = {
+  en: {
+    createAccount: "Create Account",
+    joinContraMind: "Join ContraMind and discover the future of legal technology",
+    tagline: "The Future of Law, Powered by AI",
+    fullName: "Full Name",
+    email: "Email Address",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+    company: "Company Name",
+    jobTitle: "Job Title",
+    fullNamePlaceholder: "Enter your full name",
+    emailPlaceholder: "Enter your email",
+    passwordPlaceholder: "Enter your password",
+    confirmPasswordPlaceholder: "Re-enter your password",
+    companyPlaceholder: "Your company name",
+    jobTitlePlaceholder: "Lawyer, Legal Advisor, etc...",
+    acceptTerms: "I accept the Terms of Service and Privacy Policy",
+    createAccountButton: "Create Account",
+    creatingAccount: "Creating account...",
+    orContinueWith: "Or continue with",
+    google: "Google",
+    microsoft: "Microsoft",
+    alreadyHaveAccount: "Already have an account?",
+    signIn: "Sign in",
+    // Validation messages
+    fullNameRequired: "Full name is required",
+    invalidEmail: "Please enter a valid email",
+    passwordTooShort: "Password must be at least 6 characters",
+    passwordMismatch: "Passwords do not match",
+    termsRequired: "You must accept the terms and conditions",
+    // Password strength
+    passwordStrength: "Password Strength",
+    weak: "Weak",
+    fair: "Fair",
+    good: "Good",
+    strong: "Strong",
+    // Toast messages
+    signupError: "Signup Error",
+    signupSuccess: "Account Created Successfully",
+    canNowLogin: "You can now log in with your credentials",
+    errorCreating: "An error occurred while creating your account"
+  },
+  ar: {
+    createAccount: "إنشاء حساب جديد",
+    joinContraMind: "انضم إلى كونترامايند واكتشف مستقبل التكنولوجيا القانونية",
+    tagline: "مستقبل القانون، مدعوم بالذكاء الاصطناعي",
+    fullName: "الاسم الكامل",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    confirmPassword: "تأكيد كلمة المرور",
+    company: "اسم الشركة",
+    jobTitle: "المسمى الوظيفي",
+    fullNamePlaceholder: "أدخل اسمك الكامل",
+    emailPlaceholder: "أدخل بريدك الإلكتروني",
+    passwordPlaceholder: "أدخل كلمة المرور",
+    confirmPasswordPlaceholder: "أعد إدخال كلمة المرور",
+    companyPlaceholder: "اسم شركتك",
+    jobTitlePlaceholder: "محامي، مستشار قانوني، إلخ...",
+    acceptTerms: "أوافق على شروط الخدمة وسياسة الخصوصية",
+    createAccountButton: "إنشاء حساب",
+    creatingAccount: "جاري إنشاء الحساب...",
+    orContinueWith: "أو متابعة باستخدام",
+    google: "جوجل",
+    microsoft: "مايكروسوفت",
+    alreadyHaveAccount: "لديك حساب بالفعل؟",
+    signIn: "تسجيل الدخول",
+    // Validation messages
+    fullNameRequired: "الاسم الكامل مطلوب",
+    invalidEmail: "يرجى إدخال بريد إلكتروني صحيح",
+    passwordTooShort: "كلمة المرور يجب أن تكون على الأقل 6 أحرف",
+    passwordMismatch: "كلمات المرور غير متطابقة",
+    termsRequired: "يجب الموافقة على الشروط والأحكام",
+    // Password strength
+    passwordStrength: "قوة كلمة المرور",
+    weak: "ضعيفة",
+    fair: "مقبولة",
+    good: "جيدة",
+    strong: "قوية",
+    // Toast messages
+    signupError: "خطأ في إنشاء الحساب",
+    signupSuccess: "تم إنشاء الحساب بنجاح",
+    canNowLogin: "يمكنك الآن تسجيل الدخول باستخدام بياناتك",
+    errorCreating: "حدث خطأ أثناء إنشاء الحساب"
+  }
+};
+
+type FormData = InsertUser & {
+  confirmPassword: string;
+  company?: string;
+  jobTitle?: string;
+  acceptTerms: boolean;
+};
+
 export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [formData, setFormData] = useState<SignupData>({
-    fullName: "",
+  const t = translations[locale];
+  const isRTL = locale === "ar";
+  
+  const [formData, setFormData] = useState<FormData>({
+    username: "",
     email: "",
     password: "",
+    fullName: "",
     confirmPassword: "",
     company: "",
     jobTitle: "",
+    acceptTerms: false,
   });
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState<Partial<SignupData>>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const isRTL = locale === "ar";
-
-  const t = {
-    signUp: locale === "ar" ? "إنشاء حساب" : "Sign Up",
-    joinUs: locale === "ar" ? "انضم إلينا" : "Join us",
-    tagline: locale === "ar" ? "منصة الذكاء الاصطناعي للعقود" : "AI Contract Management Platform",
-    fullName: locale === "ar" ? "الاسم الكامل" : "Full Name",
-    email: locale === "ar" ? "البريد الإلكتروني" : "Email",
-    password: locale === "ar" ? "كلمة المرور" : "Password",
-    confirmPassword: locale === "ar" ? "تأكيد كلمة المرور" : "Confirm Password",
-    company: locale === "ar" ? "الشركة / المؤسسة" : "Company / Organization",
-    jobTitle: locale === "ar" ? "المسمى الوظيفي" : "Job Title",
-    signUpButton: locale === "ar" ? "إنشاء حساب" : "Create Account",
-    signUpWithGoogle: locale === "ar" ? "التسجيل بجوجل" : "Sign up with Google",
-    signUpWithMicrosoft: locale === "ar" ? "التسجيل بمايكروسوفت" : "Sign up with Microsoft",
-    or: locale === "ar" ? "أو" : "or",
-    haveAccount: locale === "ar" ? "لديك حساب بالفعل؟" : "Already have an account?",
-    signIn: locale === "ar" ? "تسجيل الدخول" : "Sign in",
-    backToHome: locale === "ar" ? "العودة للرئيسية" : "Back to Home",
-    passwordRequirements: locale === "ar" ? "متطلبات كلمة المرور:" : "Password Requirements:",
-    minLength: locale === "ar" ? "8 أحرف على الأقل" : "At least 8 characters",
-    hasUppercase: locale === "ar" ? "حرف كبير واحد على الأقل" : "At least one uppercase letter",
-    hasLowercase: locale === "ar" ? "حرف صغير واحد على الأقل" : "At least one lowercase letter",
-    hasNumber: locale === "ar" ? "رقم واحد على الأقل" : "At least one number"
+  // Password strength calculation
+  const getPasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 6) strength++;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
   };
 
-  const jobTitles = [
-    { value: 'lawyer', ar: 'محامي', en: 'Lawyer' },
-    { value: 'legal_counsel', ar: 'مستشار قانوني', en: 'Legal Counsel' },
-    { value: 'paralegal', ar: 'مساعد قانوني', en: 'Paralegal' },
-    { value: 'contract_manager', ar: 'مدير عقود', en: 'Contract Manager' },
-    { value: 'legal_assistant', ar: 'مساعد قانوني', en: 'Legal Assistant' },
-    { value: 'compliance_officer', ar: 'مسؤول امتثال', en: 'Compliance Officer' },
-    { value: 'business_owner', ar: 'صاحب عمل', en: 'Business Owner' },
-    { value: 'entrepreneur', ar: 'رائد أعمال', en: 'Entrepreneur' },
-    { value: 'other', ar: 'أخرى', en: 'Other' },
-  ];
+  const getPasswordStrengthText = (strength: number) => {
+    if (strength <= 1) return { text: t.weak, color: "text-red-500" };
+    if (strength <= 2) return { text: t.fair, color: "text-yellow-500" };
+    if (strength <= 3) return { text: t.good, color: "text-blue-500" };
+    return { text: t.strong, color: "text-green-500" };
+  };
 
-  const mutation = useMutation({
-    mutationFn: async (data: Omit<SignupData, 'confirmPassword'>) => {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  const signupMutation = useMutation({
+    mutationFn: async (data: InsertUser) => {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
         body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
       });
-
       if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || 'Signup failed');
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Signup failed");
       }
-
       return response.json();
     },
     onSuccess: () => {
       toast({
-        title: locale === "ar" ? "تم إنشاء الحساب بنجاح" : "Account created successfully",
-        description: locale === "ar" ? "مرحباً بك في ContraMind" : "Welcome to ContraMind",
+        title: t.signupSuccess,
+        description: t.canNowLogin,
+        variant: "default",
       });
-      setLocation('/');
+      setLocation("/login");
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
+        title: t.signupError,
+        description: error.message || t.errorCreating,
         variant: "destructive",
-        title: locale === "ar" ? "خطأ في إنشاء الحساب" : "Signup error",
-        description: error.message,
       });
     },
   });
 
-  const handleInputChange = (field: keyof SignupData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = t.fullNameRequired;
     }
-  };
+    
+    if (!formData.email.trim()) {
+      newErrors.email = t.invalidEmail;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = t.invalidEmail;
+    }
+    
+    if (!formData.password) {
+      newErrors.password = t.passwordTooShort;
+    } else if (formData.password.length < 6) {
+      newErrors.password = t.passwordTooShort;
+    }
+    
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = t.passwordMismatch;
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = t.passwordMismatch;
+    }
 
-  const validatePassword = (password: string) => {
-    const requirements = {
-      minLength: password.length >= 8,
-      hasUppercase: /[A-Z]/.test(password),
-      hasLowercase: /[a-z]/.test(password),
-      hasNumber: /\d/.test(password),
-    };
-    return requirements;
-  };
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = t.termsRequired;
+    }
 
-  const passwordValidation = validatePassword(formData.password);
-  const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+    // Generate username from email
+    if (formData.email && !newErrors.email) {
+      const username = formData.email.split('@')[0];
+      setFormData(prev => ({ ...prev, username }));
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const newErrors: Partial<SignupData> = {};
-
-    // Validate required fields
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = locale === "ar" ? "الاسم الكامل مطلوب" : "Full name is required";
+    if (validateForm()) {
+      const { confirmPassword, acceptTerms, company, jobTitle, ...submitData } = formData;
+      signupMutation.mutate(submitData);
     }
-
-    if (!formData.email.trim()) {
-      newErrors.email = locale === "ar" ? "البريد الإلكتروني مطلوب" : "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = locale === "ar" ? "بريد إلكتروني غير صحيح" : "Invalid email address";
-    }
-
-    if (!formData.password) {
-      newErrors.password = locale === "ar" ? "كلمة المرور مطلوبة" : "Password is required";
-    } else if (!isPasswordValid) {
-      newErrors.password = locale === "ar" ? "كلمة المرور لا تلبي المتطلبات" : "Password doesn't meet requirements";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = locale === "ar" ? "كلمات المرور غير متطابقة" : "Passwords don't match";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    const { confirmPassword, ...signupData } = formData;
-    mutation.mutate(signupData);
   };
 
-  const handleOAuthSignup = (provider: 'google' | 'microsoft') => {
-    window.location.href = `/api/auth/${provider}`;
+  const handleInputChange = (field: keyof FormData, value: string | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
+    }
   };
+
+  const passwordStrength = getPasswordStrength(formData.password);
+  const passwordStrengthInfo = getPasswordStrengthText(passwordStrength);
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-[#0c2836] via-[#1a4a5c] to-[#2c6b7a] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12`} dir={isRTL ? "rtl" : "ltr"}>
-      <div className="max-w-[500px] w-full space-y-8">
+      <div className="max-w-[400px] w-full space-y-8">
         {/* Language Toggle */}
         <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'}`}>
           <button
@@ -183,35 +250,48 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
         </div>
 
         {/* Header */}
-        <div className="text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
           <Link href="/">
-            <div className="inline-flex items-center justify-center mb-6 cursor-pointer">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="inline-flex items-center justify-center mb-6 cursor-pointer"
+            >
               <img 
                 src={logoImage} 
                 alt="ContraMind"
                 className="h-16 w-auto"
-                style={{ padding: '8px' }}
+                style={{ padding: '8px' }} // 0.5× logomark height clearspace
               />
-            </div>
+            </motion.div>
           </Link>
           
           <h1 className={`text-3xl font-bold text-white mb-2 ${isRTL ? 'font-[Almarai]' : 'font-[Space_Grotesk]'}`}>
-            {t.signUp}
+            {t.createAccount}
           </h1>
           
           <p className={`text-white/70 mb-2 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-            {t.joinUs}
+            {t.joinContraMind}
           </p>
 
           <p className={`text-[#B7DEE8] text-sm font-medium ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
             {t.tagline}
           </p>
-        </div>
+        </motion.div>
 
         {/* Signup Form */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="bg-white rounded-2xl p-6 shadow-sm"
+        >
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Full Name Field */}
             <div className="space-y-2">
               <Label 
                 htmlFor="fullName" 
@@ -227,16 +307,18 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
                 className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
                   errors.fullName ? "border-red-500" : ""
-                } ${isRTL ? 'text-right font-[Almarai]' : 'font-[Inter]'}`}
-                placeholder={t.fullName}
+                } ${isRTL ? 'text-right' : 'text-left'}`}
+                placeholder={t.fullNamePlaceholder}
+                disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
+                aria-label={t.fullName}
               />
               {errors.fullName && (
-                <p className="text-red-500 text-sm">{errors.fullName}</p>
+                <p className="text-red-500 text-sm" role="alert">{errors.fullName}</p>
               )}
             </div>
 
-            {/* Email */}
+            {/* Email Field */}
             <div className="space-y-2">
               <Label 
                 htmlFor="email" 
@@ -252,16 +334,18 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
                   errors.email ? "border-red-500" : ""
-                } ${isRTL ? 'text-right font-[Almarai]' : 'font-[Inter]'}`}
-                placeholder={t.email}
+                } ${isRTL ? 'text-right' : 'text-left'}`}
+                placeholder={t.emailPlaceholder}
+                disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
+                aria-label={t.email}
               />
               {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
+                <p className="text-red-500 text-sm" role="alert">{errors.email}</p>
               )}
             </div>
 
-            {/* Password */}
+            {/* Password Field */}
             <div className="space-y-2">
               <Label 
                 htmlFor="password" 
@@ -276,57 +360,54 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
-                  className={`w-full py-2 px-3 pr-10 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
+                  className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'pl-10 text-right' : 'pr-10 text-left'} ${
                     errors.password ? "border-red-500" : ""
-                  } ${isRTL ? 'text-right font-[Almarai] pl-10 pr-3' : 'font-[Inter]'}`}
-                  placeholder={t.password}
+                  }`}
+                  placeholder={t.passwordPlaceholder}
+                  disabled={signupMutation.isPending}
                   dir={isRTL ? "rtl" : "ltr"}
+                  aria-label={t.password}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 ${
-                    isRTL ? 'left-3' : 'right-3'
-                  }`}
+                  className={`absolute top-1/2 transform -translate-y-1/2 ${isRTL ? 'left-3' : 'right-3'} text-gray-400 hover:text-gray-600`}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               
-              {/* Password Requirements */}
+              {/* Password Strength Indicator */}
               {formData.password && (
-                <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-                  <p className={`text-xs font-medium text-gray-700 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-                    {t.passwordRequirements}
-                  </p>
-                  <div className="space-y-1">
-                    {[
-                      { key: 'minLength', label: t.minLength, valid: passwordValidation.minLength },
-                      { key: 'hasUppercase', label: t.hasUppercase, valid: passwordValidation.hasUppercase },
-                      { key: 'hasLowercase', label: t.hasLowercase, valid: passwordValidation.hasLowercase },
-                      { key: 'hasNumber', label: t.hasNumber, valid: passwordValidation.hasNumber },
-                    ].map((req) => (
-                      <div key={req.key} className={`flex items-center gap-2 text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        {req.valid ? (
-                          <Check className="w-3 h-3 text-green-600" />
-                        ) : (
-                          <X className="w-3 h-3 text-red-500" />
-                        )}
-                        <span className={`${req.valid ? 'text-green-600' : 'text-red-500'} ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-                          {req.label}
-                        </span>
-                      </div>
-                    ))}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                      {t.passwordStrength}
+                    </span>
+                    <span className={`text-xs ${passwordStrengthInfo.color} ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                      {passwordStrengthInfo.text}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div 
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        passwordStrength <= 1 ? 'bg-red-500 w-1/4' :
+                        passwordStrength <= 2 ? 'bg-yellow-500 w-2/4' :
+                        passwordStrength <= 3 ? 'bg-blue-500 w-3/4' :
+                        'bg-green-500 w-full'
+                      }`}
+                    />
                   </div>
                 </div>
               )}
               
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
+                <p className="text-red-500 text-sm" role="alert">{errors.password}</p>
               )}
             </div>
 
-            {/* Confirm Password */}
+            {/* Confirm Password Field */}
             <div className="space-y-2">
               <Label 
                 htmlFor="confirmPassword" 
@@ -341,28 +422,42 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                  className={`w-full py-2 px-3 pr-10 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
+                  className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'pl-10 text-right' : 'pr-10 text-left'} ${
                     errors.confirmPassword ? "border-red-500" : ""
-                  } ${isRTL ? 'text-right font-[Almarai] pl-10 pr-3' : 'font-[Inter]'}`}
-                  placeholder={t.confirmPassword}
+                  }`}
+                  placeholder={t.confirmPasswordPlaceholder}
+                  disabled={signupMutation.isPending}
                   dir={isRTL ? "rtl" : "ltr"}
+                  aria-label={t.confirmPassword}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className={`absolute top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 ${
-                    isRTL ? 'left-3' : 'right-3'
-                  }`}
+                  className={`absolute top-1/2 transform -translate-y-1/2 ${isRTL ? 'left-3' : 'right-3'} text-gray-400 hover:text-gray-600`}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                 >
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {/* Password Match Indicator */}
+              {formData.confirmPassword && (
+                <div className="flex items-center gap-1">
+                  {formData.password === formData.confirmPassword ? (
+                    <Check className="w-3 h-3 text-green-500" />
+                  ) : (
+                    <X className="w-3 h-3 text-red-500" />
+                  )}
+                  <span className={`text-xs ${formData.password === formData.confirmPassword ? 'text-green-500' : 'text-red-500'} ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                    {formData.password === formData.confirmPassword ? "Passwords match" : "Passwords don't match"}
+                  </span>
+                </div>
+              )}
               {errors.confirmPassword && (
-                <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+                <p className="text-red-500 text-sm" role="alert">{errors.confirmPassword}</p>
               )}
             </div>
 
-            {/* Company */}
+            {/* Company Field */}
             <div className="space-y-2">
               <Label 
                 htmlFor="company" 
@@ -376,13 +471,15 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="text"
                 value={formData.company}
                 onChange={(e) => handleInputChange("company", e.target.value)}
-                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right font-[Almarai]' : 'font-[Inter]'}`}
-                placeholder={t.company}
+                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right' : 'text-left'}`}
+                placeholder={t.companyPlaceholder}
+                disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
+                aria-label={t.company}
               />
             </div>
 
-            {/* Job Title */}
+            {/* Job Title Field */}
             <div className="space-y-2">
               <Label 
                 htmlFor="jobTitle" 
@@ -391,36 +488,56 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 <Briefcase className="w-4 h-4" />
                 {t.jobTitle}
               </Label>
-              <Select value={formData.jobTitle} onValueChange={(value) => handleInputChange('jobTitle', value)}>
-                <SelectTrigger className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right font-[Almarai]' : 'font-[Inter]'}`}>
-                  <SelectValue placeholder={t.jobTitle} />
-                </SelectTrigger>
-                <SelectContent>
-                  {jobTitles.map((title) => (
-                    <SelectItem key={title.value} value={title.value}>
-                      {locale === "ar" ? title.ar : title.en}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                id="jobTitle"
+                type="text"
+                value={formData.jobTitle}
+                onChange={(e) => handleInputChange("jobTitle", e.target.value)}
+                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right' : 'text-left'}`}
+                placeholder={t.jobTitlePlaceholder}
+                disabled={signupMutation.isPending}
+                dir={isRTL ? "rtl" : "ltr"}
+                aria-label={t.jobTitle}
+              />
             </div>
 
-            {/* Sign Up Button */}
+            {/* Terms Acceptance */}
+            <div className={`flex items-start ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
+              <Checkbox
+                id="acceptTerms"
+                checked={formData.acceptTerms}
+                onCheckedChange={(checked) => handleInputChange("acceptTerms", checked === true)}
+                className="mt-1"
+              />
+              <Label 
+                htmlFor="acceptTerms" 
+                className={`text-sm text-[#101920] leading-5 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}
+              >
+                {t.acceptTerms}
+              </Label>
+            </div>
+            {errors.acceptTerms && (
+              <p className="text-red-500 text-sm" role="alert">{errors.acceptTerms}</p>
+            )}
+
+            {/* Submit Button */}
             <Button
               type="submit"
-              disabled={mutation.isPending}
-              className={`w-full bg-[#0C2836] hover:bg-[#0C2836]/90 text-white py-2 px-4 rounded font-semibold transition-colors ${
-                isRTL ? 'font-[Almarai]' : 'font-[Inter]'
-              }`}
+              disabled={signupMutation.isPending}
+              className="w-full bg-[#B7DEE8] hover:bg-[#a5c9d6] text-white font-semibold py-2 rounded transition-all duration-300 flex items-center justify-center gap-2 mt-6"
             >
-              <div className={`flex items-center justify-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                {mutation.isPending ? (
+              {signupMutation.isPending ? (
+                <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
+                  <span className={isRTL ? 'font-[Almarai]' : 'font-[Inter]'}>{t.creatingAccount}</span>
+                </div>
+              ) : (
+                <>
                   <UserPlus className="w-4 h-4" />
-                )}
-                {mutation.isPending ? (locale === "ar" ? "جاري إنشاء الحساب..." : "Creating account...") : t.signUpButton}
-              </div>
+                  <span className={isRTL ? 'font-[Almarai]' : 'font-[Inter]'}>{t.createAccountButton}</span>
+                  {isRTL ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+                </>
+              )}
             </Button>
 
             {/* Divider */}
@@ -429,70 +546,51 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 <div className="w-full border-t border-[#E6E6E6]" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className={`px-2 bg-white text-[#666666] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-                  {t.or}
+                <span className={`px-2 bg-white text-gray-500 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                  {t.orContinueWith}
                 </span>
               </div>
             </div>
 
-            {/* OAuth Buttons */}
-            <div className="space-y-3">
+            {/* SSO Buttons */}
+            <div className="grid grid-cols-2 gap-3">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => handleOAuthSignup('google')}
-                className={`w-full border-[#E6E6E6] text-[#101920] hover:bg-gray-50 py-2 px-4 rounded font-medium transition-colors ${
-                  isRTL ? 'font-[Almarai]' : 'font-[Inter]'
-                }`}
+                className="border-[#E6E6E6] hover:bg-gray-50 flex items-center justify-center gap-2"
               >
-                <div className={`flex items-center justify-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <Chrome className="w-4 h-4" />
-                  {t.signUpWithGoogle}
-                </div>
+                <Chrome className="w-4 h-4" />
+                <span className={isRTL ? 'font-[Almarai]' : 'font-[Inter]'}>{t.google}</span>
               </Button>
-
+              
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => handleOAuthSignup('microsoft')}
-                className={`w-full border-[#E6E6E6] text-[#101920] hover:bg-gray-50 py-2 px-4 rounded font-medium transition-colors ${
-                  isRTL ? 'font-[Almarai]' : 'font-[Inter]'
-                }`}
+                className="border-[#E6E6E6] hover:bg-gray-50 flex items-center justify-center gap-2"
               >
-                <div className={`flex items-center justify-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <div className="w-4 h-4 bg-[#00BCF2] rounded-sm flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-sm"></div>
-                  </div>
-                  {t.signUpWithMicrosoft}
-                </div>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#0C2836">
+                  <path d="M23.64 12.204c0-.436-.036-.887-.098-1.345h-11.48v2.541h6.564c-.284 1.498-1.144 2.769-2.437 3.622v2.999h3.947c2.305-2.123 3.634-5.249 3.634-8.936z"/>
+                  <path d="M12.062 24c3.297 0 6.065-1.095 8.087-2.959l-3.947-2.999c-1.095.738-2.497 1.174-4.14 1.174-3.174 0-5.861-2.144-6.828-5.03h-4.073v3.098C3.24 21.348 7.317 24 12.062 24z"/>
+                  <path d="M5.234 14.186c-.244-.738-.383-1.523-.383-2.334s.139-1.596.383-2.334V6.42H1.161C.422 7.889 0 9.407 0 11.852s.422 3.963 1.161 5.432l4.073-3.098z"/>
+                  <path d="M12.062 4.653c1.789 0 3.398.615 4.661 1.823l3.497-3.497C18.122 1.186 15.354 0 12.062 0 7.317 0 3.24 2.652 1.161 6.42l4.073 3.098c.967-2.886 3.654-5.03 6.828-5.03z"/>
+                </svg>
+                <span className={isRTL ? 'font-[Almarai]' : 'font-[Inter]'}>{t.microsoft}</span>
               </Button>
             </div>
           </form>
 
           {/* Sign In Link */}
           <div className="mt-6 text-center">
-            <p className={`text-sm text-[#666666] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
-              {t.haveAccount}{" "}
+            <p className={`text-gray-600 ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+              {t.alreadyHaveAccount}{" "}
               <Link href="/login">
-                <span className={`text-[#0C2836] hover:underline font-semibold ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
+                <a className={`font-semibold text-[#0C2836] hover:text-[#1a4a5c] ${isRTL ? 'font-[Almarai]' : 'font-[Inter]'}`}>
                   {t.signIn}
-                </span>
+                </a>
               </Link>
             </p>
           </div>
-        </div>
-
-        {/* Back to Home */}
-        <div className="text-center">
-          <Link href="/">
-            <div className={`inline-flex items-center gap-2 text-white/70 hover:text-white text-sm font-medium transition-colors ${
-              isRTL ? 'flex-row-reverse font-[Almarai]' : 'font-[Inter]'
-            }`}>
-              {isRTL ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
-              {t.backToHome}
-            </div>
-          </Link>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

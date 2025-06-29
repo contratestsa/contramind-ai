@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PartyPopper } from 'lucide-react';
+
 import { useToast } from '@/hooks/use-toast';
-import { insertWaitlistSchema } from '@shared/schema';
-import { apiRequest, queryClient } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/queryClient';
 
 interface WaitlistData {
   fullName: string;
@@ -18,8 +19,10 @@ interface WaitlistData {
 }
 
 export default function Waitlist() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
   const [formData, setFormData] = useState<WaitlistData>({
     fullName: '',
     email: '',
@@ -28,35 +31,52 @@ export default function Waitlist() {
     jobTitle: '',
   });
 
-  // Countdown timer state
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  // Count query
+  // Fetch the actual waitlist count from the database
   const { data: waitlistCount } = useQuery({
     queryKey: ['/api/waitlist/count'],
-    refetchInterval: 5000,
+    queryFn: async () => {
+      const response = await fetch('/api/waitlist/count');
+      if (!response.ok) throw new Error('Failed to fetch waitlist count');
+      const data = await response.json();
+      return data.count;
+    },
   });
 
-  // Mutation for waitlist registration
-  const mutation = useMutation({
+  const [countdown, setCountdown] = useState({
+    days: 30,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  const joinWaitlistMutation = useMutation({
     mutationFn: async (data: WaitlistData) => {
-      const response = await apiRequest('/api/waitlist', {
+      const response = await fetch('/api/waitlist', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      return response;
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to join waitlist');
+      }
+      
+      return response.json();
     },
-    onSuccess: (data) => {
-      // Show success message with position
+    onSuccess: (data, variables) => {
+      const userName = variables.fullName;
+      
+      queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
+      
       toast({
-        title: t('تم التسجيل بنجاح!', 'Successfully Registered!'),
+        title: t('تم التسجيل بنجاح!', 'Registration Confirmed'),
         description: t(
-          `مرحباً ${formData.fullName}! أنت المشترك رقم ${data.position} في قائمة الانتظار`,
-          `Welcome ${formData.fullName}! You are subscriber #${data.position} on the waitlist`
+          `مرحباً ${userName}، أنت رقم ${data.entry?.id || data.waitlistPosition} في قائمة الانتظار لمنصة ContraMind AI. سيتم التواصل معك قريباً مع تحديثات حصرية حول الإطلاق.`,
+          `Welcome ${userName}! You are number ${data.entry?.id || data.waitlistPosition} on the ContraMind AI waitlist. You'll receive exclusive updates about our launch soon.`
         ),
       });
       
-      // Reset form
       setFormData({
         fullName: '',
         email: '',
@@ -64,90 +84,67 @@ export default function Waitlist() {
         company: '',
         jobTitle: '',
       });
-      
-      // Invalidate count query to update the counter
-      queryClient.invalidateQueries({ queryKey: ['/api/waitlist/count'] });
     },
     onError: (error: Error) => {
       toast({
-        variant: 'destructive',
         title: t('خطأ في التسجيل', 'Registration Error'),
         description: error.message,
+        variant: 'destructive',
       });
     },
   });
 
-  // Countdown timer logic
+  // Countdown timer effect
   useEffect(() => {
-    const targetDate = new Date('2025-07-18T23:59:59').getTime();
+    // Set a fixed target date for launch (e.g., July 18, 2025)
+    const targetDate = new Date('2025-07-18T00:00:00');
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const difference = targetDate - now;
+      const distance = targetDate.getTime() - now;
 
-      if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-        setTimeLeft({ days, hours, minutes, seconds });
+      if (distance > 0) {
+        setCountdown({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
       } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         clearInterval(timer);
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     }, 1000);
 
     return () => clearInterval(timer);
   }, []);
 
-  const handleInputChange = (field: keyof WaitlistData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate required fields
-    if (!formData.fullName || !formData.email || !formData.phoneNumber) {
+    if (!formData.email || !formData.fullName || !formData.phoneNumber) {
       toast({
+        title: t('بيانات مطلوبة', 'Required fields'),
+        description: t(
+          'يرجى ملء جميع الحقول المطلوبة',
+          'Please fill in all required fields'
+        ),
         variant: 'destructive',
-        title: t('خطأ في البيانات', 'Data Error'),
-        description: t('يرجى ملء جميع الحقول المطلوبة', 'Please fill in all required fields'),
       });
       return;
     }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        variant: 'destructive',
-        title: t('خطأ في البريد الإلكتروني', 'Email Error'),
-        description: t('يرجى إدخال بريد إلكتروني صحيح', 'Please enter a valid email address'),
-      });
-      return;
-    }
-
-    mutation.mutate(formData);
+    joinWaitlistMutation.mutate(formData);
   };
-
-  const jobTitles = [
-    { value: 'lawyer', ar: 'محامي', en: 'Lawyer' },
-    { value: 'legal_counsel', ar: 'مستشار قانوني', en: 'Legal Counsel' },
-    { value: 'paralegal', ar: 'مساعد قانوني', en: 'Paralegal' },
-    { value: 'contract_manager', ar: 'مدير عقود', en: 'Contract Manager' },
-    { value: 'legal_assistant', ar: 'مساعد قانوني', en: 'Legal Assistant' },
-    { value: 'compliance_officer', ar: 'مسؤول امتثال', en: 'Compliance Officer' },
-    { value: 'business_owner', ar: 'صاحب عمل', en: 'Business Owner' },
-    { value: 'entrepreneur', ar: 'رائد أعمال', en: 'Entrepreneur' },
-    { value: 'other', ar: 'أخرى', en: 'Other' },
-  ];
 
   return (
     <section id="waitlist" className="py-12 sm:py-20 lg:py-32 bg-navy">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-[#0f0f0f]">
-        <div className="text-center mb-8 sm:mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-8 sm:mb-12"
+        >
           <div className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
             <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
             <span>{t('قريباً', 'Coming Soon')}</span>
@@ -158,162 +155,146 @@ export default function Waitlist() {
           </h2>
 
           {/* Countdown Timer */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
-            <p className="text-white/80 text-sm sm:text-base mb-3 sm:mb-4 font-arabic-body">
-              {t('الوقت المتبقي للإطلاق', 'Time Left Until Launch')}
-            </p>
-            
-            <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-md mx-auto">
-              {[
-                { value: timeLeft.days, label: { ar: 'يوم', en: 'Day' } },
-                { value: timeLeft.hours, label: { ar: 'ساعة', en: 'Hour' } },
-                { value: timeLeft.minutes, label: { ar: 'دقيقة', en: 'Min' } },
-                { value: timeLeft.seconds, label: { ar: 'ثانية', en: 'Sec' } },
-              ].map((item, index) => (
-                <div key={index} className="text-center">
-                  <div className="bg-sky/20 rounded-lg p-2 sm:p-3 mb-1 sm:mb-2">
-                    <span className="text-lg sm:text-2xl font-bold text-sky">
-                      {item.value.toString().padStart(2, '0')}
-                    </span>
-                  </div>
-                  <span className="text-xs sm:text-sm text-white/70 font-arabic-body">
-                    {item.label.ar}
-                  </span>
-                </div>
-              ))}
+          <motion.div
+            initial={{ scale: 0.9 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-2xl p-4 sm:p-6 shadow-custom mb-6 sm:mb-8 max-w-md mx-auto"
+          >
+            <div className="text-xs sm:text-sm text-gray-400 mb-2 font-arabic-body">
+              {t('متبقي على الإطلاق', 'Time until launch')}
             </div>
-          </div>
+            <div className="text-xl sm:text-2xl font-space font-bold text-gray-800">
+              <span>{countdown.days.toString().padStart(2, '0')}</span>:
+              <span>{countdown.hours.toString().padStart(2, '0')}</span>:
+              <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
+              <span>10</span>
+            </div>
+            <div className="text-xs text-gray-500 mt-1 font-arabic-body">
+              {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
+            </div>
+          </motion.div>
+        </motion.div>
 
-          {/* Waitlist Counter */}
-          <div className="bg-white/5 rounded-xl p-3 sm:p-4 mb-6 sm:mb-8">
-            <p className="text-sky text-sm sm:text-base font-medium mb-1 sm:mb-2">
-              {t('انضم إلى', 'Join')}{' '}
-              <span className="text-lg sm:text-xl font-bold">
-                {waitlistCount?.count || 109}+
-              </span>{' '}
-              {t('محترف قانوني', 'Legal Professionals')}
-            </p>
-            <p className="text-white/60 text-xs sm:text-sm">
-              {t('في انتظار ContraMind', 'Waiting for ContraMind')}
-            </p>
-          </div>
-        </div>
+        {/* Waitlist Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-white rounded-2xl p-6 sm:p-8 lg:p-12 shadow-custom-hover text-[#141414]"
+        >
 
-        {/* Registration Form */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-custom max-w-2xl mx-auto">
-          <div className="text-center mb-6 sm:mb-8">
-            <h3 className="text-xl sm:text-2xl font-arabic-heading-bold text-navy mb-2 sm:mb-3">
-              {t('احجز مكانك المجاني', 'Reserve Your Free Spot')}
-            </h3>
-            <p className="text-gray-600 text-sm sm:text-base font-arabic-body">
-              {t('اشتراك مجاني لمدة 3 أشهر للمشتركين الأوائل', '3 Months Free for Early Subscribers')}
-            </p>
-          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-            {/* Full Name */}
-            <div>
-              <Label htmlFor="fullName" className="text-navy font-semibold text-sm sm:text-base">
-                {t('الاسم الكامل', 'Full Name')} *
-              </Label>
-              <Input
-                id="fullName"
-                type="text"
-                value={formData.fullName}
-                onChange={(e) => handleInputChange('fullName', e.target.value)}
-                className="mt-1 sm:mt-2 text-sm sm:text-base py-2 sm:py-3"
-                placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
-                required
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-sm font-semibold text-gray-700">
+                  {t('الاسم الكامل', 'Full Name')} *
+                </Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
+                  placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">
+                  {t('البريد الإلكتروني', 'Email Address')} *
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
+                  placeholder={t('example@domain.com', 'example@domain.com')}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-700">
+                  {t('رقم الهاتف', 'Phone Number')} *
+                </Label>
+                <Input
+                  id="phoneNumber"
+                  type="tel"
+                  value={formData.phoneNumber}
+                  onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
+                  placeholder={t('+966 50 123 4567', '+966 50 123 4567')}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="company" className="text-sm font-semibold text-gray-700">
+                  {t('الشركة', 'Company')}
+                </Label>
+                <Input
+                  id="company"
+                  type="text"
+                  value={formData.company}
+                  onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
+                  placeholder={t('اسم الشركة', 'Company name')}
+                />
+              </div>
+
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="jobTitle" className="text-sm font-semibold text-gray-700">
+                  {t('المسمى الوظيفي', 'Job Title')}
+                </Label>
+                <Input
+                  id="jobTitle"
+                  type="text"
+                  value={formData.jobTitle}
+                  onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
+                  placeholder={t('محامي، مستشار قانوني، إلخ...', 'Lawyer, Legal Advisor, etc...')}
+                />
+              </div>
             </div>
 
-            {/* Email */}
-            <div>
-              <Label htmlFor="email" className="text-navy font-semibold text-sm sm:text-base">
-                {t('البريد الإلكتروني', 'Email Address')} *
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                className="mt-1 sm:mt-2 text-sm sm:text-base py-2 sm:py-3"
-                placeholder={t('أدخل بريدك الإلكتروني', 'Enter your email address')}
-                required
-              />
-            </div>
-
-            {/* Phone Number */}
-            <div>
-              <Label htmlFor="phoneNumber" className="text-navy font-semibold text-sm sm:text-base">
-                {t('رقم الهاتف', 'Phone Number')} *
-              </Label>
-              <Input
-                id="phoneNumber"
-                type="tel"
-                value={formData.phoneNumber}
-                onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                className="mt-1 sm:mt-2 text-sm sm:text-base py-2 sm:py-3"
-                placeholder={t('أدخل رقم هاتفك', 'Enter your phone number')}
-                required
-              />
-            </div>
-
-            {/* Company */}
-            <div>
-              <Label htmlFor="company" className="text-navy font-semibold text-sm sm:text-base">
-                {t('الشركة / المؤسسة', 'Company / Organization')}
-              </Label>
-              <Input
-                id="company"
-                type="text"
-                value={formData.company}
-                onChange={(e) => handleInputChange('company', e.target.value)}
-                className="mt-1 sm:mt-2 text-sm sm:text-base py-2 sm:py-3"
-                placeholder={t('أدخل اسم شركتك أو مؤسستك', 'Enter your company or organization')}
-              />
-            </div>
-
-            {/* Job Title */}
-            <div>
-              <Label htmlFor="jobTitle" className="text-navy font-semibold text-sm sm:text-base">
-                {t('المسمى الوظيفي', 'Job Title')}
-              </Label>
-              <Select value={formData.jobTitle} onValueChange={(value) => handleInputChange('jobTitle', value)}>
-                <SelectTrigger className="mt-1 sm:mt-2 text-sm sm:text-base py-2 sm:py-3">
-                  <SelectValue placeholder={t('اختر مسماك الوظيفي', 'Select your job title')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {jobTitles.map((title) => (
-                    <SelectItem key={title.value} value={title.value}>
-                      {title.ar}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Submit Button */}
             <Button
               type="submit"
-              disabled={mutation.isPending}
-              className="w-full bg-navy hover:bg-navy/90 text-white py-3 sm:py-4 text-sm sm:text-base font-semibold transition-all duration-300 hover:shadow-lg"
+              disabled={joinWaitlistMutation.isPending}
+              className="w-full px-6 py-3 sm:py-4 rounded-custom font-semibold text-sm sm:text-lg hover:bg-sky/90 transition-all duration-300 shadow-custom-hover disabled:opacity-50 bg-[#0c2836] text-[#e6f0f5]"
             >
-              {mutation.isPending 
-                ? t('جاري التسجيل...', 'Registering...')
-                : t('احجز مكانك المجاني', 'Reserve Free Spot')
-              }
+              {joinWaitlistMutation.isPending ? (
+                <span className="flex items-center justify-center">
+                  <i className="fas fa-spinner fa-spin mr-2 rtl:mr-0 rtl:ml-2" />
+                  {t('جاري التسجيل...', 'Registering...')}
+                </span>
+              ) : (
+                <span className="font-arabic-body-bold">
+                  {t('سجل الآن', 'Register Now')}
+                </span>
+              )}
             </Button>
 
-            {/* Privacy Note */}
-            <p className="text-center text-xs sm:text-sm text-gray-500 font-arabic-body">
-              {t(
-                'لن نشارك بياناتك مع أي جهة. يمكنك إلغاء الاشتراك في أي وقت.',
-                "We'll never share your data. You can unsubscribe anytime."
-              )}
-            </p>
+            <div className="flex items-center justify-between mt-4">
+              <p className="text-xs text-gray-400">
+                {t(
+                  'لن تشارك بريدك الإلكتروني أبداً، يمكنك الغاء الاشتراك في أي وقت. ',
+                  'We\'ll never share your email. Unsubscribe anytime.'
+                )}
+              </p>
+              <div className="bg-[#e6f0f5] text-[#0c2836] px-3 py-1 rounded-full">
+                <span className="text-xs font-bold flex items-center gap-1 text-[#a0d7eb]">
+                  <PartyPopper className="w-3 h-3" />
+                  {t(`محترف انضم اليوم ${waitlistCount || 0}`, `Professional joined today ${waitlistCount || 0}`)}
+                </span>
+              </div>
+            </div>
           </form>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
