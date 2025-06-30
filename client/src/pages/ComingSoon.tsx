@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { useLocation } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
 import CountdownTimer from '@/components/CountdownTimer';
@@ -10,7 +9,6 @@ import Footer from '@/components/Footer';
 
 export default function ComingSoon() {
   const { t, language } = useLanguage();
-  const { setLanguage } = useSimpleLanguage();
   const [location] = useLocation();
   const { toast } = useToast();
 

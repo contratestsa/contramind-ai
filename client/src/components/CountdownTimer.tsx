@@ -13,7 +13,7 @@ export default function CountdownTimer({
   showTitle = true, 
   size = 'medium' 
 }: CountdownTimerProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   const [countdown, setCountdown] = useState({
     days: 0,
