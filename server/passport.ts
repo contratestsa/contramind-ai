@@ -23,7 +23,7 @@ passport.deserializeUser(async (id: number, done) => {
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID!,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-  callbackURL: "/api/auth/google/callback"
+  callbackURL: `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`
 }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
   try {
     // Check if user already exists
@@ -51,7 +51,7 @@ passport.use(new GoogleStrategy({
 passport.use(new MicrosoftStrategy({
   clientID: process.env.MICROSOFT_CLIENT_ID!,
   clientSecret: process.env.MICROSOFT_CLIENT_SECRET!,
-  callbackURL: "/api/auth/microsoft/callback",
+  callbackURL: `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/microsoft/callback`,
   scope: ['user.read']
 }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
   try {
