@@ -215,8 +215,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     (req, res) => {
-      // Successful authentication, redirect to home
-      res.redirect("/?auth=success");
+      // Successful authentication, redirect to coming-soon page
+      res.redirect("/coming-soon?auth=success");
     }
   );
 
@@ -228,8 +228,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/microsoft/callback",
     passport.authenticate("microsoft", { failureRedirect: "/login" }),
     (req, res) => {
-      // Successful authentication, redirect to home
-      res.redirect("/?auth=success");
+      // Successful authentication, redirect to coming-soon page
+      res.redirect("/coming-soon?auth=success");
     }
   );
 
