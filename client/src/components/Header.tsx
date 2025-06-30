@@ -3,15 +3,12 @@ import { ChevronDown, Globe, Flag } from 'lucide-react';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 import AuthModals from '@/components/auth/AuthModals';
+import { useWorkingLanguage } from '@/hooks/useWorkingLanguage';
 
 export default function Header() {
-  // Simple local state without external hooks
-  const [language, setLanguage] = useState<'ar' | 'en'>('ar');
+  const { language, setLanguage, t } = useWorkingLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Simple translation function
-  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

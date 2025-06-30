@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useWorkingLanguage } from '@/hooks/useWorkingLanguage';
 import { Button } from '@/components/ui/button';
 
 export default function Hero() {
-  const { t, language } = useLanguage();
+  const { t, language } = useWorkingLanguage();
 
   const scrollToWaitlist = () => {
     const element = document.querySelector('#waitlist');
