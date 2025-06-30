@@ -1,22 +1,13 @@
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Globe, Flag, User, LogOut } from 'lucide-react';
+import { ChevronDown, Globe, Flag } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 import AuthModals from '@/components/auth/AuthModals';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 export default function Header() {
   const { language, setLanguage, t } = useSimpleLanguage();
-  const { user, isAuthenticated, logout, isLoggingOut } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -67,38 +58,9 @@ export default function Header() {
             {/* Contact Us Icon */}
             <ContactUs />
             
-            {/* Authentication - Show user menu if authenticated, otherwise show auth modals */}
+            {/* Authentication Modals */}
             <div className="flex items-center space-x-2">
-              {isAuthenticated && user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center space-x-2 text-white hover:bg-white/10">
-                      <User className="w-4 h-4" />
-                      <span className="text-sm font-medium max-w-[120px] truncate">
-                        {user.fullName || user.email}
-                      </span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <div className="px-3 py-2 text-sm">
-                      <p className="font-medium">{user.fullName}</p>
-                      <p className="text-muted-foreground text-xs">{user.email}</p>
-                    </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => logout()}
-                      disabled={isLoggingOut}
-                      className="text-red-600 focus:text-red-600"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      {isLoggingOut ? t('جاري تسجيل الخروج...', 'Signing out...') : t('تسجيل الخروج', 'Sign out')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <AuthModals />
-              )}
+              <AuthModals />
             </div>
             
             {/* Language Dropdown */}
