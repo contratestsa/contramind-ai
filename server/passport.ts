@@ -26,36 +26,23 @@ passport.use(new GoogleStrategy({
   callbackURL: `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`
 }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
   try {
-    console.log('Google OAuth profile:', profile);
-    
-    const email = profile.emails?.[0]?.value || '';
-    const fullName = profile.displayName || '';
-    
-    if (!email) {
-      console.error('No email found in Google profile');
-      return done(new Error('No email found'), false);
-    }
-    
     // Check if user already exists
-    const existingUser = await storage.getUserByEmail(email);
+    const existingUser = await storage.getUserByEmail(profile.emails?.[0]?.value || '');
     
     if (existingUser) {
-      console.log('Existing user found:', existingUser.email);
       return done(null, existingUser);
     }
     
     // Create new user
     const newUser = await storage.createUser({
-      email,
-      fullName,
-      username: email,
+      email: profile.emails?.[0]?.value || '',
+      fullName: profile.displayName || '',
+      username: profile.emails?.[0]?.value || '',
       password: '' // OAuth users don't need passwords
     });
     
-    console.log('New user created:', newUser.email);
     return done(null, newUser);
   } catch (error) {
-    console.error('Google OAuth error:', error);
     return done(error, false);
   }
 }));
@@ -68,36 +55,23 @@ passport.use(new MicrosoftStrategy({
   scope: ['user.read']
 }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
   try {
-    console.log('Microsoft OAuth profile:', profile);
-    
-    const email = profile.emails?.[0]?.value || profile.username || '';
-    const fullName = profile.displayName || profile.name?.givenName + ' ' + profile.name?.familyName || '';
-    
-    if (!email) {
-      console.error('No email found in Microsoft profile');
-      return done(new Error('No email found'), false);
-    }
-    
     // Check if user already exists
-    const existingUser = await storage.getUserByEmail(email);
+    const existingUser = await storage.getUserByEmail(profile.emails?.[0]?.value || '');
     
     if (existingUser) {
-      console.log('Existing user found:', existingUser.email);
       return done(null, existingUser);
     }
     
     // Create new user
     const newUser = await storage.createUser({
-      email,
-      fullName,
-      username: email,
+      email: profile.emails?.[0]?.value || '',
+      fullName: profile.displayName || '',
+      username: profile.emails?.[0]?.value || '',
       password: '' // OAuth users don't need passwords
     });
     
-    console.log('New user created:', newUser.email);
     return done(null, newUser);
   } catch (error) {
-    console.error('Microsoft OAuth error:', error);
     return done(error, false);
   }
 }));

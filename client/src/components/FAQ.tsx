@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useWorkingLanguage } from '@/hooks/useWorkingLanguage';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface FAQItem {
   question: { ar: string; en: string };
@@ -8,7 +8,7 @@ interface FAQItem {
 }
 
 export default function FAQ() {
-  const { t, language } = useWorkingLanguage();
+  const { t, language } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqItems: FAQItem[] = [
