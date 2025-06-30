@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
-import ComingSoon from "@/pages/ComingSoon";
+import ComingSoonSimple from "@/pages/ComingSoonSimple";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,7 +16,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
-      <Route path="/coming-soon" component={ComingSoon} />
+      <Route path="/coming-soon" component={ComingSoonSimple} />
       <Route component={NotFound} />
     </Switch>
   );
