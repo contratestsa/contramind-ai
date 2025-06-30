@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PartyPopper } from 'lucide-react';
-import CountdownTimer from '@/components/CountdownTimer';
 
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -43,7 +42,37 @@ export default function Waitlist() {
     },
   });
 
+  const [countdown, setCountdown] = useState({
+    days: 30,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
+  // Countdown timer effect
+  useEffect(() => {
+    // Set a fixed target date for launch (e.g., July 18, 2025)
+    const targetDate = new Date('2025-07-18T00:00:00');
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate.getTime() - now;
+
+      if (distance > 0) {
+        setCountdown({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
+      } else {
+        clearInterval(timer);
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const joinWaitlistMutation = useMutation({
     mutationFn: async (data: WaitlistData) => {
@@ -141,7 +170,7 @@ export default function Waitlist() {
               <span>{countdown.days.toString().padStart(2, '0')}</span>:
               <span>{countdown.hours.toString().padStart(2, '0')}</span>:
               <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
-              <span>10</span>
+              <span>{countdown.seconds.toString().padStart(2, '0')}</span>
             </div>
             <div className="text-xs text-gray-500 mt-1 font-arabic-body">
               {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
