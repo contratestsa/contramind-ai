@@ -263,20 +263,18 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 {t('أو استمر مع', 'Or continue with')}
               </p>
               <div className="flex gap-3 mt-3">
-                <Button 
-                  variant="outline" 
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                  onClick={() => window.location.href = '/api/auth/google'}
+                <a 
+                  href="/api/auth/google"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
                 >
                   Google
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                  onClick={() => window.location.href = '/api/auth/microsoft'}
+                </a>
+                <a 
+                  href="/api/auth/microsoft"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
                 >
                   Microsoft
-                </Button>
+                </a>
               </div>
             </div>
 
@@ -459,20 +457,18 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 {t('أو استمر مع', 'Or continue with')}
               </p>
               <div className="flex gap-3 mt-3">
-                <Button 
-                  variant="outline" 
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                  onClick={() => window.location.href = '/api/auth/google'}
+                <a 
+                  href="/api/auth/google"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
                 >
                   Google
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex-1 py-2 bg-[#0c2836] text-white border-[#0c2836] hover:bg-[#1a3a4a]"
-                  onClick={() => window.location.href = '/api/auth/microsoft'}
+                </a>
+                <a 
+                  href="/api/auth/microsoft"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
                 >
                   Microsoft
-                </Button>
+                </a>
               </div>
             </div>
 
