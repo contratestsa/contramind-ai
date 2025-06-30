@@ -216,6 +216,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     passport.authenticate("google", { failureRedirect: "/login" }),
     (req, res) => {
       // Successful authentication, redirect to home
+      console.log('Google OAuth callback - User authenticated:', req.user);
+      console.log('Session ID:', req.sessionID);
       res.redirect("/?auth=success");
     }
   );
@@ -229,6 +231,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     passport.authenticate("microsoft", { failureRedirect: "/login" }),
     (req, res) => {
       // Successful authentication, redirect to home
+      console.log('Microsoft OAuth callback - User authenticated:', req.user);
+      console.log('Session ID:', req.sessionID);
       res.redirect("/?auth=success");
     }
   );
@@ -245,6 +249,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get current user route
   app.get("/api/auth/user", (req, res) => {
+    console.log('Auth check - isAuthenticated:', req.isAuthenticated());
+    console.log('Auth check - user:', req.user);
+    console.log('Auth check - sessionID:', req.sessionID);
+    
     if (req.isAuthenticated() && req.user) {
       const { password, ...userWithoutPassword } = req.user as any;
       res.json({ user: userWithoutPassword });
