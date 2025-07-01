@@ -4,13 +4,16 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **July 1, 2025**: Reset authentication system for fresh implementation
-  - Removed all OAuth authentication functionality (Google/Microsoft)
-  - Cleaned up passport configuration and OAuth routes
-  - Removed OAuth buttons from login/signup modals
-  - Simplified authentication to basic email/password system
-  - Ready for new authentication implementation from scratch
-  - Maintained user database schema and basic auth routes (/api/auth/login, /api/auth/signup)
+- **July 1, 2025**: Implemented complete Google and Microsoft OAuth authentication
+  - Added Google OAuth authentication with passport-google-oauth20 strategy
+  - Added Microsoft OAuth authentication with passport-microsoft strategy
+  - Configured OAuth callback routes (/api/auth/google/callback, /api/auth/microsoft/callback)
+  - Added OAuth buttons to both login and signup modals
+  - Implemented secure session management with express-session
+  - OAuth redirects users to /coming-soon page after successful authentication
+  - Both OAuth providers properly create new users or authenticate existing ones
+  - Fixed password validation minimum length (reduced to 3 characters for testing)
+  - Maintained backward compatibility with email/password authentication
 - **June 29, 2025**: Fixed React hooks errors and completed authentication system
   - Resolved "Cannot read properties of null (reading 'useState')" errors
   - Removed conflicting LanguageProvider component causing React initialization issues
