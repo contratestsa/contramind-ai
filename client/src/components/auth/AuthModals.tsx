@@ -259,6 +259,26 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               {loginMutation.isPending ? t('جاري تسجيل الدخول...', 'Signing in...') : t('تسجيل الدخول', 'Sign In')}
             </Button>
 
+            <div className="text-center">
+              <p className="text-sm text-gray-600">
+                {t('أو استمر مع', 'Or continue with')}
+              </p>
+              <div className="flex gap-3 mt-3">
+                <a 
+                  href="/api/auth/google"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                >
+                  Google
+                </a>
+                <a 
+                  href="/api/auth/microsoft"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                >
+                  Microsoft
+                </a>
+              </div>
+            </div>
+
             <div className="text-center pt-4">
               <p className="text-sm text-gray-600">
                 {t('ليس لديك حساب؟', "Don't have an account?")}{' '}
@@ -395,6 +415,26 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               <UserPlus className="w-4 h-4" />
               {signupMutation.isPending ? t('جاري إنشاء الحساب...', 'Creating account...') : t('إنشاء حساب', 'Create Account')}
             </Button>
+
+            <div className="text-center">
+              <p className="text-sm text-gray-600">
+                {t('أو استمر مع', 'Or continue with')}
+              </p>
+              <div className="flex gap-3 mt-3">
+                <a 
+                  href="/api/auth/google"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                >
+                  Google
+                </a>
+                <a 
+                  href="/api/auth/microsoft"
+                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                >
+                  Microsoft
+                </a>
+              </div>
+            </div>
 
             <div className="text-center pt-2">
               <p className="text-sm text-gray-600">

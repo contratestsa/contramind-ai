@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-// import passport from "./passport"; // Removed for clean slate
+import passport from "./passport";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail } from "./emailService";
@@ -207,7 +207,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // OAuth routes removed - clean slate for new implementation
+  // Google OAuth routes
+  app.get("/api/auth/google", passport.authenticate("google", { 
+    scope: ["profile", "email"] 
+  }));
+
+  app.get("/api/auth/google/callback", 
+    passport.authenticate("google", { 
+      failureRedirect: "/?error=google_auth_failed" 
+    }),
+    (req, res) => {
+      // Successful authentication
+      console.log('Google OAuth successful for user:', req.user);
+      res.redirect("/coming-soon");
+    }
+  );
+
+  // Microsoft OAuth routes
+  app.get("/api/auth/microsoft", passport.authenticate("microsoft", {
+    scope: ['user.read']
+  }));
+
+  app.get("/api/auth/microsoft/callback",
+    passport.authenticate("microsoft", {
+      failureRedirect: "/?error=microsoft_auth_failed"
+    }),
+    (req, res) => {
+      // Successful authentication
+      console.log('Microsoft OAuth successful for user:', req.user);
+      res.redirect("/coming-soon");
+    }
+  );
+
+  // Logout route
+  app.post("/api/auth/logout", (req, res) => {
+    req.logout((err) => {
+      if (err) {
+        console.error('Logout error:', err);
+        return res.status(500).json({ message: "Logout failed" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+
+  // Get current user route
+  app.get("/api/auth/me", (req, res) => {
+    if (req.user) {
+      const { password, ...userWithoutPassword } = req.user as any;
+      res.json({ user: userWithoutPassword });
+    } else {
+      res.status(401).json({ message: "Not authenticated" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

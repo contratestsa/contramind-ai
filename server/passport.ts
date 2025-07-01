@@ -1,1 +1,111 @@
-// OAuth authentication disabled - clean slate for new implementation
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as MicrosoftStrategy } from 'passport-microsoft';
+import { storage } from './storage';
+import { User } from '../shared/schema';
+
+// Serialize user for session storage
+passport.serializeUser((user: any, done) => {
+  done(null, user.id);
+});
+
+// Deserialize user from session
+passport.deserializeUser(async (id: number, done) => {
+  try {
+    const user = await storage.getUser(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
+// Google OAuth Strategy
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/api/auth/google/callback"
+  }, async (accessToken, refreshToken, profile, done) => {
+    try {
+      console.log('Google OAuth profile:', {
+        id: profile.id,
+        email: profile.emails?.[0]?.value,
+        name: profile.displayName
+      });
+
+      const email = profile.emails?.[0]?.value;
+      if (!email) {
+        return done(new Error('No email found in Google profile'), undefined);
+      }
+
+      // Check if user already exists
+      let user = await storage.getUserByEmail(email);
+      
+      if (user) {
+        console.log('Existing user found:', user.email);
+        return done(null, user);
+      }
+
+      // Create new user
+      const newUser = await storage.createUser({
+        email: email,
+        username: email, // Use email as username
+        fullName: profile.displayName || 'Google User',
+        password: 'oauth_google_' + profile.id // OAuth users get a special password
+      });
+
+      console.log('New Google user created:', newUser.email);
+      return done(null, newUser);
+    } catch (error) {
+      console.error('Google OAuth error:', error);
+      return done(error, undefined);
+    }
+  }));
+}
+
+// Microsoft OAuth Strategy
+if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
+  passport.use(new MicrosoftStrategy({
+    clientID: process.env.MICROSOFT_CLIENT_ID,
+    clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
+    callbackURL: "/api/auth/microsoft/callback",
+    scope: ['user.read']
+  }, async (accessToken, refreshToken, profile, done) => {
+    try {
+      console.log('Microsoft OAuth profile:', {
+        id: profile.id,
+        email: profile.emails?.[0]?.value,
+        name: profile.displayName
+      });
+
+      const email = profile.emails?.[0]?.value;
+      if (!email) {
+        return done(new Error('No email found in Microsoft profile'), undefined);
+      }
+
+      // Check if user already exists
+      let user = await storage.getUserByEmail(email);
+      
+      if (user) {
+        console.log('Existing user found:', user.email);
+        return done(null, user);
+      }
+
+      // Create new user
+      const newUser = await storage.createUser({
+        email: email,
+        username: email, // Use email as username
+        fullName: profile.displayName || 'Microsoft User',
+        password: 'oauth_microsoft_' + profile.id // OAuth users get a special password
+      });
+
+      console.log('New Microsoft user created:', newUser.email);
+      return done(null, newUser);
+    } catch (error) {
+      console.error('Microsoft OAuth error:', error);
+      return done(error, undefined);
+    }
+  }));
+}
+
+export default passport;
