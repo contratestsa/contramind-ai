@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { LogIn, UserPlus, Eye, EyeOff, Mail, Lock, User, Building2, Briefcase } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
-import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { useMutation } from '@tanstack/react-query';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 
 interface AuthModalsProps {
@@ -39,6 +40,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
     acceptTerms: false
   });
 
+  // Login mutation
   const loginMutation = useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
       const response = await fetch('/api/auth/login', {
@@ -47,7 +49,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
         body: JSON.stringify(data)
       });
       if (!response.ok) {
-        throw new Error('Login failed');
+        const error = await response.json();
+        throw new Error(error.message || 'Login failed');
       }
       return response.json();
     },
@@ -57,89 +60,92 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
         description: t('مرحباً بك في ContraMind', 'Welcome to ContraMind')
       });
       setIsLoginOpen(false);
+      setLoginData({ email: '', password: '', rememberMe: false });
     },
     onError: (error: Error) => {
       toast({
-        variant: 'destructive',
         title: t('خطأ في تسجيل الدخول', 'Login Error'),
-        description: error.message
+        description: error.message,
+        variant: "destructive"
       });
     }
   });
 
+  // Signup mutation
   const signupMutation = useMutation({
     mutationFn: async (data: any) => {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fullName: data.fullName,
-          email: data.email,
-          password: data.password,
-          username: data.email // Use email as username
-        })
+        body: JSON.stringify(data)
       });
       if (!response.ok) {
-        throw new Error('Signup failed');
+        const error = await response.json();
+        throw new Error(error.message || 'Signup failed');
       }
       return response.json();
     },
     onSuccess: () => {
       toast({
         title: t('تم إنشاء الحساب بنجاح', 'Account Created Successfully'),
-        description: t('مرحباً بك في ContraMind', 'Welcome to ContraMind')
+        description: t('يمكنك الآن تسجيل الدخول', 'You can now sign in')
       });
       setIsSignupOpen(false);
+      setIsLoginOpen(true);
+      setSignupData({
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        company: '',
+        jobTitle: '',
+        acceptTerms: false
+      });
     },
     onError: (error: Error) => {
       toast({
-        variant: 'destructive',
         title: t('خطأ في إنشاء الحساب', 'Signup Error'),
-        description: error.message
+        description: error.message,
+        variant: "destructive"
       });
     }
   });
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!loginData.email || !loginData.password) {
-      toast({
-        variant: 'destructive',
-        title: t('خطأ في البيانات', 'Validation Error'),
-        description: t('يرجى ملء جميع الحقول المطلوبة', 'Please fill in all required fields')
-      });
-      return;
-    }
-    loginMutation.mutate({ email: loginData.email, password: loginData.password });
+    loginMutation.mutate({
+      email: loginData.email,
+      password: loginData.password
+    });
   };
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.confirmPassword) {
-      toast({
-        variant: 'destructive',
-        title: t('خطأ في البيانات', 'Validation Error'),
-        description: t('يرجى ملء جميع الحقول المطلوبة', 'Please fill in all required fields')
-      });
-      return;
-    }
+    
     if (signupData.password !== signupData.confirmPassword) {
       toast({
-        variant: 'destructive',
         title: t('خطأ في كلمة المرور', 'Password Error'),
-        description: t('كلمتا المرور غير متطابقتان', 'Passwords do not match')
+        description: t('كلمتا المرور غير متطابقتين', 'Passwords do not match'),
+        variant: "destructive"
       });
       return;
     }
+
     if (!signupData.acceptTerms) {
       toast({
-        variant: 'destructive',
-        title: t('موافقة مطلوبة', 'Agreement Required'),
-        description: t('يرجى الموافقة على الشروط والأحكام', 'Please accept the terms and conditions')
+        title: t('الموافقة مطلوبة', 'Agreement Required'),
+        description: t('يرجى الموافقة على الشروط والأحكام', 'Please accept the terms and conditions'),
+        variant: "destructive"
       });
       return;
     }
-    signupMutation.mutate(signupData);
+
+    signupMutation.mutate({
+      fullName: signupData.fullName,
+      email: signupData.email,
+      password: signupData.password,
+      username: signupData.email // Use email as username
+    });
   };
 
   return (
@@ -157,6 +163,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </Button>
         )}
       </div>
+
       {/* Signup Trigger */}
       <div onClick={() => setIsSignupOpen(true)}>
         {triggerSignupButton || (
@@ -169,6 +176,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </Button>
         )}
       </div>
+
       {/* Login Modal */}
       <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl">
@@ -178,42 +186,35 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-center">
+            <DialogTitle className={`text-2xl font-bold text-[#0c2836] ${language === 'ar' ? 'text-right' : 'text-left'}`}>
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-600 text-center">
-                {t('مرحباً بعودتك إلى ContraMind', 'Welcome back to ContraMind')}
-              </p>
-              <p className="text-xs text-gray-500 text-center">
-                {t('مستقبل القانون، مدعوم بالذكاء الاصطناعي', 'The Future of Law, Powered by AI')}
-              </p>
-            </div>
+            <p className={`text-gray-600 mt-2 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+              {t('أدخل بياناتك للوصول إلى حسابك', 'Enter your credentials to access your account')}
+            </p>
           </DialogHeader>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                {t('عنوان البريد الإلكتروني', 'Email Address')}
-              </label>
-              <input
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <Label className="text-sm font-medium text-gray-700">
+                {t('البريد الإلكتروني', 'Email')}
+              </Label>
+              <Input
                 type="email"
                 value={loginData.email}
                 onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                placeholder={t('أدخل بريدك الإلكتروني', 'Enter your email')}
+                placeholder={t('أدخل البريد الإلكتروني', 'Enter your email')}
                 className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                <Lock className="w-4 h-4" />
+            <div>
+              <Label className="text-sm font-medium text-gray-700">
                 {t('كلمة المرور', 'Password')}
-              </label>
+              </Label>
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? 'text' : 'password'}
                   value={loginData.password}
                   onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
@@ -258,27 +259,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               {loginMutation.isPending ? t('جاري تسجيل الدخول...', 'Signing in...') : t('تسجيل الدخول', 'Sign In')}
             </Button>
 
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                {t('أو استمر مع', 'Or continue with')}
-              </p>
-              <div className="flex gap-3 mt-3">
-                <a 
-                  href="/api/auth/google"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
-                >
-                  Google
-                </a>
-                <a 
-                  href="/api/auth/microsoft"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
-                >
-                  Microsoft
-                </a>
-              </div>
-            </div>
-
-            <div className="text-center pt-2">
+            <div className="text-center pt-4">
               <p className="text-sm text-gray-600">
                 {t('ليس لديك حساب؟', "Don't have an account?")}{' '}
                 <button
@@ -296,6 +277,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </form>
         </DialogContent>
       </Dialog>
+
       {/* Signup Modal */}
       <Dialog open={isSignupOpen} onOpenChange={setIsSignupOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -305,26 +287,20 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className="text-2xl font-bold text-[#0c2836] mb-2 text-center">
-              {t('إنشاء حساب', 'Create Account')}
+            <DialogTitle className={`text-2xl font-bold text-[#0c2836] ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+              {t('إنشاء حساب جديد', 'Create New Account')}
             </DialogTitle>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-600 text-center">
-                {t('انضم إلى ContraMind واكتشف مستقبل التكنولوجيا القانونية', 'Join ContraMind and discover the future of legal technology')}
-              </p>
-              <p className="text-xs text-gray-500 text-center">
-                {t('مستقبل القانون، مدعوم بالذكاء الاصطناعي', 'The Future of Law, Powered by AI')}
-              </p>
-            </div>
+            <p className={`text-gray-600 mt-2 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+              {t('انضم إلى ContraMind اليوم', 'Join ContraMind today')}
+            </p>
           </DialogHeader>
 
           <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                <User className="w-4 h-4" />
+            <div>
+              <Label className="text-sm font-medium text-gray-700">
                 {t('الاسم الكامل', 'Full Name')}
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={signupData.fullName}
                 onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
@@ -334,32 +310,30 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                {t('عنوان البريد الإلكتروني', 'Email Address')}
-              </label>
-              <input
+            <div>
+              <Label className="text-sm font-medium text-gray-700">
+                {t('البريد الإلكتروني', 'Email')}
+              </Label>
+              <Input
                 type="email"
                 value={signupData.email}
                 onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-                placeholder={t('أدخل بريدك الإلكتروني', 'Enter your email')}
+                placeholder={t('أدخل البريد الإلكتروني', 'Enter your email')}
                 className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                <Lock className="w-4 h-4" />
+            <div>
+              <Label className="text-sm font-medium text-gray-700">
                 {t('كلمة المرور', 'Password')}
-              </label>
+              </Label>
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? 'text' : 'password'}
                   value={signupData.password}
                   onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                  placeholder={t('أدخل كلمة مرور قوية', 'Enter a strong password')}
+                  placeholder={t('أدخل كلمة المرور', 'Enter your password')}
                   className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 pr-12"
                   required
                 />
@@ -373,13 +347,12 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                <Lock className="w-4 h-4" />
+            <div>
+              <Label className="text-sm font-medium text-gray-700">
                 {t('تأكيد كلمة المرور', 'Confirm Password')}
-              </label>
+              </Label>
               <div className="relative">
-                <input
+                <Input
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={signupData.confirmPassword}
                   onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
@@ -397,45 +370,16 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                  <Building2 className="w-4 h-4" />
-                  {t('الشركة', 'Company')}
-                </label>
-                <input
-                  type="text"
-                  value={signupData.company}
-                  onChange={(e) => setSignupData({ ...signupData, company: e.target.value })}
-                  placeholder={t('اختياري', 'Optional')}
-                  className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[#0c2836] flex items-center gap-2">
-                  <Briefcase className="w-4 h-4" />
-                  {t('المسمى الوظيفي', 'Job Title')}
-                </label>
-                <input
-                  type="text"
-                  value={signupData.jobTitle}
-                  onChange={(e) => setSignupData({ ...signupData, jobTitle: e.target.value })}
-                  placeholder={t('اختياري', 'Optional')}
-                  className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-2">
               <input
                 type="checkbox"
                 id="acceptTerms"
                 checked={signupData.acceptTerms}
                 onChange={(e) => setSignupData({ ...signupData, acceptTerms: e.target.checked })}
-                className="mt-1 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 mt-1"
                 required
               />
-              <label htmlFor="acceptTerms" className="text-xs text-gray-600 leading-relaxed">
+              <label htmlFor="acceptTerms" className="text-sm text-gray-600 cursor-pointer">
                 {t(
                   'أوافق على الشروط والأحكام وسياسة الخصوصية الخاصة بـ ContraMind',
                   'I agree to ContraMind\'s Terms of Service and Privacy Policy'
@@ -451,26 +395,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               <UserPlus className="w-4 h-4" />
               {signupMutation.isPending ? t('جاري إنشاء الحساب...', 'Creating account...') : t('إنشاء حساب', 'Create Account')}
             </Button>
-
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                {t('أو استمر مع', 'Or continue with')}
-              </p>
-              <div className="flex gap-3 mt-3">
-                <a 
-                  href="/api/auth/google"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
-                >
-                  Google
-                </a>
-                <a 
-                  href="/api/auth/microsoft"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
-                >
-                  Microsoft
-                </a>
-              </div>
-            </div>
 
             <div className="text-center pt-2">
               <p className="text-sm text-gray-600">
