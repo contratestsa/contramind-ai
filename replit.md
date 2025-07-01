@@ -4,6 +4,12 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 1, 2025**: Verified OAuth authentication functionality
+  - Google OAuth working correctly - redirects to accounts.google.com with proper client_id
+  - Microsoft OAuth working correctly - redirects to login.microsoftonline.com with proper client_id
+  - OAuth callback URLs properly configured for Replit domain
+  - Post-login redirect to /coming-soon page implemented
+  - Authentication flows fully operational for both providers
 - **June 30, 2025**: Implemented Google and Microsoft OAuth authentication
   - Added Google OAuth and Microsoft OAuth authentication flows
   - Created passport configuration with OAuth strategies for both providers
