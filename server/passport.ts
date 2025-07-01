@@ -21,10 +21,15 @@ passport.deserializeUser(async (id: number, done) => {
 
 // Google OAuth Strategy
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  // Get the correct base URL for Replit
+  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
+    : 'http://localhost:5000';
+    
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/callback"
+    callbackURL: `${baseUrl}/api/auth/google/callback`
   }, async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
       console.log('Google OAuth profile:', {
@@ -65,10 +70,15 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 // Microsoft OAuth Strategy
 if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
+  // Get the correct base URL for Replit (reuse the same baseUrl)
+  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
+    : 'http://localhost:5000';
+    
   passport.use(new MicrosoftStrategy({
     clientID: process.env.MICROSOFT_CLIENT_ID,
     clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
-    callbackURL: "/api/auth/microsoft/callback",
+    callbackURL: `${baseUrl}/api/auth/microsoft/callback`,
     scope: ['user.read']
   }, async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
