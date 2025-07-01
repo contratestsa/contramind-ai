@@ -8,7 +8,7 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import ComingSoonSimple from "@/pages/ComingSoonSimple";
-import AuthTest from "@/pages/AuthTest";
+// import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -18,7 +18,7 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
       <Route path="/coming-soon" component={ComingSoonSimple} />
-      <Route path="/auth-test" component={AuthTest} />
+
       <Route component={NotFound} />
     </Switch>
   );

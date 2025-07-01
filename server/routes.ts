@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-import passport from "./passport";
+// import passport from "./passport"; // Removed for clean slate
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail } from "./emailService";
@@ -207,51 +207,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Google OAuth routes
-  app.get("/api/auth/google", 
-    passport.authenticate("google", { scope: ["profile", "email"] })
-  );
-
-  app.get("/api/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
-    (req, res) => {
-      // Successful authentication, redirect to coming-soon page
-      res.redirect("/coming-soon?auth=success");
-    }
-  );
-
-  // Microsoft OAuth routes
-  app.get("/api/auth/microsoft", 
-    passport.authenticate("microsoft", { scope: ["user.read"] })
-  );
-
-  app.get("/api/auth/microsoft/callback",
-    passport.authenticate("microsoft", { failureRedirect: "/login" }),
-    (req, res) => {
-      // Successful authentication, redirect to coming-soon page
-      res.redirect("/coming-soon?auth=success");
-    }
-  );
-
-  // Logout route
-  app.post("/api/auth/logout", (req, res) => {
-    req.logout((err) => {
-      if (err) {
-        return res.status(500).json({ message: "Logout failed" });
-      }
-      res.json({ message: "Logged out successfully" });
-    });
-  });
-
-  // Get current user route
-  app.get("/api/auth/user", (req, res) => {
-    if (req.isAuthenticated() && req.user) {
-      const { password, ...userWithoutPassword } = req.user as any;
-      res.json({ user: userWithoutPassword });
-    } else {
-      res.status(401).json({ message: "Not authenticated" });
-    }
-  });
+  // OAuth routes removed - clean slate for new implementation
 
   const httpServer = createServer(app);
   return httpServer;
