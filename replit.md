@@ -4,6 +4,17 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 2, 2025**: Implemented comprehensive email verification system
+  - **Email Verification**: Full verification workflow using Resend integration
+    - Added emailVerified and verificationToken fields to user schema
+    - Automatic verification email sending on signup with professional templates
+    - Email verification required for login (blocks unverified users)
+    - Verification route /api/auth/verify-email with secure token validation
+    - OAuth users automatically verified (Google/Microsoft emails pre-trusted)
+    - Bilingual verification email templates with ContraMind branding
+    - Verification emails include secure 32-byte hex tokens with 24-hour expiry messaging
+  - Updated authentication flow to enforce email verification
+  - Enhanced user experience with clear verification requirements
 - **July 1, 2025**: Successfully implemented and debugged complete OAuth authentication system
   - **Google OAuth**: Fully operational with Client ID configured
   - **Microsoft OAuth**: Fully operational after resolving configuration issues

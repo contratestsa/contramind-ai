@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export type Language = 'ar' | 'en';
 
-// Global language state
+// Global language state - simple and reliable
 let globalLanguage: Language = 'ar';
 
 // Detect browser language on initial load
