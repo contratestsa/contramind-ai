@@ -37,6 +37,9 @@ export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   password: true,
   fullName: true,
+  emailVerified: true,
+}).partial({
+  emailVerified: true,
 });
 
 export const loginSchema = z.object({

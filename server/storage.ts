@@ -9,6 +9,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   updateUserVerification(email: string, verificationToken: string): Promise<User | undefined>;
   verifyUserEmail(token: string): Promise<User | undefined>;
+  verifyUserEmailByEmail(email: string): Promise<User | undefined>;
   getUserByVerificationToken(token: string): Promise<User | undefined>;
   createWaitlistEntry(entry: InsertWaitlistEntry): Promise<WaitlistEntry>;
   getWaitlistCount(): Promise<number>;
@@ -54,6 +55,15 @@ export class DatabaseStorage implements IStorage {
       .update(users)
       .set({ emailVerified: true, verificationToken: null })
       .where(eq(users.verificationToken, token))
+      .returning();
+    return user || undefined;
+  }
+
+  async verifyUserEmailByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ emailVerified: true, verificationToken: null })
+      .where(eq(users.email, email))
       .returning();
     return user || undefined;
   }

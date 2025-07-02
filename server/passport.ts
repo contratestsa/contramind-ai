@@ -51,13 +51,16 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         return done(null, user);
       }
 
-      // Create new user
+      // Create new user (OAuth providers already verify emails)
       const newUser = await storage.createUser({
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Google User',
         password: 'oauth_google_' + profile.id // OAuth users get a special password
       });
+      
+      // Mark email as verified for OAuth users
+      await storage.verifyUserEmail(newUser.verificationToken || 'oauth_verified');
 
       console.log('New Google user created:', newUser.email);
       return done(null, newUser);
@@ -101,12 +104,13 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
         return done(null, user);
       }
 
-      // Create new user
+      // Create new user with verified email (OAuth providers already verify emails)
       const newUser = await storage.createUser({
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Microsoft User',
-        password: 'oauth_microsoft_' + profile.id // OAuth users get a special password
+        password: 'oauth_microsoft_' + profile.id, // OAuth users get a special password
+        emailVerified: true // OAuth emails are pre-verified
       });
 
       console.log('New Microsoft user created:', newUser.email);

@@ -1,10 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
+import { randomBytes } from "crypto";
 import passport from "./passport";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendContactEmail } from "./emailService";
+import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./emailService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
@@ -144,6 +145,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create user (in production, hash the password)
       const user = await storage.createUser(validatedData);
       
+      // Generate verification token and send verification email
+      const verificationToken = randomBytes(32).toString('hex');
+      await storage.updateUserVerification(user.email, verificationToken);
+      
+      // Send verification email
+      const emailResult = await sendVerificationEmail({
+        email: user.email,
+        fullName: user.fullName,
+        verificationToken
+      });
+      
+      if (!emailResult.success) {
+        console.error('Failed to send verification email:', emailResult.error);
+      }
+      
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
       
@@ -185,6 +201,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Check if email is verified
+      if (!user.emailVerified) {
+        // Generate new verification token if needed
+        if (!user.verificationToken) {
+          const verificationToken = randomBytes(32).toString('hex');
+          await storage.updateUserVerification(user.email, verificationToken);
+          
+          // Send verification email
+          const emailResult = await sendVerificationEmail({
+            email: user.email,
+            fullName: user.fullName,
+            verificationToken
+          });
+          
+          if (!emailResult.success) {
+            console.error('Failed to send verification email:', emailResult.error);
+          }
+        }
+        
+        return res.status(403).json({ 
+          message: "Please verify your email address. A verification email has been sent.",
+          emailVerificationRequired: true
+        });
+      }
+
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
       
@@ -204,6 +245,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Login failed" 
         });
       }
+    }
+  });
+
+  // Email verification endpoint
+  app.get("/api/auth/verify-email", async (req, res) => {
+    try {
+      const { token } = req.query;
+      
+      if (!token || typeof token !== 'string') {
+        return res.status(400).json({ 
+          message: "Invalid verification token" 
+        });
+      }
+
+      // Find user by verification token
+      const user = await storage.getUserByVerificationToken(token);
+      if (!user) {
+        return res.status(400).json({ 
+          message: "Invalid or expired verification token" 
+        });
+      }
+
+      // Mark email as verified
+      const verifiedUser = await storage.verifyUserEmail(token);
+      if (!verifiedUser) {
+        return res.status(500).json({ 
+          message: "Failed to verify email" 
+        });
+      }
+
+      // Redirect to success page or coming soon page
+      res.redirect("/coming-soon?verified=true");
+    } catch (error) {
+      console.error("Email verification error:", error);
+      res.status(500).json({ 
+        message: "Email verification failed" 
+      });
     }
   });
 
