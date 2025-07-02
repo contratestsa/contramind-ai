@@ -7,6 +7,9 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUserVerification(email: string, verificationToken: string): Promise<User | undefined>;
+  verifyUserEmail(token: string): Promise<User | undefined>;
+  getUserByVerificationToken(token: string): Promise<User | undefined>;
   createWaitlistEntry(entry: InsertWaitlistEntry): Promise<WaitlistEntry>;
   getWaitlistCount(): Promise<number>;
   getWaitlistEntries(): Promise<WaitlistEntry[]>;
@@ -35,6 +38,29 @@ export class DatabaseStorage implements IStorage {
       .values(insertUser)
       .returning();
     return user;
+  }
+
+  async updateUserVerification(email: string, verificationToken: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ verificationToken })
+      .where(eq(users.email, email))
+      .returning();
+    return user || undefined;
+  }
+
+  async verifyUserEmail(token: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ emailVerified: true, verificationToken: null })
+      .where(eq(users.verificationToken, token))
+      .returning();
+    return user || undefined;
+  }
+
+  async getUserByVerificationToken(token: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.verificationToken, token));
+    return user || undefined;
   }
 
   async createWaitlistEntry(insertEntry: InsertWaitlistEntry): Promise<WaitlistEntry> {
