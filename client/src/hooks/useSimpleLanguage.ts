@@ -1,7 +1,20 @@
-import { useLanguage, type Language } from '@/components/SimpleLanguage';
+import { LanguageManager, type Language } from '@/components/SimpleLanguage';
 
 export type { Language };
 
 export function useSimpleLanguage() {
-  return useLanguage();
+  const setLanguage = (lang: Language) => {
+    LanguageManager.setLanguage(lang);
+  };
+  
+  const t = (ar: string, en: string) => {
+    return LanguageManager.t(ar, en);
+  };
+  
+  return { 
+    language: LanguageManager.getLanguage(), 
+    setLanguage, 
+    t, 
+    dir: LanguageManager.getDir() 
+  };
 }
