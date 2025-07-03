@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { LanguageManager } from '@/components/SimpleLanguage';
 
 interface CountdownTimerProps {
   className?: string;
@@ -13,7 +13,8 @@ export default function CountdownTimer({
   showTitle = true, 
   size = 'medium' 
 }: CountdownTimerProps) {
-  const { t, language } = useSimpleLanguage();
+  const t = LanguageManager.t;
+  const language = LanguageManager.getLanguage();
   
   const [countdown, setCountdown] = useState({
     days: 0,

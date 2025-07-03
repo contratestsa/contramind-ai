@@ -1,13 +1,15 @@
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Globe, Flag } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 import AuthModals from '@/components/auth/AuthModals';
+import { LanguageManager } from '@/components/SimpleLanguage';
 
 export default function Header() {
-  const { language, setLanguage, t } = useSimpleLanguage();
+  const language = LanguageManager.getLanguage();
+  const setLanguage = LanguageManager.setLanguage;
+  const t = LanguageManager.t;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

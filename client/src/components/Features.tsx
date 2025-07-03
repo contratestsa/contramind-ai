@@ -1,8 +1,9 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { LanguageManager } from '@/components/SimpleLanguage';
 
 export default function Features() {
-  const { t } = useSimpleLanguage();
+  const t = LanguageManager.t;
 
   const containerVariants = {
     hidden: { opacity: 0 },

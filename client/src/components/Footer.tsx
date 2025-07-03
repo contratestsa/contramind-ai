@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { LanguageManager } from '@/components/SimpleLanguage';
 
 export default function Footer() {
-  const { t } = useSimpleLanguage();
+  const t = LanguageManager.t;
 
 
 

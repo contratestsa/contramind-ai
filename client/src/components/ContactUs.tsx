@@ -12,7 +12,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { insertContactSchema } from '@shared/schema';
 import { z } from 'zod';
 import { Mail } from 'lucide-react';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { LanguageManager } from '@/components/SimpleLanguage';
 
 type ContactFormData = z.infer<typeof insertContactSchema>;
 
@@ -21,7 +21,7 @@ interface ContactUsProps {
 }
 
 export default function ContactUs({ children }: ContactUsProps) {
-  const { t } = useSimpleLanguage();
+  const t = LanguageManager.t;
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
