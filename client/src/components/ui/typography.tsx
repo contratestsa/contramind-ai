@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { cn } from '@/lib/utils';
 
 interface TypographyProps {
@@ -15,7 +15,7 @@ export function Typography({
   className = '', 
   as 
 }: TypographyProps) {
-  const { language } = useLanguage();
+  const { language } = useSimpleLanguage();
   const isArabic = language === 'ar';
 
   // Get the appropriate HTML element

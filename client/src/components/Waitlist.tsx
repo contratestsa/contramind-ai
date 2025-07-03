@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,7 +19,7 @@ interface WaitlistData {
 }
 
 export default function Waitlist() {
-  const { t, language } = useLanguage();
+  const { t, language } = useSimpleLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
