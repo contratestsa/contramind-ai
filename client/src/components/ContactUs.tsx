@@ -101,11 +101,12 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('الاسم', 'Name')}</FormLabel>
+                  <FormLabel>{t('الاسم *', 'Name *')}</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder={t('الاسم الكامل', 'Full Name')} 
                       className="bg-[#ebf2f5]"
+                      required
                       {...field} 
                     />
                   </FormControl>
@@ -119,12 +120,13 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('البريد الإلكتروني', 'Email')}</FormLabel>
+                  <FormLabel>{t('البريد الإلكتروني *', 'Email *')}</FormLabel>
                   <FormControl>
                     <Input 
                       type="email"
                       placeholder={t('البريد الإلكتروني', 'Email Address')} 
                       className="bg-[#ebf2f5]"
+                      required
                       {...field} 
                     />
                   </FormControl>
@@ -138,11 +140,12 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="subject"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('الموضوع', 'Subject')}</FormLabel>
+                  <FormLabel>{t('الموضوع *', 'Subject *')}</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder={t('موضوع الرسالة', 'Message Subject')} 
                       className="bg-[#ebf2f5]"
+                      required
                       {...field} 
                     />
                   </FormControl>
@@ -156,11 +159,12 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('الرسالة', 'Message')}</FormLabel>
+                  <FormLabel>{t('الرسالة *', 'Message *')}</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder={t('اكتب رسالتك هنا...', 'Write your message here...')} 
                       className="min-h-[100px] bg-[#ebf2f5]"
+                      required
                       {...field} 
                     />
                   </FormControl>
