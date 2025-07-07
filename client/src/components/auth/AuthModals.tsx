@@ -187,7 +187,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
             <DialogTitle className="tracking-tight text-2xl font-bold text-[#0c2836] text-center">
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
-            <p className={`text-gray-600 mt-2 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <p className="text-gray-600 mt-2 text-center">
               {t('أدخل بياناتك للوصول إلى حسابك', 'Enter your credentials to access your account')}
             </p>
           </DialogHeader>
