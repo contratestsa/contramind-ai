@@ -308,7 +308,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               {t('إنشاء حساب جديد', 'Create New Account')}
             </DialogTitle>
             <p className="text-gray-600 mt-2 text-center">
-              {t('انضم إلى ContraMind اليوم', 'Join ContraMind today')}
+              {t('انضم إلى ContraMind اليوم', 'Join ContraMind.ai today')}
             </p>
           </DialogHeader>
 
