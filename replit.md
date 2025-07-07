@@ -4,6 +4,12 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 7, 2025**: Enhanced CSS with comprehensive color palette and popup-specific spacing
+  - **Extended Color System**: Added navy (900-100), sky (400-50), grey (500-100) color variants
+  - **Popup Spacing Variables**: Added `--popup-spacing` and `--popup-field-gap` for consistent modal layouts
+  - **Icon Spacing**: Added `--icon-text-gap` for consistent icon-to-text spacing
+  - **TailwindCSS Integration**: Updated config to use CSS variables for all brand colors
+  - **Component Updates**: Converting hardcoded colors to use new CSS variable system
 - **July 2, 2025**: Implemented comprehensive email verification system
   - **Email Verification**: Full verification workflow using Resend integration
     - Added emailVerified and verificationToken fields to user schema

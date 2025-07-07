@@ -25,15 +25,36 @@
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
   --ring: #0C2836;
   --radius: 12px;
-  
+
   /* Custom ContraMind.ai brand colors */
   --navy: #0C2836;
   --sky: #B7DEE8;
   --white: hsl(0, 0%, 100%);
   --grey: #E6E6E6;
+  --black: #101920;
   --shadow: 0 4px 12px rgba(0,0,0,.08);
   --shadow-hover: 0 8px 24px rgba(0,0,0,.12);
   --transition: .25s ease;
+
+  /* Extended Color Palette from Brand Guidelines */
+  --navy-900: #101920;
+  --navy-800: #2d676c;
+  --navy-700: #2b4f62;
+  --navy-400: #60859b;
+  --navy-100: #bed5e3;
+
+  --sky-400: #7eb3c2;
+  --sky-100: #b7dee8;
+  --sky-50: #e2f2f6;
+
+  --grey-500: #a5a5a5;
+  --grey-300: #5f5f5f;
+  --grey-100: #f6f6f6;
+
+  /* Popup specific spacing */
+  --popup-spacing: 1.5rem;
+  --popup-field-gap: 0.5rem;
+  --icon-text-gap: 0.5rem;
 }
 
 /* Force input text to be black with maximum specificity */
@@ -125,16 +146,33 @@ form.waitlist-form input[type="tel"] {
     @apply font-sans antialiased bg-background text-foreground;
   }
 
+  /* Enhanced RTL Support */
+  html[dir="rtl"],
   [dir="rtl"] {
     text-align: right;
+    direction: rtl;
   }
 
+  html[dir="ltr"],
   [dir="ltr"] {
     text-align: left;
+    direction: ltr;
+  }
+
+  /* Focus States for Accessibility */
+  :focus-visible {
+    outline: 2px solid var(--sky);
+    outline-offset: 2px;
+  }
+
+  /* Smooth Scrolling */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 @layer components {
+  /* Font Family Classes - Updated with proper weight specifications */
   .font-space {
     font-family: 'Space Grotesk', sans-serif;
   }
@@ -152,7 +190,7 @@ form.waitlist-form input[type="tel"] {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 400; /* Regular */
   }
-  
+
   .font-heading-en-medium {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 500; /* Medium */
@@ -177,6 +215,22 @@ form.waitlist-form input[type="tel"] {
   .font-arabic-bold, .font-arabic-heading-bold, .font-arabic-body-bold {
     font-family: 'Almarai', sans-serif;
     font-weight: 700; /* Bold */
+  }
+
+  /* Auto Font Switching for RTL */
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] h5,
+  [dir="rtl"] h6 {
+    @apply font-arabic-bold;
+  }
+
+  [dir="rtl"] p,
+  [dir="rtl"] span,
+  [dir="rtl"] div:not([class*="font-"]) {
+    @apply font-arabic-regular;
   }
 
   .rtl-transition {
@@ -234,6 +288,7 @@ form.waitlist-form input[type="tel"] {
     }
   }
 
+  /* Brand Color Classes */
   .bg-navy {
     background-color: var(--navy);
   }
@@ -262,8 +317,365 @@ form.waitlist-form input[type="tel"] {
     border-radius: var(--radius);
   }
 
+  /* RTL Specific Utilities */
   [dir="rtl"] .flip-rtl {
     transform: scaleX(-1);
+  }
+
+  /* Component Building Blocks */
+  .btn-base {
+    @apply px-6 py-3 rounded-custom font-body-en-semibold transition-all duration-300;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn-base bg-navy text-white hover:bg-navy-700 focus:ring-navy;
+  }
+
+  .btn-secondary {
+    @apply btn-base bg-sky text-navy hover:bg-sky-400 focus:ring-sky;
+  }
+
+  .card-base {
+    @apply p-6 rounded-custom shadow-custom transition-shadow duration-300;
+    @apply hover:shadow-custom-hover;
+  }
+
+  .input-base {
+    @apply w-full px-4 py-3 rounded-custom border border-grey;
+    @apply focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20;
+    @apply transition-all duration-300;
+  }
+
+  /* Typography Scale */
+  .h1-style {
+    @apply font-heading-en text-4xl md:text-5xl leading-tight;
+  }
+
+  .h2-style {
+    @apply font-heading-en text-3xl md:text-4xl leading-tight;
+  }
+
+  .h3-style {
+    @apply font-heading-en-medium text-2xl md:text-3xl leading-snug;
+  }
+
+  .body-style {
+    @apply font-body-en text-base leading-relaxed;
+  }
+
+  /* Container */
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+    max-width: 1280px;
+  }
+
+  /* Section Spacing */
+  .section-spacing {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  /* ============================================
+     POPUP/MODAL STYLES
+     ============================================ */
+
+  /* Popup Container - Expected HTML structure:
+     <div class="popup-modal">
+       <div class="popup-content">
+         ...
+       </div>
+     </div>
+  */
+  .popup-modal {
+    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4;
+  }
+
+  .popup-content {
+    @apply bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto;
+    @apply p-8 relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Popup Logo - Add class="popup-logo" to logo container */
+  .popup-logo {
+    @apply flex justify-center mb-6;
+  }
+
+  .popup-logo img {
+    @apply h-16 w-auto;
+  }
+
+  /* Popup Title */
+  .popup-title {
+    @apply text-center text-2xl font-bold text-navy mb-2;
+    @apply font-heading-en-medium;
+  }
+
+  [dir="rtl"] .popup-title {
+    @apply font-arabic-bold;
+  }
+
+  .popup-subtitle {
+    @apply text-center text-grey-300 mb-6;
+    @apply font-body-en;
+  }
+
+  [dir="rtl"] .popup-subtitle {
+    @apply font-arabic-regular;
+  }
+
+  /* Popup Form Styles */
+  .popup-form {
+    @apply space-y-4;
+  }
+
+  .popup-form-group {
+    @apply space-y-2;
+  }
+
+  /* Form Labels - White text for popup forms */
+  .popup-form label,
+  .popup-label {
+    @apply block text-white font-medium mb-2;
+    @apply font-body-en-semibold;
+  }
+
+  [dir="rtl"] .popup-form label,
+  [dir="rtl"] .popup-label {
+    @apply font-arabic-regular text-right;
+  }
+
+  /* Form Inputs */
+  .popup-form input[type="text"],
+  .popup-form input[type="email"],
+  .popup-form input[type="password"],
+  .popup-form input[type="tel"],
+  .popup-form textarea,
+  .popup-input {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-navy-700 text-white placeholder-grey-500;
+    @apply border border-transparent;
+    @apply focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20;
+    @apply transition-all duration-200;
+  }
+
+  /* Required field indicator */
+  .popup-form input[required],
+  .popup-form textarea[required] {
+    @apply relative;
+  }
+
+  /* Popup Buttons */
+  .popup-btn-primary {
+    @apply w-full py-3 px-6 rounded-lg;
+    @apply bg-sky text-navy font-semibold;
+    @apply hover:bg-sky-400 transition-colors duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-sky focus:ring-offset-2;
+  }
+
+  .popup-btn-secondary {
+    @apply py-2 px-4 rounded-lg;
+    @apply bg-transparent text-grey-300 font-medium;
+    @apply hover:text-white transition-colors duration-200;
+  }
+
+  /* Two button layout */
+  .popup-btn-group {
+    @apply flex gap-3 mt-6;
+  }
+
+  .popup-btn-group button {
+    @apply flex-1;
+  }
+
+  /* Social Login Buttons */
+  .popup-divider {
+    @apply text-center text-grey-500 my-6 relative;
+  }
+
+  .popup-divider::before {
+    content: '';
+    @apply absolute top-1/2 left-0 right-0 h-px bg-grey-300;
+  }
+
+  .popup-divider span {
+    @apply bg-white px-4 relative;
+  }
+
+  .popup-social-buttons {
+    @apply flex gap-3;
+  }
+
+  .popup-social-btn {
+    @apply flex-1 py-3 px-4 rounded-lg;
+    @apply bg-navy text-white font-medium;
+    @apply hover:bg-navy-700 transition-colors duration-200;
+    @apply flex items-center justify-center gap-2;
+  }
+
+  /* Checkbox styles */
+  .popup-checkbox {
+    @apply flex items-start gap-3 mb-4;
+  }
+
+  .popup-checkbox input[type="checkbox"] {
+    @apply mt-1 w-4 h-4 rounded border-grey-300;
+    @apply focus:ring-2 focus:ring-sky;
+  }
+
+  .popup-checkbox label {
+    @apply text-sm text-grey-300;
+  }
+
+  /* Links in popup */
+  .popup-link {
+    @apply text-sky hover:text-sky-400 transition-colors duration-200;
+  }
+
+  /* Close button */
+  .popup-close {
+    @apply absolute top-4 right-4 p-2;
+    @apply text-grey-500 hover:text-grey-300 transition-colors duration-200;
+  }
+
+  [dir="rtl"] .popup-close {
+    @apply right-auto left-4;
+  }
+
+  /* ============================================
+     LANGUAGE SELECTOR STYLES
+     ============================================ */
+
+  /* Expected HTML structure:
+     <div class="language-selector">
+       <button class="language-trigger">عربي</button>
+       <div class="language-dropdown">
+         <a class="language-option active">
+           <span class="language-check">✓</span>
+           عربي
+         </a>
+         <a class="language-option">English</a>
+       </div>
+     </div>
+  */
+
+  .language-selector {
+    @apply relative;
+  }
+
+  .language-trigger {
+    @apply px-4 py-2 rounded-lg;
+    @apply bg-navy-700 text-white;
+    @apply hover:bg-navy-600 transition-colors duration-200;
+    @apply flex items-center gap-2;
+  }
+
+  .language-dropdown {
+    @apply absolute top-full mt-2 right-0;
+    @apply bg-white rounded-lg shadow-lg;
+    @apply py-2 min-w-[150px];
+    @apply hidden;
+  }
+
+  [dir="rtl"] .language-dropdown {
+    @apply right-auto left-0;
+  }
+
+  .language-selector.active .language-dropdown {
+    @apply block;
+  }
+
+  .language-option {
+    @apply block px-4 py-2;
+    @apply hover:bg-grey-100 transition-colors duration-200;
+    @apply cursor-pointer;
+    @apply flex items-center gap-2;
+  }
+
+  /* Checkmark for active language */
+  .language-check {
+    @apply text-sky font-bold;
+    @apply hidden;
+  }
+
+  .language-option.active .language-check {
+    @apply inline-block;
+  }
+
+  /* ============================================
+     LOGO VARIANTS
+     ============================================ */
+
+  /* Logo switching based on background
+     Expected HTML: <img class="logo-auto" src="logo-dark.svg" data-light-src="logo-light.svg" alt="ContraMind.ai">
+  */
+
+  /* For dark backgrounds - show light logo */
+  .dark-bg .logo-auto,
+  .bg-navy .logo-auto,
+  .bg-navy-900 .logo-auto,
+  .bg-navy-800 .logo-auto,
+  .bg-navy-700 .logo-auto {
+    content: url('logo-light.svg'); /* Path to light logo */
+  }
+
+  /* For light backgrounds - show dark logo */
+  .light-bg .logo-auto,
+  .bg-white .logo-auto,
+  .bg-grey-100 .logo-auto {
+    content: url('logo-dark.svg'); /* Path to dark logo */
+  }
+
+  /* Alternative approach using classes */
+  .logo-light {
+    @apply block;
+  }
+
+  .logo-dark {
+    @apply hidden;
+  }
+
+  .dark-bg .logo-light,
+  .bg-navy .logo-light {
+    @apply block;
+  }
+
+  .dark-bg .logo-dark,
+  .bg-navy .logo-dark {
+    @apply hidden;
+  }
+
+  .light-bg .logo-light,
+  .bg-white .logo-light {
+    @apply hidden;
+  }
+
+  .light-bg .logo-dark,
+  .bg-white .logo-dark {
+    @apply block;
+  }
+
+  /* ============================================
+     ICON-TEXT SPACING
+     ============================================ */
+
+  /* Consistent spacing between icons and text */
+  .icon-text {
+    @apply flex items-center gap-2;
+  }
+
+  /* RTL support for icon-text */
+  [dir="rtl"] .icon-text {
+    @apply flex-row-reverse;
+  }
+
+  /* Button with icon */
+  .btn-icon {
+    @apply inline-flex items-center gap-2;
+  }
+
+  [dir="rtl"] .btn-icon {
+    @apply flex-row-reverse;
   }
 }
 
@@ -300,5 +712,60 @@ form.waitlist-form input[type="tel"] {
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Extended Color Utilities */
+  .bg-navy-900 { background-color: var(--navy-900); }
+  .bg-navy-800 { background-color: var(--navy-800); }
+  .bg-navy-700 { background-color: var(--navy-700); }
+  .bg-navy-400 { background-color: var(--navy-400); }
+  .bg-navy-100 { background-color: var(--navy-100); }
+
+  .bg-sky-400 { background-color: var(--sky-400); }
+  .bg-sky-100 { background-color: var(--sky-100); }
+  .bg-sky-50 { background-color: var(--sky-50); }
+
+  .bg-grey-500 { background-color: var(--grey-500); }
+  .bg-grey-300 { background-color: var(--grey-300); }
+  .bg-grey-100 { background-color: var(--grey-100); }
+
+  .text-navy-900 { color: var(--navy-900); }
+  .text-navy-800 { color: var(--navy-800); }
+  .text-navy-700 { color: var(--navy-700); }
+  .text-navy-400 { color: var(--navy-400); }
+  .text-navy-100 { color: var(--navy-100); }
+
+  .text-sky-400 { color: var(--sky-400); }
+  .text-sky-100 { color: var(--sky-100); }
+  .text-sky-50 { color: var(--sky-50); }
+
+  .text-grey-500 { color: var(--grey-500); }
+  .text-grey-300 { color: var(--grey-300); }
+  .text-grey-100 { color: var(--grey-100); }
+
+  /* RTL-Aware Spacing */
+  .ms-auto {
+    margin-inline-start: auto;
+  }
+
+  .me-auto {
+    margin-inline-end: auto;
+  }
+
+  .ps-4 {
+    padding-inline-start: 1rem;
+  }
+
+  .pe-4 {
+    padding-inline-end: 1rem;
+  }
+
+  /* Pattern Background (from brand guidelines) */
+  .pattern-arrows {
+    background-image: repeating-pattern(
+      "> < > < > <",
+      var(--navy),
+      20px
+    );
   }
 }

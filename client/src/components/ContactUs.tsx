@@ -87,7 +87,7 @@ export default function ContactUs({ children }: ContactUsProps) {
           </button>
         )}
       </DialogTrigger>
-      <DialogContent className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg sm:max-w-[425px] text-[#1a3a4a] bg-[#f5f8fa]">
+      <DialogContent className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-[var(--popup-spacing)] border p-[var(--popup-spacing)] shadow-custom duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg sm:max-w-[425px] text-contraMind-navy-700 bg-contraMind-sky-50">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-center">
             {t('اتصل بنا', 'Contact Us')}
@@ -105,7 +105,7 @@ export default function ContactUs({ children }: ContactUsProps) {
                   <FormControl>
                     <Input 
                       placeholder={t('الاسم الكامل', 'Full Name')} 
-                      className="bg-[#ebf2f5]"
+                      className="bg-contraMind-sky-50 border-contraMind-grey focus:border-contraMind-navy"
                       {...field} 
                     />
                   </FormControl>

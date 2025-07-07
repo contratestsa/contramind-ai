@@ -295,7 +295,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
             <div className="space-y-2">
               <Label 
                 htmlFor="fullName" 
-                className={`text-[#101920] font-semibold flex items-center gap-2 ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
+                className={`text-contraMind-black font-semibold flex items-center gap-[var(--icon-text-gap)] ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
               >
                 <User className="w-4 h-4" />
                 {t.fullName}
@@ -305,7 +305,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
-                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
+                className={`w-full py-2 px-3 border-contraMind-grey focus:border-contraMind-navy focus:ring-contraMind-navy rounded ${
                   errors.fullName ? "border-red-500" : ""
                 } ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.fullNamePlaceholder}
@@ -322,7 +322,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
             <div className="space-y-2">
               <Label 
                 htmlFor="email" 
-                className={`text-[#101920] font-semibold flex items-center gap-2 ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
+                className={`text-contraMind-black font-semibold flex items-center gap-[var(--icon-text-gap)] ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
               >
                 <Mail className="w-4 h-4" />
                 {t.email}
@@ -332,7 +332,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${
+                className={`w-full py-2 px-3 border-contraMind-grey focus:border-contraMind-navy focus:ring-contraMind-navy rounded ${
                   errors.email ? "border-red-500" : ""
                 } ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.emailPlaceholder}
