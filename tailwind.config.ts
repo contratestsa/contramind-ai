@@ -69,29 +69,12 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
-        // ContraMind Design Tokens - Extended Palette
+        // ContraMind Design Tokens
         'contraMind': {
-          'navy': {
-            '900': 'var(--navy-900)',
-            '800': 'var(--navy-800)',
-            '700': 'var(--navy-700)',
-            '400': 'var(--navy-400)',
-            '100': 'var(--navy-100)',
-            'DEFAULT': 'var(--navy)',
-          },
-          'sky': {
-            '400': 'var(--sky-400)',
-            '100': 'var(--sky-100)',
-            '50': 'var(--sky-50)',
-            'DEFAULT': 'var(--sky)',
-          },
-          'grey': {
-            '500': 'var(--grey-500)',
-            '300': 'var(--grey-300)',
-            '100': 'var(--grey-100)',
-            'DEFAULT': 'var(--grey)',
-          },
-          'black': 'var(--black)',
+          'navy': '#0C2836',
+          'sky': '#B7DEE8',
+          'grey': '#E6E6E6',
+          'black': '#101920',
         },
       },
       keyframes: {

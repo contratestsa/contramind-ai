@@ -87,28 +87,25 @@ export default function ContactUs({ children }: ContactUsProps) {
           </button>
         )}
       </DialogTrigger>
-      <DialogContent className="fixed left-[50%] top-[50%] z-50 w-full max-w-md translate-x-[-50%] translate-y-[-50%] bg-white rounded-3xl p-8 shadow-2xl border-0" dir={LanguageManager.getDir()}>
-        <DialogHeader className="text-center mb-8">
-          <DialogTitle className="text-2xl font-bold text-contraMind-navy font-arabic-bold">
+      <DialogContent className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg sm:max-w-[425px] text-[#1a3a4a] bg-[#f5f8fa]">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold text-center">
             {t('اتصل بنا', 'Contact Us')}
           </DialogTitle>
         </DialogHeader>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-contraMind-navy font-semibold text-right block mb-2 font-arabic">
-                    {t('الاسم', 'Name')}
-                  </FormLabel>
+                  <FormLabel>{t('الاسم', 'Name')}</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder={t('$#', 'Enter your name')} 
-                      className="w-full h-12 px-4 bg-contraMind-sky-50 border-2 border-contraMind-navy rounded-2xl text-right placeholder-contraMind-grey-500 focus:border-contraMind-navy focus:ring-0 font-arabic"
-                      dir="rtl"
+                      placeholder={t('الاسم الكامل', 'Full Name')} 
+                      className="bg-[#ebf2f5]"
                       {...field} 
                     />
                   </FormControl>
@@ -122,15 +119,12 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-contraMind-navy font-semibold text-right block mb-2 font-arabic">
-                    {t('البريد الإلكتروني', 'Email')}
-                  </FormLabel>
+                  <FormLabel>{t('البريد الإلكتروني', 'Email')}</FormLabel>
                   <FormControl>
                     <Input 
                       type="email"
-                      placeholder={t('البريد الالكتروني', 'Email Address')} 
-                      className="w-full h-12 px-4 bg-contraMind-sky-50 border-2 border-contraMind-grey-300 rounded-2xl text-right placeholder-contraMind-grey-500 focus:border-contraMind-navy focus:ring-0 font-arabic"
-                      dir="rtl"
+                      placeholder={t('البريد الإلكتروني', 'Email Address')} 
+                      className="bg-[#ebf2f5]"
                       {...field} 
                     />
                   </FormControl>
@@ -144,14 +138,11 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="subject"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-contraMind-navy font-semibold text-right block mb-2 font-arabic">
-                    {t('الموضوع', 'Subject')}
-                  </FormLabel>
+                  <FormLabel>{t('الموضوع', 'Subject')}</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder={t('موضوع الرسالة', 'Message Subject')} 
-                      className="w-full h-12 px-4 bg-contraMind-sky-50 border-2 border-contraMind-grey-300 rounded-2xl text-right placeholder-contraMind-grey-500 focus:border-contraMind-navy focus:ring-0 font-arabic"
-                      dir="rtl"
+                      className="bg-[#ebf2f5]"
                       {...field} 
                     />
                   </FormControl>
@@ -165,14 +156,11 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-contraMind-navy font-semibold text-right block mb-2 font-arabic">
-                    {t('الرسالة', 'Message')}
-                  </FormLabel>
+                  <FormLabel>{t('الرسالة', 'Message')}</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder={t('اكتب رسالتك هنا...', 'Write your message here...')} 
-                      className="w-full h-32 p-4 bg-contraMind-sky-50 border-2 border-contraMind-grey-300 rounded-2xl text-right placeholder-contraMind-grey-500 focus:border-contraMind-navy focus:ring-0 resize-none font-arabic"
-                      dir="rtl"
+                      className="min-h-[100px] bg-[#ebf2f5]"
                       {...field} 
                     />
                   </FormControl>
@@ -181,23 +169,24 @@ export default function ContactUs({ children }: ContactUsProps) {
               )}
             />
             
-            {/* Action Buttons */}
-            <div className="flex gap-4 pt-6">
-              <Button 
-                type="submit" 
-                disabled={mutation.isPending}
-                className="flex-1 h-12 bg-contraMind-navy hover:bg-contraMind-navy-800 text-white font-bold rounded-2xl font-arabic transition-all duration-200"
-              >
-                {mutation.isPending ? t('جارٍ الإرسال...', 'Sending...') : t('إرسال', 'Send')}
-              </Button>
-              
-              <Button 
-                type="button" 
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button
+                type="button"
                 variant="outline"
+                className="text-[#e1ebf0] bg-[#0c2836]"
                 onClick={() => setOpen(false)}
-                className="flex-1 h-12 border-2 border-contraMind-navy text-contraMind-navy hover:bg-contraMind-navy hover:text-white font-bold rounded-2xl font-arabic transition-all duration-200"
               >
                 {t('إلغاء', 'Cancel')}
+              </Button>
+              <Button
+                type="submit"
+                disabled={mutation.isPending}
+                className="bg-[#0C2836] hover:bg-[#1a3a4a] text-white"
+              >
+                {mutation.isPending ? 
+                  t('جاري الإرسال...', 'Sending...') : 
+                  t('إرسال', 'Send')
+                }
               </Button>
             </div>
           </form>
