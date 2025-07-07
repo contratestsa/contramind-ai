@@ -5,7 +5,7 @@ import { randomBytes } from "crypto";
 import passport from "./passport";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./emailService";
+import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail, sendLoginConfirmationEmail } from "./emailService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
@@ -226,6 +226,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Send login confirmation email
+      const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const emailResult = await sendLoginConfirmationEmail({
+        email: user.email,
+        fullName: user.fullName,
+        loginTime: new Date(),
+        ipAddress: ipAddress as string
+      });
+      
+      if (!emailResult.success) {
+        console.error('Failed to send login confirmation email:', emailResult.error);
+      }
+
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
       
@@ -294,9 +307,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     passport.authenticate("google", { 
       failureRedirect: "/?error=google_auth_failed" 
     }),
-    (req, res) => {
+    async (req, res) => {
       // Successful authentication
       console.log('Google OAuth successful for user:', req.user);
+      
+      // Send login confirmation email
+      if (req.user) {
+        const user = req.user as User;
+        const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        
+        const emailResult = await sendLoginConfirmationEmail({
+          email: user.email,
+          fullName: user.fullName,
+          loginTime: new Date(),
+          ipAddress: ipAddress as string
+        });
+        
+        if (!emailResult.success) {
+          console.error('Failed to send Google OAuth login confirmation email:', emailResult.error);
+        }
+      }
+      
       res.redirect("/coming-soon");
     }
   );
@@ -310,9 +341,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     passport.authenticate("microsoft", {
       failureRedirect: "/?error=microsoft_auth_failed"
     }),
-    (req, res) => {
+    async (req, res) => {
       // Successful authentication
       console.log('Microsoft OAuth successful for user:', req.user);
+      
+      // Send login confirmation email
+      if (req.user) {
+        const user = req.user as User;
+        const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        
+        const emailResult = await sendLoginConfirmationEmail({
+          email: user.email,
+          fullName: user.fullName,
+          loginTime: new Date(),
+          ipAddress: ipAddress as string
+        });
+        
+        if (!emailResult.success) {
+          console.error('Failed to send Microsoft OAuth login confirmation email:', emailResult.error);
+        }
+      }
+      
       res.redirect("/coming-soon");
     }
   );

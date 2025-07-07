@@ -23,6 +23,13 @@ interface VerificationEmailData {
   verificationToken: string;
 }
 
+interface LoginConfirmationEmailData {
+  email: string;
+  fullName: string;
+  loginTime?: Date;
+  ipAddress?: string;
+}
+
 export async function sendWelcomeEmail({ email, fullName, waitlistPosition }: EmailData) {
   const subject = `Welcome to ContraMind - You're #${waitlistPosition} on the waitlist`;
   const htmlContent = getEnglishEmailTemplate(fullName, waitlistPosition);
@@ -216,6 +223,28 @@ export async function sendVerificationEmail({ email, fullName, verificationToken
     return { success: true, data };
   } catch (error) {
     console.error('Failed to send verification email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendLoginConfirmationEmail({ email, fullName, loginTime = new Date(), ipAddress }: LoginConfirmationEmailData) {
+  const subject = 'Login Confirmation - ContraMind';
+  const htmlContent = getLoginConfirmationEmailTemplate(fullName, loginTime, ipAddress);
+  const textContent = getLoginConfirmationTextTemplate(fullName, loginTime, ipAddress);
+
+  try {
+    const data = await resend.emails.send({
+      from: 'ContraMind Team <noreply@contramind.ai>',
+      to: [email],
+      subject,
+      html: htmlContent,
+      text: textContent,
+    });
+
+    console.log('Login confirmation email sent successfully:', data);
+    return { success: true, data };
+  } catch (error) {
+    console.error('Failed to send login confirmation email:', error);
     return { success: false, error };
   }
 }
@@ -417,5 +446,104 @@ Security Note: This verification link will expire in 24 hours for your security.
 ---
 ContraMind - AI-Powered Legal Technology Platform
 This email was sent because you created an account at contramind.ai
+  `;
+}
+
+function getLoginConfirmationEmailTemplate(fullName: string, loginTime: Date, ipAddress?: string): string {
+  const formattedDate = loginTime.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  const formattedTime = loginTime.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login Confirmation - ContraMind</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f9fafb;">
+    <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;">
+        <div style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); padding: 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">
+                ContraMind.ai
+            </h1>
+        </div>
+        <div style="padding: 40px 30px;">
+            <h2 style="color: #0C2836; margin: 0 0 20px 0; font-size: 22px; font-weight: 600;">
+                Hello ${fullName},
+            </h2>
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Your account was successfully logged into at:
+            </p>
+            
+            <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #0C2836;">
+                <p style="margin: 0 0 10px 0; color: #374151; font-size: 15px;">
+                    <strong>Date:</strong> ${formattedDate}
+                </p>
+                <p style="margin: 0 0 10px 0; color: #374151; font-size: 15px;">
+                    <strong>Time:</strong> ${formattedTime}
+                </p>
+                ${ipAddress ? `<p style="margin: 0; color: #374151; font-size: 15px;">
+                    <strong>IP Address:</strong> ${ipAddress}
+                </p>` : ''}
+            </div>
+            
+            <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #f59e0b;">
+                <p style="margin: 0; color: #92400e; font-size: 14px;">
+                    <strong>Security Notice:</strong> If this wasn't you, please secure your account immediately by changing your password.
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
+                    This is an automated security notification from ContraMind.ai
+                </p>
+                <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                    AI-Powered Legal Technology Platform for the MENA Region
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+}
+
+function getLoginConfirmationTextTemplate(fullName: string, loginTime: Date, ipAddress?: string): string {
+  const formattedDate = loginTime.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  const formattedTime = loginTime.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
+
+  return `ContraMind.ai - Login Confirmation
+
+Hello ${fullName},
+
+Your account was successfully logged into at:
+
+Date: ${formattedDate}
+Time: ${formattedTime}
+${ipAddress ? `IP Address: ${ipAddress}` : ''}
+
+Security Notice: If this wasn't you, please secure your account immediately by changing your password.
+
+---
+This is an automated security notification from ContraMind.ai
+AI-Powered Legal Technology Platform for the MENA Region
   `;
 }

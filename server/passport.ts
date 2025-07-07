@@ -3,6 +3,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as MicrosoftStrategy } from 'passport-microsoft';
 import { storage } from './storage';
 import { User } from '../shared/schema';
+import { sendLoginConfirmationEmail } from './emailService';
 
 // Serialize user for session storage
 passport.serializeUser((user: any, done) => {
