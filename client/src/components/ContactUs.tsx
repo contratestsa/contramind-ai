@@ -176,7 +176,7 @@ export default function ContactUs({ children }: ContactUsProps) {
             <div className="flex justify-between gap-4 pt-8">
               <button
                 type="button"
-                className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8]"
+                className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8]"
                 onClick={() => setOpen(false)}
               >
                 {t('إلغاء', 'Cancel')}
@@ -184,7 +184,7 @@ export default function ContactUs({ children }: ContactUsProps) {
               <button
                 type="submit"
                 disabled={mutation.isPending}
-                className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {mutation.isPending ? 
                   t('جاري الإرسال...', 'Sending...') : 
