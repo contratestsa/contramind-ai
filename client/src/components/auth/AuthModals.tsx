@@ -304,10 +304,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className={`text-2xl font-bold text-[#0c2836] ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <DialogTitle className="tracking-tight text-2xl font-bold text-[#0c2836] text-center">
               {t('إنشاء حساب جديد', 'Create New Account')}
             </DialogTitle>
-            <p className={`text-gray-600 mt-2 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <p className="text-gray-600 mt-2 text-center">
               {t('انضم إلى ContraMind اليوم', 'Join ContraMind today')}
             </p>
           </DialogHeader>
