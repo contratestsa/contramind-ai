@@ -173,10 +173,10 @@ export default function ContactUs({ children }: ContactUsProps) {
               )}
             />
             
-            <div className="flex justify-end gap-4 pt-8">
+            <div className="flex justify-between gap-4 pt-8">
               <button
                 type="button"
-                className="h-12 px-12 bg-[#0C2836] text-white font-medium rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] min-w-[120px] ml-[55px] mr-[55px] pl-[5px] pr-[5px] pt-[6px] pb-[6px]"
+                className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8]"
                 onClick={() => setOpen(false)}
               >
                 {t('إلغاء', 'Cancel')}
@@ -184,7 +184,7 @@ export default function ContactUs({ children }: ContactUsProps) {
               <button
                 type="submit"
                 disabled={mutation.isPending}
-                className="h-12 px-12 bg-[#0C2836] text-white font-medium rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px] ml-[-5px] mr-[-5px] mt-[0px] mb-[0px] pl-[-6px] pr-[-6px] pt-[14px] pb-[14px]"
+                className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {mutation.isPending ? 
                   t('جاري الإرسال...', 'Sending...') : 
