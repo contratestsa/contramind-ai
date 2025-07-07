@@ -4,6 +4,11 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 7, 2025**: Updated branding from "ContraMind" to "ContraMind.ai" across entire website
+  - Changed all occurrences in components (Footer, Features, FAQ, ComingSoon pages)
+  - Updated all email templates with ContraMind.ai branding
+  - Modified email sender names to "ContraMind.ai Team"
+  - Ensured consistent branding without adding hyperlinks
 - **July 2, 2025**: Implemented comprehensive email verification system
   - **Email Verification**: Full verification workflow using Resend integration
     - Added emailVerified and verificationToken fields to user schema
