@@ -89,14 +89,12 @@ export default function Header() {
                       setLanguage('en');
                       setIsDropdownOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
-                      language === 'en' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'
-                    }`}
+                    className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-gray-100 transition-colors text-gray-700"
                   >
                     <Flag className="w-4 h-4" />
                     <span>English</span>
                     {language === 'en' && (
-                      <svg className="w-4 h-4 text-sky ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-green-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     )}
@@ -106,14 +104,12 @@ export default function Header() {
                       setLanguage('ar');
                       setIsDropdownOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-sky/5 transition-colors ${
-                      language === 'ar' ? 'bg-sky/10 text-sky font-medium' : 'text-navy'
-                    }`}
+                    className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-gray-100 transition-colors text-gray-700"
                   >
                     <Globe className="w-4 h-4" />
                     <span>عربي</span>
                     {language === 'ar' && (
-                      <svg className="w-4 h-4 text-sky ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-green-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     )}
