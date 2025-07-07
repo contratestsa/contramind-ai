@@ -250,14 +250,14 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               </button>
             </div>
 
-            <Button
+            <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full bg-[#B7DEE8] hover:bg-[#9CD3E0] text-[#0c2836] font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              className="w-full h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <LogIn className="w-4 h-4" />
               {loginMutation.isPending ? t('جاري تسجيل الدخول...', 'Signing in...') : t('تسجيل الدخول', 'Sign In')}
-            </Button>
+            </button>
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
@@ -407,14 +407,14 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               </label>
             </div>
 
-            <Button
+            <button
               type="submit"
               disabled={signupMutation.isPending}
-              className="w-full bg-[#B7DEE8] hover:bg-[#9CD3E0] text-[#0c2836] font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              className="w-full h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               {signupMutation.isPending ? t('جاري إنشاء الحساب...', 'Creating account...') : t('إنشاء حساب', 'Create Account')}
-            </Button>
+            </button>
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
