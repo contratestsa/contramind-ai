@@ -173,25 +173,24 @@ export default function ContactUs({ children }: ContactUsProps) {
               )}
             />
             
-            <div className="flex justify-end space-x-3 pt-6">
-              <Button
+            <div className="flex justify-end gap-4 pt-8">
+              <button
                 type="button"
-                variant="outline"
-                className="px-8 py-3 rounded-full border-2 border-[#0c2836] text-[#0c2836] hover:bg-[#0c2836] hover:text-white transition-all duration-200 font-medium"
+                className="h-12 px-12 bg-[#0C2836] text-white font-medium rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] min-w-[120px]"
                 onClick={() => setOpen(false)}
               >
                 {t('إلغاء', 'Cancel')}
-              </Button>
-              <Button
+              </button>
+              <button
                 type="submit"
                 disabled={mutation.isPending}
-                className="px-8 py-3 rounded-full bg-[#0C2836] hover:bg-[#1a3a4a] text-white transition-all duration-200 font-medium disabled:opacity-50"
+                className="h-12 px-12 bg-[#0C2836] text-white font-medium rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
               >
                 {mutation.isPending ? 
                   t('جاري الإرسال...', 'Sending...') : 
                   t('إرسال', 'Send')
                 }
-              </Button>
+              </button>
             </div>
           </form>
         </Form>
