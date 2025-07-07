@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
-import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
+import { LanguageManager } from '@/components/SimpleLanguage';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
@@ -19,7 +19,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { language, t } = useSimpleLanguage();
+  const language = LanguageManager.getLanguage();
+  const t = LanguageManager.t;
   const { toast } = useToast();
 
   // Login form state

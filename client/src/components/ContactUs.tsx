@@ -124,7 +124,7 @@ export default function ContactUs({ children }: ContactUsProps) {
                     <Input 
                       type="email"
                       placeholder={t('البريد الإلكتروني', 'Email Address')} 
-                      className="bg-[#ebf2f5]"
+                      className="bg-contraMind-sky-50 border-contraMind-grey focus:border-contraMind-navy"
                       {...field} 
                     />
                   </FormControl>
@@ -142,7 +142,7 @@ export default function ContactUs({ children }: ContactUsProps) {
                   <FormControl>
                     <Input 
                       placeholder={t('موضوع الرسالة', 'Message Subject')} 
-                      className="bg-[#ebf2f5]"
+                      className="bg-contraMind-sky-50 border-contraMind-grey focus:border-contraMind-navy"
                       {...field} 
                     />
                   </FormControl>
@@ -160,7 +160,7 @@ export default function ContactUs({ children }: ContactUsProps) {
                   <FormControl>
                     <Textarea 
                       placeholder={t('اكتب رسالتك هنا...', 'Write your message here...')} 
-                      className="min-h-[100px] bg-[#ebf2f5]"
+                      className="min-h-[100px] bg-contraMind-sky-50 border-contraMind-grey focus:border-contraMind-navy"
                       {...field} 
                     />
                   </FormControl>

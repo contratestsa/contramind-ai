@@ -349,7 +349,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
             <div className="space-y-2">
               <Label 
                 htmlFor="password" 
-                className={`text-[#101920] font-semibold flex items-center gap-2 ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
+                className={`text-contraMind-black font-semibold flex items-center gap-[var(--icon-text-gap)] ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
               >
                 <Lock className="w-4 h-4" />
                 {t.password}
@@ -360,7 +360,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
-                  className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'pl-10 text-right' : 'pr-10 text-left'} ${
+                  className={`w-full py-2 px-3 border-contraMind-grey focus:border-contraMind-navy focus:ring-contraMind-navy rounded ${isRTL ? 'pl-10 text-right' : 'pr-10 text-left'} ${
                     errors.password ? "border-red-500" : ""
                   }`}
                   placeholder={t.passwordPlaceholder}
@@ -461,7 +461,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
             <div className="space-y-2">
               <Label 
                 htmlFor="company" 
-                className={`text-[#101920] font-semibold flex items-center gap-2 ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
+                className={`text-contraMind-black font-semibold flex items-center gap-[var(--icon-text-gap)] ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
               >
                 <Building className="w-4 h-4" />
                 {t.company}
@@ -471,7 +471,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="text"
                 value={formData.company}
                 onChange={(e) => handleInputChange("company", e.target.value)}
-                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right' : 'text-left'}`}
+                className={`w-full py-2 px-3 border-contraMind-grey focus:border-contraMind-navy focus:ring-contraMind-navy rounded ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.companyPlaceholder}
                 disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
@@ -483,7 +483,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
             <div className="space-y-2">
               <Label 
                 htmlFor="jobTitle" 
-                className={`text-[#101920] font-semibold flex items-center gap-2 ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
+                className={`text-contraMind-black font-semibold flex items-center gap-[var(--icon-text-gap)] ${isRTL ? 'font-[Almarai] flex-row-reverse' : 'font-[Inter]'}`}
               >
                 <Briefcase className="w-4 h-4" />
                 {t.jobTitle}
@@ -493,7 +493,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
                 type="text"
                 value={formData.jobTitle}
                 onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                className={`w-full py-2 px-3 border-[#E6E6E6] focus:border-[#0C2836] focus:ring-[#0C2836] rounded ${isRTL ? 'text-right' : 'text-left'}`}
+                className={`w-full py-2 px-3 border-contraMind-grey focus:border-contraMind-navy focus:ring-contraMind-navy rounded ${isRTL ? 'text-right' : 'text-left'}`}
                 placeholder={t.jobTitlePlaceholder}
                 disabled={signupMutation.isPending}
                 dir={isRTL ? "rtl" : "ltr"}
