@@ -67,8 +67,8 @@ export default function Footer() {
           <div className="flex justify-center items-center">
             <p className="text-gray-400 text-sm text-center">
               {t(
-                '© 2025 ContraMind.ai Inc. جميع الحقوق محفوظة.',
-                '© 2025 ContraMind.ai Inc. All rights reserved.'
+                '© 2025 ContraMind Inc. جميع الحقوق محفوظة.',
+                '© 2025 ContraMind Inc. All rights reserved.'
               )}
             </p>
           </div>

@@ -116,14 +116,14 @@ export default function Features() {
                 </div>
                 <h3 className="text-2xl lg:text-3xl font-arabic-heading-bold text-white">
                   {t(
-                    'عزّز إنتاجية أعمالك مع ContraMind.ai',
-                    'Enhance Your Business Productivity with ContraMind.ai'
+                    'عزّز إنتاجية أعمالك مع ContraMind',
+                    'Enhance Your Business Productivity with ContraMind'
                   )}
                 </h3>
               </div>
               <p className="text-gray-300 text-lg mb-6 font-arabic-body text-justify">
                 {t(
-                  'نوفر لك منصة متكاملة لإدارة وتوزيع المهام بكل سهولة، مع متابعة دقيقة لإنجاز المهام، مما يتيح لفريقك التركيز على ما يهم فعلاً. نُسهل لك عمليات التفاوض المعقدة، ونقدّم حلول ذكية تدعم اتخاذ القرارات القانونية بثقة ووضوح ، لتختصر الوقت والجهد في كل مرحلة من مراحل إبرام العقد. مع ContraMind.ai، أنت في قلب كل خطوة، تحكم ووضوح وكفاءة، لضمان سير أعمالك بشكل قانوني و بكفاءة وشفافية مستمرة.',
+                  'نوفر لك منصة متكاملة لإدارة وتوزيع المهام بكل سهولة، مع متابعة دقيقة لإنجاز المهام، مما يتيح لفريقك التركيز على ما يهم فعلاً. نُسهل لك عمليات التفاوض المعقدة، ونقدّم حلول ذكية تدعم اتخاذ القرارات القانونية بثقة ووضوح ، لتختصر الوقت والجهد في كل مرحلة من مراحل إبرام العقد. مع ContraMind، أنت في قلب كل خطوة، تحكم ووضوح وكفاءة، لضمان سير أعمالك بشكل قانوني و بكفاءة وشفافية مستمرة.',
                   'We provide you with an integrated platform for managing and distributing tasks with ease, along with precise task completion tracking that allows your team to focus on what truly matters. We simplify complex negotiation processes and offer smart solutions that support confident and informed legal decision making, saving time and effort at every stage of contract completion. With ContraMind, you are at the center of every step, with control, clarity, and efficiency, ensuring your legal runs smoothly and legally with continuous transparency.'
                 )}
               </p>
@@ -148,7 +148,7 @@ export default function Features() {
               </div>
               <p className="text-gray-300 text-lg mb-6 font-arabic-body text-justify">
                 {t(
-                  'توفّر لك ContraMind.ai منصة متطورة تجمع جميع مراحل إدارة العقود في مكان واحد، بدءًا من صياغة الوثائق وصولاً إلى التفاوض، المراجعة، تحليل المخاطر، التوقيع، الحفظ، ثم الإدارة.وذلك لتمكين فريقك من التركيز على اتخاذ القرارات بكل ثقة، مع تقليل المخاطر وتحقيق أعلى مستويات الكفاءة.نرافقك في كل خطوة، لنضمن لك نتائج دقيقة ومستدامة بشفافية كاملة.',
+                  'توفّر لك ContraMind منصة متطورة تجمع جميع مراحل إدارة العقود في مكان واحد، بدءًا من صياغة الوثائق وصولاً إلى التفاوض، المراجعة، تحليل المخاطر، التوقيع، الحفظ، ثم الإدارة.وذلك لتمكين فريقك من التركيز على اتخاذ القرارات بكل ثقة، مع تقليل المخاطر وتحقيق أعلى مستويات الكفاءة.نرافقك في كل خطوة، لنضمن لك نتائج دقيقة ومستدامة بشفافية كاملة.',
                   'ContraMind offers a comprehensive platform that integrates all stages of contract management in one location. From document drafting to negotiation, review, risk analysis, signing, storage, and management. This enables your team to focus on making decisions with complete confidence, while reducing risks and achieving the highest levels of efficiency. We support you at every stage to ensure accurate and sustainable outcomes with full transparency.'
                 )}
               </p>

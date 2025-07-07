@@ -31,14 +31,14 @@ interface LoginConfirmationEmailData {
 }
 
 export async function sendWelcomeEmail({ email, fullName, waitlistPosition }: EmailData) {
-  const subject = `Welcome to ContraMind.ai - You're #${waitlistPosition} on the waitlist`;
+  const subject = `Welcome to ContraMind - You're #${waitlistPosition} on the waitlist`;
   const htmlContent = getEnglishEmailTemplate(fullName, waitlistPosition);
   const textContent = getEnglishTextTemplate(fullName, waitlistPosition);
 
   // Try with custom domain first, fallback to default domain
   const fromAddresses = [
-    'ContraMind.ai Team <noreply@contramind.ai>',
-    'ContraMind.ai Team <onboarding@resend.dev>'
+    'ContraMind Team <noreply@contramind.ai>',
+    'ContraMind Team <onboarding@resend.dev>'
   ];
 
   for (const fromAddress of fromAddresses) {
@@ -70,14 +70,14 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to ContraMind.ai</title>
+    <title>Welcome to ContraMind</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f8fafc;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); padding: 40px 30px; text-align: center;">
             <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                ContraMind.ai
+                ContraMind
             </h1>
             <p style="color: #B7DEE8; margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
                 AI-Powered Legal Technology Platform
@@ -95,7 +95,7 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
             </p>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Thank you for joining the ContraMind.ai waitlist! We're excited to have you on board as we prepare to revolutionize legal contract management in the MENA region.
+                Thank you for joining the ContraMind waitlist! We're excited to have you on board as we prepare to revolutionize legal contract management in the MENA region.
             </p>
 
             <!-- Waitlist Position -->
@@ -107,7 +107,7 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
                     #${waitlistPosition}
                 </p>
                 <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">
-                    You'll be among the first to experience ContraMind.ai when we launch!
+                    You'll be among the first to experience ContraMind when we launch!
                 </p>
             </div>
 
@@ -123,7 +123,7 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
             </ul>
 
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
-                We'll keep you updated on our progress and notify you as soon as ContraMind.ai is ready for launch.
+                We'll keep you updated on our progress and notify you as soon as ContraMind is ready for launch.
             </p>
 
             <!-- CTA Button -->
@@ -137,7 +137,7 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
         <!-- Footer -->
         <div style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
             <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
-                Thank you for your interest in ContraMind.ai
+                Thank you for your interest in ContraMind
             </p>
             <p style="color: #9ca3af; font-size: 12px; margin: 0;">
                 This email was sent because you joined our waitlist at contramind.ai
@@ -151,15 +151,15 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
 
 function getEnglishTextTemplate(fullName: string, waitlistPosition: number): string {
   return `
-Welcome to ContraMind.ai!
+Welcome to ContraMind!
 
 Dear ${fullName},
 
-Thank you for joining the ContraMind.ai waitlist! We're excited to have you on board as we prepare to revolutionize legal contract management in the MENA region.
+Thank you for joining the ContraMind waitlist! We're excited to have you on board as we prepare to revolutionize legal contract management in the MENA region.
 
 Your Waitlist Position: #${waitlistPosition}
 
-You'll be among the first to experience ContraMind.ai when we launch!
+You'll be among the first to experience ContraMind when we launch!
 
 What to expect:
 - Early access to our AI-powered contract analysis platform
@@ -167,11 +167,11 @@ What to expect:
 - Advanced risk assessment and legal review tools
 - Exclusive updates on our launch progress
 
-We'll keep you updated on our progress and notify you as soon as ContraMind.ai is ready for launch.
+We'll keep you updated on our progress and notify you as soon as ContraMind is ready for launch.
 
 Visit us at: https://contramind.ai
 
-Thank you for your interest in ContraMind.ai.
+Thank you for your interest in ContraMind.
 
 ---
 This email was sent because you joined our waitlist at contramind.ai
@@ -179,9 +179,9 @@ This email was sent because you joined our waitlist at contramind.ai
 }
 
 export async function sendContactEmail({ name, email, subject, message }: ContactEmailData) {
-  // Send email to ContraMind.ai team
+  // Send email to ContraMind team
   const toTeamEmail = await resend.emails.send({
-    from: 'ContraMind.ai Team <noreply@contramind.ai>',
+    from: 'ContraMind Team <noreply@contramind.ai>',
     to: ['ceo@contramind.com'],
     subject: `Contact Form: ${subject}`,
     html: getContactEmailTemplate(name, email, subject, message),
@@ -190,9 +190,9 @@ export async function sendContactEmail({ name, email, subject, message }: Contac
 
   // Send confirmation email to user
   const toUserEmail = await resend.emails.send({
-    from: 'ContraMind.ai Team <noreply@contramind.ai>',
+    from: 'ContraMind Team <noreply@contramind.ai>',
     to: [email],
-    subject: 'Message Received - ContraMind.ai.ai Team',
+    subject: 'Message Received - ContraMind Team',
     html: getContactConfirmationTemplate(name),
     text: getContactConfirmationTextTemplate(name),
   });
@@ -206,13 +206,13 @@ export async function sendVerificationEmail({ email, fullName, verificationToken
     : 'http://localhost:5000';
   
   const verificationUrl = `${baseUrl}/api/auth/verify-email?token=${verificationToken}`;
-  const subject = 'Verify Your Email - ContraMind.ai.ai';
+  const subject = 'Verify Your Email - ContraMind';
   const htmlContent = getVerificationEmailTemplate(fullName, verificationUrl);
   const textContent = getVerificationTextTemplate(fullName, verificationUrl);
 
   try {
     const data = await resend.emails.send({
-      from: 'ContraMind.ai Team <noreply@contramind.ai>',
+      from: 'ContraMind Team <noreply@contramind.ai>',
       to: [email],
       subject,
       html: htmlContent,
@@ -228,13 +228,13 @@ export async function sendVerificationEmail({ email, fullName, verificationToken
 }
 
 export async function sendLoginConfirmationEmail({ email, fullName, loginTime = new Date(), ipAddress }: LoginConfirmationEmailData) {
-  const subject = 'Login Confirmation - ContraMind.ai';
+  const subject = 'Login Confirmation - ContraMind';
   const htmlContent = getLoginConfirmationEmailTemplate(fullName, loginTime, ipAddress);
   const textContent = getLoginConfirmationTextTemplate(fullName, loginTime, ipAddress);
 
   try {
     const data = await resend.emails.send({
-      from: 'ContraMind.ai Team <noreply@contramind.ai>',
+      from: 'ContraMind Team <noreply@contramind.ai>',
       to: [email],
       subject,
       html: htmlContent,
@@ -288,7 +288,7 @@ function getContactEmailTemplate(name: string, email: string, subject: string, m
 
 function getContactTextTemplate(name: string, email: string, subject: string, message: string): string {
   return `
-New Contact Message - ContraMind.ai
+New Contact Message - ContraMind
 
 Contact Details:
 Name: ${name}
@@ -299,7 +299,7 @@ Message:
 ${message}
 
 ---
-Sent from ContraMind.ai Contact Form
+Sent from ContraMind Contact Form
   `;
 }
 
@@ -323,7 +323,7 @@ function getContactConfirmationTemplate(name: string): string {
                 Dear ${name},
             </p>
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Thank you for contacting ContraMind.ai. We have received your message and will get back to you within 24 hours.
+                Thank you for contacting ContraMind. We have received your message and will get back to you within 24 hours.
             </p>
             <div style="background-color: #f0f9ff; border-left: 4px solid #B7DEE8; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;">
                 <p style="color: #0C2836; font-size: 16px; margin: 0;">
@@ -332,7 +332,7 @@ function getContactConfirmationTemplate(name: string): string {
             </div>
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
                 Best regards,<br>
-                The ContraMind.ai Team
+                The ContraMind Team
             </p>
         </div>
     </div>
@@ -343,16 +343,16 @@ function getContactConfirmationTemplate(name: string): string {
 
 function getContactConfirmationTextTemplate(name: string): string {
   return `
-Message Received - ContraMind.ai
+Message Received - ContraMind
 
 Dear ${name},
 
-Thank you for contacting ContraMind.ai. We have received your message and will get back to you within 24 hours.
+Thank you for contacting ContraMind. We have received your message and will get back to you within 24 hours.
 
 Our team is committed to providing you with the best support for your legal technology needs.
 
 Best regards,
-The ContraMind.ai Team
+The ContraMind Team
 
 ---
 ContraMind.ai - AI-Powered Legal Contract Management
@@ -366,14 +366,14 @@ function getVerificationEmailTemplate(fullName: string, verificationUrl: string)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - ContraMind.ai.ai</title>
+    <title>Verify Your Email - ContraMind</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f8fafc;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); padding: 40px 30px; text-align: center;">
             <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                ContraMind.ai
+                ContraMind
             </h1>
             <p style="color: #B7DEE8; margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
                 Email Verification Required
@@ -391,7 +391,7 @@ function getVerificationEmailTemplate(fullName: string, verificationUrl: string)
             </p>
             
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Welcome to ContraMind.ai! To complete your account setup and start using our AI-powered legal platform, please verify your email address by clicking the button below.
+                Welcome to ContraMind! To complete your account setup and start using our AI-powered legal platform, please verify your email address by clicking the button below.
             </p>
 
             <!-- Verification Button -->
@@ -410,14 +410,14 @@ function getVerificationEmailTemplate(fullName: string, verificationUrl: string)
             </div>
 
             <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0 0 0;">
-                <strong>Security Note:</strong> This verification link will expire in 24 hours for your security. If you didn't create an account with ContraMind.ai, please ignore this email.
+                <strong>Security Note:</strong> This verification link will expire in 24 hours for your security. If you didn't create an account with ContraMind, please ignore this email.
             </p>
         </div>
 
         <!-- Footer -->
         <div style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
             <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
-                ContraMind.ai - AI-Powered Legal Technology Platform
+                ContraMind - AI-Powered Legal Technology Platform
             </p>
             <p style="color: #9ca3af; font-size: 12px; margin: 0;">
                 This email was sent because you created an account at contramind.ai
@@ -431,20 +431,20 @@ function getVerificationEmailTemplate(fullName: string, verificationUrl: string)
 
 function getVerificationTextTemplate(fullName: string, verificationUrl: string): string {
   return `
-Verify Your Email - ContraMind.ai
+Verify Your Email - ContraMind
 
 Hello ${fullName},
 
-Welcome to ContraMind.ai! To complete your account setup and start using our AI-powered legal platform, please verify your email address.
+Welcome to ContraMind! To complete your account setup and start using our AI-powered legal platform, please verify your email address.
 
 Click here to verify: ${verificationUrl}
 
 If the link doesn't work, copy and paste it into your browser.
 
-Security Note: This verification link will expire in 24 hours for your security. If you didn't create an account with ContraMind.ai, please ignore this email.
+Security Note: This verification link will expire in 24 hours for your security. If you didn't create an account with ContraMind, please ignore this email.
 
 ---
-ContraMind.ai - AI-Powered Legal Technology Platform
+ContraMind - AI-Powered Legal Technology Platform
 This email was sent because you created an account at contramind.ai
   `;
 }
@@ -467,7 +467,7 @@ function getLoginConfirmationEmailTemplate(fullName: string, loginTime: Date, ip
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Login Confirmation - ContraMind.ai</title>
+    <title>Login Confirmation - ContraMind</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f9fafb;">
     <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;">
