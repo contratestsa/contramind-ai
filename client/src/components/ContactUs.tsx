@@ -107,7 +107,7 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('الاسم *', 'Name *')}</FormLabel>
+                  <FormLabel>{t('الاسم', 'Name')} <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Input 
                       placeholder={t('الاسم الكامل', 'Full Name')} 
@@ -126,7 +126,7 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('البريد الإلكتروني *', 'Email *')}</FormLabel>
+                  <FormLabel>{t('البريد الإلكتروني', 'Email')} <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Input 
                       type="email"
@@ -146,7 +146,7 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="subject"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('الموضوع *', 'Subject *')}</FormLabel>
+                  <FormLabel>{t('الموضوع', 'Subject')} <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Input 
                       placeholder={t('موضوع الرسالة', 'Message Subject')} 
@@ -165,7 +165,7 @@ export default function ContactUs({ children }: ContactUsProps) {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('الرسالة *', 'Message *')}</FormLabel>
+                  <FormLabel>{t('الرسالة', 'Message')} <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder={t('اكتب رسالتك هنا...', 'Write your message here...')} 
