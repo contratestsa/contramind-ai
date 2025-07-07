@@ -266,13 +266,13 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               <div className="flex gap-3 mt-3">
                 <a 
                   href="/api/auth/google"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
                 >
                   Google
                 </a>
                 <a 
                   href="/api/auth/microsoft"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
                 >
                   Microsoft
                 </a>
@@ -325,7 +325,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 value={signupData.fullName}
                 onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
                 placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
-                className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-500 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -339,7 +339,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 value={signupData.email}
                 onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                 placeholder={t('أدخل البريد الإلكتروني', 'Enter your email')}
-                className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-500 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -354,13 +354,13 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                   value={signupData.password}
                   onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                   placeholder={t('أدخل كلمة المرور', 'Enter your password')}
-                  className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 pr-12"
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-500 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 pr-12"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -377,13 +377,13 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                   value={signupData.confirmPassword}
                   onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
                   placeholder={t('أعد إدخال كلمة المرور', 'Re-enter your password')}
-                  className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 pr-12"
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-500 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 pr-12"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -423,13 +423,13 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               <div className="flex gap-3 mt-3">
                 <a 
                   href="/api/auth/google"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
                 >
                   Google
                 </a>
                 <a 
                   href="/api/auth/microsoft"
-                  className="flex-1 py-2 bg-[#0c2836] text-white border border-[#0c2836] hover:bg-[#1a3a4a] rounded-lg transition-colors text-center no-underline"
+                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
                 >
                   Microsoft
                 </a>
