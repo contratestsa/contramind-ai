@@ -46,10 +46,14 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data)
       });
       if (!response.ok) {
         const error = await response.json();
+        if (error.emailVerificationRequired) {
+          throw new Error(t('يرجى التحقق من بريدك الإلكتروني. تم إرسال رسالة التحقق.', 'Please verify your email address. A verification email has been sent.'));
+        }
         throw new Error(error.message || 'Login failed');
       }
       return response.json();
@@ -61,6 +65,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
+      // Redirect to coming soon page after successful login
+      window.location.href = '/coming-soon';
     },
     onError: (error: Error) => {
       toast({
@@ -77,6 +83,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data)
       });
       if (!response.ok) {

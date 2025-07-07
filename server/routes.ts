@@ -239,12 +239,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Failed to send login confirmation email:', emailResult.error);
       }
 
-      // Remove password from response
-      const { password, ...userWithoutPassword } = user;
-      
-      res.json({ 
-        message: "Login successful",
-        user: userWithoutPassword 
+      // Login user with passport (creates session)
+      req.login(user, (err) => {
+        if (err) {
+          console.error('Session login error:', err);
+          return res.status(500).json({ message: "Login failed" });
+        }
+        
+        // Remove password from response
+        const { password, ...userWithoutPassword } = user;
+        
+        res.json({ 
+          message: "Login successful",
+          user: userWithoutPassword 
+        });
       });
     } catch (error) {
       console.error("Login error:", error);

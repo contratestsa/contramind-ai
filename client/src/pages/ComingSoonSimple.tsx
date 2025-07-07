@@ -1,12 +1,37 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import { motion } from 'framer-motion';
 import CountdownTimer from '@/components/CountdownTimer';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
 
 export default function ComingSoonSimple() {
   const { t, language } = useLanguage();
+  const { user, isAuthenticated, logout } = useAuth();
   
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] flex items-center justify-center ${language === 'ar' ? 'font-arabic' : 'font-inter'}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className={`min-h-screen bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] flex items-center justify-center relative ${language === 'ar' ? 'font-arabic' : 'font-inter'}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      {/* User info and logout button */}
+      {isAuthenticated && user && (
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm text-gray-600">{t('مرحباً', 'Welcome')}</p>
+              <p className="font-semibold text-[#0C2836]">{user.fullName}</p>
+            </div>
+            <Button
+              onClick={() => logout()}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              {t('تسجيل الخروج', 'Logout')}
+            </Button>
+          </div>
+        </div>
+      )}
+      
       <div className="text-center max-w-4xl mx-auto px-6">
         {/* Logo */}
         <motion.div
