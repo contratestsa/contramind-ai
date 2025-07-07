@@ -204,7 +204,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 value={loginData.email}
                 onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                 placeholder={t('أدخل البريد الإلكتروني', 'Enter your email')}
-                className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-500 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -219,13 +219,13 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                   value={loginData.password}
                   onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                   placeholder={t('أدخل كلمة المرور', 'Enter your password')}
-                  className="w-full px-4 py-3 bg-[#0c2836] text-white placeholder-gray-400 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 pr-12"
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder-gray-500 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 pr-12"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
