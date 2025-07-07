@@ -69,7 +69,7 @@ export default function Header() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 text-white"
+                className="flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 text-white"
               >
                 {language === 'ar' ? (
                   <Globe className="w-4 h-4" />
@@ -89,7 +89,7 @@ export default function Header() {
                       setLanguage('en');
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-gray-100 transition-colors text-gray-700"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 transition-colors text-gray-700"
                   >
                     <Flag className="w-4 h-4" />
                     <span>English</span>
@@ -104,7 +104,7 @@ export default function Header() {
                       setLanguage('ar');
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full flex items-center space-x-2 px-3 py-2 text-sm hover:bg-gray-100 transition-colors text-gray-700"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 transition-colors text-gray-700"
                   >
                     <Globe className="w-4 h-4" />
                     <span>عربي</span>
