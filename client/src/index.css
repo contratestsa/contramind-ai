@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #0C2836;
-  --foreground: hsl(0, 0%, 98%);
+  --background: #f0f3f5;
+  --foreground: #0C2836;
   --muted: hsl(60, 4.8%, 95.9%);
   --muted-foreground: hsl(25, 5.3%, 44.7%);
   --popover: hsl(0, 0%, 100%);
