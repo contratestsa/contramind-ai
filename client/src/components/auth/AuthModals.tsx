@@ -113,6 +113,17 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!loginData.email || !loginData.password) {
+      toast({
+        title: t('خطأ في التحقق', 'Validation Error'),
+        description: t('يرجى ملء جميع الحقول المطلوبة', 'Please fill in all required fields'),
+        variant: "destructive"
+      });
+      return;
+    }
+    
     loginMutation.mutate({
       email: loginData.email,
       password: loginData.password
@@ -121,6 +132,16 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.confirmPassword) {
+      toast({
+        title: t('خطأ في التحقق', 'Validation Error'),
+        description: t('يرجى ملء جميع الحقول المطلوبة', 'Please fill in all required fields'),
+        variant: "destructive"
+      });
+      return;
+    }
     
     if (signupData.password !== signupData.confirmPassword) {
       toast({
@@ -193,9 +214,12 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </DialogHeader>
 
           <form onSubmit={handleLogin} className="space-y-6">
+            <p className="text-xs text-gray-500 text-center mb-4">
+              {t('جميع الحقول المشار إليها بـ (*) مطلوبة', 'All fields marked with (*) are required')}
+            </p>
             <div>
               <Label className="text-sm font-medium text-gray-700">
-                {t('البريد الإلكتروني', 'Email')}
+                {t('البريد الإلكتروني', 'Email')} <span className="text-red-500">*</span>
               </Label>
               <Input
                 type="email"
@@ -209,7 +233,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
             <div>
               <Label className="text-sm font-medium text-gray-700">
-                {t('كلمة المرور', 'Password')}
+                {t('كلمة المرور', 'Password')} <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
@@ -313,9 +337,12 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </DialogHeader>
 
           <form onSubmit={handleSignup} className="space-y-4">
+            <p className="text-xs text-gray-500 text-center mb-4">
+              {t('جميع الحقول المشار إليها بـ (*) مطلوبة', 'All fields marked with (*) are required')}
+            </p>
             <div>
               <Label className="text-sm font-medium text-gray-700">
-                {t('الاسم الكامل', 'Full Name')}
+                {t('الاسم الكامل', 'Full Name')} <span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -329,7 +356,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
             <div>
               <Label className="text-sm font-medium text-gray-700">
-                {t('البريد الإلكتروني', 'Email')}
+                {t('البريد الإلكتروني', 'Email')} <span className="text-red-500">*</span>
               </Label>
               <Input
                 type="email"
@@ -343,7 +370,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
             <div>
               <Label className="text-sm font-medium text-gray-700">
-                {t('كلمة المرور', 'Password')}
+                {t('كلمة المرور', 'Password')} <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
@@ -366,7 +393,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
             <div>
               <Label className="text-sm font-medium text-gray-700">
-                {t('تأكيد كلمة المرور', 'Confirm Password')}
+                {t('تأكيد كلمة المرور', 'Confirm Password')} <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
