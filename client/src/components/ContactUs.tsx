@@ -184,7 +184,7 @@ export default function ContactUs({ children }: ContactUsProps) {
               <button
                 type="submit"
                 disabled={mutation.isPending}
-                className="h-12 px-12 bg-[#0C2836] text-white font-medium rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
+                className="h-12 px-12 bg-[#0C2836] text-white font-medium rounded-[48px] transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px] ml-[-5px] mr-[-5px] mt-[0px] mb-[0px] pl-[-6px] pr-[-6px] pt-[14px] pb-[14px]"
               >
                 {mutation.isPending ? 
                   t('جاري الإرسال...', 'Sending...') : 
