@@ -189,10 +189,10 @@ export default function Waitlist() {
         >
 
 
-          <form onSubmit={handleSubmit} className="space-y-[var(--popup-spacing)]">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-sm font-semibold text-contraMind-navy-700 flex items-center gap-[var(--icon-text-gap)]">
+                <Label htmlFor="fullName" className="text-sm font-semibold text-gray-700">
                   {t('الاسم الكامل', 'Full Name')} *
                 </Label>
                 <Input
@@ -200,14 +200,14 @@ export default function Waitlist() {
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                  className="w-full border-contraMind-grey focus:border-contraMind-sky focus:ring-contraMind-sky text-sm sm:text-base bg-contraMind-grey-100"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-semibold text-contraMind-navy-700 flex items-center gap-[var(--icon-text-gap)]">
+                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">
                   {t('البريد الإلكتروني', 'Email Address')} *
                 </Label>
                 <Input
@@ -215,14 +215,14 @@ export default function Waitlist() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full border-contraMind-grey focus:border-contraMind-sky focus:ring-contraMind-sky text-sm sm:text-base bg-contraMind-grey-100"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('example@domain.com', 'example@domain.com')}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phoneNumber" className="text-sm font-semibold text-contraMind-navy-700 flex items-center gap-[var(--icon-text-gap)]">
+                <Label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-700">
                   {t('رقم الهاتف', 'Phone Number')} *
                 </Label>
                 <Input
@@ -230,14 +230,14 @@ export default function Waitlist() {
                   type="tel"
                   value={formData.phoneNumber}
                   onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                  className="w-full border-contraMind-grey focus:border-contraMind-sky focus:ring-contraMind-sky text-sm sm:text-base bg-contraMind-grey-100"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('+966 50 123 4567', '+966 50 123 4567')}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company" className="text-sm font-semibold text-contraMind-navy-700 flex items-center gap-[var(--icon-text-gap)]">
+                <Label htmlFor="company" className="text-sm font-semibold text-gray-700">
                   {t('الشركة', 'Company')}
                 </Label>
                 <Input
@@ -245,13 +245,13 @@ export default function Waitlist() {
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-                  className="w-full border-contraMind-grey focus:border-contraMind-sky focus:ring-contraMind-sky text-sm sm:text-base bg-contraMind-grey-100"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('اسم الشركة', 'Company name')}
                 />
               </div>
 
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="jobTitle" className="text-sm font-semibold text-contraMind-navy-700 flex items-center gap-[var(--icon-text-gap)]">
+                <Label htmlFor="jobTitle" className="text-sm font-semibold text-gray-700">
                   {t('المسمى الوظيفي', 'Job Title')}
                 </Label>
                 <Input
@@ -259,7 +259,7 @@ export default function Waitlist() {
                   type="text"
                   value={formData.jobTitle}
                   onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                  className="w-full border-contraMind-grey focus:border-contraMind-sky focus:ring-contraMind-sky text-sm sm:text-base bg-contraMind-grey-100"
+                  className="w-full border-gray-300 focus:border-sky focus:ring-sky text-sm sm:text-base bg-[#f0f3f5]"
                   placeholder={t('محامي، مستشار قانوني، إلخ...', 'Lawyer, Legal Advisor, etc...')}
                 />
               </div>

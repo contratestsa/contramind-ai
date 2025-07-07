@@ -433,10 +433,10 @@ form.waitlist-form input[type="tel"] {
     @apply space-y-2;
   }
 
-  /* Form Labels - Dark text for popup forms */
+  /* Form Labels - White text for popup forms */
   .popup-form label,
   .popup-label {
-    @apply block text-grey-300 font-medium mb-2;
+    @apply block text-white font-medium mb-2;
     @apply font-body-en-semibold;
   }
 
@@ -453,8 +453,8 @@ form.waitlist-form input[type="tel"] {
   .popup-form textarea,
   .popup-input {
     @apply w-full px-4 py-3 rounded-lg;
-    @apply bg-white text-navy placeholder-grey-500;
-    @apply border border-navy-700;
+    @apply bg-navy-700 text-white placeholder-grey-500;
+    @apply border border-transparent;
     @apply focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20;
     @apply transition-all duration-200;
   }
@@ -467,16 +467,16 @@ form.waitlist-form input[type="tel"] {
 
   /* Popup Buttons */
   .popup-btn-primary {
-    @apply py-3 px-6 rounded-lg;
-    @apply bg-navy text-white font-semibold;
-    @apply hover:bg-navy-700 transition-colors duration-200;
-    @apply focus:outline-none focus:ring-2 focus:ring-navy focus:ring-offset-2;
+    @apply w-full py-3 px-6 rounded-lg;
+    @apply bg-sky text-navy font-semibold;
+    @apply hover:bg-sky-400 transition-colors duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-sky focus:ring-offset-2;
   }
 
   .popup-btn-secondary {
-    @apply py-3 px-6 rounded-lg;
-    @apply bg-navy text-white font-medium;
-    @apply hover:bg-navy-700 transition-colors duration-200;
+    @apply py-2 px-4 rounded-lg;
+    @apply bg-transparent text-grey-300 font-medium;
+    @apply hover:text-white transition-colors duration-200;
   }
 
   /* Two button layout */
@@ -486,12 +486,6 @@ form.waitlist-form input[type="tel"] {
 
   .popup-btn-group button {
     @apply flex-1;
-  }
-
-  /* Equal width buttons for consistency */
-  .popup-btn-group .popup-btn-primary,
-  .popup-btn-group .popup-btn-secondary {
-    @apply min-w-[120px];
   }
 
   /* Social Login Buttons */
