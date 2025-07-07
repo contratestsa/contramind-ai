@@ -163,7 +163,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </Button>
         )}
       </div>
-
       {/* Signup Trigger */}
       <div onClick={() => setIsSignupOpen(true)}>
         {triggerSignupButton || (
@@ -176,7 +175,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </Button>
         )}
       </div>
-
       {/* Login Modal */}
       <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl">
@@ -186,7 +184,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
               </div>
             </div>
-            <DialogTitle className={`text-2xl font-bold text-[#0c2836] ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <DialogTitle className="tracking-tight text-2xl font-bold text-[#0c2836] text-center">
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
             <p className={`text-gray-600 mt-2 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
@@ -297,7 +295,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </form>
         </DialogContent>
       </Dialog>
-
       {/* Signup Modal */}
       <Dialog open={isSignupOpen} onOpenChange={setIsSignupOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
