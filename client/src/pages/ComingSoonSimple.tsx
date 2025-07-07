@@ -74,8 +74,8 @@ export default function ComingSoonSimple() {
             language === 'ar' ? 'font-arabic-body' : 'font-inter'
           }`}>
             {t(
-              'منصة الذكاء الاصطناعي الأولى لإدارة العقود القانونية في منطقة الشرق الأوسط',
-              'The first AI-powered legal contract management platform for the Middle East region'
+              'منصة الذكاء الاصطناعي الأولى لإدارة العقود القانونية في منطقة الشرق الأوسط وشمال أفريقيا',
+              'The first AI-powered legal contract management platform for the MENA region'
             )}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
