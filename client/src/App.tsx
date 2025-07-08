@@ -30,9 +30,7 @@ function Router() {
       </Route>
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
-      <Route path="/dashboard">
-        {user ? <Dashboard /> : <Redirect to="/" />}
-      </Route>
+      <Route path="/dashboard" component={Dashboard} />
       <Route path="/coming-soon">
         <Redirect to="/dashboard" />
       </Route>

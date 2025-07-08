@@ -53,6 +53,13 @@ export default function Dashboard() {
   const [, navigate] = useLocation();
   const [activeNav, setActiveNav] = useState('dashboard');
   
+  // Use demo user if no authenticated user
+  const displayUser = user || {
+    id: 1,
+    fullName: "Demo User",
+    email: "demo@contramind.ai"
+  };
+  
   const toggleLanguage = () => {
     setLanguage(language === 'ar' ? 'en' : 'ar');
   };
@@ -106,8 +113,8 @@ export default function Dashboard() {
   ];
 
   const getUserInitials = () => {
-    if (!user?.fullName) return 'U';
-    const names = user.fullName.split(' ');
+    if (!displayUser?.fullName) return 'U';
+    const names = displayUser.fullName.split(' ');
     return names.map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
