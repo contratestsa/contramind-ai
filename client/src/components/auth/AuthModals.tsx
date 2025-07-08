@@ -7,7 +7,6 @@ import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
-import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 
 interface AuthModalsProps {
   triggerLoginButton?: React.ReactNode;
@@ -200,11 +199,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl">
           <DialogHeader className="text-center pb-6">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-[#0c2836] rounded-xl flex items-center justify-center">
-                <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
-              </div>
-            </div>
             <DialogTitle className="tracking-tight text-2xl font-bold text-[#0c2836] text-center">
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
@@ -323,11 +317,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       <Dialog open={isSignupOpen} onOpenChange={setIsSignupOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader className="text-center pb-6">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-[#0c2836] rounded-xl flex items-center justify-center">
-                <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
-              </div>
-            </div>
             <DialogTitle className="tracking-tight text-2xl font-bold text-[#0c2836] text-center">
               {t('إنشاء حساب جديد', 'Create New Account')}
             </DialogTitle>
