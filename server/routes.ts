@@ -5,7 +5,7 @@ import { randomBytes } from "crypto";
 import passport from "./passport";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./emailService";
+import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail, sendLoginConfirmationEmail } from "./emailService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
@@ -201,33 +201,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Check if email is verified
-      if (!user.emailVerified) {
-        // Generate new verification token if needed
-        if (!user.verificationToken) {
-          const verificationToken = randomBytes(32).toString('hex');
-          await storage.updateUserVerification(user.email, verificationToken);
-          
-          // Send verification email
-          const emailResult = await sendVerificationEmail({
-            email: user.email,
-            fullName: user.fullName,
-            verificationToken
-          });
-          
-          if (!emailResult.success) {
-            console.error('Failed to send verification email:', emailResult.error);
-          }
-        }
-        
-        return res.status(403).json({ 
-          message: "Please verify your email address. A verification email has been sent.",
-          emailVerificationRequired: true
-        });
-      }
-
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
+      
+      // Send login confirmation email (non-blocking)
+      sendLoginConfirmationEmail({
+        email: user.email,
+        fullName: user.fullName,
+        loginTime: new Date().toISOString()
+      }).catch(error => {
+        console.error('Failed to send login confirmation email:', error);
+      });
       
       res.json({ 
         message: "Login successful",

@@ -23,6 +23,12 @@ interface VerificationEmailData {
   verificationToken: string;
 }
 
+interface LoginConfirmationEmailData {
+  email: string;
+  fullName: string;
+  loginTime: string;
+}
+
 export async function sendWelcomeEmail({ email, fullName, waitlistPosition }: EmailData) {
   const subject = `Welcome to ContraMind - You're #${waitlistPosition} on the waitlist`;
   const htmlContent = getEnglishEmailTemplate(fullName, waitlistPosition);
@@ -216,6 +222,28 @@ export async function sendVerificationEmail({ email, fullName, verificationToken
     return { success: true, data };
   } catch (error) {
     console.error('Failed to send verification email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendLoginConfirmationEmail({ email, fullName, loginTime }: LoginConfirmationEmailData) {
+  const subject = 'Login Confirmation - ContraMind';
+  const htmlContent = getLoginConfirmationEmailTemplate(fullName, loginTime);
+  const textContent = getLoginConfirmationTextTemplate(fullName, loginTime);
+
+  try {
+    const data = await resend.emails.send({
+      from: 'ContraMind Team <noreply@contramind.ai>',
+      to: [email],
+      subject,
+      html: htmlContent,
+      text: textContent,
+    });
+
+    console.log('Login confirmation email sent successfully:', data);
+    return { success: true, data };
+  } catch (error) {
+    console.error('Failed to send login confirmation email:', error);
     return { success: false, error };
   }
 }
@@ -417,5 +445,121 @@ Security Note: This verification link will expire in 24 hours for your security.
 ---
 ContraMind - AI-Powered Legal Technology Platform
 This email was sent because you created an account at contramind.ai
+  `;
+}
+
+function getLoginConfirmationEmailTemplate(fullName: string, loginTime: string): string {
+  const formattedTime = new Date(loginTime).toLocaleString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short'
+  });
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Confirmation - ContraMind</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f8fafc;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); padding: 40px 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                ContraMind
+            </h1>
+            <p style="color: #B7DEE8; margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
+                Login Confirmation
+            </p>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 40px 30px;">
+            <h2 style="color: #0C2836; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">
+                Account Login Detected
+            </h2>
+            
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Hello ${fullName},
+            </p>
+            
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                We noticed a new login to your ContraMind account. If this was you, no action is needed.
+            </p>
+
+            <!-- Login Details -->
+            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0;">
+                <h3 style="color: #0C2836; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                    Login Details:
+                </h3>
+                <p style="color: #374151; font-size: 14px; margin: 0 0 10px 0;">
+                    <strong>Time:</strong> ${formattedTime}
+                </p>
+                <p style="color: #374151; font-size: 14px; margin: 0;">
+                    <strong>Platform:</strong> ContraMind Web Application
+                </p>
+            </div>
+
+            <p style="color: #dc2626; font-size: 16px; line-height: 1.6; margin: 30px 0; font-weight: 600;">
+                If you didn't login to your account, please contact us immediately at support@contramind.ai
+            </p>
+
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0 0 0;">
+                <strong>Security Tip:</strong> Keep your account secure by using a strong, unique password and enabling two-factor authentication when available.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+            <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
+                ContraMind - AI-Powered Legal Technology Platform
+            </p>
+            <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                This is an automated security notification. Please do not reply to this email.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+}
+
+function getLoginConfirmationTextTemplate(fullName: string, loginTime: string): string {
+  const formattedTime = new Date(loginTime).toLocaleString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short'
+  });
+
+  return `
+Login Confirmation - ContraMind
+
+Hello ${fullName},
+
+We noticed a new login to your ContraMind account. If this was you, no action is needed.
+
+Login Details:
+- Time: ${formattedTime}
+- Platform: ContraMind Web Application
+
+⚠️ If you didn't login to your account, please contact us immediately at support@contramind.ai
+
+Security Tip: Keep your account secure by using a strong, unique password and enabling two-factor authentication when available.
+
+---
+ContraMind - AI-Powered Legal Technology Platform
+This is an automated security notification. Please do not reply to this email.
   `;
 }
