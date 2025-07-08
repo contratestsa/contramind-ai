@@ -293,10 +293,7 @@ export default function Dashboard() {
           <div className="mt-10">
             <button
               className="relative w-[280px] h-[160px] bg-white border border-[#E6E6E6] rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center gap-2"
-              onClick={() => toast({ 
-                title: t('قريباً', 'Coming Soon'), 
-                description: t('ميزة تحميل ومراجعة العقود قريباً', 'Upload & Review feature coming soon') 
-              })}
+              onClick={() => setLocation('/upload-review')}
             >
               {/* Token Badge */}
               <div className="absolute top-4 right-4 bg-[#FFF3CD] flex items-center gap-1 px-2 py-1 rounded-xl">
