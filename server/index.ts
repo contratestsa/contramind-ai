@@ -5,7 +5,6 @@ import passport from "./passport";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { pool } from "./db";
-import { googleSheetsService } from "./googleSheetsService";
 
 const app = express();
 app.use(express.json());
@@ -137,12 +136,5 @@ app.use((req, res, next) => {
   
   server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`, "express");
-    
-    // Try to initialize Google Sheets if credentials are available
-    googleSheetsService.initialize().then(() => {
-      log("Google Sheets service initialized from environment", "express");
-    }).catch(err => {
-      log("Google Sheets service not initialized (credentials not found or invalid)", "express");
-    });
   });
 })();

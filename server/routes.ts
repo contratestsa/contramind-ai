@@ -7,69 +7,8 @@ import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail, sendLoginConfirmationEmail } from "./emailService";
 import { getPreferredDomain } from "./authRedirect";
-import { googleSheetsService } from "./googleSheetsService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Initialize Google Sheets service if credentials are available
-  app.post("/api/google-sheets/init", async (req, res) => {
-    try {
-      const { credentials } = req.body;
-      await googleSheetsService.initialize(credentials);
-      res.json({ 
-        success: true, 
-        message: "Google Sheets service initialized successfully" 
-      });
-    } catch (error: any) {
-      console.error("Google Sheets init error:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: error.message || "Failed to initialize Google Sheets" 
-      });
-    }
-  });
-
-  // Check Google Sheets connection status
-  app.get("/api/google-sheets/status", async (req, res) => {
-    res.json({ 
-      connected: googleSheetsService.isInitialized(),
-      message: googleSheetsService.isInitialized() ? 
-        "Connected to Google Database" : 
-        "Google Sheets not connected"
-    });
-  });
-
-  // Get user token balance
-  app.get("/api/tokens/balance", async (req, res) => {
-    if (!req.user) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    try {
-      const user = req.user as any;
-      const userId = user.providerId ? 
-        `${user.provider}_${user.providerId}` : 
-        `email_${user.id}`;
-      
-      const balance = await googleSheetsService.getTokenBalance(userId);
-      
-      if (!balance) {
-        return res.json({ 
-          total_tokens: 1000,
-          used_tokens: 0,
-          remaining_tokens: 1000
-        });
-      }
-
-      res.json({
-        total_tokens: parseInt(balance.total_tokens),
-        used_tokens: parseInt(balance.used_tokens),
-        remaining_tokens: parseInt(balance.remaining_tokens)
-      });
-    } catch (error) {
-      console.error("Error getting token balance:", error);
-      res.status(500).json({ message: "Failed to get token balance" });
-    }
-  });
   // Waitlist endpoints
   app.post("/api/waitlist", async (req, res) => {
     try {
