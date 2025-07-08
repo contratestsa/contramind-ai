@@ -60,6 +60,11 @@ export default function Dashboard() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [showChecklist, setShowChecklist] = useState(false);
   
+  // Redirect to coming soon page
+  useEffect(() => {
+    navigate('/coming-soon');
+  }, [navigate]);
+  
   // Use demo user if no authenticated user
   const displayUser = user || {
     id: 1,
