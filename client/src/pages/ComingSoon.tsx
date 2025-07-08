@@ -1,16 +1,38 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useLocation } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
-import CountdownTimer from '@/components/CountdownTimer';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { Lightbulb, Lock, Globe } from 'lucide-react';
 
 export default function ComingSoon() {
   const { t, language } = useLanguage();
   const [location] = useLocation();
   const { toast } = useToast();
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  // Calculate time until launch (July 18, 2025)
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const targetDate = new Date('2025-07-18T00:00:00').getTime();
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        setTimeLeft({ days, hours, minutes, seconds });
+      }
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Check for successful authentication
   useEffect(() => {
@@ -24,115 +46,102 @@ export default function ComingSoon() {
     }
   }, [location, t, toast]);
 
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
+
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 ${language === 'ar' ? 'font-arabic' : 'font-inter'}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
-      <Header />
+    <div className="min-h-screen bg-[#1e2936] flex flex-col items-center justify-center px-4 relative overflow-hidden">
+      {/* Gradient background effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1e2936] via-[#243342] to-[#1e2936]" />
       
-      <main className="flex-1 flex items-center justify-center px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Welcome Message */}
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 ${
-              language === 'ar' ? 'font-arabic-heading' : 'font-space'
-            }`}>
-              <span className="bg-gradient-to-r from-[#0C2836] to-[#1e3a47] bg-clip-text text-transparent">
-                {t('نحن نحضر شيئاً مذهلاً لك', "We're preparing something amazing for you")}
-              </span>
-            </h1>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="max-w-4xl mx-auto text-center relative z-10"
+      >
+        {/* ContraMind.ai Logo/Text */}
+        <h2 className="text-3xl font-bold text-white mb-8">ContraMind.ai</h2>
+
+        {/* Coming Soon Heading */}
+        <h1 className="text-6xl lg:text-7xl font-bold text-white mb-4">
+          {t('قريباً', 'Coming Soon')}
+        </h1>
+
+        {/* Subheading */}
+        <p className="text-xl text-gray-300 mb-12">
+          {t('نحن نحضر شيئاً مذهلاً لك', "We're preparing something amazing for you")}
+        </p>
+
+        {/* Countdown Timer Box */}
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-white rounded-3xl p-8 mb-12 shadow-2xl max-w-2xl mx-auto"
+        >
+          <p className="text-gray-500 text-sm mb-4">{t('الوقت حتى الإطلاق', 'Time until launch')}</p>
+          <div className="text-5xl lg:text-6xl font-bold text-[#1e2936] tracking-wider">
+            {formatNumber(timeLeft.days)}:{formatNumber(timeLeft.hours)}:{formatNumber(timeLeft.minutes)}:{formatNumber(timeLeft.seconds)}
+          </div>
+          <div className="flex justify-center gap-8 mt-3 text-gray-500 text-sm">
+            <span>{t('أيام', 'Days')}</span>
+            <span>:</span>
+            <span>{t('ساعات', 'Hours')}</span>
+            <span>:</span>
+            <span>{t('دقائق', 'Minutes')}</span>
+            <span>:</span>
+            <span>{t('ثواني', 'Seconds')}</span>
+          </div>
+        </motion.div>
+
+        {/* Features Box */}
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="bg-[#243342] rounded-3xl p-8 shadow-xl max-w-3xl mx-auto border border-gray-700"
+        >
+          <h3 className="text-2xl font-bold text-white mb-4">
+            {t('مرحباً بك في ContraMind.ai', 'Welcome to ContraMind.ai')}
+          </h3>
+          <p className="text-gray-400 mb-8">
+            {t('أول منصة لإدارة العقود القانونية مدعومة بالذكاء الاصطناعي في منطقة الشرق الأوسط وشمال أفريقيا', 'The first AI-powered legal contract management platform for the MENA region')}
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3">
+                <Lightbulb className="w-8 h-8 text-gray-300" />
+              </div>
+              <p className="text-gray-300 text-sm">{t('تحليل ذكي', 'Smart Analysis')}</p>
+            </div>
             
-            <p className={`text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed ${
-              language === 'ar' ? 'font-arabic-body' : 'font-inter'
-            }`}>
-              {t(
-                'منصة ContraMind.ai قادمة قريباً بتقنيات الذكاء الاصطناعي المتطورة لإدارة العقود القانونية',
-                'ContraMind.ai platform is coming soon with advanced AI technologies for legal contract management'
-              )}
-            </p>
-          </motion.div>
-
-          {/* Countdown Timer */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-12"
-          >
-            <CountdownTimer size="large" className="max-w-md mx-auto" />
-          </motion.div>
-
-          {/* Features Preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto"
-          >
-            <div className="bg-white rounded-2xl p-6 shadow-custom">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#0C2836] to-[#1e3a47] rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3">
+                <Lock className="w-8 h-8 text-gray-300" />
               </div>
-              <h3 className={`font-bold text-lg mb-2 ${language === 'ar' ? 'font-arabic-heading' : 'font-space'}`}>
-                {t('تحليل ذكي للعقود', 'Smart Contract Analysis')}
-              </h3>
-              <p className={`text-gray-600 text-sm ${language === 'ar' ? 'font-arabic-body' : 'font-inter'}`}>
-                {t('تحليل متقدم للعقود باستخدام الذكاء الاصطناعي', 'Advanced AI-powered contract analysis')}
-              </p>
+              <p className="text-gray-300 text-sm">{t('أمان متقدم', 'Advanced Security')}</p>
             </div>
-
-            <div className="bg-white rounded-2xl p-6 shadow-custom">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#B7DEE8] to-[#87ceeb] rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <svg className="w-6 h-6 text-[#0C2836]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3">
+                <Globe className="w-8 h-8 text-gray-300" />
               </div>
-              <h3 className={`font-bold text-lg mb-2 ${language === 'ar' ? 'font-arabic-heading' : 'font-space'}`}>
-                {t('دعم ثنائي اللغة', 'Bilingual Support')}
-              </h3>
-              <p className={`text-gray-600 text-sm ${language === 'ar' ? 'font-arabic-body' : 'font-inter'}`}>
-                {t('دعم كامل للغتين العربية والإنجليزية', 'Full Arabic and English language support')}
-              </p>
+              <p className="text-gray-300 text-sm">{t('دعم ثنائي اللغة', 'Bilingual Support')}</p>
             </div>
+          </div>
+        </motion.div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-custom">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#0C2836] to-[#1e3a47] rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h3 className={`font-bold text-lg mb-2 ${language === 'ar' ? 'font-arabic-heading' : 'font-space'}`}>
-                {t('أمان متقدم', 'Advanced Security')}
-              </h3>
-              <p className={`text-gray-600 text-sm ${language === 'ar' ? 'font-arabic-body' : 'font-inter'}`}>
-                {t('حماية متطورة للبيانات والعقود', 'Advanced data and contract protection')}
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Thank You Message */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-12"
-          >
-            <p className={`text-gray-500 ${language === 'ar' ? 'font-arabic-body' : 'font-inter'}`}>
-              {t(
-                'شكراً لك على انضمامك إلينا. سنتواصل معك قريباً عند إطلاق المنصة',
-                'Thank you for joining us. We\'ll contact you soon when the platform launches'
-              )}
-            </p>
-          </motion.div>
-        </div>
-      </main>
-
-      <Footer />
+        {/* Thank You Message */}
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="text-gray-400 mt-12"
+        >
+          {t('شكراً لانضمامك إلينا. ترقب الإطلاق!', 'Thank you for joining us. Stay tuned for the launch!')}
+        </motion.p>
+      </motion.div>
     </div>
   );
 }
