@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -14,6 +15,7 @@ interface AuthModalsProps {
 }
 
 export default function AuthModals({ triggerLoginButton, triggerSignupButton }: AuthModalsProps) {
+  const [, setLocation] = useLocation();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +63,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
       // Redirect to dashboard page
-      window.location.href = '/dashboard';
+      setLocation('/dashboard');
     },
     onError: (error: Error) => {
       toast({
