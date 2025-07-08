@@ -60,6 +60,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
+      // Redirect to coming soon page
+      window.location.href = '/coming-soon';
     },
     onError: (error: Error) => {
       toast({
