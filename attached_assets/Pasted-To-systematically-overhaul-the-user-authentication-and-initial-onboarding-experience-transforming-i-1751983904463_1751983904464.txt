@@ -1,0 +1,28 @@
+To systematically overhaul the user authentication and initial onboarding experience, transforming it from a functional but disjointed process into a seamless, professional, and trustworthy journey that builds customer confidence and accelerates user activation.
+
+
+Phase 1: Critical Fixes & Professional Polish
+
+These tasks address urgent issues that undermine the platform's credibility and security.
+1. Unify All Email Communications Under the Official Domain
+* Current Problem: All automated emails (verification, password resets, etc.) send links with a replit.dev domain. This looks like a development environment, eroding the trust of our B2B clientele.
+* Required Solution: All user-facing links in all emails must originate from the contramind.ai domain.
+* Implementation Steps:
+    1. DNS Configuration: Configure the contramind.ai domain (e.g., creating a subdomain like app.contramind.ai or similar) to point correctly to the Replit application.
+    2. Environment Update: Update all environment variables and application code to use https://contramind.ai (or the chosen subdomain) as the base URL for generating all links.
+    3. Template Audit: Systematically review and update every email template (verification, password reset, invite user, etc.) to use the new production URL.
+    4. SSL: Ensure SSL is properly configured for the custom domain to maintain security.
+2. Secure and Rename the User Dashboard
+* Current Problem: The primary post-login destination is /coming-soon, a non-descriptive URL that is also publicly accessible, posing a significant security risk.
+* Required Solution: The dashboard must be renamed and be accessible only to authenticated users.
+* Implementation Steps:
+    1. Rename Route: Change the page route from /coming-soon to /user-dashboard while preserving its exact content and design.
+    2. Implement Auth Middleware: Protect the /user-dashboard route and any other sensitive routes. This middleware must check for a valid, non-expired session token (e.g., JWT) on every request.
+    3. Redirect Unauthorized Users: If a user without a valid session attempts to access the dashboard, they must be immediately redirected to the /login page.
+3. Standardize Email Verification for All Sign-Up Methods
+* Current Problem: Users signing up with social providers (Google/Microsoft) bypass the email verification step, creating an inconsistent and incomplete registration process.
+* Required Solution: Every user, regardless of sign-up method, must have a verified email address.
+* Implementation Steps:
+    1. Modify Auth Flow: Integrate the email verification step into the registration flow for Google and Microsoft OAuth.
+    2. User State: Upon first social login, the user's account should be marked as "pending verification." They should be prompted to check their email to complete the process.
+    3. Restrict Access (Optional but Recommended): Consider limiting access to certain features until the user's email is verified to encourage completion.
