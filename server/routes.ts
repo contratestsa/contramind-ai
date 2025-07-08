@@ -10,6 +10,17 @@ import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./ema
 import { getPreferredDomain } from "./authRedirect";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Redirect any dashboard routes to coming soon
+  app.get('/dashboard', (req, res) => {
+    res.redirect('/coming-soon');
+  });
+  app.get('/user-dashboard', (req, res) => {
+    res.redirect('/coming-soon');
+  });
+  app.get('/api/dashboard/*', (req, res) => {
+    res.redirect('/coming-soon');
+  });
+  
   // Middleware to ensure user is authenticated
   const ensureAuthenticated = (req: any, res: any, next: any) => {
     if (req.isAuthenticated && req.isAuthenticated()) {
