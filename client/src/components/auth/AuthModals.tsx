@@ -46,33 +46,21 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(data)
       });
       if (!response.ok) {
         const error = await response.json();
-        if (error.emailVerificationRequired) {
-          throw new Error(t('يرجى التحقق من بريدك الإلكتروني. تم إرسال رسالة التحقق.', 'Please verify your email address. A verification email has been sent.'));
-        }
         throw new Error(error.message || 'Login failed');
       }
       return response.json();
     },
-    onSuccess: (data) => {
-      // Store user in localStorage as a temporary fix for cookie issues
-      if (data.user) {
-        localStorage.setItem('contramind_auth', JSON.stringify(data.user));
-      }
+    onSuccess: () => {
       toast({
         title: t('تم تسجيل الدخول بنجاح', 'Login Successful'),
         description: t('مرحباً بك في ContraMind', 'Welcome to ContraMind')
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
-      // Force reload to coming soon page with auth
-      setTimeout(() => {
-        window.location.href = '/coming-soon';
-      }, 100);
     },
     onError: (error: Error) => {
       toast({
@@ -89,7 +77,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(data)
       });
       if (!response.ok) {
@@ -146,17 +133,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Trim values to remove any accidental spaces
-    const trimmedData = {
-      ...signupData,
-      fullName: signupData.fullName.trim(),
-      email: signupData.email.trim(),
-      password: signupData.password.trim(),
-      confirmPassword: signupData.confirmPassword.trim()
-    };
-    
     // Validate required fields
-    if (!trimmedData.fullName || !trimmedData.email || !trimmedData.password || !trimmedData.confirmPassword) {
+    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.confirmPassword) {
       toast({
         title: t('خطأ في التحقق', 'Validation Error'),
         description: t('يرجى ملء جميع الحقول المطلوبة', 'Please fill in all required fields'),
@@ -165,14 +143,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       return;
     }
     
-    // Debug log to see what's being compared
-    console.log('Password comparison:', {
-      password: trimmedData.password,
-      confirmPassword: trimmedData.confirmPassword,
-      match: trimmedData.password === trimmedData.confirmPassword
-    });
-    
-    if (trimmedData.password !== trimmedData.confirmPassword) {
+    if (signupData.password !== signupData.confirmPassword) {
       toast({
         title: t('خطأ في كلمة المرور', 'Password Error'),
         description: t('كلمتا المرور غير متطابقتين', 'Passwords do not match'),
@@ -191,10 +162,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
     }
 
     signupMutation.mutate({
-      fullName: trimmedData.fullName,
-      email: trimmedData.email,
-      password: trimmedData.password,
-      username: trimmedData.email // Use email as username
+      fullName: signupData.fullName,
+      email: signupData.email,
+      password: signupData.password,
+      username: signupData.email // Use email as username
     });
   };
 
@@ -229,6 +200,11 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl">
           <DialogHeader className="text-center pb-6">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-[#0c2836] rounded-xl flex items-center justify-center">
+                <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
+              </div>
+            </div>
             <DialogTitle className="tracking-tight text-2xl font-bold text-[#0c2836] text-center">
               {t('تسجيل الدخول', 'Sign In')}
             </DialogTitle>
@@ -347,6 +323,11 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       <Dialog open={isSignupOpen} onOpenChange={setIsSignupOpen}>
         <DialogContent className="max-w-md mx-auto bg-white rounded-2xl border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader className="text-center pb-6">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-[#0c2836] rounded-xl flex items-center justify-center">
+                <img src={logoImage} alt="ContraMind" className="w-12 h-12 object-contain" />
+              </div>
+            </div>
             <DialogTitle className="tracking-tight text-2xl font-bold text-[#0c2836] text-center">
               {t('إنشاء حساب جديد', 'Create New Account')}
             </DialogTitle>

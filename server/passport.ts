@@ -3,36 +3,28 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as MicrosoftStrategy } from 'passport-microsoft';
 import { storage } from './storage';
 import { User } from '../shared/schema';
-import crypto from 'crypto';
-import { sendVerificationEmail } from './emailService';
-
 
 // Serialize user for session storage
 passport.serializeUser((user: any, done) => {
-  console.log('Serializing user:', user.id, user.email);
   done(null, user.id);
 });
 
 // Deserialize user from session
 passport.deserializeUser(async (id: number, done) => {
   try {
-    console.log('Deserializing user ID:', id);
     const user = await storage.getUser(id);
-    console.log('Found user:', user?.email);
     done(null, user);
   } catch (error) {
-    console.error('Deserialize error:', error);
     done(error, null);
   }
 });
 
 // Google OAuth Strategy
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  // Use production domain for OAuth
-  const baseUrl = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
-    
-  console.log('OAuth Base URL:', baseUrl);
-  console.log('Google Callback URL:', `${baseUrl}/api/auth/google/callback`);
+  // Get the correct base URL for Replit
+  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
+    : 'http://localhost:5000';
     
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -59,29 +51,18 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         return done(null, user);
       }
 
-      // Generate verification token for new OAuth user
-      const verificationToken = crypto.randomBytes(32).toString('hex');
-      
-      // Create new user without auto-verifying email
+      // Create new user (OAuth providers already verify emails)
       const newUser = await storage.createUser({
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Google User',
-        password: 'oauth_google_' + profile.id, // OAuth users get a special password
-        emailVerified: false
+        password: 'oauth_google_' + profile.id // OAuth users get a special password
       });
       
-      // Update user with verification token
-      await storage.updateUserVerification(email, verificationToken);
-      
-      // Send verification email
-      await sendVerificationEmail({
-        email: email,
-        fullName: profile.displayName || 'Google User',
-        verificationToken
-      });
+      // Mark email as verified for OAuth users (since OAuth providers verify emails)
+      await storage.verifyUserEmailByEmail(email);
 
-      console.log('New Google user created, verification email sent:', newUser.email);
+      console.log('New Google user created:', newUser.email);
       return done(null, newUser);
     } catch (error) {
       console.error('Google OAuth error:', error);
@@ -92,8 +73,10 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 // Microsoft OAuth Strategy
 if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
-  // Use production domain for OAuth
-  const baseUrl = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
+  // Get the correct base URL for Replit (reuse the same baseUrl)
+  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
+    : 'http://localhost:5000';
     
   passport.use(new MicrosoftStrategy({
     clientID: process.env.MICROSOFT_CLIENT_ID,
@@ -121,29 +104,18 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
         return done(null, user);
       }
 
-      // Generate verification token for new OAuth user
-      const verificationToken = crypto.randomBytes(32).toString('hex');
-      
-      // Create new user without auto-verifying email
+      // Create new user (OAuth providers already verify emails)
       const newUser = await storage.createUser({
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Microsoft User',
-        password: 'oauth_microsoft_' + profile.id, // OAuth users get a special password
-        emailVerified: false
+        password: 'oauth_microsoft_' + profile.id // OAuth users get a special password
       });
       
-      // Update user with verification token
-      await storage.updateUserVerification(email, verificationToken);
-      
-      // Send verification email
-      await sendVerificationEmail({
-        email: email,
-        fullName: profile.displayName || 'Microsoft User',
-        verificationToken
-      });
+      // Mark email as verified for OAuth users (since OAuth providers verify emails)
+      await storage.verifyUserEmailByEmail(email);
 
-      console.log('New Microsoft user created, verification email sent:', newUser.email);
+      console.log('New Microsoft user created:', newUser.email);
       return done(null, newUser);
     } catch (error) {
       console.error('Microsoft OAuth error:', error);

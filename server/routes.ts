@@ -1,41 +1,13 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-import crypto from "crypto";
-
+import { randomBytes } from "crypto";
 import passport from "./passport";
 import { storage } from "./storage";
-import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema, type User } from "@shared/schema";
+import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./emailService";
-import { getPreferredDomain } from "./authRedirect";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Redirect any dashboard routes to coming soon
-  app.get('/dashboard', (req, res) => {
-    res.redirect('/coming-soon');
-  });
-  app.get('/user-dashboard', (req, res) => {
-    res.redirect('/coming-soon');
-  });
-  app.get('/api/dashboard/*', (req, res) => {
-    res.redirect('/coming-soon');
-  });
-  
-  // Redirect login/signup pages to homepage (use modals instead)
-  app.get('/login', (req, res) => {
-    res.redirect('/');
-  });
-  app.get('/signup', (req, res) => {
-    res.redirect('/');
-  });
-  
-  // Middleware to ensure user is authenticated
-  const ensureAuthenticated = (req: any, res: any, next: any) => {
-    if (req.isAuthenticated && req.isAuthenticated()) {
-      return next();
-    }
-    res.status(401).json({ message: "Not authenticated" });
-  };
   // Waitlist endpoints
   app.post("/api/waitlist", async (req, res) => {
     try {
@@ -170,30 +142,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Generate verification token
-      const verificationToken = crypto.randomBytes(32).toString('hex');
+      // Create user (in production, hash the password)
+      const user = await storage.createUser(validatedData);
       
-      // Create user with verification token (in production, hash the password)
-      const user = await storage.createUser({
-        ...validatedData,
-        emailVerified: false
-      });
-      
-      // Update user with verification token
+      // Generate verification token and send verification email
+      const verificationToken = randomBytes(32).toString('hex');
       await storage.updateUserVerification(user.email, verificationToken);
       
       // Send verification email
-      await sendVerificationEmail({
+      const emailResult = await sendVerificationEmail({
         email: user.email,
         fullName: user.fullName,
         verificationToken
       });
       
+      if (!emailResult.success) {
+        console.error('Failed to send verification email:', emailResult.error);
+      }
+      
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
       
       res.status(201).json({ 
-        message: "Account created successfully. Please check your email to verify your account.",
+        message: "Account created successfully",
         user: userWithoutPassword 
       });
     } catch (error) {
@@ -232,41 +203,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if email is verified
       if (!user.emailVerified) {
+        // Generate new verification token if needed
+        if (!user.verificationToken) {
+          const verificationToken = randomBytes(32).toString('hex');
+          await storage.updateUserVerification(user.email, verificationToken);
+          
+          // Send verification email
+          const emailResult = await sendVerificationEmail({
+            email: user.email,
+            fullName: user.fullName,
+            verificationToken
+          });
+          
+          if (!emailResult.success) {
+            console.error('Failed to send verification email:', emailResult.error);
+          }
+        }
+        
         return res.status(403).json({ 
-          message: "Please verify your email address before logging in. Check your inbox for the verification email." 
+          message: "Please verify your email address. A verification email has been sent.",
+          emailVerificationRequired: true
         });
       }
 
-      // Login user with passport (creates session)
-      req.login(user, (err) => {
-        if (err) {
-          console.error('Session login error:', err);
-          return res.status(500).json({ message: "Login failed" });
-        }
-        
-        // Log session details for debugging
-        console.log('Login successful for user:', user.email);
-        console.log('Session ID:', req.sessionID);
-        console.log('Session user:', req.user);
-        
-        // Save session to ensure cookie is set
-        req.session.save((saveErr) => {
-          if (saveErr) {
-            console.error('Session save error:', saveErr);
-            return res.status(500).json({ message: "Session save failed" });
-          }
-          
-          console.log('Session saved successfully, session ID:', req.sessionID);
-          console.log('Session cookie:', req.session.cookie);
-          
-          // Remove password from response
-          const { password, ...userWithoutPassword } = user;
-          
-          res.json({ 
-            message: "Login successful",
-            user: userWithoutPassword 
-          });
-        });
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      
+      res.json({ 
+        message: "Login successful",
+        user: userWithoutPassword 
       });
     } catch (error) {
       console.error("Login error:", error);
@@ -310,9 +275,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Redirect to success page on the production domain
-      const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
-      res.redirect(`${productionDomain}/coming-soon?verified=true`);
+      // Redirect to success page or coming soon page
+      res.redirect("/coming-soon?verified=true");
     } catch (error) {
       console.error("Email verification error:", error);
       res.status(500).json({ 
@@ -330,28 +294,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     passport.authenticate("google", { 
       failureRedirect: "/?error=google_auth_failed" 
     }),
-    async (req, res) => {
+    (req, res) => {
       // Successful authentication
-      const user = req.user as User;
-      console.log('Google OAuth successful for user:', user.email);
-      
-      // Check if email is verified
-      if (!user.emailVerified) {
-        // Redirect to a page informing them to verify email
-        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
-        return res.redirect(`${productionDomain}/?message=verify-email`);
-      }
-      
-      // Ensure session is saved before redirecting
-      req.session.save((err) => {
-        if (err) {
-          console.error('Failed to save session after Google OAuth:', err);
-        }
-        // Always redirect to the production domain after OAuth
-        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
-        console.log('Google OAuth redirecting to:', `${productionDomain}/coming-soon`);
-        res.redirect(`${productionDomain}/coming-soon`);
-      });
+      console.log('Google OAuth successful for user:', req.user);
+      res.redirect("/coming-soon");
     }
   );
 
@@ -364,28 +310,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     passport.authenticate("microsoft", {
       failureRedirect: "/?error=microsoft_auth_failed"
     }),
-    async (req, res) => {
+    (req, res) => {
       // Successful authentication
-      const user = req.user as User;
-      console.log('Microsoft OAuth successful for user:', user.email);
-      
-      // Check if email is verified
-      if (!user.emailVerified) {
-        // Redirect to a page informing them to verify email
-        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
-        return res.redirect(`${productionDomain}/?message=verify-email`);
-      }
-      
-      // Ensure session is saved before redirecting
-      req.session.save((err) => {
-        if (err) {
-          console.error('Failed to save session after Microsoft OAuth:', err);
-        }
-        // Always redirect to the production domain after OAuth
-        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
-        console.log('Microsoft OAuth redirecting to:', `${productionDomain}/coming-soon`);
-        res.redirect(`${productionDomain}/coming-soon`);
-      });
+      console.log('Microsoft OAuth successful for user:', req.user);
+      res.redirect("/coming-soon");
     }
   );
 
@@ -400,77 +328,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // Complete onboarding endpoint
-  app.post("/api/auth/complete-onboarding", ensureAuthenticated, async (req, res) => {
-    try {
-      const user = req.user as User;
-      
-      if (!user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-      
-      const updatedUser = await storage.updateUserOnboardingStatus(user.id, true);
-      
-      if (!updatedUser) {
-        return res.status(500).json({ message: "Failed to update onboarding status" });
-      }
-      
-      res.json({ 
-        message: "Onboarding completed successfully",
-        user: updatedUser 
-      });
-    } catch (error) {
-      console.error("Complete onboarding error:", error);
-      res.status(500).json({ message: "Failed to complete onboarding" });
-    }
-  });
-
-  // Feedback endpoint
-  app.post("/api/feedback", ensureAuthenticated, async (req, res) => {
-    try {
-      const user = req.user as User;
-      const { feedback } = req.body;
-      
-      if (!feedback || typeof feedback !== 'string') {
-        return res.status(400).json({ message: "Feedback is required" });
-      }
-      
-      // In a real app, you would send this to a support system, email, or database
-      console.log(`Feedback from user ${user.email}: ${feedback}`);
-      
-      // For now, we'll just send it as a contact message
-      await storage.createContactMessage({
-        name: user.fullName,
-        email: user.email,
-        subject: "User Feedback",
-        message: feedback
-      });
-      
-      // Also send email to the team
-      await sendContactEmail({
-        name: user.fullName,
-        email: user.email,
-        subject: "User Feedback from Dashboard",
-        message: feedback
-      });
-      
-      res.json({ message: "Feedback submitted successfully" });
-    } catch (error) {
-      console.error("Feedback submission error:", error);
-      res.status(500).json({ message: "Failed to submit feedback" });
-    }
-  });
-
   // Get current user route
   app.get("/api/auth/me", (req, res) => {
-    // Debug logging for production
-    console.log("Auth check - Headers:", req.headers);
-    console.log("Auth check - Cookie header:", req.headers.cookie);
-    console.log("Auth check - Session ID:", req.sessionID);
-    console.log("Auth check - Session data:", req.session);
-    console.log("Auth check - User from req.user:", req.user);
-    console.log("Auth check - Passport session:", (req.session as any).passport);
-    
     if (req.user) {
       const { password, ...userWithoutPassword } = req.user as any;
       res.json({ user: userWithoutPassword });

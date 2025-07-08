@@ -88,7 +88,6 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
         method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -96,18 +95,13 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
       }
       return response.json();
     },
-    onSuccess: (data) => {
-      // Store user data in localStorage as fallback
-      localStorage.setItem('contramind_auth', JSON.stringify(data.user));
-      
+    onSuccess: () => {
       toast({
         title: t.loginSuccess,
         description: t.welcome,
         variant: "default",
       });
-      
-      // Force a page reload to ensure auth state is updated
-      window.location.href = "/coming-soon";
+      setLocation("/dashboard");
     },
     onError: (error: any) => {
       toast({
