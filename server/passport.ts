@@ -22,8 +22,10 @@ passport.deserializeUser(async (id: number, done) => {
 
 // Google OAuth Strategy
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  // Get the correct base URL for Replit
-  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+  // Get the correct base URL for Replit deployment
+  const baseUrl = process.env.REPLIT_DEPLOYED_DOMAIN 
+    ? `https://${process.env.REPLIT_DEPLOYED_DOMAIN}` 
+    : process.env.REPLIT_DEV_DOMAIN 
     ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
     : 'http://localhost:5000';
     
@@ -74,8 +76,10 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 // Microsoft OAuth Strategy
 if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
-  // Get the correct base URL for Replit (reuse the same baseUrl)
-  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+  // Get the correct base URL for Replit deployment
+  const baseUrl = process.env.REPLIT_DEPLOYED_DOMAIN 
+    ? `https://${process.env.REPLIT_DEPLOYED_DOMAIN}` 
+    : process.env.REPLIT_DEV_DOMAIN 
     ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
     : 'http://localhost:5000';
     

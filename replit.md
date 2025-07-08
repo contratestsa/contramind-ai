@@ -97,3 +97,13 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 - Contact form with automated responses functional
 - Countdown timer displaying correct time until launch
 - All pages responsive and bilingual
+
+## Deployment Configuration
+### Authentication Issues After Deployment
+1. **Session Configuration**: Updated to automatically use secure cookies in production
+   - `secure: process.env.NODE_ENV === 'production'` ensures HTTPS-only cookies
+2. **OAuth Callback URLs**: Updated to check for `REPLIT_DEPLOYED_DOMAIN` first
+   - Handles both development and production URLs correctly
+3. **Required Environment Variables**:
+   - `SESSION_SECRET`: Must be set for secure session management
+   - OAuth redirect URIs must be updated in Google/Azure consoles to match deployment URL
