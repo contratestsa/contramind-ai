@@ -4,10 +4,20 @@ import CountdownTimer from '@/components/CountdownTimer';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
+import { useEffect } from 'react';
+import { useLocation } from 'wouter';
 
 export default function ComingSoonSimple() {
   const { t, language } = useLanguage();
   const { user, isAuthenticated, logout } = useAuth();
+  const [, navigate] = useLocation();
+  
+  // Redirect to dashboard if user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, user, navigate]);
   
   return (
     <div className={`min-h-screen bg-gradient-to-br from-[#0C2836] to-[#1e3a47] flex items-center justify-center relative ${language === 'ar' ? 'font-arabic' : 'font-inter'}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
