@@ -353,10 +353,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (err) {
           console.error('Failed to save session after Google OAuth:', err);
         }
-        // Redirect to the same domain the user came from
-        const preferredDomain = getPreferredDomain(req);
-        console.log('Google OAuth redirecting to:', `${preferredDomain}/dashboard`);
-        res.redirect(`${preferredDomain}/dashboard`);
+        // Always redirect to the Replit app after OAuth
+        const replitDomain = process.env.REPLIT_DEV_DOMAIN 
+          ? `https://${process.env.REPLIT_DEV_DOMAIN}`
+          : 'https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev';
+        console.log('Google OAuth redirecting to:', `${replitDomain}/dashboard`);
+        res.redirect(`${replitDomain}/dashboard`);
       });
     }
   );
@@ -396,10 +398,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (err) {
           console.error('Failed to save session after Microsoft OAuth:', err);
         }
-        // Redirect to the same domain the user came from
-        const preferredDomain = getPreferredDomain(req);
-        console.log('Microsoft OAuth redirecting to:', `${preferredDomain}/dashboard`);
-        res.redirect(`${preferredDomain}/dashboard`);
+        // Always redirect to the Replit app after OAuth
+        const replitDomain = process.env.REPLIT_DEV_DOMAIN 
+          ? `https://${process.env.REPLIT_DEV_DOMAIN}`
+          : 'https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev';
+        console.log('Microsoft OAuth redirecting to:', `${replitDomain}/dashboard`);
+        res.redirect(`${replitDomain}/dashboard`);
       });
     }
   );
