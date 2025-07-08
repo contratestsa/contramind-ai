@@ -33,9 +33,9 @@ const sessionConfig: session.SessionOptions = {
   saveUninitialized: false,
   name: 'contramind_session', // Custom session name
   cookie: {
-    secure: process.env.REPLIT_DEV_DOMAIN ? true : isProduction, // HTTPS in Replit dev and production
+    secure: true, // Always use secure cookies in HTTPS environment
     httpOnly: true,
-    sameSite: process.env.REPLIT_DEV_DOMAIN ? 'none' : 'lax', // 'none' for cross-origin in Replit
+    sameSite: 'none', // Required for cross-origin cookies with secure=true
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     // Don't set domain - let browser handle it per request
   }
@@ -63,6 +63,11 @@ app.use((req, res, next) => {
     'http://localhost:5173',
     'http://localhost:5000'
   ];
+  
+  // Add current Replit dev domain if present
+  if (process.env.REPLIT_DEV_DOMAIN) {
+    allowedOrigins.push(`https://${process.env.REPLIT_DEV_DOMAIN}`);
+  }
   
   if (origin && allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
