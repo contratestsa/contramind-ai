@@ -6,10 +6,17 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 ## Recent Changes
 - **July 8, 2025**: Replaced Coming Soon page with main dashboard layout
   - **Dashboard Implementation**: Created comprehensive dashboard interface
-    - Left sidebar navigation with ContraMind branding and menu items
-    - Top header with user profile, language toggle, and token counter
-    - Main content area with dynamic section display
+    - Left sidebar navigation (200px width, #F8F9FA background) with ContraMind branding and menu items
+    - Top header (60px height) with user profile, language toggle, and token counter (1,000 tokens)
+    - Main content area with dynamic section display and RTL support
+    - Navigation items: Dashboard, Create, Repository, Alerts, Tasks, Reports, Settings, Deals Stack
+    - All icons sized at 18px with hover effects (#E6E6E6 on hover)
     - OAuth and regular authentication now redirect to /dashboard
+  - **Authentication Cookie Fix**: Implemented localStorage fallback for session persistence
+    - Added localStorage storage of user data after successful login
+    - Modified useAuth hook to check localStorage when cookies fail
+    - Maintains backward compatibility with session-based authentication
+    - Clears localStorage on logout for security
   - **OAuth Redirect Fix**: Fixed OAuth redirect URI mismatch for production deployment
     - Modified passport.ts to use CUSTOM_DOMAIN environment variable
     - Added CUSTOM_DOMAIN=contramind.ai to environment secrets
