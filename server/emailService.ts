@@ -508,7 +508,7 @@ function getLoginConfirmationEmailTemplate(fullName: string, loginTime: string):
             </div>
 
             <p style="color: #dc2626; font-size: 16px; line-height: 1.6; margin: 30px 0; font-weight: 600;">
-                If you didn't login to your account, please contact us immediately at support@contramind.ai
+                If you didn't login to your account, please contact us immediately at ceo@contramind.com
             </p>
 
             <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0 0 0;">
@@ -554,7 +554,7 @@ Login Details:
 - Time: ${formattedTime}
 - Platform: ContraMind Web Application
 
-⚠️ If you didn't login to your account, please contact us immediately at support@contramind.ai
+⚠️ If you didn't login to your account, please contact us immediately at ceo@contramind.com
 
 Security Tip: Keep your account secure by using a strong, unique password and enabling two-factor authentication when available.
 
