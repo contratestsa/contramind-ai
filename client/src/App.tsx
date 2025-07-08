@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
-import Dashboard from "@/pages/Dashboard";
+
 import ComingSoonSimple from "@/pages/ComingSoonSimple";
 import NotFound from "@/pages/not-found";
 import TestAuth from "@/pages/TestAuth";
@@ -39,9 +39,7 @@ function Router() {
       <Route path="/coming-soon">
         {user ? <ComingSoonSimple /> : <Redirect to="/login" />}
       </Route>
-      <Route path="/user-dashboard">
-        {user ? <Dashboard /> : <Redirect to="/login" />}
-      </Route>
+
       <Route path="/test-auth">
         <TestAuth />
       </Route>
