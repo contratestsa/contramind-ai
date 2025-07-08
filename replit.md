@@ -4,7 +4,11 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **July 8, 2025**: Fixed authentication cookie issues for deployment
+- **July 8, 2025**: Fixed OAuth redirect URI mismatch for production deployment
+  - **OAuth Configuration**: Updated to use CUSTOM_DOMAIN environment variable
+    - Modified passport.ts to prioritize custom domain (contramind.ai) over Replit URLs
+    - Added CUSTOM_DOMAIN=contramind.ai to environment secrets
+    - OAuth callbacks now correctly use https://contramind.ai instead of broken Replit URL
   - **Cookie Configuration**: Updated session settings for cross-domain compatibility
     - Changed `sameSite: 'none'` for production to allow cross-site cookies
     - Added custom session name `contramind_session`
