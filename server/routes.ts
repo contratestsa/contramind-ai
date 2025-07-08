@@ -21,6 +21,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.redirect('/coming-soon');
   });
   
+  // Redirect login/signup pages to homepage (use modals instead)
+  app.get('/login', (req, res) => {
+    res.redirect('/');
+  });
+  app.get('/signup', (req, res) => {
+    res.redirect('/');
+  });
+  
   // Middleware to ensure user is authenticated
   const ensureAuthenticated = (req: any, res: any, next: any) => {
     if (req.isAuthenticated && req.isAuthenticated()) {

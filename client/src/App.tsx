@@ -6,9 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SimpleLanguageProvider } from "@/components/SimpleLanguage";
 import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Signup from "@/pages/Signup";
-
 import ComingSoonSimple from "@/pages/ComingSoonSimple";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/not-found";
@@ -32,10 +29,10 @@ function Router() {
         {user ? <Redirect to="/coming-soon" /> : <Home />}
       </Route>
       <Route path="/login">
-        {user ? <Redirect to="/coming-soon" /> : <Login />}
+        <Redirect to="/" />
       </Route>
       <Route path="/signup">
-        {user ? <Redirect to="/coming-soon" /> : <Signup />}
+        <Redirect to="/" />
       </Route>
       <Route path="/coming-soon">
         {user ? <ComingSoonSimple /> : <Redirect to="/login" />}
