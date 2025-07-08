@@ -1,4 +1,5 @@
 import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as MicrosoftStrategy } from 'passport-microsoft';
 import { storage } from './storage';
@@ -18,6 +19,34 @@ passport.deserializeUser(async (id: number, done) => {
     done(error, null);
   }
 });
+
+// Local Strategy for email/password authentication
+passport.use(new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password'
+}, async (email: string, password: string, done) => {
+  try {
+    // Find user by email
+    const user = await storage.getUserByEmail(email);
+    if (!user) {
+      return done(null, false, { message: 'Invalid email or password' });
+    }
+
+    // Check password (in production, compare hashed passwords)
+    if (user.password !== password) {
+      return done(null, false, { message: 'Invalid email or password' });
+    }
+
+    // Check if email is verified
+    if (!user.emailVerified) {
+      return done(null, false, { message: 'Please verify your email before logging in' });
+    }
+
+    return done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+}));
 
 // Google OAuth Strategy
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {

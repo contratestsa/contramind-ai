@@ -182,7 +182,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/login", async (req, res) => {
+  app.post("/api/auth/login", async (req, res, next) => {
     try {
       const validatedData = loginSchema.parse(req.body);
       
@@ -201,21 +201,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Remove password from response
-      const { password, ...userWithoutPassword } = user;
-      
-      // Send login confirmation email (non-blocking)
-      sendLoginConfirmationEmail({
-        email: user.email,
-        fullName: user.fullName,
-        loginTime: new Date().toISOString()
-      }).catch(error => {
-        console.error('Failed to send login confirmation email:', error);
-      });
-      
-      res.json({ 
-        message: "Login successful",
-        user: userWithoutPassword 
+      // Check if email is verified
+      if (!user.emailVerified) {
+        return res.status(401).json({ 
+          message: "Please verify your email before logging in" 
+        });
+      }
+
+      // Establish session using Passport
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error("Session establishment error:", err);
+          return res.status(500).json({ 
+            message: "Failed to establish session" 
+          });
+        }
+
+        // Remove password from response
+        const { password, ...userWithoutPassword } = user;
+        
+        // Send login confirmation email (non-blocking)
+        sendLoginConfirmationEmail({
+          email: user.email,
+          fullName: user.fullName,
+          loginTime: new Date().toISOString()
+        }).catch(error => {
+          console.error('Failed to send login confirmation email:', error);
+        });
+        
+        res.json({ 
+          message: "Login successful",
+          user: userWithoutPassword 
+        });
       });
     } catch (error) {
       console.error("Login error:", error);
