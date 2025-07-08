@@ -35,7 +35,7 @@ const sessionConfig: session.SessionOptions = {
   cookie: {
     secure: process.env.REPLIT_DEV_DOMAIN ? true : isProduction, // HTTPS in Replit dev and production
     httpOnly: true,
-    sameSite: isProduction ? 'none' : 'lax', // 'none' allows cross-site cookies with secure
+    sameSite: process.env.REPLIT_DEV_DOMAIN ? 'none' : 'lax', // 'none' for cross-origin in Replit
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     // Don't set domain - let browser handle it per request
   }
