@@ -395,6 +395,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // OAuth Debug endpoint - shows current redirect URLs
+  app.get("/api/auth/debug", (_req, res) => {
+    const deployedDomain = process.env.REPLIT_DEPLOYED_DOMAIN;
+    const devDomain = process.env.REPLIT_DEV_DOMAIN;
+    const baseUrl = deployedDomain 
+      ? `https://${deployedDomain}` 
+      : devDomain 
+      ? `https://${devDomain}` 
+      : 'http://localhost:5000';
+    
+    res.json({
+      currentEnvironment: {
+        NODE_ENV: process.env.NODE_ENV,
+        REPLIT_DEPLOYED_DOMAIN: deployedDomain || 'not set',
+        REPLIT_DEV_DOMAIN: devDomain || 'not set',
+      },
+      oauthCallbacks: {
+        google: `${baseUrl}/api/auth/google/callback`,
+        microsoft: `${baseUrl}/api/auth/microsoft/callback`
+      },
+      instructions: {
+        google: "Add the Google callback URL above to your Google Cloud Console OAuth 2.0 Client ID settings",
+        microsoft: "Add the Microsoft callback URL above to your Azure App Registration redirect URIs"
+      }
+    });
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
