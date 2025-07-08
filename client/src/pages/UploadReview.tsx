@@ -287,9 +287,9 @@ export default function UploadReview() {
             </button>
 
             {/* Token Counter */}
-            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#E8F4F8] border border-[#B7DEE8] rounded-lg">
+            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg">
               <span className="text-lg">🪙</span>
-              <span className="text-sm font-medium text-gray-700">1,000 {t('رموز', 'Tokens')}</span>
+              <span className="text-sm font-medium">1,000 {t('رموز', 'Tokens')}</span>
             </div>
 
             {/* User Avatar */}
@@ -329,11 +329,11 @@ export default function UploadReview() {
         {/* Main Content */}
         <main className="p-6">
           {/* Token Balance Section */}
-          <div className="bg-[#E8F4F8] px-6 py-4 rounded-lg mb-8">
+          <div className="bg-[#0C2836] text-white px-6 py-4 rounded-lg mb-8">
             <div className="font-bold text-base mb-1">
               {t('رصيدك: 1,000 رمز', 'Your Balance: 1,000 Tokens')}
             </div>
-            <div className="text-sm">
+            <div className="text-sm opacity-90">
               {t('التحميل والتحليل يكلف 10 رموز', 'Upload & Analysis costs 10 tokens')}
             </div>
           </div>

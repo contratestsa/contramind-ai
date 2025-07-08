@@ -203,9 +203,9 @@ export default function Dashboard() {
             </button>
 
             {/* Token Counter */}
-            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#E8F4F8] border border-[#B7DEE8] rounded-lg">
+            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg">
               <span className="text-lg">🪙</span>
-              <span className="text-sm font-medium text-gray-700">1,000 {t('رموز', 'Tokens')}</span>
+              <span className="text-sm font-medium">1,000 {t('رموز', 'Tokens')}</span>
             </div>
 
             {/* User Avatar */}
