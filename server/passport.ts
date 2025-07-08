@@ -7,15 +7,19 @@ import { sendLoginConfirmationEmail } from './emailService';
 
 // Serialize user for session storage
 passport.serializeUser((user: any, done) => {
+  console.log('Serializing user:', user.id, user.email);
   done(null, user.id);
 });
 
 // Deserialize user from session
 passport.deserializeUser(async (id: number, done) => {
   try {
+    console.log('Deserializing user ID:', id);
     const user = await storage.getUser(id);
+    console.log('Found user:', user?.email);
     done(null, user);
   } catch (error) {
+    console.error('Deserialize error:', error);
     done(error, null);
   }
 });

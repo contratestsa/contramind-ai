@@ -20,6 +20,8 @@ if (isProduction) {
 // Debug logging for production
 if (isProduction) {
   console.log('Running in production mode - cookies will be secure and sameSite=none');
+  console.log('SESSION_SECRET exists:', !!process.env.SESSION_SECRET);
+  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
 }
 
 // Use PostgreSQL session store in production

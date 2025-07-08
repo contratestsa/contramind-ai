@@ -393,6 +393,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get current user route
   app.get("/api/auth/me", (req, res) => {
+    // Debug logging for production
+    console.log("Auth check - Headers:", req.headers);
+    console.log("Auth check - Cookie header:", req.headers.cookie);
+    console.log("Auth check - Session ID:", req.sessionID);
+    console.log("Auth check - User:", req.user);
+    
     if (req.user) {
       const { password, ...userWithoutPassword } = req.user as any;
       res.json({ user: userWithoutPassword });
