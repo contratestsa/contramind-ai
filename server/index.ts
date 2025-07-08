@@ -1,18 +1,31 @@
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 import passport from "./passport";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { pool } from "./db";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Session configuration for OAuth
+// Trust proxy for production (needed for secure cookies behind reverse proxy)
 const isProduction = process.env.NODE_ENV === 'production' || process.env.REPLIT_DEPLOYED_DOMAIN !== undefined;
+if (isProduction) {
+  app.set('trust proxy', 1); // Trust first proxy
+}
 
-// Determine cookie domain based on the request host
-const sessionMiddleware = session({
+// Session configuration for OAuth
+// Debug logging for production
+if (isProduction) {
+  console.log('Running in production mode - cookies will be secure and sameSite=none');
+}
+
+// Use PostgreSQL session store in production
+const PgSession = connectPgSimple(session);
+
+const sessionConfig: session.SessionOptions = {
   secret: process.env.SESSION_SECRET || 'your-secret-key-here',
   resave: false,
   saveUninitialized: false,
@@ -24,7 +37,18 @@ const sessionMiddleware = session({
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     // Don't set domain - let browser handle it per request
   }
-});
+};
+
+// Use PostgreSQL store in production for session persistence
+if (isProduction) {
+  sessionConfig.store = new PgSession({
+    pool: pool,
+    tableName: 'user_sessions',
+    createTableIfMissing: true
+  });
+}
+
+const sessionMiddleware = session(sessionConfig);
 
 app.use(sessionMiddleware);
 
