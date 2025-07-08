@@ -101,7 +101,6 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
         description: t.welcome,
         variant: "default",
       });
-      console.log("Login successful, redirecting to /dashboard");
       setLocation("/dashboard");
     },
     onError: (error: any) => {

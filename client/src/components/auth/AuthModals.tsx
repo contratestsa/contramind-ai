@@ -63,7 +63,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
       // Redirect to dashboard page
-      console.log("AuthModals: Login successful, redirecting to /dashboard");
       setLocation('/dashboard');
     },
     onError: (error: Error) => {
