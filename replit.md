@@ -4,6 +4,12 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 8, 2025**: Dashboard is now the main landing page
+  - **Landing Page Change**: Dashboard now displays at root URL (/)
+    - Removed authentication requirement for dashboard access
+    - Coming Soon page replaced entirely with dashboard
+    - Home page moved to /home route for reference
+    - Dashboard accessible to all visitors immediately
 - **July 8, 2025**: Replaced Coming Soon page with main dashboard layout
   - **Dashboard Implementation**: Created comprehensive dashboard interface
     - Left sidebar navigation (200px width, #F8F9FA background) with ContraMind branding and menu items
