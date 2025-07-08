@@ -9,7 +9,7 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
-import ComingSoon from "@/pages/ComingSoon";
+import ComingSoonSimple from "@/pages/ComingSoonSimple";
 import NotFound from "@/pages/not-found";
 import TestAuth from "@/pages/TestAuth";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,7 +37,7 @@ function Router() {
         {user ? <Redirect to="/coming-soon" /> : <Signup />}
       </Route>
       <Route path="/coming-soon">
-        {user ? <ComingSoon /> : <Redirect to="/login" />}
+        {user ? <ComingSoonSimple /> : <Redirect to="/login" />}
       </Route>
       <Route path="/user-dashboard">
         {user ? <Dashboard /> : <Redirect to="/login" />}
