@@ -6,7 +6,10 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 ## Recent Changes
 - **July 8, 2025**: User Flow Update - Coming Soon Page
   - Modified user authentication flow to show coming soon page after login
-  - Updated routes: authenticated users now redirect to /coming-soon instead of /user-dashboard
+  - Fixed all redirect paths from /user-dashboard to /coming-soon in:
+    - LoginForm.tsx: Regular login redirect
+    - AuthModals.tsx: Modal login redirect
+    - server/routes.ts: Email verification redirect
   - OAuth callbacks (Google/Microsoft) redirect to /coming-soon upon successful authentication
   - Removed dashboard page entirely - application now uses coming soon page for authenticated users
 - **July 8, 2025**: Phase 2 - Onboarding Enhancements & Bug Fixes

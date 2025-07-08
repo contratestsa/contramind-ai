@@ -107,7 +107,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
       });
       
       // Force a page reload to ensure auth state is updated
-      window.location.href = "/user-dashboard";
+      window.location.href = "/coming-soon";
     },
     onError: (error: any) => {
       toast({

@@ -293,7 +293,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Redirect to success page on the production domain
       const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
-      res.redirect(`${productionDomain}/user-dashboard?verified=true`);
+      res.redirect(`${productionDomain}/coming-soon?verified=true`);
     } catch (error) {
       console.error("Email verification error:", error);
       res.status(500).json({ 

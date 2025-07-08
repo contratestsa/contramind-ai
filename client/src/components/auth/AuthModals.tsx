@@ -69,9 +69,9 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
-      // Force reload to dashboard with auth
+      // Force reload to coming soon page with auth
       setTimeout(() => {
-        window.location.href = '/user-dashboard';
+        window.location.href = '/coming-soon';
       }, 100);
     },
     onError: (error: Error) => {
