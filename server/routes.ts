@@ -201,12 +201,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Check if email is verified
-      if (!user.emailVerified) {
-        return res.status(401).json({ 
-          message: "Please verify your email before logging in" 
-        });
-      }
+      // Skip email verification check for now
 
       // Establish session using Passport
       req.logIn(user, (err) => {

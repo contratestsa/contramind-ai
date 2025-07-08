@@ -37,10 +37,7 @@ passport.use(new LocalStrategy({
       return done(null, false, { message: 'Invalid email or password' });
     }
 
-    // Check if email is verified
-    if (!user.emailVerified) {
-      return done(null, false, { message: 'Please verify your email before logging in' });
-    }
+    // Skip email verification check for now
 
     return done(null, user);
   } catch (error) {
