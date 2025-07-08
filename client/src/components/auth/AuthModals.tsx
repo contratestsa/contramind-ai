@@ -146,8 +146,17 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Trim values to remove any accidental spaces
+    const trimmedData = {
+      ...signupData,
+      fullName: signupData.fullName.trim(),
+      email: signupData.email.trim(),
+      password: signupData.password.trim(),
+      confirmPassword: signupData.confirmPassword.trim()
+    };
+    
     // Validate required fields
-    if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.confirmPassword) {
+    if (!trimmedData.fullName || !trimmedData.email || !trimmedData.password || !trimmedData.confirmPassword) {
       toast({
         title: t('خطأ في التحقق', 'Validation Error'),
         description: t('يرجى ملء جميع الحقول المطلوبة', 'Please fill in all required fields'),
@@ -156,7 +165,14 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       return;
     }
     
-    if (signupData.password !== signupData.confirmPassword) {
+    // Debug log to see what's being compared
+    console.log('Password comparison:', {
+      password: trimmedData.password,
+      confirmPassword: trimmedData.confirmPassword,
+      match: trimmedData.password === trimmedData.confirmPassword
+    });
+    
+    if (trimmedData.password !== trimmedData.confirmPassword) {
       toast({
         title: t('خطأ في كلمة المرور', 'Password Error'),
         description: t('كلمتا المرور غير متطابقتين', 'Passwords do not match'),
@@ -175,10 +191,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
     }
 
     signupMutation.mutate({
-      fullName: signupData.fullName,
-      email: signupData.email,
-      password: signupData.password,
-      username: signupData.email // Use email as username
+      fullName: trimmedData.fullName,
+      email: trimmedData.email,
+      password: trimmedData.password,
+      username: trimmedData.email // Use email as username
     });
   };
 
