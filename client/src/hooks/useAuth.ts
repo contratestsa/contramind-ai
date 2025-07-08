@@ -12,9 +12,8 @@ export function useAuth() {
       });
       if (!response.ok) {
         if (response.status === 401) {
-          // Fallback to localStorage
-          const localAuth = localStorage.getItem('contramind_auth');
-          return localAuth ? JSON.parse(localAuth) : null;
+          // No user authenticated
+          return null;
         }
         throw new Error('Failed to fetch user');
       }
