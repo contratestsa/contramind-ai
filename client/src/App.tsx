@@ -26,12 +26,17 @@ function Router() {
   return (
     <Switch>
       <Route path="/" exact>
-        <Dashboard />
+        {user ? <Redirect to="/dashboard" /> : <Home />}
       </Route>
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Signup} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/home" component={Home} />
+      <Route path="/login">
+        {user ? <Redirect to="/dashboard" /> : <Login />}
+      </Route>
+      <Route path="/signup">
+        {user ? <Redirect to="/dashboard" /> : <Signup />}
+      </Route>
+      <Route path="/dashboard">
+        {user ? <Dashboard /> : <Redirect to="/login" />}
+      </Route>
       <Route path="/demo-auth">
         {() => {
           const DemoAuth = React.lazy(() => import("@/pages/DemoAuth"));
