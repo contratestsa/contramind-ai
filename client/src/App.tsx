@@ -10,6 +10,7 @@ import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 
 import ComingSoonSimple from "@/pages/ComingSoonSimple";
+import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/not-found";
 import TestAuth from "@/pages/TestAuth";
 import { useAuth } from "@/hooks/useAuth";
@@ -38,6 +39,14 @@ function Router() {
       </Route>
       <Route path="/coming-soon">
         {user ? <ComingSoonSimple /> : <Redirect to="/login" />}
+      </Route>
+      
+      {/* Redirect any dashboard routes to coming soon */}
+      <Route path="/dashboard">
+        {user ? <Dashboard /> : <Redirect to="/login" />}
+      </Route>
+      <Route path="/user-dashboard">
+        {user ? <Dashboard /> : <Redirect to="/login" />}
       </Route>
 
       <Route path="/test-auth">
