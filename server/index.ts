@@ -33,7 +33,7 @@ const sessionConfig: session.SessionOptions = {
   saveUninitialized: false,
   name: 'contramind_session', // Custom session name
   cookie: {
-    secure: isProduction, // HTTPS only in production
+    secure: process.env.REPLIT_DEV_DOMAIN ? true : isProduction, // HTTPS in Replit dev and production
     httpOnly: true,
     sameSite: isProduction ? 'none' : 'lax', // 'none' allows cross-site cookies with secure
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
