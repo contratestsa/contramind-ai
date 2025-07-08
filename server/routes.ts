@@ -6,6 +6,7 @@ import passport from "./passport";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail, sendLoginConfirmationEmail } from "./emailService";
+import { getPreferredDomain } from "./authRedirect";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Waitlist endpoints
@@ -296,8 +297,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Redirect to success page or coming soon page
-      res.redirect("/coming-soon?verified=true");
+      // Redirect to success page on the same domain
+      const preferredDomain = getPreferredDomain(req);
+      res.redirect(`${preferredDomain}/coming-soon?verified=true`);
     } catch (error) {
       console.error("Email verification error:", error);
       res.status(500).json({ 
@@ -336,7 +338,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      res.redirect("/coming-soon");
+      // Redirect to the same domain the user came from
+      const preferredDomain = getPreferredDomain(req);
+      res.redirect(`${preferredDomain}/coming-soon`);
     }
   );
 
@@ -370,7 +374,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      res.redirect("/coming-soon");
+      // Redirect to the same domain the user came from
+      const preferredDomain = getPreferredDomain(req);
+      res.redirect(`${preferredDomain}/coming-soon`);
     }
   );
 

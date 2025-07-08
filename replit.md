@@ -4,6 +4,17 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 8, 2025**: Fixed authentication cookie issues for deployment
+  - **Cookie Configuration**: Updated session settings for cross-domain compatibility
+    - Changed `sameSite: 'none'` for production to allow cross-site cookies
+    - Added custom session name `contramind_session`
+    - Automatic secure cookie detection for production environments
+  - **CORS Headers**: Added proper CORS configuration for authentication
+    - Allowed origins include both Replit app and custom domain
+    - Enabled credentials in cross-origin requests
+  - **Domain Preservation**: OAuth redirects now preserve the original domain
+    - Created authRedirect module to handle domain consistency
+    - OAuth callbacks redirect to the same domain user came from
 - **July 2, 2025**: Implemented comprehensive email verification system
   - **Email Verification**: Full verification workflow using Resend integration
     - Added emailVerified and verificationToken fields to user schema

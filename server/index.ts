@@ -9,18 +9,48 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Session configuration for OAuth
-app.use(session({
+const isProduction = process.env.NODE_ENV === 'production' || process.env.REPLIT_DEPLOYED_DOMAIN !== undefined;
+
+// Determine cookie domain based on the request host
+const sessionMiddleware = session({
   secret: process.env.SESSION_SECRET || 'your-secret-key-here',
   resave: false,
   saveUninitialized: false,
+  name: 'contramind_session', // Custom session name
   cookie: {
-    secure: process.env.NODE_ENV === 'production' || process.env.REPLIT_DEPLOYED_DOMAIN !== undefined, // Automatically set to true in production or deployment
+    secure: isProduction, // HTTPS only in production
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: isProduction ? 'none' : 'lax', // 'none' allows cross-site cookies with secure
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    domain: process.env.COOKIE_DOMAIN || undefined // Allow setting custom domain for cookies
+    // Don't set domain - let browser handle it per request
   }
-}));
+});
+
+app.use(sessionMiddleware);
+
+// CORS configuration for authentication
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    'https://contramind.ai',
+    'https://ai-language-bridge-ceo-ContraMind.replit.app',
+    'http://localhost:5173',
+    'http://localhost:5000'
+  ];
+  
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  }
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
 
 // Initialize Passport
 app.use(passport.initialize());
