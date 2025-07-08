@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup Auth</title>
+</head>
+<body>
+    <script>
+        // Set authentication data in localStorage
+        const user = {
+            id: 19,
+            email: "demo@contramind.ai",
+            fullName: "Demo User",
+            username: "demo@contramind.ai",
+            emailVerified: true,
+            createdAt: new Date().toISOString()
+        };
+        localStorage.setItem('contramind_auth', JSON.stringify(user));
+        window.location.href = '/dashboard';
+    </script>
+</body>
+</html>
