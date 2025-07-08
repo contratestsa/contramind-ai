@@ -5,7 +5,7 @@ import { randomBytes } from "crypto";
 import passport from "./passport";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail, sendLoginConfirmationEmail } from "./emailService";
+import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./emailService";
 import { getPreferredDomain } from "./authRedirect";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -227,18 +227,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Send login confirmation email
-      const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-      const emailResult = await sendLoginConfirmationEmail({
-        email: user.email,
-        fullName: user.fullName,
-        loginTime: new Date(),
-        ipAddress: ipAddress as string
-      });
-      
-      if (!emailResult.success) {
-        console.error('Failed to send login confirmation email:', emailResult.error);
-      }
+      // Login confirmation email disabled per user request
 
       // Login user with passport (creates session)
       req.login(user, (err) => {
@@ -337,22 +326,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Successful authentication
       console.log('Google OAuth successful for user:', req.user);
       
-      // Send login confirmation email
-      if (req.user) {
-        const user = req.user as User;
-        const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        
-        const emailResult = await sendLoginConfirmationEmail({
-          email: user.email,
-          fullName: user.fullName,
-          loginTime: new Date(),
-          ipAddress: ipAddress as string
-        });
-        
-        if (!emailResult.success) {
-          console.error('Failed to send Google OAuth login confirmation email:', emailResult.error);
-        }
-      }
+      // Login confirmation email disabled per user request
       
       // Ensure session is saved before redirecting
       req.session.save((err) => {
@@ -382,22 +356,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Successful authentication
       console.log('Microsoft OAuth successful for user:', req.user);
       
-      // Send login confirmation email
-      if (req.user) {
-        const user = req.user as User;
-        const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        
-        const emailResult = await sendLoginConfirmationEmail({
-          email: user.email,
-          fullName: user.fullName,
-          loginTime: new Date(),
-          ipAddress: ipAddress as string
-        });
-        
-        if (!emailResult.success) {
-          console.error('Failed to send Microsoft OAuth login confirmation email:', emailResult.error);
-        }
-      }
+      // Login confirmation email disabled per user request
       
       // Ensure session is saved before redirecting
       req.session.save((err) => {
