@@ -32,6 +32,7 @@ interface User {
   email: string;
   fullName: string;
   emailVerified: boolean;
+  profilePicture?: string;
 }
 
 export default function Dashboard() {
@@ -225,36 +226,104 @@ export default function Dashboard() {
         </header>
 
         {/* Main Content */}
-        <main className="p-8">
-          <h1 className={cn(
-            "text-3xl font-bold text-gray-800 mb-4",
-            isRTL ? "text-right" : "text-left"
-          )}>
-            {t('مرحباً بك في لوحة تحكم ContraMind', 'Welcome to ContraMind Dashboard')}
-          </h1>
-          
-          <p className={cn(
-            "text-lg text-gray-600",
-            isRTL ? "text-right" : "text-left"
-          )}>
-            {user?.fullName && t(`أهلاً ${user.fullName}!`, `Hello ${user.fullName}!`)}
-          </p>
+        <main className="p-8 flex flex-col items-center">
+          {/* User Welcome Section */}
+          <div className="flex flex-col items-center">
+            {/* User Avatar */}
+            <div className="w-20 h-20 rounded-full bg-[#0C2836] text-white flex items-center justify-center font-semibold text-2xl overflow-hidden">
+              {user?.profilePicture ? (
+                <img 
+                  src={user.profilePicture} 
+                  alt={user.fullName} 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                userInitials
+              )}
+            </div>
+            
+            {/* Greeting Text */}
+            <h2 className="mt-4 text-2xl font-semibold text-[#0C2836]">
+              {t(
+                `مرحباً ${user?.fullName?.split(' ')[0] || 'بك'}, ماذا تريد أن تفعل؟`,
+                `Hey ${user?.fullName?.split(' ')[0] || 'there'}, what do you want to do?`
+              )}
+            </h2>
+          </div>
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('العقود النشطة', 'Active Contracts')}</h3>
-              <p className="text-3xl font-bold text-[#0C2836]">0</p>
+          {/* Search Bar Section */}
+          <div className="mt-8 w-full max-w-[600px]">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={t('اسأل عن العقود التقنية...', 'Ask about technology contracts...')}
+                className="w-full h-12 pl-12 pr-12 text-base border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors"
+              />
+              {/* Search Icon */}
+              <svg 
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              {/* Send Button */}
+              <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-md transition-colors">
+                <svg 
+                  className="w-5 h-5 text-gray-600"
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
             </div>
-            
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('المهام المعلقة', 'Pending Tasks')}</h3>
-              <p className="text-3xl font-bold text-[#0C2836]">0</p>
+            {/* Info tooltip */}
+            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-gray-500">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{t('الدردشة تكلف 5 رموز لكل رسالة', 'Chat costs 5 tokens per message')}</span>
             </div>
-            
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('التنبيهات', 'Alerts')}</h3>
-              <p className="text-3xl font-bold text-[#0C2836]">0</p>
-            </div>
+          </div>
+
+          {/* Action Card */}
+          <div className="mt-10">
+            <button
+              className="relative w-[280px] h-[160px] bg-white border border-[#E6E6E6] rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center gap-2"
+              onClick={() => toast({ 
+                title: t('قريباً', 'Coming Soon'), 
+                description: t('ميزة تحميل ومراجعة العقود قريباً', 'Upload & Review feature coming soon') 
+              })}
+            >
+              {/* Token Badge */}
+              <div className="absolute top-4 right-4 bg-[#FFF3CD] flex items-center gap-1 px-2 py-1 rounded-xl">
+                <span className="text-xs">🪙</span>
+                <span className="text-xs font-medium">{t('10 رموز', '10 tokens')}</span>
+              </div>
+              
+              {/* Upload Icon */}
+              <svg 
+                className="w-8 h-8 text-gray-600"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              
+              {/* Title */}
+              <h3 className="text-lg font-bold text-gray-800">
+                {t('تحميل ومراجعة', 'Upload & Review')}
+              </h3>
+              
+              {/* Subtitle */}
+              <p className="text-sm text-[#6C757D] text-center">
+                {t('حلل عقدك التقني', 'Analyze your technology contract')}
+              </p>
+            </button>
           </div>
         </main>
       </div>
