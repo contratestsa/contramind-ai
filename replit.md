@@ -90,6 +90,7 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 - Consistent color scheme: light backgrounds (#f0f3f5), dark blue buttons (#0c2836)
 - Privacy messaging: "We'll never share your email. Unsubscribe anytime."
 - Fixed countdown timer instead of dynamic calculation
+- Dashboard screens: Don't focus on specific font types or colors - keep it simple
 
 ## Technical Decisions
 - Browser language detection for initial language setting
