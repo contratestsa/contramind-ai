@@ -27,18 +27,22 @@ if (isProduction) {
 // Use PostgreSQL session store in production
 const PgSession = connectPgSimple(session);
 
+// Trust proxy for proper HTTPS detection
+app.set('trust proxy', true);
+
 const sessionConfig: session.SessionOptions = {
   secret: process.env.SESSION_SECRET || 'your-secret-key-here',
   resave: false,
   saveUninitialized: false,
   name: 'contramind_session', // Custom session name
   cookie: {
-    secure: false, // Disable secure in development to fix cookie issues
+    secure: false, // Let Express handle this automatically based on protocol
     httpOnly: true,
-    sameSite: 'lax', // Use lax for development
+    sameSite: 'lax', // Use lax for better compatibility
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     // Don't set domain - let browser handle it per request
-  }
+  },
+  proxy: true // Trust proxy headers
 };
 
 // Use PostgreSQL store in production for session persistence
