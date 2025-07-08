@@ -19,7 +19,7 @@ export default function DemoAuth() {
     
     // Navigate to dashboard
     setTimeout(() => {
-      navigate('/dashboard');
+      navigate('/user-dashboard');
     }, 100);
   }, [navigate]);
 

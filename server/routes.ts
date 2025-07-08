@@ -1,11 +1,12 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
+import crypto from "crypto";
 
 import passport from "./passport";
 import { storage } from "./storage";
-import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendContactEmail } from "./emailService";
+import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema, type User } from "@shared/schema";
+import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./emailService";
 import { getPreferredDomain } from "./authRedirect";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -143,17 +144,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Create user (in production, hash the password)
-      const user = await storage.createUser(validatedData);
+      // Generate verification token
+      const verificationToken = crypto.randomBytes(32).toString('hex');
       
-      // Automatically verify user email without sending confirmation
-      await storage.verifyUserEmailByEmail(user.email);
+      // Create user with verification token (in production, hash the password)
+      const user = await storage.createUser({
+        ...validatedData,
+        emailVerified: false
+      });
+      
+      // Update user with verification token
+      await storage.updateUserVerification(user.email, verificationToken);
+      
+      // Send verification email
+      await sendVerificationEmail({
+        email: user.email,
+        fullName: user.fullName,
+        verificationToken
+      });
       
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
       
       res.status(201).json({ 
-        message: "Account created successfully",
+        message: "Account created successfully. Please check your email to verify your account.",
         user: userWithoutPassword 
       });
     } catch (error) {
@@ -190,9 +204,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Email verification check removed - users can login without email verification
-
-      // Login confirmation email disabled per user request
+      // Check if email is verified
+      if (!user.emailVerified) {
+        return res.status(403).json({ 
+          message: "Please verify your email address before logging in. Check your inbox for the verification email." 
+        });
+      }
 
       // Login user with passport (creates session)
       req.login(user, (err) => {
@@ -267,9 +284,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Redirect to success page on the same domain
-      const preferredDomain = getPreferredDomain(req);
-      res.redirect(`${preferredDomain}/dashboard?verified=true`);
+      // Redirect to success page on the production domain
+      const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+      res.redirect(`${productionDomain}/user-dashboard?verified=true`);
     } catch (error) {
       console.error("Email verification error:", error);
       res.status(500).json({ 
@@ -289,21 +306,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }),
     async (req, res) => {
       // Successful authentication
-      console.log('Google OAuth successful for user:', req.user);
+      const user = req.user as User;
+      console.log('Google OAuth successful for user:', user.email);
       
-      // Login confirmation email disabled per user request
+      // Check if email is verified
+      if (!user.emailVerified) {
+        // Redirect to a page informing them to verify email
+        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        return res.redirect(`${productionDomain}/?message=verify-email`);
+      }
       
       // Ensure session is saved before redirecting
       req.session.save((err) => {
         if (err) {
           console.error('Failed to save session after Google OAuth:', err);
         }
-        // Always redirect to the Replit app after OAuth
-        const replitDomain = process.env.REPLIT_DEV_DOMAIN 
-          ? `https://${process.env.REPLIT_DEV_DOMAIN}`
-          : 'https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev';
-        console.log('Google OAuth redirecting to:', `${replitDomain}/dashboard`);
-        res.redirect(`${replitDomain}/dashboard`);
+        // Always redirect to the production domain after OAuth
+        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        console.log('Google OAuth redirecting to:', `${productionDomain}/user-dashboard`);
+        res.redirect(`${productionDomain}/user-dashboard`);
       });
     }
   );
@@ -319,21 +340,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }),
     async (req, res) => {
       // Successful authentication
-      console.log('Microsoft OAuth successful for user:', req.user);
+      const user = req.user as User;
+      console.log('Microsoft OAuth successful for user:', user.email);
       
-      // Login confirmation email disabled per user request
+      // Check if email is verified
+      if (!user.emailVerified) {
+        // Redirect to a page informing them to verify email
+        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        return res.redirect(`${productionDomain}/?message=verify-email`);
+      }
       
       // Ensure session is saved before redirecting
       req.session.save((err) => {
         if (err) {
           console.error('Failed to save session after Microsoft OAuth:', err);
         }
-        // Always redirect to the Replit app after OAuth
-        const replitDomain = process.env.REPLIT_DEV_DOMAIN 
-          ? `https://${process.env.REPLIT_DEV_DOMAIN}`
-          : 'https://8103ac6b-c2ec-453b-b704-b562d25d30d7-00-1ntd620e4kt76.spock.replit.dev';
-        console.log('Microsoft OAuth redirecting to:', `${replitDomain}/dashboard`);
-        res.redirect(`${replitDomain}/dashboard`);
+        // Always redirect to the production domain after OAuth
+        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        console.log('Microsoft OAuth redirecting to:', `${productionDomain}/user-dashboard`);
+        res.redirect(`${productionDomain}/user-dashboard`);
       });
     }
   );

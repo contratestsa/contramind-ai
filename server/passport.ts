@@ -3,6 +3,8 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as MicrosoftStrategy } from 'passport-microsoft';
 import { storage } from './storage';
 import { User } from '../shared/schema';
+import crypto from 'crypto';
+import { sendVerificationEmail } from './emailService';
 
 
 // Serialize user for session storage
@@ -57,18 +59,29 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         return done(null, user);
       }
 
-      // Create new user (OAuth providers already verify emails)
+      // Generate verification token for new OAuth user
+      const verificationToken = crypto.randomBytes(32).toString('hex');
+      
+      // Create new user without auto-verifying email
       const newUser = await storage.createUser({
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Google User',
-        password: 'oauth_google_' + profile.id // OAuth users get a special password
+        password: 'oauth_google_' + profile.id, // OAuth users get a special password
+        emailVerified: false
       });
       
-      // Mark email as verified for OAuth users (since OAuth providers verify emails)
-      await storage.verifyUserEmailByEmail(email);
+      // Update user with verification token
+      await storage.updateUserVerification(email, verificationToken);
+      
+      // Send verification email
+      await sendVerificationEmail({
+        email: email,
+        fullName: profile.displayName || 'Google User',
+        verificationToken
+      });
 
-      console.log('New Google user created:', newUser.email);
+      console.log('New Google user created, verification email sent:', newUser.email);
       return done(null, newUser);
     } catch (error) {
       console.error('Google OAuth error:', error);
@@ -108,18 +121,29 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
         return done(null, user);
       }
 
-      // Create new user (OAuth providers already verify emails)
+      // Generate verification token for new OAuth user
+      const verificationToken = crypto.randomBytes(32).toString('hex');
+      
+      // Create new user without auto-verifying email
       const newUser = await storage.createUser({
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Microsoft User',
-        password: 'oauth_microsoft_' + profile.id // OAuth users get a special password
+        password: 'oauth_microsoft_' + profile.id, // OAuth users get a special password
+        emailVerified: false
       });
       
-      // Mark email as verified for OAuth users (since OAuth providers verify emails)
-      await storage.verifyUserEmailByEmail(email);
+      // Update user with verification token
+      await storage.updateUserVerification(email, verificationToken);
+      
+      // Send verification email
+      await sendVerificationEmail({
+        email: email,
+        fullName: profile.displayName || 'Microsoft User',
+        verificationToken
+      });
 
-      console.log('New Microsoft user created:', newUser.email);
+      console.log('New Microsoft user created, verification email sent:', newUser.email);
       return done(null, newUser);
     } catch (error) {
       console.error('Microsoft OAuth error:', error);

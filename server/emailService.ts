@@ -17,6 +17,12 @@ interface ContactEmailData {
   message: string;
 }
 
+interface VerificationEmailData {
+  email: string;
+  fullName: string;
+  verificationToken: string;
+}
+
 
 
 export async function sendWelcomeEmail({ email, fullName, waitlistPosition }: EmailData) {
@@ -164,6 +170,130 @@ Thank you for your interest in ContraMind.
 
 ---
 This email was sent because you joined our waitlist at contramind.ai
+  `;
+}
+
+export async function sendVerificationEmail({ email, fullName, verificationToken }: VerificationEmailData) {
+  const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+  const verificationUrl = `${productionDomain}/api/auth/verify-email?token=${verificationToken}`;
+  
+  const subject = 'Verify Your ContraMind Account';
+  const htmlContent = getVerificationEmailTemplate(fullName, verificationUrl);
+  const textContent = getVerificationTextTemplate(fullName, verificationUrl);
+
+  // Try with custom domain first, fallback to default domain
+  const fromAddresses = [
+    'ContraMind Team <noreply@contramind.ai>',
+    'ContraMind Team <onboarding@resend.dev>'
+  ];
+
+  for (const fromAddress of fromAddresses) {
+    try {
+      const data = await resend.emails.send({
+        from: fromAddress,
+        to: [email],
+        subject,
+        html: htmlContent,
+        text: textContent,
+      });
+
+      console.log(`Verification email sent successfully from ${fromAddress}:`, data);
+      return { success: true, data };
+    } catch (error) {
+      console.log(`Failed to send from ${fromAddress}:`, error);
+      continue;
+    }
+  }
+
+  console.error('All verification email attempts failed');
+  return { success: false, error: 'Unable to send verification email from any configured domain' };
+}
+
+function getVerificationEmailTemplate(fullName: string, verificationUrl: string): string {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your ContraMind Account</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background-color: #f8fafc;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); padding: 40px 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                ContraMind
+            </h1>
+            <p style="color: #B7DEE8; margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
+                AI-Powered Legal Technology Platform
+            </p>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 40px 30px;">
+            <h2 style="color: #0C2836; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">
+                Verify Your Email Address
+            </h2>
+            
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Hello ${fullName},
+            </p>
+            
+            <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
+                Thank you for creating your ContraMind account. To complete your registration and access all features, please verify your email address by clicking the button below.
+            </p>
+
+            <!-- CTA Button -->
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="${verificationUrl}" style="background: linear-gradient(135deg, #0C2836 0%, #1a3a4a 100%); color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(12, 40, 54, 0.3);">
+                    Verify Email Address
+                </a>
+            </div>
+
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0 0 0;">
+                Or copy and paste this link into your browser:
+            </p>
+            <p style="color: #3b82f6; font-size: 14px; line-height: 1.6; margin: 5px 0 30px 0; word-break: break-all;">
+                ${verificationUrl}
+            </p>
+
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 0;">
+                This verification link will expire in 24 hours. If you didn't create a ContraMind account, please ignore this email.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+            <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
+                Thank you for choosing ContraMind
+            </p>
+            <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                This email was sent because you created an account at contramind.ai
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+}
+
+function getVerificationTextTemplate(fullName: string, verificationUrl: string): string {
+  return `
+Verify Your ContraMind Account
+
+Hello ${fullName},
+
+Thank you for creating your ContraMind account. To complete your registration and access all features, please verify your email address by clicking the link below.
+
+Verify Email Address: ${verificationUrl}
+
+This verification link will expire in 24 hours. If you didn't create a ContraMind account, please ignore this email.
+
+Thank you for choosing ContraMind.
+
+---
+This email was sent because you created an account at contramind.ai
   `;
 }
 

@@ -15,14 +15,14 @@ export default function ComingSoonSimple() {
   // Redirect to dashboard if user is authenticated
   useEffect(() => {
     if (isAuthenticated && user) {
-      navigate('/dashboard');
+      navigate('/user-dashboard');
     }
   }, [isAuthenticated, user, navigate]);
   
   // Also check if user data exists in the page (for server-side rendered auth)
   useEffect(() => {
     if (user) {
-      window.location.href = '/dashboard';
+      window.location.href = '/user-dashboard';
     }
   }, [user]);
   

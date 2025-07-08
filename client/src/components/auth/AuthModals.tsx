@@ -71,7 +71,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       setLoginData({ email: '', password: '', rememberMe: false });
       // Force reload to dashboard with auth
       setTimeout(() => {
-        window.location.href = '/dashboard';
+        window.location.href = '/user-dashboard';
       }, 100);
     },
     onError: (error: Error) => {

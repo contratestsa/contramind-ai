@@ -27,15 +27,15 @@ function Router() {
   return (
     <Switch>
       <Route path="/" exact>
-        {user ? <Redirect to="/dashboard" /> : <Home />}
+        {user ? <Redirect to="/user-dashboard" /> : <Home />}
       </Route>
       <Route path="/login">
-        {user ? <Redirect to="/dashboard" /> : <Login />}
+        {user ? <Redirect to="/user-dashboard" /> : <Login />}
       </Route>
       <Route path="/signup">
-        {user ? <Redirect to="/dashboard" /> : <Signup />}
+        {user ? <Redirect to="/user-dashboard" /> : <Signup />}
       </Route>
-      <Route path="/dashboard">
+      <Route path="/user-dashboard">
         {user ? <Dashboard /> : <Redirect to="/login" />}
       </Route>
       <Route path="/test-auth">
