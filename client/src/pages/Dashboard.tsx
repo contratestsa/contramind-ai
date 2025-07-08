@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 import { 
   LayoutGrid, 
   Folder, 
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 import { useLocation } from "wouter";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
+import GoogleSheetsSetup from '@/components/GoogleSheetsSetup';
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -50,6 +52,19 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
   const [activeNav, setActiveNav] = useState('dashboard');
+  
+  // Fetch Google Sheets connection status
+  const { data: sheetsStatus } = useQuery({
+    queryKey: ['/api/google-sheets/status'],
+    refetchInterval: 30000 // Check every 30 seconds
+  });
+  
+  // Fetch token balance
+  const { data: tokenData } = useQuery({
+    queryKey: ['/api/tokens/balance'],
+    enabled: !!user,
+    refetchInterval: 10000 // Update every 10 seconds
+  });
   
   const toggleLanguage = () => {
     setLanguage(language === 'ar' ? 'en' : 'ar');
@@ -169,7 +184,9 @@ export default function Dashboard() {
           {/* Token Counter */}
           <div className="flex items-center gap-2 px-4 py-2 bg-[#E8F4F8] border border-[#B7DEE8] rounded-lg">
             <Coins className="w-4 h-4 text-[#0C2836]" />
-            <span className="text-sm font-medium text-[#0C2836]">1,000 Tokens</span>
+            <span className="text-sm font-medium text-[#0C2836]">
+              {tokenData?.remaining_tokens || 1000} Tokens
+            </span>
           </div>
 
           {/* User Avatar */}
@@ -194,6 +211,18 @@ export default function Dashboard() {
             {language === 'ar' ? 'مرحباً بك في لوحة تحكم ContraMind' : 'Welcome to ContraMind Dashboard'}
           </h1>
           
+          {/* Google Sheets Connection Status */}
+          {sheetsStatus && (
+            <div className={`mt-4 p-3 rounded-lg flex items-center gap-2 ${
+              sheetsStatus.connected ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
+            }`}>
+              <div className={`w-2 h-2 rounded-full ${
+                sheetsStatus.connected ? 'bg-green-500' : 'bg-yellow-500'
+              }`} />
+              <span className="font-medium">{sheetsStatus.message}</span>
+            </div>
+          )}
+          
           {/* Placeholder content */}
           <div className="mt-6 text-gray-600">
             {activeNav === 'dashboard' && (
@@ -209,7 +238,12 @@ export default function Dashboard() {
               <p>{language === 'ar' ? 'محتوى التقارير سيظهر هنا' : 'Reports content will appear here'}</p>
             )}
             {activeNav === 'settings' && (
-              <p>{language === 'ar' ? 'محتوى الإعدادات سيظهر هنا' : 'Settings content will appear here'}</p>
+              <div className="space-y-6">
+                <h2 className="text-lg font-semibold text-[#0C2836]">
+                  {language === 'ar' ? 'إعدادات قاعدة البيانات' : 'Database Settings'}
+                </h2>
+                <GoogleSheetsSetup />
+              </div>
             )}
           </div>
         </main>

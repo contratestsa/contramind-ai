@@ -4,6 +4,7 @@ import { Strategy as MicrosoftStrategy } from 'passport-microsoft';
 import { storage } from './storage';
 import { User } from '../shared/schema';
 import { sendLoginConfirmationEmail } from './emailService';
+import { googleSheetsService } from './googleSheetsService';
 
 // Serialize user for session storage
 passport.serializeUser((user: any, done) => {
@@ -71,6 +72,26 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       await storage.verifyUserEmailByEmail(email);
 
       console.log('New Google user created:', newUser.email);
+      
+      // Sync with Google Sheets if initialized
+      if (googleSheetsService.isInitialized()) {
+        try {
+          const googleUserId = `google_${profile.id}`;
+          if (!(await googleSheetsService.checkUserExists(googleUserId))) {
+            await googleSheetsService.createUser({
+              user_id: googleUserId,
+              email: newUser.email,
+              full_name: newUser.fullName,
+              profile_picture_url: profile.photos?.[0]?.value || ''
+            });
+          } else {
+            await googleSheetsService.updateLastLogin(googleUserId);
+          }
+        } catch (error) {
+          console.error('Google Sheets sync error:', error);
+        }
+      }
+      
       return done(null, newUser);
     } catch (error) {
       console.error('Google OAuth error:', error);
@@ -127,6 +148,26 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
       await storage.verifyUserEmailByEmail(email);
 
       console.log('New Microsoft user created:', newUser.email);
+      
+      // Sync with Google Sheets if initialized
+      if (googleSheetsService.isInitialized()) {
+        try {
+          const microsoftUserId = `microsoft_${profile.id}`;
+          if (!(await googleSheetsService.checkUserExists(microsoftUserId))) {
+            await googleSheetsService.createUser({
+              user_id: microsoftUserId,
+              email: newUser.email,
+              full_name: newUser.fullName,
+              profile_picture_url: profile.photos?.[0]?.value || ''
+            });
+          } else {
+            await googleSheetsService.updateLastLogin(microsoftUserId);
+          }
+        } catch (error) {
+          console.error('Google Sheets sync error:', error);
+        }
+      }
+      
       return done(null, newUser);
     } catch (error) {
       console.error('Microsoft OAuth error:', error);
