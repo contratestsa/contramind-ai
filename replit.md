@@ -4,6 +4,13 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 8, 2025**: Added GitHub integration and Google Cloud migration capabilities
+  - **GitHub Integration**: Configured for read/write access to https://github.com/contramindai/contramindPoC
+  - **Google Cloud Migration**: Created comprehensive migration guide and deployment configurations
+    - Added Dockerfile for containerization
+    - Created cloudbuild.yaml for automatic deployments from GitHub
+    - Documented complete migration process including Cloud SQL setup
+    - Prepared application for Cloud Run deployment with environment variable configurations
 - **July 2, 2025**: Implemented comprehensive email verification system
   - **Email Verification**: Full verification workflow using Resend integration
     - Added emailVerified and verificationToken fields to user schema
