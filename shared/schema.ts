@@ -10,6 +10,7 @@ export const users = pgTable("users", {
   fullName: text("full_name").notNull(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   verificationToken: text("verification_token"),
+  hasCompletedOnboarding: boolean("has_completed_onboarding").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

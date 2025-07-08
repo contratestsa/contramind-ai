@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,11 @@ import {
 } from "lucide-react";
 import { useLocation } from "wouter";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
+import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
+import { GettingStartedChecklist } from "@/components/onboarding/GettingStartedChecklist";
+import { FeedbackWidget } from "@/components/feedback/FeedbackWidget";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -52,12 +57,58 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
   const [activeNav, setActiveNav] = useState('dashboard');
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [showChecklist, setShowChecklist] = useState(false);
   
   // Use demo user if no authenticated user
   const displayUser = user || {
     id: 1,
     fullName: "Demo User",
     email: "demo@contramind.ai"
+  };
+
+  // Check if user has completed onboarding
+  useEffect(() => {
+    if (user && !user.hasCompletedOnboarding) {
+      // Check if welcome modal has been shown before
+      const hasSeenWelcome = localStorage.getItem(`welcome-modal-${user.id}`);
+      if (!hasSeenWelcome) {
+        setShowWelcomeModal(true);
+      } else {
+        setShowChecklist(true);
+      }
+    } else if (user && user.hasCompletedOnboarding) {
+      // Check if checklist should still be shown
+      const dismissedChecklist = localStorage.getItem(`checklist-dismissed-${user.id}`);
+      if (!dismissedChecklist) {
+        setShowChecklist(true);
+      }
+    }
+  }, [user]);
+
+  const completeOnboardingMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest('/api/auth/complete-onboarding', {
+        method: 'POST',
+      });
+    },
+  });
+
+  const handleWelcomeModalClose = () => {
+    setShowWelcomeModal(false);
+    if (user) {
+      localStorage.setItem(`welcome-modal-${user.id}`, 'true');
+      setShowChecklist(true);
+    }
+  };
+
+  const handleChecklistDismiss = () => {
+    setShowChecklist(false);
+    if (user) {
+      localStorage.setItem(`checklist-dismissed-${user.id}`, 'true');
+      // Mark onboarding as complete
+      completeOnboardingMutation.mutate();
+    }
   };
   
   const toggleLanguage = () => {
@@ -246,6 +297,23 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
+      
+      {/* Onboarding Components */}
+      {user && (
+        <>
+          <WelcomeModal
+            isOpen={showWelcomeModal}
+            onClose={handleWelcomeModalClose}
+            userName={user.fullName}
+          />
+          {showChecklist && (
+            <GettingStartedChecklist onDismiss={handleChecklistDismiss} />
+          )}
+        </>
+      )}
+      
+      {/* Feedback Widget */}
+      <FeedbackWidget />
     </div>
   );
 }

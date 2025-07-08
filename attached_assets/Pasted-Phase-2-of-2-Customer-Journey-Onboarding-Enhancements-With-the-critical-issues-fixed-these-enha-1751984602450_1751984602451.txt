@@ -1,0 +1,37 @@
+Phase 2 of 2: Customer Journey & Onboarding Enhancements
+
+With the critical issues fixed, these enhancements focus on making the user's first experience positive, intuitive, and engaging.
+4. Implement a "First-Time User" Onboarding Flow
+* Problem: New users log in to the dashboard with no direction, potentially leading to confusion and abandonment.
+* Solution: Guide new users to their "aha!" moment with a simple onboarding sequence.
+* Implementation Ideas:
+    1. Welcome Modal: Display a one-time welcome message upon the user's first login to the dashboard.
+    2. "Getting Started" Checklist: Implement a simple, dismissible UI element with 2-3 key steps to get started (e.g., "1. Create Your First Contract," "2. Invite a Team Member"). This gives users immediate, actionable goals.
+    3. (Optional) Product Tour: Consider integrating a lightweight library like Driver.js to provide an optional, step-by-step tour of the main dashboard features.
+5. Integrate an In-App User Feedback Mechanism
+* Problem: Customers have no easy way to report bugs or suggest improvements from within the platform.
+* Solution: Add a simple, non-intrusive way for users to communicate with us.
+* Implementation Ideas:
+    1. Feedback Button: Add a "Feedback" or "Help" button in a fixed position (e.g., bottom-right corner).
+    2. Simple Form: On click, this button should open a simple modal with a text area and a submit button.
+    3. Action: The submitted feedback can be configured to automatically create an email, send a message to a Slack channel via webhook, or log an issue in a project management tool.
+6. Refine UI with Modern Loading States
+* Problem: The UI likely shows a blank page or a generic spinner while data is being fetched for the dashboard, which feels slow and dated.
+* Solution: Improve the perceived performance and user experience with modern loading patterns.
+* Implementation:
+    1. Skeleton Screens: Replace jarring loading spinners on the dashboard with skeleton loaders. These are placeholders that mimic the layout of the page, making the user feel like content is loading faster.
+
+
+Testing Checklist & Quality Assurance
+
+Authentication & Security:
+* [ ] Test sign-up with Gmail, Outlook, and other business email domains.
+* [ ] Confirm all verification/password-reset links use the contramind.ai domain.
+* [ ] Test expired token and link scenarios.
+* [ ] Attempt to access /user-dashboard directly without logging in (should redirect to /login).
+* [ ] Verify that logging out properly invalidates the session.
+Onboarding & UX:
+* [ ] Confirm the Welcome Modal appears only once for new users.
+* [ ] Test the "Getting Started" checklist functionality (checking items, dismissing it).
+* [ ] Verify the feedback widget successfully sends messages.
+* [ ] Check that skeleton loaders appear correctly on the dashboard during data fetch.

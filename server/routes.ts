@@ -10,6 +10,13 @@ import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./ema
 import { getPreferredDomain } from "./authRedirect";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Middleware to ensure user is authenticated
+  const ensureAuthenticated = (req: any, res: any, next: any) => {
+    if (req.isAuthenticated && req.isAuthenticated()) {
+      return next();
+    }
+    res.status(401).json({ message: "Not authenticated" });
+  };
   // Waitlist endpoints
   app.post("/api/waitlist", async (req, res) => {
     try {
@@ -372,6 +379,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json({ message: "Logged out successfully" });
     });
+  });
+
+  // Complete onboarding endpoint
+  app.post("/api/auth/complete-onboarding", ensureAuthenticated, async (req, res) => {
+    try {
+      const user = req.user as User;
+      
+      if (!user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const updatedUser = await storage.updateUserOnboardingStatus(user.id, true);
+      
+      if (!updatedUser) {
+        return res.status(500).json({ message: "Failed to update onboarding status" });
+      }
+      
+      res.json({ 
+        message: "Onboarding completed successfully",
+        user: updatedUser 
+      });
+    } catch (error) {
+      console.error("Complete onboarding error:", error);
+      res.status(500).json({ message: "Failed to complete onboarding" });
+    }
+  });
+
+  // Feedback endpoint
+  app.post("/api/feedback", ensureAuthenticated, async (req, res) => {
+    try {
+      const user = req.user as User;
+      const { feedback } = req.body;
+      
+      if (!feedback || typeof feedback !== 'string') {
+        return res.status(400).json({ message: "Feedback is required" });
+      }
+      
+      // In a real app, you would send this to a support system, email, or database
+      console.log(`Feedback from user ${user.email}: ${feedback}`);
+      
+      // For now, we'll just send it as a contact message
+      await storage.createContactMessage({
+        name: user.fullName,
+        email: user.email,
+        subject: "User Feedback",
+        message: feedback
+      });
+      
+      // Also send email to the team
+      await sendContactEmail({
+        name: user.fullName,
+        email: user.email,
+        subject: "User Feedback from Dashboard",
+        message: feedback
+      });
+      
+      res.json({ message: "Feedback submitted successfully" });
+    } catch (error) {
+      console.error("Feedback submission error:", error);
+      res.status(500).json({ message: "Failed to submit feedback" });
+    }
   });
 
   // Get current user route
