@@ -155,6 +155,7 @@ export default function SignupForm({ locale, onLanguageToggle }: SignupFormProps
         method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
       });
       if (!response.ok) {
         const errorData = await response.json();

@@ -10,6 +10,7 @@ import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/not-found";
+import TestAuth from "@/pages/TestAuth";
 import { useAuth } from "@/hooks/useAuth";
 
 function Router() {
@@ -36,6 +37,9 @@ function Router() {
       </Route>
       <Route path="/dashboard">
         {user ? <Dashboard /> : <Redirect to="/login" />}
+      </Route>
+      <Route path="/test-auth">
+        <TestAuth />
       </Route>
       <Route path="/demo-auth">
         {() => {
