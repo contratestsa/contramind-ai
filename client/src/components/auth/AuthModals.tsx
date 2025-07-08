@@ -65,8 +65,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
-      // Redirect to coming soon page after successful login
-      window.location.href = '/coming-soon';
+      // Redirect to dashboard after successful login
+      window.location.href = '/dashboard';
     },
     onError: (error: Error) => {
       toast({

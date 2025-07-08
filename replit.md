@@ -4,21 +4,22 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **July 8, 2025**: Fixed OAuth redirect URI mismatch for production deployment
-  - **OAuth Configuration**: Updated to use CUSTOM_DOMAIN environment variable
-    - Modified passport.ts to prioritize custom domain (contramind.ai) over Replit URLs
+- **July 8, 2025**: Replaced Coming Soon page with main dashboard layout
+  - **Dashboard Implementation**: Created comprehensive dashboard interface
+    - Left sidebar navigation with ContraMind branding and menu items
+    - Top header with user profile, language toggle, and token counter
+    - Main content area with dynamic section display
+    - OAuth and regular authentication now redirect to /dashboard
+  - **OAuth Redirect Fix**: Fixed OAuth redirect URI mismatch for production deployment
+    - Modified passport.ts to use CUSTOM_DOMAIN environment variable
     - Added CUSTOM_DOMAIN=contramind.ai to environment secrets
-    - OAuth callbacks now correctly use https://contramind.ai instead of broken Replit URL
+    - OAuth callbacks use https://contramind.ai instead of broken Replit URL
   - **Cookie Configuration**: Updated session settings for cross-domain compatibility
     - Changed `sameSite: 'none'` for production to allow cross-site cookies
     - Added custom session name `contramind_session`
     - Automatic secure cookie detection for production environments
-  - **CORS Headers**: Added proper CORS configuration for authentication
-    - Allowed origins include both Replit app and custom domain
-    - Enabled credentials in cross-origin requests
-  - **Domain Preservation**: OAuth redirects now preserve the original domain
+  - **Domain Preservation**: OAuth redirects preserve the original domain
     - Created authRedirect module to handle domain consistency
-    - OAuth callbacks redirect to the same domain user came from
 - **July 2, 2025**: Implemented comprehensive email verification system
   - **Email Verification**: Full verification workflow using Resend integration
     - Added emailVerified and verificationToken fields to user schema

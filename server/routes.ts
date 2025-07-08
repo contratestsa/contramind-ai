@@ -299,7 +299,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Redirect to success page on the same domain
       const preferredDomain = getPreferredDomain(req);
-      res.redirect(`${preferredDomain}/coming-soon?verified=true`);
+      res.redirect(`${preferredDomain}/dashboard?verified=true`);
     } catch (error) {
       console.error("Email verification error:", error);
       res.status(500).json({ 
@@ -340,7 +340,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Redirect to the same domain the user came from
       const preferredDomain = getPreferredDomain(req);
-      res.redirect(`${preferredDomain}/coming-soon`);
+      res.redirect(`${preferredDomain}/dashboard`);
     }
   );
 
@@ -376,7 +376,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Redirect to the same domain the user came from
       const preferredDomain = getPreferredDomain(req);
-      res.redirect(`${preferredDomain}/coming-soon`);
+      res.redirect(`${preferredDomain}/dashboard`);
     }
   );
 
