@@ -7,18 +7,35 @@ export function useAuth() {
   const { data: user, isLoading } = useQuery({
     queryKey: ['/api/auth/me'],
     queryFn: async () => {
-      const response = await fetch('/api/auth/me', {
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        if (response.status === 401) {
-          // No user authenticated
-          return null;
+      try {
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include'
+        });
+        if (!response.ok) {
+          if (response.status === 401) {
+            // Check localStorage as fallback
+            const storedAuth = localStorage.getItem('contramind_auth');
+            if (storedAuth) {
+              return JSON.parse(storedAuth);
+            }
+            return null;
+          }
+          throw new Error('Failed to fetch user');
         }
-        throw new Error('Failed to fetch user');
+        const data = await response.json();
+        // Update localStorage with fresh data
+        if (data.user) {
+          localStorage.setItem('contramind_auth', JSON.stringify(data.user));
+        }
+        return data.user;
+      } catch (error) {
+        // Check localStorage on any error
+        const storedAuth = localStorage.getItem('contramind_auth');
+        if (storedAuth) {
+          return JSON.parse(storedAuth);
+        }
+        throw error;
       }
-      const data = await response.json();
-      return data.user;
     },
     retry: false
   });

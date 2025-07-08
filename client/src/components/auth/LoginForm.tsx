@@ -96,13 +96,18 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
       }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Store user data in localStorage as fallback
+      localStorage.setItem('contramind_auth', JSON.stringify(data.user));
+      
       toast({
         title: t.loginSuccess,
         description: t.welcome,
         variant: "default",
       });
-      setLocation("/dashboard");
+      
+      // Force a page reload to ensure auth state is updated
+      window.location.href = "/dashboard";
     },
     onError: (error: any) => {
       toast({

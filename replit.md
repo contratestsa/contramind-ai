@@ -24,6 +24,8 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Modified useAuth hook to check localStorage when cookies fail
     - Maintains backward compatibility with session-based authentication
     - Clears localStorage on logout for security
+    - Maintains backward compatibility with session-based authentication
+    - Clears localStorage on logout for security
   - **OAuth Redirect Fix**: Fixed OAuth redirect to dashboard after authentication
     - Modified passport.ts to prioritize REPLIT_DEV_DOMAIN for OAuth callbacks
     - Added session.save() callbacks to ensure session persistence before redirect
