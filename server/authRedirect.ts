@@ -1,23 +1,16 @@
 // Authentication redirect handler for multiple domains
 export function getPreferredDomain(req: any): string {
-  // Check if we have a custom domain
-  const customDomain = 'contramind.ai';
-  const replitDomain = 'ai-language-bridge-ceo-ContraMind.replit.app';
-  
-  // Get the host from the request
+  // For OAuth redirects, always use the current host to avoid cross-domain issues
   const host = req.get('host');
+  const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
   
-  // If accessing from custom domain, use that
-  if (host?.includes(customDomain)) {
-    return `https://${customDomain}`;
+  // If we have a host, use it
+  if (host) {
+    console.log('Using host for redirect:', host);
+    return `${protocol}://${host}`;
   }
   
-  // If accessing from Replit domain, use that
-  if (host?.includes(replitDomain)) {
-    return `https://${replitDomain}`;
-  }
-  
-  // In development
+  // Fallback to environment variables
   if (process.env.REPLIT_DEV_DOMAIN) {
     return `https://${process.env.REPLIT_DEV_DOMAIN}`;
   }

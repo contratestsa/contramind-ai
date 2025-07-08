@@ -27,11 +27,11 @@ passport.deserializeUser(async (id: number, done) => {
 // Google OAuth Strategy
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   // Get the correct base URL for Replit deployment
-  // Prioritize Replit domain for OAuth callbacks
-  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
-    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
-    : process.env.CUSTOM_DOMAIN
+  // Check for custom domain first (contramind.ai)
+  const baseUrl = process.env.CUSTOM_DOMAIN
     ? `https://${process.env.CUSTOM_DOMAIN}`
+    : process.env.REPLIT_DEV_DOMAIN 
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
     : 'http://localhost:5000';
     
   console.log('OAuth Base URL:', baseUrl);
@@ -85,11 +85,11 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 // Microsoft OAuth Strategy
 if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
   // Get the correct base URL for Replit deployment
-  // Prioritize Replit domain for OAuth callbacks
-  const baseUrl = process.env.REPLIT_DEV_DOMAIN 
-    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
-    : process.env.CUSTOM_DOMAIN
+  // Check for custom domain first (contramind.ai)
+  const baseUrl = process.env.CUSTOM_DOMAIN
     ? `https://${process.env.CUSTOM_DOMAIN}`
+    : process.env.REPLIT_DEV_DOMAIN 
+    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
     : 'http://localhost:5000';
     
   passport.use(new MicrosoftStrategy({
