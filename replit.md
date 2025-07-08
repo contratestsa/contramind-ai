@@ -101,9 +101,20 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 ## Deployment Configuration
 ### Authentication Issues After Deployment
 1. **Session Configuration**: Updated to automatically use secure cookies in production
-   - `secure: process.env.NODE_ENV === 'production'` ensures HTTPS-only cookies
+   - `secure: process.env.NODE_ENV === 'production' || process.env.REPLIT_DEPLOYED_DOMAIN !== undefined` ensures HTTPS-only cookies in deployment
+   - Added `COOKIE_DOMAIN` environment variable support for custom domains
 2. **OAuth Callback URLs**: Updated to check for `REPLIT_DEPLOYED_DOMAIN` first
    - Handles both development and production URLs correctly
 3. **Required Environment Variables**:
    - `SESSION_SECRET`: Must be set for secure session management
-   - OAuth redirect URIs must be updated in Google/Azure consoles to match deployment URL
+   - `COOKIE_DOMAIN`: Optional - set to `.contramind.ai` if using custom domain
+4. **OAuth Provider Configuration**:
+   - **Production URLs**: 
+     - Replit App: `https://ai-language-bridge-ceo-ContraMind.replit.app`
+     - Custom Domain: `https://contramind.ai`
+   - **Google Cloud Console** - Add these authorized redirect URIs:
+     - `https://ai-language-bridge-ceo-ContraMind.replit.app/api/auth/google/callback`
+     - `https://contramind.ai/api/auth/google/callback`
+   - **Azure Portal** - Add these redirect URIs:
+     - `https://ai-language-bridge-ceo-ContraMind.replit.app/api/auth/microsoft/callback`
+     - `https://contramind.ai/api/auth/microsoft/callback`
