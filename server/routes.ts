@@ -330,8 +330,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         // Always redirect to the production domain after OAuth
         const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
-        console.log('Google OAuth redirecting to:', `${productionDomain}/user-dashboard`);
-        res.redirect(`${productionDomain}/user-dashboard`);
+        console.log('Google OAuth redirecting to:', `${productionDomain}/coming-soon`);
+        res.redirect(`${productionDomain}/coming-soon`);
       });
     }
   );
@@ -364,8 +364,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         // Always redirect to the production domain after OAuth
         const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
-        console.log('Microsoft OAuth redirecting to:', `${productionDomain}/user-dashboard`);
-        res.redirect(`${productionDomain}/user-dashboard`);
+        console.log('Microsoft OAuth redirecting to:', `${productionDomain}/coming-soon`);
+        res.redirect(`${productionDomain}/coming-soon`);
       });
     }
   );

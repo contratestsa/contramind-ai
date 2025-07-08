@@ -4,6 +4,11 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 8, 2025**: User Flow Update - Coming Soon Page
+  - Modified user authentication flow to show coming soon page after login
+  - Updated routes: authenticated users now redirect to /coming-soon instead of /user-dashboard
+  - OAuth callbacks (Google/Microsoft) redirect to /coming-soon upon successful authentication
+  - Dashboard remains accessible at /user-dashboard for admin/testing purposes
 - **July 8, 2025**: Phase 2 - Onboarding Enhancements & Bug Fixes
   - **Password Validation Fix**: Fixed signup form password mismatch error
     - Added input trimming to remove accidental spaces from all form fields
