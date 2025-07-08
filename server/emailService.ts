@@ -174,7 +174,7 @@ This email was sent because you joined our waitlist at contramind.ai
 }
 
 export async function sendVerificationEmail({ email, fullName, verificationToken }: VerificationEmailData) {
-  const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+  const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
   const verificationUrl = `${productionDomain}/api/auth/verify-email?token=${verificationToken}`;
   
   const subject = 'Verify Your ContraMind Account';

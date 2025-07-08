@@ -319,7 +319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if email is verified
       if (!user.emailVerified) {
         // Redirect to a page informing them to verify email
-        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
         return res.redirect(`${productionDomain}/?message=verify-email`);
       }
       
@@ -329,7 +329,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to save session after Google OAuth:', err);
         }
         // Always redirect to the production domain after OAuth
-        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
         console.log('Google OAuth redirecting to:', `${productionDomain}/coming-soon`);
         res.redirect(`${productionDomain}/coming-soon`);
       });
@@ -353,7 +353,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if email is verified
       if (!user.emailVerified) {
         // Redirect to a page informing them to verify email
-        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
         return res.redirect(`${productionDomain}/?message=verify-email`);
       }
       
@@ -363,7 +363,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to save session after Microsoft OAuth:', err);
         }
         // Always redirect to the production domain after OAuth
-        const productionDomain = process.env.PRODUCTION_DOMAIN || 'https://contramind.ai';
+        const productionDomain = process.env.PRODUCTION_DOMAIN || process.env.REPLIT_DEPLOYED_DOMAIN || 'https://contramind.ai';
         console.log('Microsoft OAuth redirecting to:', `${productionDomain}/coming-soon`);
         res.redirect(`${productionDomain}/coming-soon`);
       });
