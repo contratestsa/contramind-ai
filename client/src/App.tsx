@@ -32,7 +32,10 @@ function Router() {
         {user ? <Dashboard /> : <Redirect to="/" />}
       </Route>
       <Route path="/coming-soon">
-        <Redirect to="/dashboard" />
+        {() => {
+          window.location.href = '/dashboard';
+          return null;
+        }}
       </Route>
 
       <Route component={NotFound} />
