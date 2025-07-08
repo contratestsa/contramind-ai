@@ -17,10 +17,11 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Modified useAuth hook to check localStorage when cookies fail
     - Maintains backward compatibility with session-based authentication
     - Clears localStorage on logout for security
-  - **OAuth Redirect Fix**: Fixed OAuth redirect URI mismatch for production deployment
-    - Modified passport.ts to use CUSTOM_DOMAIN environment variable
-    - Added CUSTOM_DOMAIN=contramind.ai to environment secrets
-    - OAuth callbacks use https://contramind.ai instead of broken Replit URL
+  - **OAuth Redirect Fix**: Fixed OAuth redirect to dashboard after authentication
+    - Modified passport.ts to prioritize REPLIT_DEV_DOMAIN for OAuth callbacks
+    - Added session.save() callbacks to ensure session persistence before redirect
+    - OAuth callbacks now properly redirect to /dashboard instead of /coming-soon
+    - Both Google and Microsoft OAuth working with Replit domain
   - **Cookie Configuration**: Updated session settings for cross-domain compatibility
     - Changed `sameSite: 'none'` for production to allow cross-site cookies
     - Added custom session name `contramind_session`
