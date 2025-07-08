@@ -36,6 +36,16 @@ function Router() {
       <Route path="/coming-soon">
         <Redirect to="/dashboard" />
       </Route>
+      <Route path="/demo-auth">
+        {() => {
+          const DemoAuth = React.lazy(() => import("@/pages/DemoAuth"));
+          return (
+            <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>}>
+              <DemoAuth />
+            </React.Suspense>
+          );
+        }}
+      </Route>
 
       <Route component={NotFound} />
     </Switch>

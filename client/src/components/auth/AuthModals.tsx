@@ -69,8 +69,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
-      // Redirect to dashboard after successful login
-      window.location.href = '/dashboard';
+      // Force reload to dashboard with auth
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 100);
     },
     onError: (error: Error) => {
       toast({
