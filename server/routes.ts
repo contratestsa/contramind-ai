@@ -247,6 +247,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(500).json({ message: "Login failed" });
         }
         
+        // Log session details for debugging
+        console.log('Login successful for user:', user.email);
+        console.log('Session ID:', req.sessionID);
+        console.log('Session user:', req.user);
+        
         // Save session to ensure cookie is set
         req.session.save((saveErr) => {
           if (saveErr) {
@@ -255,6 +260,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
           
           console.log('Session saved successfully, session ID:', req.sessionID);
+          console.log('Session cookie:', req.session.cookie);
           
           // Remove password from response
           const { password, ...userWithoutPassword } = user;
@@ -425,7 +431,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log("Auth check - Headers:", req.headers);
     console.log("Auth check - Cookie header:", req.headers.cookie);
     console.log("Auth check - Session ID:", req.sessionID);
-    console.log("Auth check - User:", req.user);
+    console.log("Auth check - Session data:", req.session);
+    console.log("Auth check - User from req.user:", req.user);
+    console.log("Auth check - Passport session:", (req.session as any).passport);
     
     if (req.user) {
       const { password, ...userWithoutPassword } = req.user as any;
