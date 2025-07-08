@@ -1,11 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-import { randomBytes } from "crypto";
+
 import passport from "./passport";
 import { storage } from "./storage";
 import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
-import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail } from "./emailService";
+import { sendWelcomeEmail, sendContactEmail } from "./emailService";
 import { getPreferredDomain } from "./authRedirect";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -146,20 +146,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create user (in production, hash the password)
       const user = await storage.createUser(validatedData);
       
-      // Generate verification token and send verification email
-      const verificationToken = randomBytes(32).toString('hex');
-      await storage.updateUserVerification(user.email, verificationToken);
-      
-      // Send verification email
-      const emailResult = await sendVerificationEmail({
-        email: user.email,
-        fullName: user.fullName,
-        verificationToken
-      });
-      
-      if (!emailResult.success) {
-        console.error('Failed to send verification email:', emailResult.error);
-      }
+      // Automatically verify user email without sending confirmation
+      await storage.verifyUserEmailByEmail(user.email);
       
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
@@ -202,30 +190,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Check if email is verified
-      if (!user.emailVerified) {
-        // Generate new verification token if needed
-        if (!user.verificationToken) {
-          const verificationToken = randomBytes(32).toString('hex');
-          await storage.updateUserVerification(user.email, verificationToken);
-          
-          // Send verification email
-          const emailResult = await sendVerificationEmail({
-            email: user.email,
-            fullName: user.fullName,
-            verificationToken
-          });
-          
-          if (!emailResult.success) {
-            console.error('Failed to send verification email:', emailResult.error);
-          }
-        }
-        
-        return res.status(403).json({ 
-          message: "Please verify your email address. A verification email has been sent.",
-          emailVerificationRequired: true
-        });
-      }
+      // Email verification check removed - users can login without email verification
 
       // Login confirmation email disabled per user request
 
