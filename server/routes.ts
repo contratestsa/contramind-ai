@@ -259,8 +259,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Redirect to success page or coming soon page
-      res.redirect("/coming-soon?verified=true");
+      // Redirect to success page or dashboard page
+      res.redirect("/dashboard?verified=true");
     } catch (error) {
       console.error("Email verification error:", error);
       res.status(500).json({ 
@@ -281,7 +281,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     (req, res) => {
       // Successful authentication
       console.log('Google OAuth successful for user:', req.user);
-      res.redirect("/coming-soon");
+      res.redirect("/dashboard");
     }
   );
 
@@ -297,7 +297,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     (req, res) => {
       // Successful authentication
       console.log('Microsoft OAuth successful for user:', req.user);
-      res.redirect("/coming-soon");
+      res.redirect("/dashboard");
     }
   );
 

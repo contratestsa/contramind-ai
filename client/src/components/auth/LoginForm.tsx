@@ -101,7 +101,7 @@ export default function LoginForm({ locale, onLanguageToggle }: LoginFormProps) 
         description: t.welcome,
         variant: "default",
       });
-      setLocation("/coming-soon");
+      setLocation("/dashboard");
     },
     onError: (error: any) => {
       toast({
