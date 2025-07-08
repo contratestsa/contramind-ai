@@ -60,15 +60,17 @@ export default function ComingSoon() {
         className="max-w-4xl mx-auto text-center relative z-10"
       >
         {/* ContraMind.ai Logo/Text */}
-        <h2 className="text-3xl font-bold text-white mb-8">ContraMind.ai</h2>
+        <h2 className="text-3xl font-bold text-white mb-8 font-space tracking-wider animate-pulse">ContraMind.ai</h2>
 
         {/* Coming Soon Heading */}
-        <h1 className="text-6xl lg:text-7xl font-bold text-white mb-4">
+        <h1 className="text-6xl lg:text-7xl font-bold text-white mb-4 font-space tracking-wide" style={{
+          textShadow: '0 0 40px rgba(183, 222, 232, 0.8), 0 0 80px rgba(183, 222, 232, 0.6)'
+        }}>
           {t('قريباً', 'Coming Soon')}
         </h1>
 
         {/* Subheading */}
-        <p className="text-xl text-gray-300 mb-12">
+        <p className="text-xl text-gray-300 mb-12 font-inter tracking-wide">
           {t('نحن نحضر شيئاً مذهلاً لك', "We're preparing something amazing for you")}
         </p>
 
@@ -78,9 +80,12 @@ export default function ComingSoon() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="bg-white rounded-3xl p-8 mb-12 shadow-2xl max-w-2xl mx-auto"
+          style={{
+            boxShadow: '0 0 60px rgba(183, 222, 232, 0.5), 0 10px 40px rgba(0, 0, 0, 0.2)'
+          }}
         >
-          <p className="text-gray-500 text-sm mb-4">{t('الوقت حتى الإطلاق', 'Time until launch')}</p>
-          <div className="text-5xl lg:text-6xl font-bold text-[#1e2936] tracking-wider">
+          <p className="text-gray-500 text-sm mb-4 font-inter">{t('الوقت حتى الإطلاق', 'Time until launch')}</p>
+          <div className="text-5xl lg:text-6xl font-bold text-[#1e2936] tracking-wider font-space">
             {formatNumber(timeLeft.days)}:{formatNumber(timeLeft.hours)}:{formatNumber(timeLeft.minutes)}:{formatNumber(timeLeft.seconds)}
           </div>
           <div className="flex justify-center gap-8 mt-3 text-gray-500 text-sm">
@@ -100,34 +105,47 @@ export default function ComingSoon() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="bg-[#243342] rounded-3xl p-8 shadow-xl max-w-3xl mx-auto border border-gray-700"
+          style={{
+            boxShadow: '0 0 50px rgba(183, 222, 232, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3)',
+            border: '1px solid rgba(183, 222, 232, 0.2)'
+          }}
         >
-          <h3 className="text-2xl font-bold text-white mb-4">
+          <h3 className="text-2xl font-bold text-white mb-4 font-space">
             {t('مرحباً بك في ContraMind.ai', 'Welcome to ContraMind.ai')}
           </h3>
-          <p className="text-gray-400 mb-8">
+          <p className="text-gray-400 mb-8 font-inter">
             {t('أول منصة لإدارة العقود القانونية مدعومة بالذكاء الاصطناعي في منطقة الشرق الأوسط وشمال أفريقيا', 'The first AI-powered legal contract management platform for the MENA region')}
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3">
-                <Lightbulb className="w-8 h-8 text-gray-300" />
+              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3 transition-all hover:scale-110" style={{
+                borderColor: 'rgba(183, 222, 232, 0.5)',
+                boxShadow: '0 0 20px rgba(183, 222, 232, 0.3)'
+              }}>
+                <Lightbulb className="w-8 h-8 text-[#B7DEE8]" />
               </div>
-              <p className="text-gray-300 text-sm">{t('تحليل ذكي', 'Smart Analysis')}</p>
+              <p className="text-gray-300 text-sm font-inter">{t('تحليل ذكي', 'Smart Analysis')}</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3">
-                <Lock className="w-8 h-8 text-gray-300" />
+              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3 transition-all hover:scale-110" style={{
+                borderColor: 'rgba(183, 222, 232, 0.5)',
+                boxShadow: '0 0 20px rgba(183, 222, 232, 0.3)'
+              }}>
+                <Lock className="w-8 h-8 text-[#B7DEE8]" />
               </div>
-              <p className="text-gray-300 text-sm">{t('أمان متقدم', 'Advanced Security')}</p>
+              <p className="text-gray-300 text-sm font-inter">{t('أمان متقدم', 'Advanced Security')}</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3">
-                <Globe className="w-8 h-8 text-gray-300" />
+              <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center mx-auto mb-3 transition-all hover:scale-110" style={{
+                borderColor: 'rgba(183, 222, 232, 0.5)',
+                boxShadow: '0 0 20px rgba(183, 222, 232, 0.3)'
+              }}>
+                <Globe className="w-8 h-8 text-[#B7DEE8]" />
               </div>
-              <p className="text-gray-300 text-sm">{t('دعم ثنائي اللغة', 'Bilingual Support')}</p>
+              <p className="text-gray-300 text-sm font-inter">{t('دعم ثنائي اللغة', 'Bilingual Support')}</p>
             </div>
           </div>
         </motion.div>
@@ -137,7 +155,7 @@ export default function ComingSoon() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-gray-400 mt-12"
+          className="text-gray-400 mt-12 font-inter"
         >
           {t('شكراً لانضمامك إلينا. ترقب الإطلاق!', 'Thank you for joining us. Stay tuned for the launch!')}
         </motion.p>
