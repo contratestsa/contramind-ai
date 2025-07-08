@@ -33,9 +33,9 @@ const sessionConfig: session.SessionOptions = {
   saveUninitialized: false,
   name: 'contramind_session', // Custom session name
   cookie: {
-    secure: true, // Always use secure cookies in HTTPS environment
+    secure: false, // Disable secure in development to fix cookie issues
     httpOnly: true,
-    sameSite: 'none', // Required for cross-origin cookies with secure=true
+    sameSite: 'lax', // Use lax for development
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     // Don't set domain - let browser handle it per request
   }
@@ -57,23 +57,18 @@ app.use(sessionMiddleware);
 // CORS configuration for authentication
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  const allowedOrigins = [
-    'https://contramind.ai',
-    'https://ai-language-bridge-ceo-ContraMind.replit.app',
-    'http://localhost:5173',
-    'http://localhost:5000'
-  ];
   
-  // Add current Replit dev domain if present
-  if (process.env.REPLIT_DEV_DOMAIN) {
-    allowedOrigins.push(`https://${process.env.REPLIT_DEV_DOMAIN}`);
-  }
-  
-  if (origin && allowedOrigins.includes(origin)) {
+  // For Replit dev environment, allow any origin from Replit
+  if (origin && (origin.includes('.replit.dev') || origin.includes('localhost'))) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie');
+  } else if (origin === 'https://contramind.ai' || origin === 'https://ai-language-bridge-ceo-ContraMind.replit.app') {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie');
   }
   
   if (req.method === 'OPTIONS') {

@@ -12,7 +12,9 @@ export function useAuth() {
       });
       if (!response.ok) {
         if (response.status === 401) {
-          return null;
+          // Fallback to localStorage
+          const localAuth = localStorage.getItem('contramind_auth');
+          return localAuth ? JSON.parse(localAuth) : null;
         }
         throw new Error('Failed to fetch user');
       }
@@ -35,6 +37,7 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.setQueryData(['/api/auth/me'], null);
+      localStorage.removeItem('contramind_auth');
       window.location.href = '/';
     }
   });

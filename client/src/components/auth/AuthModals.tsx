@@ -58,7 +58,11 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Store user in localStorage as a temporary fix for cookie issues
+      if (data.user) {
+        localStorage.setItem('contramind_auth', JSON.stringify(data.user));
+      }
       toast({
         title: t('تم تسجيل الدخول بنجاح', 'Login Successful'),
         description: t('مرحباً بك في ContraMind', 'Welcome to ContraMind')
