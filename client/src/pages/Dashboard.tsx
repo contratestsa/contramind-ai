@@ -4,13 +4,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { 
   LayoutGrid, 
+  Plus,
   Folder, 
+  Bell,
   CheckSquare, 
   FileBarChart, 
   Settings, 
+  Layers,
   HelpCircle, 
   Calendar,
-  Bell,
   Inbox,
   ChevronDown,
   Coins
@@ -67,9 +69,19 @@ export default function Dashboard() {
       label: language === 'ar' ? 'لوحة التحكم' : 'Dashboard' 
     },
     { 
+      id: 'create', 
+      icon: <Plus className="w-[18px] h-[18px]" />, 
+      label: language === 'ar' ? 'إنشاء' : 'Create' 
+    },
+    { 
       id: 'repository', 
       icon: <Folder className="w-[18px] h-[18px]" />, 
       label: language === 'ar' ? 'المستودع' : 'Repository' 
+    },
+    { 
+      id: 'alerts', 
+      icon: <Bell className="w-[18px] h-[18px]" />, 
+      label: language === 'ar' ? 'التنبيهات' : 'Alerts' 
     },
     { 
       id: 'tasks', 
@@ -84,8 +96,12 @@ export default function Dashboard() {
     { 
       id: 'settings', 
       icon: <Settings className="w-[18px] h-[18px]" />, 
-      label: language === 'ar' ? 'الإعدادات' : 'Settings',
-      hasDropdown: true 
+      label: language === 'ar' ? 'الإعدادات' : 'Settings' 
+    },
+    { 
+      id: 'deals', 
+      icon: <Layers className="w-[18px] h-[18px]" />, 
+      label: language === 'ar' ? 'مجموعة الصفقات' : 'Deals Stack' 
     },
   ];
 
@@ -110,7 +126,7 @@ export default function Dashboard() {
 
         {/* My Work Section */}
         <div className="flex-1">
-          <div className="bg-[#0C2836] text-white px-4 py-2 text-sm font-semibold">
+          <div className="bg-[#0C2836] text-white px-5 py-3 text-sm font-semibold">
             {language === 'ar' ? 'عملي' : 'My Work'}
           </div>
           
@@ -144,7 +160,7 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Top Header */}
-        <header className="h-[60px] bg-white shadow-sm flex items-center justify-end px-6 gap-4">
+        <header className="h-[60px] bg-white shadow-[0_2px_4px_rgba(0,0,0,0.1)] flex items-center justify-end px-6 gap-4">
           {/* Inbox */}
           <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <Inbox className="w-5 h-5 text-gray-600" />
@@ -199,8 +215,14 @@ export default function Dashboard() {
             {activeNav === 'dashboard' && (
               <p>{language === 'ar' ? 'محتوى لوحة التحكم سيظهر هنا' : 'Dashboard content will appear here'}</p>
             )}
+            {activeNav === 'create' && (
+              <p>{language === 'ar' ? 'إنشاء مستند جديد سيظهر هنا' : 'Create new document will appear here'}</p>
+            )}
             {activeNav === 'repository' && (
               <p>{language === 'ar' ? 'محتوى المستودع سيظهر هنا' : 'Repository content will appear here'}</p>
+            )}
+            {activeNav === 'alerts' && (
+              <p>{language === 'ar' ? 'التنبيهات ستظهر هنا' : 'Alerts will appear here'}</p>
             )}
             {activeNav === 'tasks' && (
               <p>{language === 'ar' ? 'محتوى المهام سيظهر هنا' : 'Tasks content will appear here'}</p>
@@ -210,6 +232,9 @@ export default function Dashboard() {
             )}
             {activeNav === 'settings' && (
               <p>{language === 'ar' ? 'محتوى الإعدادات سيظهر هنا' : 'Settings content will appear here'}</p>
+            )}
+            {activeNav === 'deals' && (
+              <p>{language === 'ar' ? 'مجموعة الصفقات ستظهر هنا' : 'Deals Stack will appear here'}</p>
             )}
           </div>
         </main>
