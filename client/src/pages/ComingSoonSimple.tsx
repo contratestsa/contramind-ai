@@ -19,6 +19,13 @@ export default function ComingSoonSimple() {
     }
   }, [isAuthenticated, user, navigate]);
   
+  // Also check if user data exists in the page (for server-side rendered auth)
+  useEffect(() => {
+    if (user) {
+      window.location.href = '/dashboard';
+    }
+  }, [user]);
+  
   return (
     <div className={`min-h-screen bg-gradient-to-br from-[#0C2836] to-[#1e3a47] flex items-center justify-center relative ${language === 'ar' ? 'font-arabic' : 'font-inter'}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {/* User info and logout button */}
