@@ -3,13 +3,42 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useLocation } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
-import { Lightbulb, Lock, Globe } from 'lucide-react';
+import { Lightbulb, Lock, Globe, LogOut } from 'lucide-react';
+import { useMutation } from '@tanstack/react-query';
 
 export default function ComingSoon() {
   const { t, language } = useLanguage();
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  // Logout mutation
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: t('تم تسجيل الخروج بنجاح', 'Logged out successfully'),
+        description: t('نراك قريباً!', 'See you soon!')
+      });
+      setLocation('/');
+    },
+    onError: () => {
+      toast({
+        title: t('خطأ في تسجيل الخروج', 'Logout Error'),
+        description: t('حدث خطأ أثناء تسجيل الخروج', 'An error occurred while logging out'),
+        variant: 'destructive'
+      });
+    }
+  });
 
   // Calculate time until launch (July 18, 2025)
   useEffect(() => {
@@ -52,6 +81,24 @@ export default function ComingSoon() {
     <div className="min-h-screen bg-[#1e2936] flex flex-col items-center justify-center px-4 relative overflow-hidden">
       {/* Gradient background effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1e2936] via-[#243342] to-[#1e2936]" />
+      
+      {/* Logout Button */}
+      <motion.button
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        onClick={() => logoutMutation.mutate()}
+        disabled={logoutMutation.isPending}
+        className="absolute top-6 right-6 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all duration-300 backdrop-blur-sm"
+        style={{
+          boxShadow: '0 0 20px rgba(183, 222, 232, 0.2)'
+        }}
+      >
+        <LogOut className="w-4 h-4" />
+        <span className="font-inter text-sm">
+          {logoutMutation.isPending ? t('جاري الخروج...', 'Logging out...') : t('تسجيل الخروج', 'Logout')}
+        </span>
+      </motion.button>
       
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
