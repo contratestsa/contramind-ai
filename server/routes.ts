@@ -348,9 +348,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Redirect to the same domain the user came from
-      const preferredDomain = getPreferredDomain(req);
-      res.redirect(`${preferredDomain}/dashboard`);
+      // Ensure session is saved before redirecting
+      req.session.save((err) => {
+        if (err) {
+          console.error('Failed to save session after Google OAuth:', err);
+        }
+        // Redirect to the same domain the user came from
+        const preferredDomain = getPreferredDomain(req);
+        console.log('Google OAuth redirecting to:', `${preferredDomain}/dashboard`);
+        res.redirect(`${preferredDomain}/dashboard`);
+      });
     }
   );
 
@@ -384,9 +391,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Redirect to the same domain the user came from
-      const preferredDomain = getPreferredDomain(req);
-      res.redirect(`${preferredDomain}/dashboard`);
+      // Ensure session is saved before redirecting
+      req.session.save((err) => {
+        if (err) {
+          console.error('Failed to save session after Microsoft OAuth:', err);
+        }
+        // Redirect to the same domain the user came from
+        const preferredDomain = getPreferredDomain(req);
+        console.log('Microsoft OAuth redirecting to:', `${preferredDomain}/dashboard`);
+        res.redirect(`${preferredDomain}/dashboard`);
+      });
     }
   );
 
