@@ -306,10 +306,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Google OAuth routes
-  app.get("/api/auth/google", passport.authenticate("google", { 
-    scope: ["profile", "email"] 
-  }));
+  // Google OAuth routes with development bypass
+  app.get("/api/auth/google", (req, res, next) => {
+    // In development, bypass OAuth if redirect URI issues exist
+    if (process.env.NODE_ENV === 'development' && process.env.BYPASS_OAUTH === 'true') {
+      return res.redirect('/api/auth/dev-oauth?provider=google');
+    }
+    passport.authenticate("google", { 
+      scope: ["profile", "email"] 
+    })(req, res, next);
+  });
 
   app.get("/api/auth/google/callback", 
     passport.authenticate("google", { 
@@ -340,10 +346,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   );
 
-  // Microsoft OAuth routes
-  app.get("/api/auth/microsoft", passport.authenticate("microsoft", {
-    scope: ['user.read']
-  }));
+  // Microsoft OAuth routes with development bypass
+  app.get("/api/auth/microsoft", (req, res, next) => {
+    // In development, bypass OAuth if redirect URI issues exist
+    if (process.env.NODE_ENV === 'development' && process.env.BYPASS_OAUTH === 'true') {
+      return res.redirect('/api/auth/dev-oauth?provider=microsoft');
+    }
+    passport.authenticate("microsoft", {
+      scope: ['user.read']
+    })(req, res, next);
+  });
 
   app.get("/api/auth/microsoft/callback",
     passport.authenticate("microsoft", {
@@ -392,6 +404,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ user: userWithoutPassword });
     } else {
       res.status(401).json({ message: "Not authenticated" });
+    }
+  });
+
+  // Development OAuth bypass route
+  app.get("/api/auth/dev-oauth", async (req, res) => {
+    if (process.env.NODE_ENV !== 'development' || process.env.BYPASS_OAUTH !== 'true') {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    const provider = req.query.provider as string;
+    const testEmail = provider === 'google' ? 'test@gmail.com' : 'test@outlook.com';
+    const testName = provider === 'google' ? 'Test Google User' : 'Test Microsoft User';
+
+    try {
+      // Check if user exists
+      let user = await storage.getUserByEmail(testEmail);
+      
+      if (!user) {
+        // Create test user
+        user = await storage.createUser({
+          email: testEmail,
+          username: testEmail,
+          fullName: testName,
+          password: `oauth_${provider}_test`
+        });
+        
+        // Mark as verified
+        await storage.verifyUserEmailByEmail(testEmail);
+      }
+
+      // Log the user in
+      req.login(user, async (err) => {
+        if (err) {
+          console.error('Dev OAuth login error:', err);
+          return res.redirect('/?error=dev_oauth_failed');
+        }
+
+        // Send login confirmation email
+        await sendLoginConfirmationEmail({
+          email: user!.email,
+          fullName: user!.fullName,
+          loginTime: new Date(),
+          ipAddress: 'Development Mode'
+        });
+
+        res.redirect('/coming-soon');
+      });
+    } catch (error) {
+      console.error('Dev OAuth error:', error);
+      res.redirect('/?error=dev_oauth_failed');
     }
   });
 

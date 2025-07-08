@@ -22,17 +22,22 @@ passport.deserializeUser(async (id: number, done) => {
 
 // Google OAuth Strategy
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  // Get the correct base URL for Replit deployment
-  const baseUrl = process.env.REPLIT_DEPLOYED_DOMAIN 
-    ? `https://${process.env.REPLIT_DEPLOYED_DOMAIN}` 
-    : process.env.REPLIT_DEV_DOMAIN 
-    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
-    : 'http://localhost:5000';
+  // Use environment variable for callback URL or construct dynamically
+  const googleCallbackURL = process.env.GOOGLE_CALLBACK_URL || (() => {
+    const baseUrl = process.env.REPLIT_DEPLOYED_DOMAIN 
+      ? `https://${process.env.REPLIT_DEPLOYED_DOMAIN}` 
+      : process.env.REPLIT_DEV_DOMAIN 
+      ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
+      : 'http://localhost:5000';
+    return `${baseUrl}/api/auth/google/callback`;
+  })();
+    
+  console.log('Google OAuth callback URL:', googleCallbackURL);
     
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${baseUrl}/api/auth/google/callback`
+    callbackURL: googleCallbackURL
   }, async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
       console.log('Google OAuth profile:', {
@@ -76,17 +81,22 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 // Microsoft OAuth Strategy
 if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
-  // Get the correct base URL for Replit deployment
-  const baseUrl = process.env.REPLIT_DEPLOYED_DOMAIN 
-    ? `https://${process.env.REPLIT_DEPLOYED_DOMAIN}` 
-    : process.env.REPLIT_DEV_DOMAIN 
-    ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
-    : 'http://localhost:5000';
+  // Use environment variable for callback URL or construct dynamically
+  const microsoftCallbackURL = process.env.MICROSOFT_CALLBACK_URL || (() => {
+    const baseUrl = process.env.REPLIT_DEPLOYED_DOMAIN 
+      ? `https://${process.env.REPLIT_DEPLOYED_DOMAIN}` 
+      : process.env.REPLIT_DEV_DOMAIN 
+      ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
+      : 'http://localhost:5000';
+    return `${baseUrl}/api/auth/microsoft/callback`;
+  })();
+    
+  console.log('Microsoft OAuth callback URL:', microsoftCallbackURL);
     
   passport.use(new MicrosoftStrategy({
     clientID: process.env.MICROSOFT_CLIENT_ID,
     clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
-    callbackURL: `${baseUrl}/api/auth/microsoft/callback`,
+    callbackURL: microsoftCallbackURL,
     scope: ['user.read']
   }, async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
