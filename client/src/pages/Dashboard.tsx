@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { 
   Grid3X3, 
   Plus, 
@@ -12,7 +10,6 @@ import {
   Layers, 
   HelpCircle, 
   Calendar,
-  LogOut,
   Inbox,
   Globe
 } from "lucide-react";
@@ -38,7 +35,6 @@ interface User {
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage();
-  const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const [hasNotifications, setHasNotifications] = useState(true);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -48,46 +44,17 @@ export default function Dashboard() {
     setLanguage(language === 'ar' ? 'en' : 'ar');
   };
 
-  // Fetch user data
-  const { data: userData, isLoading, error } = useQuery<{ user: User }>({
-    queryKey: ["/api/auth/me"],
-    retry: false,
-  });
-
-  // Logout mutation
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      if (!response.ok) {
-        throw new Error('Logout failed');
-      }
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: t('تم تسجيل الخروج بنجاح', 'Logged out successfully'),
-        description: t('نراك قريباً!', 'See you soon!')
-      });
-      setLocation('/');
-    },
-    onError: () => {
-      toast({
-        title: t('خطأ في تسجيل الخروج', 'Logout Error'),
-        description: t('حدث خطأ أثناء تسجيل الخروج', 'An error occurred while logging out'),
-        variant: 'destructive'
-      });
+  // Mock user data for demo
+  const userData = {
+    user: {
+      id: 1,
+      username: "Sarah",
+      fullName: "Sarah Mitchell",
+      email: "sarah@example.com",
+      profilePicture: null
     }
-  });
-
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (error || (!isLoading && !userData?.user)) {
-      setLocation('/login');
-    }
-  }, [error, isLoading, userData, setLocation]);
+  };
+  const isLoading = false;
 
   const sidebarItems: SidebarItem[] = [
     { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة القيادة", en: "Dashboard" }, path: "/dashboard" },
@@ -215,14 +182,7 @@ export default function Dashboard() {
               <div className="w-10 h-10 bg-[#0C2836] text-white rounded-full flex items-center justify-center font-semibold">
                 {userInitials}
               </div>
-              <button
-                onClick={() => logoutMutation.mutate()}
-                disabled={logoutMutation.isPending}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                title={t('تسجيل الخروج', 'Logout')}
-              >
-                <LogOut className="w-5 h-5 text-gray-600" />
-              </button>
+
             </div>
           </div>
         </header>

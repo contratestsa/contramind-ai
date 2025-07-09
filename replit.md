@@ -1,9 +1,14 @@
 # ContraMind.ai - Legal Tech Platform
 
 ## Project Overview
-A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
+A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. The platform features a modern dashboard interface with AI-powered document analysis, token-based usage system, and professional language switching capabilities.
 
 ## Recent Changes
+- **July 9, 2025**: Simplified application architecture to focus on core functionality
+  - **Dashboard as Main Page**: Removed authentication pages (login, signup, coming-soon) and made dashboard the primary interface
+  - **Direct Access**: Application now starts directly at the dashboard without requiring authentication
+  - **Upload Modal**: Contract upload functionality implemented as a popup modal instead of separate page
+  - **UI Updates**: Fixed sidebar icon visibility and aligned all fonts with brand typography (Space Grotesk, Inter, Almarai)
 - **July 8, 2025**: Added GitHub integration and Google Cloud migration capabilities
   - **GitHub Integration**: Configured for read/write access to https://github.com/contramindai/contramindPoC
   - **Google Cloud Migration**: Created comprehensive migration guide and deployment configurations
