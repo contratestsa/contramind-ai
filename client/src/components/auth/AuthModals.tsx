@@ -277,26 +277,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               {loginMutation.isPending ? t('جاري تسجيل الدخول...', 'Signing in...') : t('تسجيل الدخول', 'Sign In')}
             </button>
 
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                {t('أو استمر مع', 'Or continue with')}
-              </p>
-              <div className="flex gap-3 mt-3">
-                <a 
-                  href="/api/auth/google"
-                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
-                >
-                  Google
-                </a>
-                <a 
-                  href="/api/auth/microsoft"
-                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
-                >
-                  Microsoft
-                </a>
-              </div>
-            </div>
-
             <div className="text-center pt-4">
               <p className="text-sm text-gray-600">
                 {t('ليس لديك حساب؟', "Don't have an account?")}{' '}
@@ -430,42 +410,6 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               <UserPlus className="w-4 h-4" />
               {signupMutation.isPending ? t('جاري إنشاء الحساب...', 'Creating account...') : t('إنشاء حساب', 'Create Account')}
             </button>
-
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                {t('أو استمر مع', 'Or continue with')}
-              </p>
-              <div className="flex gap-3 mt-3">
-                <a 
-                  href="/api/auth/google"
-                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
-                >
-                  Google
-                </a>
-                <a 
-                  href="/api/auth/microsoft"
-                  className="flex-1 h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] flex items-center justify-center no-underline"
-                >
-                  Microsoft
-                </a>
-              </div>
-            </div>
-
-            <div className="text-center pt-2">
-              <p className="text-sm text-gray-600">
-                {t('لديك حساب بالفعل؟', 'Already have an account?')}{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSignupOpen(false);
-                    setIsLoginOpen(true);
-                  }}
-                  className="text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  {t('تسجيل الدخول', 'Sign in')}
-                </button>
-              </p>
-            </div>
           </form>
         </DialogContent>
       </Dialog>
