@@ -4,7 +4,13 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **July 9, 2025**: Enhanced sidebar navigation and settings pages
+- **July 9, 2025**: Enhanced navigation with Help Center and support features
+  - **Help Center Implementation**: Created comprehensive Help Center accessible from sidebar
+    - Sidebar: Added Help navigation item across all pages (Dashboard, Repository, AnalysisProgress, AnalysisResults, Settings)
+    - Footer Quick Links: Added support links at bottom of sidebar (Feedback, Raise Ticket, What's New)
+    - Help Center Page: Complete implementation with hero section, 6-card quick links grid, expandable FAQ section
+    - Support Modals: FeedbackModal and TicketModal integrated into all pages
+    - What's New Page: Release notes and updates page with proper categorization
   - **Settings Navigation**: Implemented expandable Settings menu in sidebar across all pages
     - Settings item now has chevron icon that rotates when expanded
     - Sub-menu items appear with proper indentation for Personal and Organization settings

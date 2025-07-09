@@ -1,0 +1,135 @@
+Create the Help Center page and support features:
+
+1. HELP CENTER PAGE:
+- Access via "Help" in sidebar
+- Breadcrumb: "Help Center"
+
+Hero Section:
+- Background: #E8F4F8 (light blue)
+- Padding: 40px
+- Title: "How can we help you?" (32px, centered)
+- Search bar below:
+  - Width: 500px
+  - Placeholder: "Search for help..."
+  - Search icon inside
+
+2. QUICK LINKS GRID:
+6 cards in 2x3 grid:
+
+Card 1 - Getting Started:
+- Icon: Rocket (32px)
+- Title: "Getting Started"
+- Description: "Learn the basics"
+
+Card 2 - Understanding Tokens:
+- Icon: Coin (32px)
+- Title: "Understanding Tokens"
+- Description: "How tokens work"
+
+Card 3 - Upload Guidelines:
+- Icon: Upload (32px)
+- Title: "Upload Guidelines"
+- Description: "File requirements"
+
+Card 4 - Contract Analysis:
+- Icon: Magnifying glass (32px)
+- Title: "Contract Analysis"
+- Description: "How AI analyzes"
+
+Card 5 - Billing & Payments:
+- Icon: Credit card (32px)
+- Title: "Billing & Payments"
+- Description: "Subscription info"
+
+Card 6 - Contact Support:
+- Icon: Headset (32px)
+- Title: "Contact Support"
+- Description: "Get help"
+
+Card styling:
+- White background
+- Border: 1px solid #E6E6E6
+- Padding: 20px
+- Hover: shadow effect
+- Cursor: pointer
+
+3. FAQ SECTION:
+Title: "Frequently Asked Questions"
+
+Categories as tabs:
+- General
+- Tokens
+- Contracts
+- Technical
+
+FAQ Items (expandable):
+General:
+- "What is ContraMind?"
+- "How accurate is the AI analysis?"
+- "Is my data secure?"
+
+Tokens:
+- "What are tokens and how do they work?"
+- "How do I get more tokens?"
+- "Do tokens expire?"
+
+Contracts:
+- "What file formats are supported?"
+- "What's the maximum file size?"
+- "Can I analyze multiple contracts?"
+
+Technical:
+- "Which browsers are supported?"
+- "Can I use ContraMind on mobile?"
+- "How do I enable Arabic?"
+
+Expandable behavior:
+- Plus/minus icon
+- Smooth expand animation
+- Only one open at a time
+
+4. FOOTER SECTION (add to sidebar):
+Below main navigation, add divider and:
+
+Quick Links:
+- Feedback (thumbs up icon)
+- Raise Ticket (ticket icon)
+- What's New (sparkle icon)
+
+Styling:
+- Smaller text (12px)
+- Less padding than main items
+- Same hover effects
+
+5. FEEDBACK MODAL:
+When "Feedback" clicked:
+- Modal title: "Send Feedback"
+- Rating: 5 stars (clickable)
+- Type: Radio buttons (Bug/Feature/General)
+- Message: Textarea
+- Submit button
+- Close X button
+
+6. RAISE TICKET MODAL:
+When "Raise Ticket" clicked:
+- Modal title: "Submit Support Ticket"
+- Fields:
+  - Subject (required)
+  - Category dropdown
+  - Priority (Low/Medium/High)
+  - Description (required)
+- Attach file option
+- Submit button
+
+7. WHAT'S NEW PAGE:
+Simple timeline of updates:
+- v1.0.2 (Today): "Added repository filters"
+- v1.0.1 (3 days ago): "Improved Arabic support"
+- v1.0.0 (1 week ago): "Initial release"
+
+Style as timeline with dots and lines
+
+8. RESPONSIVE:
+- Quick links: 2x3 on desktop, 1 column on mobile
+- FAQ items: full width on mobile
+- Modals: adapt to screen size
