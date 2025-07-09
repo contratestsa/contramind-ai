@@ -1,0 +1,93 @@
+Create the Settings pages with expandable navigation:
+
+1. SIDEBAR ENHANCEMENT:
+- When clicking Settings in sidebar:
+  - Arrow icon rotates (▶ to ▼)
+  - Expands to show two sub-items:
+    * Personal Settings
+    * Organization Settings
+  - Sub-items indented 20px
+  - Same hover effects as main items
+
+2. PERSONAL SETTINGS PAGE:
+Navigate to: Settings > Personal Settings
+Breadcrumb: "Settings > Personal Settings"
+
+Section 1 - Profile Information (white card):
+- Title: "Profile Information"
+- User avatar (80px) with "Change Photo" link
+- Form fields:
+  - Full Name (pre-filled from auth)
+  - Email (pre-filled, disabled)
+  - Phone Number (editable)
+  - Preferred Language (dropdown: English/Arabic)
+- "Save Changes" button (bottom right)
+
+Section 2 - Notification Preferences (white card):
+- Title: "Notification Preferences"
+- Toggle switches for:
+  - Email notifications (default: on)
+  - Contract analysis complete (default: on)
+  - Low token warnings (default: on)
+  - Weekly summary (default: off)
+- Each with description text
+- "Save Preferences" button
+
+Section 3 - Security (white card):
+- Title: "Security Settings"
+- Last login: "Today at 2:30 PM"
+- Connected accounts: Show Google/Microsoft
+- Two-factor auth: "Coming Soon" (disabled toggle)
+
+3. ORGANIZATION SETTINGS PAGE:
+Navigate to: Settings > Organization Settings
+Breadcrumb: "Settings > Organization Settings"
+
+Alert Banner (top):
+- Background: #FFF3CD (warning yellow)
+- Icon: Info circle
+- Text: "Complete your organization profile to unlock all features"
+
+Section 1 - Company Information (white card):
+- Title: "Company Information"
+- Form fields (all required):
+  - Company Name (Arabic) *
+  - Company Name (English) *
+  - Registration Number *
+  - VAT Number
+  - Country (dropdown, default: Saudi Arabia)
+  - City
+  - Address
+- Required fields marked with red asterisk
+- "Save Company Info" button
+
+Section 2 - Authorized Signatories (white card):
+- Title: "Authorized Signatories"
+- "Add Signatory" button (top right)
+- Table with columns:
+  - Name (AR/EN)
+  - Position
+  - Email
+  - Actions (Edit/Delete)
+- Add one mock signatory
+
+Section 3 - Subscription & Tokens (white card):
+- Title: "Subscription & Tokens"
+- Current Plan: "Free Trial" badge
+- Token Balance: "988 Tokens"
+- Monthly Usage: Progress bar (12/1000 used)
+- "Purchase Tokens" button (shows "Coming Soon")
+- "View Usage History" link
+
+4. STYLING:
+- Each section: white card with border
+- Card padding: 24px
+- Margin between cards: 20px
+- Form inputs: consistent with upload page
+- Toggle switches: iOS style
+- Required field indicators
+
+5. RESPONSIVE:
+- Cards stack vertically on mobile
+- Form inputs full width
+- Tables become cards on mobile

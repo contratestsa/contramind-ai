@@ -20,7 +20,10 @@ import {
   FileX,
   Download,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  ChevronRight,
+  User,
+  Building
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
@@ -31,6 +34,7 @@ interface SidebarItem {
   icon: React.ReactNode;
   label: { ar: string; en: string };
   path: string;
+  subItems?: SidebarItem[];
 }
 
 interface User {
@@ -62,6 +66,7 @@ export default function AnalysisResults() {
   const [expandedFindings, setExpandedFindings] = useState<number[]>([]);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [selectedParty, setSelectedParty] = useState<string>('');
+  const [expandedSettings, setExpandedSettings] = useState(false);
   const isRTL = language === 'ar';
 
   // Fetch user data
@@ -97,7 +102,15 @@ export default function AnalysisResults() {
     { icon: <Bell className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
     { icon: <CheckCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المهام", en: "Tasks" }, path: "/tasks" },
     { icon: <BarChart3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التقارير", en: "Reports" }, path: "/reports" },
-    { icon: <Settings className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "الإعدادات", en: "Settings" }, path: "/settings" },
+    { 
+      icon: <Settings className="w-[18px] h-[18px] text-gray-700" />, 
+      label: { ar: "الإعدادات", en: "Settings" }, 
+      path: "/settings",
+      subItems: [
+        { icon: <User className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "الإعدادات الشخصية", en: "Personal Settings" }, path: "/settings/personal" },
+        { icon: <Building className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "إعدادات المؤسسة", en: "Organization Settings" }, path: "/settings/organization" }
+      ]
+    },
     { icon: <Layers className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "صفقات مكدسة", en: "Deals Stack" }, path: "/deals" },
   ];
 
@@ -214,21 +227,54 @@ export default function AnalysisResults() {
               <li key={index}>
                 <button
                   onClick={() => {
-                    if (item.path === '/repository') {
+                    if (item.path === '/settings') {
+                      setExpandedSettings(!expandedSettings);
+                    } else if (item.path === '/repository') {
                       setLocation('/repository');
                     } else if (item.path === '/dashboard') {
                       setLocation('/dashboard');
+                    } else if (item.path === '/settings/personal') {
+                      setLocation(item.path);
+                    } else if (item.path === '/settings/organization') {
+                      setLocation(item.path);
                     } else {
                       toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
                     }
                   }}
                   className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
                 >
+                  {item.subItems && (
+                    <div className={cn("transition-transform", expandedSettings ? "rotate-90" : "", isRTL ? "order-last" : "order-first")}>
+                      <ChevronRight className="w-4 h-4 text-gray-500" />
+                    </div>
+                  )}
                   {item.icon}
                   <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
                     {t(item.label.ar, item.label.en)}
                   </span>
                 </button>
+
+                {/* Sub-items */}
+                {item.subItems && expandedSettings && (
+                  <ul>
+                    {item.subItems.map((subItem, subIndex) => (
+                      <li key={subIndex}>
+                        <button
+                          onClick={() => setLocation(subItem.path)}
+                          className={cn(
+                            "w-full h-[40px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
+                            isRTL ? "pr-10" : "pl-10"
+                          )}
+                        >
+                          {subItem.icon}
+                          <span className={cn("text-[14px] text-gray-600 flex-1", isRTL ? "text-right" : "text-left")}>
+                            {t(subItem.label.ar, subItem.label.en)}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
