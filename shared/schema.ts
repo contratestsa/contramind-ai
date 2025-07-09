@@ -8,6 +8,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   fullName: text("full_name").notNull(),
+  profilePicture: text("profile_picture"),
   emailVerified: boolean("email_verified").default(false).notNull(),
   verificationToken: text("verification_token"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -37,9 +38,11 @@ export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   password: true,
   fullName: true,
+  profilePicture: true,
   emailVerified: true,
 }).partial({
   emailVerified: true,
+  profilePicture: true,
 });
 
 export const loginSchema = z.object({

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -14,6 +15,7 @@ interface AuthModalsProps {
 }
 
 export default function AuthModals({ triggerLoginButton, triggerSignupButton }: AuthModalsProps) {
+  const [, setLocation] = useLocation();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -60,8 +62,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
-      // Redirect to coming soon page
-      window.location.href = '/coming-soon';
+      // Redirect to dashboard page
+      setLocation('/dashboard');
     },
     onError: (error: Error) => {
       toast({
@@ -410,6 +412,22 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               <UserPlus className="w-4 h-4" />
               {signupMutation.isPending ? t('جاري إنشاء الحساب...', 'Creating account...') : t('إنشاء حساب', 'Create Account')}
             </button>
+
+            <div className="text-center pt-2">
+              <p className="text-sm text-gray-600">
+                {t('لديك حساب بالفعل؟', 'Already have an account?')}{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSignupOpen(false);
+                    setIsLoginOpen(true);
+                  }}
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  {t('تسجيل الدخول', 'Sign in')}
+                </button>
+              </p>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

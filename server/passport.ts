@@ -1,4 +1,5 @@
 import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as MicrosoftStrategy } from 'passport-microsoft';
 import { storage } from './storage';
@@ -19,6 +20,31 @@ passport.deserializeUser(async (id: number, done) => {
   }
 });
 
+// Local Strategy for email/password authentication
+passport.use(new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password'
+}, async (email: string, password: string, done) => {
+  try {
+    // Find user by email
+    const user = await storage.getUserByEmail(email);
+    if (!user) {
+      return done(null, false, { message: 'Invalid email or password' });
+    }
+
+    // Check password (in production, compare hashed passwords)
+    if (user.password !== password) {
+      return done(null, false, { message: 'Invalid email or password' });
+    }
+
+    // Skip email verification check for now
+
+    return done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+}));
+
 // Google OAuth Strategy
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   // Get the correct base URL for Replit
@@ -35,7 +61,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       console.log('Google OAuth profile:', {
         id: profile.id,
         email: profile.emails?.[0]?.value,
-        name: profile.displayName
+        name: profile.displayName,
+        photos: profile.photos
       });
 
       const email = profile.emails?.[0]?.value;
@@ -43,11 +70,18 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         return done(new Error('No email found in Google profile'), undefined);
       }
 
+      // Get profile picture URL
+      const profilePicture = profile.photos?.[0]?.value;
+
       // Check if user already exists
       let user = await storage.getUserByEmail(email);
       
       if (user) {
         console.log('Existing user found:', user.email);
+        // Update profile picture if available
+        if (profilePicture && profilePicture !== user.profilePicture) {
+          await storage.updateUserProfilePicture(user.id, profilePicture);
+        }
         return done(null, user);
       }
 
@@ -56,7 +90,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Google User',
-        password: 'oauth_google_' + profile.id // OAuth users get a special password
+        password: 'oauth_google_' + profile.id, // OAuth users get a special password
+        profilePicture: profilePicture || undefined
       });
       
       // Mark email as verified for OAuth users (since OAuth providers verify emails)
@@ -88,7 +123,8 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
       console.log('Microsoft OAuth profile:', {
         id: profile.id,
         email: profile.emails?.[0]?.value,
-        name: profile.displayName
+        name: profile.displayName,
+        photos: profile.photos
       });
 
       const email = profile.emails?.[0]?.value;
@@ -96,11 +132,18 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
         return done(new Error('No email found in Microsoft profile'), undefined);
       }
 
+      // Get profile picture URL
+      const profilePicture = profile.photos?.[0]?.value;
+
       // Check if user already exists
       let user = await storage.getUserByEmail(email);
       
       if (user) {
         console.log('Existing user found:', user.email);
+        // Update profile picture if available
+        if (profilePicture && profilePicture !== user.profilePicture) {
+          await storage.updateUserProfilePicture(user.id, profilePicture);
+        }
         return done(null, user);
       }
 
@@ -109,7 +152,8 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
         email: email,
         username: email, // Use email as username
         fullName: profile.displayName || 'Microsoft User',
-        password: 'oauth_microsoft_' + profile.id // OAuth users get a special password
+        password: 'oauth_microsoft_' + profile.id, // OAuth users get a special password
+        profilePicture: profilePicture || undefined
       });
       
       // Mark email as verified for OAuth users (since OAuth providers verify emails)

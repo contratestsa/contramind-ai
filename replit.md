@@ -4,6 +4,24 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 9, 2025**: Built contract analysis flow with party selection and results display
+  - **Upload Modal**: Converted upload functionality from separate page to popup modal
+  - **Party Selection**: Added party selection modal after upload (Service Recipient/Provider/General)
+  - **Analysis Progress**: Created animated progress page with 3-step analysis visualization
+  - **Analysis Results**: Built comprehensive results page with:
+    - Risk score gauge (animated semi-circle, color-coded zones)
+    - Key findings cards with severity indicators and expandable recommendations
+    - Contract details with party badge showing selected role
+    - Download report and repository integration buttons
+  - **Flow**: Dashboard → Upload Modal → Party Selection → Analysis Progress → Results
+  - **Sidebar UI Update**: Icons positioned on left side of text for all languages, logo area matches sidebar width
+- **July 8, 2025**: Added GitHub integration and Google Cloud migration capabilities
+  - **GitHub Integration**: Configured for read/write access to https://github.com/contramindai/contramindPoC
+  - **Google Cloud Migration**: Created comprehensive migration guide and deployment configurations
+    - Added Dockerfile for containerization
+    - Created cloudbuild.yaml for automatic deployments from GitHub
+    - Documented complete migration process including Cloud SQL setup
+    - Prepared application for Cloud Run deployment with environment variable configurations
 - **July 2, 2025**: Implemented comprehensive email verification system
   - **Email Verification**: Full verification workflow using Resend integration
     - Added emailVerified and verificationToken fields to user schema
@@ -83,6 +101,7 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 - Consistent color scheme: light backgrounds (#f0f3f5), dark blue buttons (#0c2836)
 - Privacy messaging: "We'll never share your email. Unsubscribe anytime."
 - Fixed countdown timer instead of dynamic calculation
+- Dashboard screens: Don't focus on specific font types or colors - keep it simple
 
 ## Technical Decisions
 - Browser language detection for initial language setting
