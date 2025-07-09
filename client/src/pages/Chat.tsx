@@ -195,7 +195,7 @@ export default function Chat() {
   ];
 
   const sidebarItems: SidebarItem[] = [
-    { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة القيادة", en: "Dashboard" }, path: "/dashboard" },
+    { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة التحكم", en: "Dashboard" }, path: "/dashboard" },
     { icon: <Plus className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "إنشاء", en: "Create" }, path: "/create" },
     { icon: <Folder className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المستودع", en: "Repository" }, path: "/repository" },
     { icon: <Bell className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
@@ -220,7 +220,7 @@ export default function Chat() {
   return (
     <div className={cn("flex h-screen bg-[#F0F3F5]", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
-      <aside className="w-[240px] bg-white border-r border-[#E6E6E6] flex flex-col h-full">
+      <aside className={cn("w-[240px] bg-white flex flex-col h-full", isRTL ? "border-l border-[#E6E6E6]" : "border-r border-[#E6E6E6]")}>
         {/* Logo Section */}
         <div className="h-[72px] px-5 flex items-center">
           <div className="bg-white rounded-lg p-2 shadow-sm">
@@ -300,7 +300,12 @@ export default function Chat() {
         {/* Header */}
         <header className="h-[72px] bg-white border-b border-[#E6E6E6] px-6 flex items-center justify-between">
           <div className={cn("flex items-center", isRTL && "flex-row-reverse")}>
-            <span className="text-gray-500 text-sm">{t('لوحة القيادة', 'Dashboard')}</span>
+            <button 
+              onClick={() => setLocation('/dashboard')}
+              className="text-gray-500 text-sm hover:text-gray-700 transition-colors cursor-pointer"
+            >
+              {t('لوحة التحكم', 'Dashboard')}
+            </button>
             <ChevronRight className={cn("w-4 h-4 text-gray-400 mx-2", isRTL && "rotate-180")} />
             <span className="text-gray-700 text-sm font-medium">{t('مساعد العقود', 'Contract Assistant')}</span>
           </div>

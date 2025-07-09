@@ -4,12 +4,17 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **July 9, 2025**: Added AI-powered chat interface for technology contract questions
+- **July 9, 2025**: Fixed navigation and sidebar positioning for Arabic RTL layout
+  - **Navigation Fixes**: 
+    - Changed "لوحة القيادة" to "لوحة التحكم" across all dashboard pages for consistency
+    - Made breadcrumb navigation clickable in Chat page (Dashboard link navigates back)
+    - Fixed sidebar positioning for RTL layout - sidebar appears on right side for Arabic
+    - Fixed content margins to accommodate sidebar position based on language direction
   - **Chat Interface**: Created comprehensive chat system accessible from dashboard search
     - Activation: User types in dashboard search bar and presses Enter to navigate to chat
     - Pre-fills user's question from search query
     - Token-based system: 5 tokens per message with live token counter
-    - Breadcrumb navigation: Dashboard > Contract Assistant
+    - Clickable breadcrumb navigation: Dashboard > Contract Assistant
   - **Chat Features**:
     - System message explaining token cost and capabilities
     - User messages (right/navy) and AI messages (left/light grey) with distinct styling
