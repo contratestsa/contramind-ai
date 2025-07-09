@@ -124,11 +124,11 @@ export default function Dashboard() {
       {/* Left Sidebar */}
       <div className="w-[200px] h-screen bg-[#F8F9FA] fixed z-10" style={{ [isRTL ? 'right' : 'left']: 0 }}>
         {/* Logo */}
-        <div className="h-[60px] flex items-center justify-center px-5 bg-[#F8F9FA]">
+        <div className="h-[60px] bg-[#0C2836] flex items-center justify-center px-5">
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
-            className="h-8 w-full object-contain"
+            className="h-8 w-full object-contain brightness-0 invert"
           />
         </div>
 
