@@ -82,7 +82,7 @@ export default function Repository() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [deleteContractId, setDeleteContractId] = useState<string | null>(null);
-  const [expandedSettings, setExpandedSettings] = useState(false);
+  const [expandedSettings, setExpandedSettings] = useState(location.startsWith('/settings'));
   const isRTL = language === 'ar';
 
   // Fetch user data

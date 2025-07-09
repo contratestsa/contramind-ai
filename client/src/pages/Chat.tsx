@@ -55,7 +55,7 @@ export default function Chat() {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const [hasNotifications, setHasNotifications] = useState(true);
-  const [expandedSettings, setExpandedSettings] = useState(false);
+  const [expandedSettings, setExpandedSettings] = useState(location.startsWith('/settings'));
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -241,13 +241,7 @@ export default function Chat() {
                   onClick={() => {
                     if (item.path === '/settings') {
                       setExpandedSettings(!expandedSettings);
-                    } else if (item.path === '/repository') {
-                      setLocation('/repository');
-                    } else if (item.path === '/dashboard') {
-                      setLocation('/dashboard');
-                    } else if (item.path === '/settings/personal') {
-                      setLocation(item.path);
-                    } else if (item.path === '/settings/organization') {
+                    } else if (item.path === '/dashboard' || item.path === '/repository') {
                       setLocation(item.path);
                     } else {
                       toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
