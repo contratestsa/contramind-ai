@@ -4,6 +4,7 @@ import { Upload, FileText, X } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useLocation } from "wouter";
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface UploadModalProps {
 export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
   const { t, language } = useLanguage();
   const { toast } = useToast();
+  const [location, setLocation] = useLocation();
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -88,13 +90,14 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
         title: t('تم تحميل العقد بنجاح', 'Contract uploaded successfully'),
         description: t('جاري تحليل العقد...', 'Analyzing contract...')
       });
-      // Close modal and reset state
+      // Navigate to analysis progress page
       setTimeout(() => {
         setIsUploading(false);
         setSelectedFile(null);
         onClose();
-      }, 2000);
-    }, 2000);
+        setLocation('/analysis-progress');
+      }, 1000);
+    }, 1000);
   };
 
   const formatFileSize = (bytes: number) => {
