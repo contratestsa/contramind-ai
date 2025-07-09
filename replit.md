@@ -14,6 +14,7 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Contract details with party badge showing selected role
     - Download report and repository integration buttons
   - **Flow**: Dashboard → Upload Modal → Party Selection → Analysis Progress → Results
+  - **Sidebar UI Update**: Icons positioned on left side of text for all languages, logo area matches sidebar width
 - **July 8, 2025**: Added GitHub integration and Google Cloud migration capabilities
   - **GitHub Integration**: Configured for read/write access to https://github.com/contramindai/contramindPoC
   - **Google Cloud Migration**: Created comprehensive migration guide and deployment configurations

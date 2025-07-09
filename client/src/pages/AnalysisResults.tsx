@@ -190,11 +190,11 @@ export default function AnalysisResults() {
       {/* Left Sidebar */}
       <div className="w-[200px] h-screen bg-[#F8F9FA] fixed z-10" style={{ [isRTL ? 'right' : 'left']: 0 }}>
         {/* Logo */}
-        <div className="h-[60px] flex items-center px-5">
+        <div className="h-[60px] flex items-center justify-center px-5 bg-[#F8F9FA]">
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
-            className="h-8 object-contain"
+            className="h-8 w-full object-contain"
           />
         </div>
 
@@ -212,22 +212,12 @@ export default function AnalysisResults() {
               <li key={index}>
                 <button
                   onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) })}
-                  className={cn(
-                    "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                    isRTL ? "justify-between" : ""
-                  )}
+                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
                 >
-                  {isRTL ? (
-                    <>
-                      <span className="text-[15px] text-gray-700 text-right">{t(item.label.ar, item.label.en)}</span>
-                      {item.icon}
-                    </>
-                  ) : (
-                    <>
-                      {item.icon}
-                      <span className="text-[15px] text-gray-700 text-left">{t(item.label.ar, item.label.en)}</span>
-                    </>
-                  )}
+                  {item.icon}
+                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                    {t(item.label.ar, item.label.en)}
+                  </span>
                 </button>
               </li>
             ))}
@@ -241,22 +231,12 @@ export default function AnalysisResults() {
               <li key={index}>
                 <button
                   onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) })}
-                  className={cn(
-                    "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                    isRTL ? "justify-between" : ""
-                  )}
+                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
                 >
-                  {isRTL ? (
-                    <>
-                      <span className="text-[15px] text-gray-700 text-right">{t(item.label.ar, item.label.en)}</span>
-                      {item.icon}
-                    </>
-                  ) : (
-                    <>
-                      {item.icon}
-                      <span className="text-[15px] text-gray-700 text-left">{t(item.label.ar, item.label.en)}</span>
-                    </>
-                  )}
+                  {item.icon}
+                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                    {t(item.label.ar, item.label.en)}
+                  </span>
                 </button>
               </li>
             ))}
