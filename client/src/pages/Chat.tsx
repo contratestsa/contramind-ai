@@ -218,18 +218,25 @@ export default function Chat() {
   }
 
   return (
-    <div className={cn("flex h-screen bg-[#F0F3F5]", isRTL && "flex-row-reverse")}>
+    <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
       {/* Sidebar */}
-      <aside className={cn("w-[240px] bg-white flex flex-col h-full", isRTL ? "border-l border-[#E6E6E6]" : "border-r border-[#E6E6E6]")}>
-        {/* Logo Section */}
-        <div className="h-[72px] px-5 flex items-center">
-          <div className="bg-white rounded-lg p-2 shadow-sm">
+      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+        {/* Logo */}
+        <div className="h-[80px] flex items-center justify-center px-3 bg-white">
+          <div className="bg-white p-3 rounded-lg">
             <img 
               src={logoImage} 
               alt="ContraMind Logo" 
-              className="h-[40px] w-auto"
+              className="max-h-[50px] object-contain rounded-md"
             />
           </div>
+        </div>
+
+        {/* My Work Section */}
+        <div className="bg-[#0C2836] text-white px-5 py-3">
+          <h3 className={cn("text-base font-semibold", isRTL ? "text-right" : "text-left")}>
+            {t('عملي', 'My Work')}
+          </h3>
         </div>
 
         {/* Navigation Items */}
@@ -287,16 +294,36 @@ export default function Chat() {
         </nav>
 
         {/* Bottom Section */}
-        <div className="border-t border-[#E6E6E6] p-4">
-          <button className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-            <HelpCircle className="w-[18px] h-[18px] text-gray-600" />
-            <span className="text-[14px] text-gray-600">{t('المساعدة', 'Help')}</span>
-          </button>
+        <div className="p-4 mt-auto">
+          <ul className="space-y-1">
+            <li>
+              <button
+                onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t('المساعدة قريباً', 'Help coming soon') })}
+                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
+              >
+                <HelpCircle className="w-[18px] h-[18px] text-gray-700" />
+                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                  {t('المساعدة', 'Help')}
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t('حجز عرض توضيحي قريباً', 'Schedule demo coming soon') })}
+                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
+              >
+                <Calendar className="w-[18px] h-[18px] text-gray-700" />
+                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                  {t('حجز عرض توضيحي', 'Schedule Demo')}
+                </span>
+              </button>
+            </li>
+          </ul>
         </div>
-      </aside>
+      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      {/* Main Content Area */}
+      <div className={cn("flex-1 flex flex-col", isRTL ? "mr-[200px]" : "ml-[200px]")}>
         {/* Header */}
         <header className="h-[72px] bg-white border-b border-[#E6E6E6] px-6 flex items-center justify-between">
           <div className={cn("flex items-center", isRTL && "flex-row-reverse")}>
