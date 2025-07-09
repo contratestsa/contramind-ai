@@ -25,7 +25,7 @@ import {
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (3)_1752052096349.png';
+import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 
 interface SidebarItem {
   icon: React.ReactNode;
