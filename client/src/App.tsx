@@ -11,6 +11,7 @@ import Signup from "@/pages/Signup";
 import ComingSoon from "@/pages/ComingSoon";
 import Dashboard from "@/pages/Dashboard";
 import AnalysisProgress from "@/pages/AnalysisProgress";
+import AnalysisResults from "@/pages/AnalysisResults";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/coming-soon" component={ComingSoon} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/analysis-progress" component={AnalysisProgress} />
+      <Route path="/analysis-results" component={AnalysisResults} />
 
       <Route component={NotFound} />
     </Switch>
