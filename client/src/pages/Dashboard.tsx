@@ -342,7 +342,7 @@ export default function Dashboard() {
                 }}
                 placeholder={t('اسأل عن العقود التقنية...', 'Ask about technology contracts...')}
                 className={cn(
-                  "w-full h-12 text-base border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors",
+                  "w-full h-12 text-base text-gray-800 placeholder-gray-400 border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors",
                   isRTL ? "pr-12 pl-12 text-right" : "pl-12 pr-12 text-left"
                 )}
               />

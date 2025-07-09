@@ -466,7 +466,7 @@ export default function Chat() {
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder={t('اسأل عن عقد التكنولوجيا الخاص بك...', 'Ask about your technology contract...')}
                     className={cn(
-                      "w-full h-11 px-4 border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#0C2836]",
+                      "w-full h-11 px-4 text-gray-800 placeholder-gray-400 border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#0C2836]",
                       isRTL && "text-right"
                     )}
                   />
