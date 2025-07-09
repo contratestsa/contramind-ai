@@ -147,7 +147,13 @@ export default function Dashboard() {
             {sidebarItems.map((item, index) => (
               <li key={index}>
                 <button
-                  onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) })}
+                  onClick={() => {
+                    if (item.path === '/repository') {
+                      setLocation('/repository');
+                    } else {
+                      toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
+                    }
+                  }}
                   className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
                 >
                   {item.icon}

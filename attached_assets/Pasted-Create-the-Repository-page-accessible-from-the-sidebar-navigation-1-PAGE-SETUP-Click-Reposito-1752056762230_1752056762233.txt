@@ -1,0 +1,105 @@
+Create the Repository page accessible from the sidebar navigation:
+
+1. PAGE SETUP:
+- Click "Repository" in sidebar to navigate
+- Breadcrumb: "Repository" 
+- Page title: "Contract Repository" (24px, bold)
+- Subtitle: "Manage and review all your contracts"
+
+2. SUMMARY CARDS (top section):
+Create 4 cards in a horizontal row:
+
+Card 1 - All Contracts:
+- Icon: Folder (32px)
+- Count: "3" (24px, bold)
+- Label: "Total Contracts"
+- Background: white
+- Border: 1px solid #E6E6E6
+
+Card 2 - Analyzed:
+- Icon: Check circle (32px, green)
+- Count: "2" 
+- Label: "Analyzed"
+- Background: white
+
+Card 3 - Pending:
+- Icon: Clock (32px, orange)
+- Count: "1"
+- Label: "Analyzing" 
+- Background: white
+
+Card 4 - High Risk:
+- Icon: Alert triangle (32px, red)
+- Count: "1"
+- Label: "High Risk"
+- Background: white
+
+Card styling:
+- Width: 200px
+- Height: 100px
+- Border radius: 8px
+- Hover: slight shadow
+
+3. FILTER BAR:
+- Search input: "Search contracts..." (300px)
+- Filter dropdown: "All Statuses" 
+  Options: All, Analyzed, Analyzing, Uploaded
+- Sort dropdown: "Newest First"
+  Options: Newest First, Oldest First, Risk Level
+- View toggle: List view (for now)
+
+4. CONTRACTS TABLE:
+Table headers:
+- Contract Name (40% width)
+- Party Role (15%)
+- Upload Date (15%)
+- Risk Score (15%)
+- Status (15%)
+- Actions
+
+Mock Data Rows:
+Row 1:
+- Name: "TechVendor_Agreement_2024.pdf"
+- Party: "Service Provider"
+- Date: "Today, 2:30 PM"
+- Risk: "45" with yellow dot
+- Status: "Analyzed" (green badge)
+- Actions: View, Download
+
+Row 2:
+- Name: "CloudServices_Contract.docx"
+- Party: "Service Recipient"
+- Date: "Yesterday"
+- Risk: "72" with red dot
+- Status: "Analyzed" (green badge)
+- Actions: View, Download
+
+Row 3:
+- Name: "Maintenance_Agreement.pdf"
+- Party: "Service Provider"
+- Date: "2 days ago"
+- Risk: "-" (analyzing)
+- Status: "Analyzing" (orange badge)
+- Actions: View (disabled)
+
+Table styling:
+- White background
+- Hover: light grey background
+- Borders between rows
+- Action buttons: small, icon + text
+
+5. ACTIONS:
+- View: Opens results page (for analyzed)
+- Download: Shows "Download Report (2 tokens)"
+- Delete: Shows confirmation modal
+
+6. EMPTY STATE:
+If no contracts:
+- Large document icon
+- "No contracts uploaded yet"
+- "Upload your first contract" button
+
+7. RESPONSIVE:
+- On mobile: Convert to cards instead of table
+- Show key info on each card
+- Actions in dropdown menu
