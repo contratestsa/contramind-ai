@@ -341,10 +341,7 @@ export default function AnalysisProgress() {
                 return (
                   <div
                     key={step.id}
-                    className={cn(
-                      "flex items-center gap-3",
-                      isRTL ? "flex-row-reverse" : ""
-                    )}
+                    className="flex items-center gap-3"
                   >
                     {/* Icon */}
                     <div className={cn(
