@@ -182,7 +182,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/login", async (req, res, next) => {
+  app.post("/api/auth/login", async (req, res) => {
     try {
       const validatedData = loginSchema.parse(req.body);
       
@@ -201,33 +201,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Skip email verification check for now
-
-      // Establish session using Passport
-      req.logIn(user, (err) => {
-        if (err) {
-          console.error("Session establishment error:", err);
-          return res.status(500).json({ 
-            message: "Failed to establish session" 
-          });
-        }
-
-        // Remove password from response
-        const { password, ...userWithoutPassword } = user;
-        
-        // Send login confirmation email (non-blocking)
-        sendLoginConfirmationEmail({
-          email: user.email,
-          fullName: user.fullName,
-          loginTime: new Date().toISOString()
-        }).catch(error => {
-          console.error('Failed to send login confirmation email:', error);
-        });
-        
-        res.json({ 
-          message: "Login successful",
-          user: userWithoutPassword 
-        });
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      
+      // Send login confirmation email (non-blocking)
+      sendLoginConfirmationEmail({
+        email: user.email,
+        fullName: user.fullName,
+        loginTime: new Date().toISOString()
+      }).catch(error => {
+        console.error('Failed to send login confirmation email:', error);
+      });
+      
+      res.json({ 
+        message: "Login successful",
+        user: userWithoutPassword 
       });
     } catch (error) {
       console.error("Login error:", error);
@@ -271,8 +259,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Redirect to success page or dashboard page
-      res.redirect("/dashboard?verified=true");
+      // Redirect to success page or coming soon page
+      res.redirect("/coming-soon?verified=true");
     } catch (error) {
       console.error("Email verification error:", error);
       res.status(500).json({ 
@@ -293,7 +281,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     (req, res) => {
       // Successful authentication
       console.log('Google OAuth successful for user:', req.user);
-      res.redirect("/dashboard");
+      res.redirect("/coming-soon");
     }
   );
 
@@ -309,7 +297,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     (req, res) => {
       // Successful authentication
       console.log('Microsoft OAuth successful for user:', req.user);
-      res.redirect("/dashboard");
+      res.redirect("/coming-soon");
     }
   );
 
