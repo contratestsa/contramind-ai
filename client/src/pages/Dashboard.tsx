@@ -19,6 +19,7 @@ import {
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import UploadModal from "@/components/UploadModal";
 
 interface SidebarItem {
   icon: React.ReactNode;
@@ -40,6 +41,7 @@ export default function Dashboard() {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const [hasNotifications, setHasNotifications] = useState(true);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const isRTL = language === 'ar';
 
   const toggleLanguage = () => {
@@ -293,7 +295,7 @@ export default function Dashboard() {
           <div className="mt-10">
             <button
               className="relative w-[280px] h-[160px] bg-white border border-[#E6E6E6] rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center gap-2"
-              onClick={() => setLocation('/upload-review')}
+              onClick={() => setIsUploadModalOpen(true)}
             >
               {/* Token Badge */}
               <div className="absolute top-4 right-4 bg-[#FFF3CD] flex items-center gap-1 px-2 py-1 rounded-xl">
@@ -324,6 +326,12 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
+
+      {/* Upload Modal */}
+      <UploadModal 
+        isOpen={isUploadModalOpen} 
+        onClose={() => setIsUploadModalOpen(false)} 
+      />
     </div>
   );
 }
