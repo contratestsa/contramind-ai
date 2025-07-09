@@ -90,19 +90,19 @@ export default function Dashboard() {
   }, [error, isLoading, userData, setLocation]);
 
   const sidebarItems: SidebarItem[] = [
-    { icon: <Grid3X3 className="w-[18px] h-[18px]" />, label: { ar: "لوحة القيادة", en: "Dashboard" }, path: "/dashboard" },
-    { icon: <Plus className="w-[18px] h-[18px]" />, label: { ar: "إنشاء", en: "Create" }, path: "/create" },
-    { icon: <Folder className="w-[18px] h-[18px]" />, label: { ar: "المستودع", en: "Repository" }, path: "/repository" },
-    { icon: <Bell className="w-[18px] h-[18px]" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
-    { icon: <CheckCircle className="w-[18px] h-[18px]" />, label: { ar: "المهام", en: "Tasks" }, path: "/tasks" },
-    { icon: <BarChart3 className="w-[18px] h-[18px]" />, label: { ar: "التقارير", en: "Reports" }, path: "/reports" },
-    { icon: <Settings className="w-[18px] h-[18px]" />, label: { ar: "الإعدادات", en: "Settings" }, path: "/settings" },
-    { icon: <Layers className="w-[18px] h-[18px]" />, label: { ar: "صفقات مكدسة", en: "Deals Stack" }, path: "/deals" },
+    { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة القيادة", en: "Dashboard" }, path: "/dashboard" },
+    { icon: <Plus className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "إنشاء", en: "Create" }, path: "/create" },
+    { icon: <Folder className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المستودع", en: "Repository" }, path: "/repository" },
+    { icon: <Bell className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
+    { icon: <CheckCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المهام", en: "Tasks" }, path: "/tasks" },
+    { icon: <BarChart3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التقارير", en: "Reports" }, path: "/reports" },
+    { icon: <Settings className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "الإعدادات", en: "Settings" }, path: "/settings" },
+    { icon: <Layers className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "صفقات مكدسة", en: "Deals Stack" }, path: "/deals" },
   ];
 
   const bottomItems: SidebarItem[] = [
-    { icon: <HelpCircle className="w-[18px] h-[18px]" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
-    { icon: <Calendar className="w-[18px] h-[18px]" />, label: { ar: "حجز عرض توضيحي", en: "Schedule Demo" }, path: "/demo" },
+    { icon: <HelpCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
+    { icon: <Calendar className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "حجز عرض توضيحي", en: "Schedule Demo" }, path: "/demo" },
   ];
 
   if (isLoading) {
