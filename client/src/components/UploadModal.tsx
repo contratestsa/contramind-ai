@@ -4,7 +4,7 @@ import { Upload, FileText, X } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { useLocation } from "wouter";
+import PartySelectionModal from "./PartySelectionModal";
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -14,10 +14,10 @@ interface UploadModalProps {
 export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
   const { t, language } = useLanguage();
   const { toast } = useToast();
-  const [location, setLocation] = useLocation();
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [showPartySelection, setShowPartySelection] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isRTL = language === 'ar';
 
@@ -88,14 +88,14 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
     setTimeout(() => {
       toast({
         title: t('تم تحميل العقد بنجاح', 'Contract uploaded successfully'),
-        description: t('جاري تحليل العقد...', 'Analyzing contract...')
+        description: t('يرجى اختيار دورك في العقد', 'Please select your role in the contract')
       });
-      // Navigate to analysis progress page
+      // Show party selection modal
       setTimeout(() => {
         setIsUploading(false);
         setSelectedFile(null);
         onClose();
-        setLocation('/analysis-progress');
+        setShowPartySelection(true);
       }, 1000);
     }, 1000);
   };
@@ -115,8 +115,9 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[650px] p-0">
+    <>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="max-w-[650px] p-0">
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle className={cn(
             "text-xl font-semibold",
@@ -209,5 +210,12 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
         </div>
       </DialogContent>
     </Dialog>
+    
+    {/* Party Selection Modal */}
+    <PartySelectionModal 
+      isOpen={showPartySelection} 
+      onClose={() => setShowPartySelection(false)} 
+    />
+    </>
   );
 }
