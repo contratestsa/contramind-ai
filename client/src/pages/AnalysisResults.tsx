@@ -200,8 +200,8 @@ export default function AnalysisResults() {
 
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
-      {/* Left Sidebar */}
-      <div className="w-[200px] h-screen bg-[#F8F9FA] fixed z-10" style={{ [isRTL ? 'right' : 'left']: 0 }}>
+      {/* Sidebar */}
+      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
           <div className="bg-white p-3 rounded-lg">
