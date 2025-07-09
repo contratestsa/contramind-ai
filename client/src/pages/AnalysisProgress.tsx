@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -21,7 +21,9 @@ import {
   Check,
   ChevronRight,
   User,
-  Building
+  Building,
+  AlertTriangle,
+  Info
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
