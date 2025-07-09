@@ -191,11 +191,13 @@ export default function AnalysisProgress() {
       <div className="w-[200px] h-screen bg-[#F8F9FA] fixed z-10" style={{ [isRTL ? 'right' : 'left']: 0 }}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
-          <img 
-            src={logoImage} 
-            alt="ContraMind Logo" 
-            className="max-h-[60px] object-contain"
-          />
+          <div className="bg-white p-3 rounded-lg">
+            <img 
+              src={logoImage} 
+              alt="ContraMind Logo" 
+              className="max-h-[50px] object-contain rounded-md"
+            />
+          </div>
         </div>
 
         {/* My Work Section */}
