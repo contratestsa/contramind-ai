@@ -14,6 +14,7 @@ import Repository from "@/pages/Repository";
 import PersonalSettings from "@/pages/PersonalSettings";
 import OrganizationSettings from "@/pages/OrganizationSettings";
 import Chat from "@/pages/Chat";
+import Help from "@/pages/Help";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/settings/personal" component={PersonalSettings} />
       <Route path="/settings/organization" component={OrganizationSettings} />
       <Route path="/chat" component={Chat} />
+      <Route path="/help" component={Help} />
 
       <Route component={NotFound} />
     </Switch>

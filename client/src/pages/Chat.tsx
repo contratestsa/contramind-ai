@@ -298,7 +298,7 @@ export default function Chat() {
           <ul className="space-y-1">
             <li>
               <button
-                onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t('المساعدة قريباً', 'Help coming soon') })}
+                onClick={() => setLocation('/help')}
                 className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
               >
                 <HelpCircle className="w-[18px] h-[18px] text-gray-700" />

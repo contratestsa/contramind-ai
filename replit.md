@@ -10,6 +10,12 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Made breadcrumb navigation clickable in Chat page (Dashboard link navigates back)
     - Fixed sidebar positioning for RTL layout - sidebar appears on right side for Arabic
     - Fixed content margins to accommodate sidebar position based on language direction
+  - **Help Page**: Created simple Help page accessible from sidebar
+    - Route: /help accessible from Help button in sidebar across all dashboard pages
+    - FAQ Section: 5 questions copied from homepage covering ContraMind features
+    - Simple styling: 24px Space Grotesk for title, 16px Inter for questions (navy), 14px Inter for answers (grey)
+    - Contact Section: Light blue background (#E8F4F8) with CEO email (Ceo@contramind.com)
+    - Updated all dashboard pages to navigate to /help instead of showing "Coming Soon"
   - **Chat Interface**: Created comprehensive chat system accessible from dashboard search
     - Activation: User types in dashboard search bar and presses Enter to navigate to chat
     - Pre-fills user's question from search query
