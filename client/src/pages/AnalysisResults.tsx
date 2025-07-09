@@ -194,7 +194,7 @@ export default function AnalysisResults() {
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
-            className="h-12 w-full object-contain"
+            className="max-h-[60px] object-contain"
           />
         </div>
 
