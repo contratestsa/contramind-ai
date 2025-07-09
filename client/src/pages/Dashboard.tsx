@@ -85,7 +85,7 @@ export default function Dashboard() {
   // Redirect if not authenticated
   useEffect(() => {
     if (error || (!isLoading && !userData?.user)) {
-      setLocation('/login');
+      setLocation('/');
     }
   }, [error, isLoading, userData, setLocation]);
 
@@ -224,7 +224,10 @@ export default function Dashboard() {
                 {userInitials}
               </div>
               <button
-                onClick={() => logoutMutation.mutate()}
+                onClick={() => {
+                  logoutMutation.mutate();
+                  setLocation('/');
+                }}
                 disabled={logoutMutation.isPending}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 title={t('تسجيل الخروج', 'Logout')}

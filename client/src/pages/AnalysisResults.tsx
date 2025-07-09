@@ -85,7 +85,7 @@ export default function AnalysisResults() {
   // Redirect if not authenticated
   useEffect(() => {
     if (error || (!isLoading && !userData?.user)) {
-      setLocation('/login');
+      setLocation('/');
     }
   }, [error, isLoading, userData, setLocation]);
 
@@ -306,7 +306,7 @@ export default function AnalysisResults() {
                 )}
               </div>
               <button
-                onClick={() => setLocation('/login')}
+                onClick={() => setLocation('/')}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 title={t('تسجيل الخروج', 'Logout')}
               >

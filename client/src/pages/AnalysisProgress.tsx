@@ -151,7 +151,7 @@ export default function AnalysisProgress() {
   // Redirect if not authenticated
   useEffect(() => {
     if (error || (!isLoading && !userData?.user)) {
-      setLocation('/login');
+      setLocation('/');
     }
   }, [error, isLoading, userData, setLocation]);
 

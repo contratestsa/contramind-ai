@@ -6,8 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SimpleLanguageProvider } from "@/components/SimpleLanguage";
 import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Signup from "@/pages/Signup";
 import ComingSoon from "@/pages/ComingSoon";
 import Dashboard from "@/pages/Dashboard";
 import AnalysisProgress from "@/pages/AnalysisProgress";
@@ -19,8 +17,6 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Signup} />
       <Route path="/coming-soon" component={ComingSoon} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/analysis-progress" component={AnalysisProgress} />
