@@ -16,6 +16,7 @@ import {
   Inbox,
   Globe
 } from "lucide-react";
+import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (3)_1752052096349.png';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -124,7 +125,11 @@ export default function Dashboard() {
       <div className="w-[200px] h-screen bg-[#F8F9FA] fixed z-10" style={{ [isRTL ? 'right' : 'left']: 0 }}>
         {/* Logo */}
         <div className="h-[60px] flex items-center px-5">
-          <h1 className="text-xl font-bold text-[#0C2836]">ContraMind</h1>
+          <img 
+            src={logoImage} 
+            alt="ContraMind Logo" 
+            className="h-8 object-contain"
+          />
         </div>
 
         {/* My Work Section */}
@@ -143,11 +148,20 @@ export default function Dashboard() {
                   onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) })}
                   className={cn(
                     "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                    isRTL ? "flex-row-reverse text-right" : "text-left"
+                    isRTL ? "justify-between" : ""
                   )}
                 >
-                  {item.icon}
-                  <span className="text-[15px] text-gray-700">{t(item.label.ar, item.label.en)}</span>
+                  {isRTL ? (
+                    <>
+                      <span className="text-[15px] text-gray-700 text-right">{t(item.label.ar, item.label.en)}</span>
+                      {item.icon}
+                    </>
+                  ) : (
+                    <>
+                      {item.icon}
+                      <span className="text-[15px] text-gray-700 text-left">{t(item.label.ar, item.label.en)}</span>
+                    </>
+                  )}
                 </button>
               </li>
             ))}
@@ -163,11 +177,20 @@ export default function Dashboard() {
                   onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) })}
                   className={cn(
                     "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                    isRTL ? "flex-row-reverse text-right" : "text-left"
+                    isRTL ? "justify-between" : ""
                   )}
                 >
-                  {item.icon}
-                  <span className="text-[15px] text-gray-700">{t(item.label.ar, item.label.en)}</span>
+                  {isRTL ? (
+                    <>
+                      <span className="text-[15px] text-gray-700 text-right">{t(item.label.ar, item.label.en)}</span>
+                      {item.icon}
+                    </>
+                  ) : (
+                    <>
+                      {item.icon}
+                      <span className="text-[15px] text-gray-700 text-left">{t(item.label.ar, item.label.en)}</span>
+                    </>
+                  )}
                 </button>
               </li>
             ))}
