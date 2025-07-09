@@ -281,7 +281,7 @@ export default function AnalysisResults() {
             {/* Token Counter */}
             <div className="flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg">
               <span className="text-lg">🪙</span>
-              <span className="text-sm font-medium">1,000 {t('رموز', 'Tokens')}</span>
+              <span className="text-sm font-medium">1,000 {t('توكن', 'Tokens')}</span>
             </div>
 
             {/* User Avatar */}
@@ -457,7 +457,7 @@ export default function AnalysisResults() {
                 className="flex items-center gap-2 px-6 py-3 bg-[#0C2836] text-white rounded-lg hover:bg-opacity-90 transition-colors"
               >
                 <Download className="w-5 h-5" />
-                {t('تنزيل التقرير (2 رمز)', 'Download Report (2 tokens)')}
+                {t('تنزيل التقرير (2 توكن)', 'Download Report (2 tokens)')}
               </button>
 
               {/* Secondary Buttons */}

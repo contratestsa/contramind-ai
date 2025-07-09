@@ -131,10 +131,10 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
         <div className="px-6">
           <div className="bg-[#0C2836] text-white px-4 py-3 rounded-lg">
             <div className="font-bold text-sm mb-1">
-              {t('رصيدك: 1,000 رمز', 'Your Balance: 1,000 Tokens')}
+              {t('رصيدك: 1,000 توكن', 'Your Balance: 1,000 Tokens')}
             </div>
             <div className="text-xs opacity-90">
-              {t('التحميل والتحليل يكلف 10 رموز', 'Upload & Analysis costs 10 tokens')}
+              {t('التحميل والتحليل يكلف 10 توكن', 'Upload & Analysis costs 10 tokens')}
             </div>
           </div>
         </div>
