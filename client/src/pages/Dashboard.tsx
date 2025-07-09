@@ -124,12 +124,12 @@ export default function Dashboard() {
       <div className="w-[200px] h-screen bg-[#F8F9FA] fixed z-10" style={{ [isRTL ? 'right' : 'left']: 0 }}>
         {/* Logo */}
         <div className="h-[60px] flex items-center px-5">
-          <h1 className="text-xl font-bold text-[#0C2836]">ContraMind</h1>
+          <h1 className="text-xl font-bold text-[#0C2836] font-heading">ContraMind</h1>
         </div>
 
         {/* My Work Section */}
         <div className="bg-[#0C2836] text-white px-5 py-3">
-          <h3 className="text-base font-semibold">{t('عملي', 'My Work')}</h3>
+          <h3 className={cn("text-base font-semibold", language === 'ar' ? 'font-arabic' : 'font-heading')}>{t('عملي', 'My Work')}</h3>
         </div>
 
         {/* Navigation Items */}
@@ -145,7 +145,7 @@ export default function Dashboard() {
                   )}
                 >
                   {item.icon}
-                  <span className="text-[15px] text-gray-700">{t(item.label.ar, item.label.en)}</span>
+                  <span className={cn("text-[15px] text-gray-700", language === 'ar' ? 'font-arabic' : 'font-sans')}>{t(item.label.ar, item.label.en)}</span>
                 </button>
               </li>
             ))}
@@ -165,7 +165,7 @@ export default function Dashboard() {
                   )}
                 >
                   {item.icon}
-                  <span className="text-[15px] text-gray-700">{t(item.label.ar, item.label.en)}</span>
+                  <span className={cn("text-[15px] text-gray-700", language === 'ar' ? 'font-arabic' : 'font-sans')}>{t(item.label.ar, item.label.en)}</span>
                 </button>
               </li>
             ))}
@@ -201,13 +201,13 @@ export default function Dashboard() {
               className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Globe className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">{language === 'ar' ? 'EN' : 'AR'}</span>
+              <span className="text-sm font-medium text-gray-700 font-sans">{language === 'ar' ? 'EN' : 'AR'}</span>
             </button>
 
             {/* Token Counter */}
             <div className="flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg">
               <span className="text-lg">🪙</span>
-              <span className="text-sm font-medium">1,000 {t('رموز', 'Tokens')}</span>
+              <span className={cn("text-sm font-medium", language === 'ar' ? 'font-arabic' : 'font-sans')}>1,000 {t('رموز', 'Tokens')}</span>
             </div>
 
             {/* User Avatar */}
@@ -245,7 +245,7 @@ export default function Dashboard() {
             </div>
             
             {/* Greeting Text */}
-            <h2 className="mt-4 text-2xl font-semibold text-[#0C2836]">
+            <h2 className={cn("mt-4 text-2xl font-semibold text-[#0C2836]", language === 'ar' ? 'font-arabic' : 'font-heading')}>
               {t(
                 `مرحباً ${user?.fullName?.split(' ')[0] || 'بك'}, ماذا تريد أن تفعل؟`,
                 `Hey ${user?.fullName?.split(' ')[0] || 'there'}, what do you want to do?`
@@ -259,7 +259,7 @@ export default function Dashboard() {
               <input
                 type="text"
                 placeholder={t('اسأل عن العقود التقنية...', 'Ask about technology contracts...')}
-                className="w-full h-12 pl-12 pr-12 text-base border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors"
+                className={cn("w-full h-12 pl-12 pr-12 text-base border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors", language === 'ar' ? 'font-arabic' : 'font-sans')}
               />
               {/* Search Icon */}
               <svg 
@@ -287,7 +287,7 @@ export default function Dashboard() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>{t('الدردشة تكلف 5 رموز لكل رسالة', 'Chat costs 5 tokens per message')}</span>
+              <span className={cn(language === 'ar' ? 'font-arabic' : 'font-sans')}>{t('الدردشة تكلف 5 رموز لكل رسالة', 'Chat costs 5 tokens per message')}</span>
             </div>
           </div>
 
@@ -300,7 +300,7 @@ export default function Dashboard() {
               {/* Token Badge */}
               <div className="absolute top-4 right-4 bg-[#FFF3CD] flex items-center gap-1 px-2 py-1 rounded-xl">
                 <span className="text-xs">🪙</span>
-                <span className="text-xs font-medium">{t('10 رموز', '10 tokens')}</span>
+                <span className={cn("text-xs font-medium", language === 'ar' ? 'font-arabic' : 'font-sans')}>{t('10 رموز', '10 tokens')}</span>
               </div>
               
               {/* Upload Icon */}
@@ -314,12 +314,12 @@ export default function Dashboard() {
               </svg>
               
               {/* Title */}
-              <h3 className="text-lg font-bold text-gray-800">
+              <h3 className={cn("text-lg font-bold text-gray-800", language === 'ar' ? 'font-arabic' : 'font-heading')}>
                 {t('تحميل ومراجعة', 'Upload & Review')}
               </h3>
               
               {/* Subtitle */}
-              <p className="text-sm text-[#6C757D] text-center">
+              <p className={cn("text-sm text-[#6C757D] text-center", language === 'ar' ? 'font-arabic' : 'font-sans')}>
                 {t('حلل عقدك التقني', 'Analyze your technology contract')}
               </p>
             </button>
