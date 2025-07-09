@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -24,8 +24,7 @@ import {
   FileText,
   ChevronRight,
   User,
-  Building,
-  Info
+  Building
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -84,34 +83,6 @@ export default function Repository() {
   const [sortBy, setSortBy] = useState('newest');
   const [deleteContractId, setDeleteContractId] = useState<string | null>(null);
   const [expandedSettings, setExpandedSettings] = useState(location.startsWith('/settings'));
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: 'success',
-      icon: <CheckCircle className="w-4 h-4 text-green-500" />,
-      text: 'Contract analysis complete',
-      subtext: 'TechVendor_Agreement.pdf',
-      time: '5 minutes ago'
-    },
-    {
-      id: 2,
-      type: 'warning',
-      icon: <AlertTriangle className="w-4 h-4 text-orange-500" />,
-      text: 'Low token balance',
-      subtext: 'Only 88 tokens remaining',
-      time: '1 hour ago'
-    },
-    {
-      id: 3,
-      type: 'info',
-      icon: <Info className="w-4 h-4 text-blue-500" />,
-      text: 'Welcome to ContraMind!',
-      subtext: 'You\'ve received 1000 tokens',
-      time: 'Today'
-    }
-  ]);
-  const notificationRef = useRef<HTMLDivElement>(null);
   const isRTL = language === 'ar';
 
   // Fetch user data
@@ -197,27 +168,6 @@ export default function Repository() {
     { icon: <HelpCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
     { icon: <Calendar className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "حجز عرض توضيحي", en: "Schedule Demo" }, path: "/demo" },
   ];
-
-  // Handle click outside to close notifications
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setShowNotifications(false);
-      }
-    };
-
-    if (showNotifications) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [showNotifications]);
-
-  const handleNotificationClick = (notificationId: number) => {
-    setNotifications(prev => prev.filter(n => n.id !== notificationId));
-    if (notifications.length === 1) {
-      setHasNotifications(false);
-    }
-  };
 
   const handleView = (contractId: string) => {
     const contract = contracts.find(c => c.id === contractId);
@@ -411,79 +361,15 @@ export default function Repository() {
             </button>
 
             {/* Notifications */}
-            <div className="relative" ref={notificationRef}>
-              <button 
-                onClick={() => {
-                  setShowNotifications(!showNotifications);
-                  if (!showNotifications) {
-                    setHasNotifications(false);
-                  }
-                }}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
-              >
-                <Bell className="w-5 h-5 text-gray-600" />
-                {hasNotifications && !showNotifications && (
-                  <span className={cn(
-                    "absolute top-0.5 w-2 h-2 bg-red-500 rounded-full",
-                    isRTL ? "left-0.5" : "right-0.5"
-                  )} />
-                )}
-              </button>
-
-              {/* Notification Dropdown */}
-              {showNotifications && (
-                <div 
-                  className={cn(
-                    "absolute top-full mt-2 w-[300px] bg-white border border-[#E6E6E6] rounded-lg shadow-lg z-50",
-                    isRTL ? "left-0" : "right-0"
-                  )}
-                  style={{ boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-                >
-                  {/* Header */}
-                  <div className="px-4 py-3 border-b border-[#E6E6E6]">
-                    <h3 className={cn("text-[16px] font-['Space_Grotesk'] font-semibold text-gray-800", isRTL && "text-right")}>
-                      {t('الإشعارات', 'Notifications')}
-                    </h3>
-                  </div>
-
-                  {/* Notifications List */}
-                  <div className="max-h-[400px] overflow-y-auto">
-                    {notifications.length > 0 ? (
-                      notifications.map((notification, index) => (
-                        <div key={notification.id}>
-                          <div
-                            onClick={() => handleNotificationClick(notification.id)}
-                            className="px-4 py-3 hover:bg-[#F8F9FA] cursor-pointer transition-colors"
-                          >
-                            <div className={cn("flex items-start gap-3", isRTL && "flex-row-reverse")}>
-                              {notification.icon}
-                              <div className="flex-1">
-                                <p className={cn("text-[14px] font-['Inter'] text-gray-800", isRTL && "text-right")}>
-                                  {t(notification.text, notification.text)}
-                                </p>
-                                <p className={cn("text-[13px] font-['Inter'] text-gray-600 mt-0.5", isRTL && "text-right")}>
-                                  {t(notification.subtext, notification.subtext)}
-                                </p>
-                                <p className={cn("text-[12px] font-['Inter'] text-gray-400 mt-1", isRTL && "text-right")}>
-                                  {t(notification.time, notification.time)}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          {index < notifications.length - 1 && <div className="border-t border-[#E6E6E6]" />}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="px-4 py-8 text-center">
-                        <p className="text-[14px] font-['Inter'] text-[#6C757D]">
-                          {t('لا توجد إشعارات جديدة', 'No new notifications')}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
+              <Bell className="w-5 h-5 text-gray-600" />
+              {hasNotifications && (
+                <span className={cn(
+                  "absolute top-1 w-2 h-2 bg-red-500 rounded-full",
+                  isRTL ? "left-1" : "right-1"
+                )} />
               )}
-            </div>
+            </button>
 
             {/* Language Toggle */}
             <button
