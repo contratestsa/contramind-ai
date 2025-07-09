@@ -1,0 +1,100 @@
+Create the chat interface that opens when users use the search bar on dashboard:
+
+1. CHAT ACTIVATION:
+- When user types in dashboard search bar and presses Enter:
+  - Navigate to chat page
+  - Keep sidebar and header visible
+  - Pre-fill the question in chat
+
+2. CHAT PAGE LAYOUT:
+Breadcrumb: "Dashboard > Contract Assistant"
+
+Chat Container:
+- Max width: 800px, centered
+- Height: calc(100vh - 200px)
+- Background: white
+- Border: 1px solid #E6E6E6
+- Border radius: 8px
+
+3. CHAT HEADER:
+- Background: #F8F9FA
+- Padding: 16px 24px
+- Title: "Technology Contract Assistant"
+- Subtitle: "Ask questions about technology contracts"
+- Token cost badge: "5 tokens per message"
+- Close button (X) - returns to dashboard
+
+4. MESSAGE AREA:
+- Scrollable container
+- Padding: 24px
+- Auto-scroll to bottom
+
+Initial System Message:
+- "I can help you with technology contract questions. Each message costs 5 tokens."
+- Light blue background (#E8F4F8)
+- No avatar
+- Timestamp
+
+Message Bubbles:
+User messages (right side):
+- Background: #0C2836 (navy)
+- Color: white
+- Max width: 70%
+- Border radius: 16px
+- Padding: 12px 16px
+- User avatar (24px)
+
+AI messages (left side):
+- Background: #F8F9FA (light grey)
+- Color: #0C2836
+- Max width: 70%
+- Border radius: 16px
+- Padding: 12px 16px
+- AI avatar/icon (24px)
+
+5. INPUT AREA (fixed bottom):
+- Background: white
+- Border top: 1px solid #E6E6E6
+- Padding: 16px
+
+Input field:
+- Full width
+- Height: 44px
+- Placeholder: "Ask about your technology contract..."
+- Max length: 500 characters
+- Character counter when typing
+
+Send button:
+- Background: #0C2836
+- Icon: Send arrow
+- Disabled when empty
+- Shows "5 tokens" on hover
+
+6. MOCK CONVERSATION:
+Pre-populate with user's question from search
+Then add mock AI response after 2 seconds:
+
+Example:
+User: "What is a limitation of liability clause?"
+AI: "A limitation of liability clause is a contractual provision that caps the amount one party has to pay the other in case of breach or damages. In technology contracts, this often limits liability to the fees paid under the contract. It's important to review these carefully as they can significantly impact your risk exposure."
+
+7. SUGGESTED QUESTIONS:
+Below input, show 3 chips:
+- "What are standard payment terms?"
+- "Explain IP ownership"
+- "What is a termination clause?"
+
+Clicking a chip adds it to input
+
+8. FEATURES:
+- Copy button on AI messages
+- Timestamp on hover
+- Loading indicator (3 dots) while waiting
+- Token count updates after each message
+  (mock: reduce by 5 each time)
+
+9. RESPONSIVE:
+- Full width on mobile
+- Smaller avatars (20px)
+- Adjust bubble max-width to 85%
+- Fixed input area stays accessible

@@ -48,6 +48,7 @@ export default function Dashboard() {
   const [hasNotifications, setHasNotifications] = useState(true);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [expandedSettings, setExpandedSettings] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const isRTL = language === 'ar';
 
   const toggleLanguage = () => {
@@ -332,6 +333,13 @@ export default function Dashboard() {
             <div className="relative">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    setLocation(`/chat?q=${encodeURIComponent(searchQuery)}`);
+                  }
+                }}
                 placeholder={t('اسأل عن العقود التقنية...', 'Ask about technology contracts...')}
                 className={cn(
                   "w-full h-12 text-base border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors",
@@ -351,10 +359,17 @@ export default function Dashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               {/* Send Button */}
-              <button className={cn(
-                "absolute top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-md transition-colors",
-                isRTL ? "left-2" : "right-2"
-              )}>
+              <button 
+                onClick={() => {
+                  if (searchQuery.trim()) {
+                    setLocation(`/chat?q=${encodeURIComponent(searchQuery)}`);
+                  }
+                }}
+                className={cn(
+                  "absolute top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-md transition-colors",
+                  isRTL ? "left-2" : "right-2"
+                )}
+              >
                 <svg 
                   className="w-5 h-5 text-gray-600"
                   fill="none" 

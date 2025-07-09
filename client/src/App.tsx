@@ -13,6 +13,7 @@ import AnalysisResults from "@/pages/AnalysisResults";
 import Repository from "@/pages/Repository";
 import PersonalSettings from "@/pages/PersonalSettings";
 import OrganizationSettings from "@/pages/OrganizationSettings";
+import Chat from "@/pages/Chat";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/repository" component={Repository} />
       <Route path="/settings/personal" component={PersonalSettings} />
       <Route path="/settings/organization" component={OrganizationSettings} />
+      <Route path="/chat" component={Chat} />
 
       <Route component={NotFound} />
     </Switch>

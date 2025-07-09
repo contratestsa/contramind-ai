@@ -4,21 +4,26 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **July 9, 2025**: Enhanced sidebar navigation and settings pages
-  - **Settings Navigation**: Implemented expandable Settings menu in sidebar across all pages
-    - Settings item now has chevron icon that rotates when expanded
-    - Sub-menu items appear with proper indentation for Personal and Organization settings
-    - Consistent behavior across Dashboard, Repository, AnalysisProgress, and AnalysisResults pages
-  - **Settings Pages**: Created Personal Settings and Organization Settings pages
-    - Personal Settings: Profile management, notification preferences, security settings
-    - Organization Settings: Company info, authorized signatories, subscription details
-  - **Previous Updates**: Built contract analysis flow with party selection and results display
-    - Upload Modal: Converted upload functionality from separate page to popup modal
-    - Party Selection: Added party selection modal after upload (Service Recipient/Provider/General)
-    - Analysis Progress: Created animated progress page with 3-step analysis visualization
-    - Analysis Results: Built comprehensive results page with risk gauge and findings
-    - Flow: Dashboard → Upload Modal → Party Selection → Analysis Progress → Results
-    - Sidebar UI Update: Icons positioned on left side of text for all languages, logo area matches sidebar width
+- **July 9, 2025**: Added AI-powered chat interface for technology contract questions
+  - **Chat Interface**: Created comprehensive chat system accessible from dashboard search
+    - Activation: User types in dashboard search bar and presses Enter to navigate to chat
+    - Pre-fills user's question from search query
+    - Token-based system: 5 tokens per message with live token counter
+    - Breadcrumb navigation: Dashboard > Contract Assistant
+  - **Chat Features**:
+    - System message explaining token cost and capabilities
+    - User messages (right/navy) and AI messages (left/light grey) with distinct styling
+    - Mock AI responses for common contract questions (limitation of liability, payment terms, IP ownership, termination)
+    - Copy button on AI messages, timestamps on hover
+    - Loading animation with 3 bouncing dots while waiting for response
+    - Suggested question chips below input field
+    - Character counter (500 max) and send button
+    - Responsive design with adjusted sizing for mobile
+  - **Previous Updates**: Enhanced sidebar navigation and settings pages
+    - Settings Navigation: Implemented expandable Settings menu in sidebar across all pages
+    - Settings Pages: Created Personal Settings and Organization Settings pages
+    - Contract Analysis Flow: Dashboard → Upload Modal → Party Selection → Analysis Progress → Results
+    - Sidebar UI Update: Icons positioned on left side of text for all languages
 - **July 8, 2025**: Added GitHub integration and Google Cloud migration capabilities
   - **GitHub Integration**: Configured for read/write access to https://github.com/contramindai/contramindPoC
   - **Google Cloud Migration**: Created comprehensive migration guide and deployment configurations
