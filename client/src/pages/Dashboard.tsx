@@ -129,7 +129,9 @@ export default function Dashboard() {
 
         {/* My Work Section */}
         <div className="bg-[#0C2836] text-white px-5 py-3">
-          <h3 className="text-base font-semibold">{t('عملي', 'My Work')}</h3>
+          <h3 className={cn("text-base font-semibold", isRTL ? "text-right" : "text-left")}>
+            {t('عملي', 'My Work')}
+          </h3>
         </div>
 
         {/* Navigation Items */}
@@ -191,7 +193,10 @@ export default function Dashboard() {
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
               <Bell className="w-5 h-5 text-gray-600" />
               {hasNotifications && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                <span className={cn(
+                  "absolute top-1 w-2 h-2 bg-red-500 rounded-full",
+                  isRTL ? "left-1" : "right-1"
+                )} />
               )}
             </button>
 
@@ -205,7 +210,10 @@ export default function Dashboard() {
             </button>
 
             {/* Token Counter */}
-            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg">
+            <div className={cn(
+              "flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg",
+              isRTL ? "flex-row-reverse" : ""
+            )}>
               <span className="text-lg">🪙</span>
               <span className="text-sm font-medium">1,000 {t('توكن', 'Tokens')}</span>
             </div>
@@ -259,11 +267,17 @@ export default function Dashboard() {
               <input
                 type="text"
                 placeholder={t('اسأل عن العقود التقنية...', 'Ask about technology contracts...')}
-                className="w-full h-12 pl-12 pr-12 text-base border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors"
+                className={cn(
+                  "w-full h-12 text-base border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors",
+                  isRTL ? "pr-12 pl-12 text-right" : "pl-12 pr-12 text-left"
+                )}
               />
               {/* Search Icon */}
               <svg 
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                className={cn(
+                  "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400",
+                  isRTL ? "right-4" : "left-4"
+                )}
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -271,7 +285,10 @@ export default function Dashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               {/* Send Button */}
-              <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-md transition-colors">
+              <button className={cn(
+                "absolute top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-md transition-colors",
+                isRTL ? "left-2" : "right-2"
+              )}>
                 <svg 
                   className="w-5 h-5 text-gray-600"
                   fill="none" 
@@ -287,7 +304,7 @@ export default function Dashboard() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>{t('الدردشة تكلف 5 رموز لكل رسالة', 'Chat costs 5 tokens per message')}</span>
+              <span>{t('الدردشة تكلف 5 توكن لكل رسالة', 'Chat costs 5 tokens per message')}</span>
             </div>
           </div>
 
@@ -298,9 +315,12 @@ export default function Dashboard() {
               onClick={() => setIsUploadModalOpen(true)}
             >
               {/* Token Badge */}
-              <div className="absolute top-4 right-4 bg-[#FFF3CD] flex items-center gap-1 px-2 py-1 rounded-xl">
+              <div className={cn(
+                "absolute top-4 bg-[#FFF3CD] flex items-center gap-1 px-2 py-1 rounded-xl",
+                isRTL ? "left-4 flex-row-reverse" : "right-4"
+              )}>
                 <span className="text-xs">🪙</span>
-                <span className="text-xs font-medium">{t('10 رموز', '10 tokens')}</span>
+                <span className="text-xs font-medium">{t('10 توكن', '10 tokens')}</span>
               </div>
               
               {/* Upload Icon */}

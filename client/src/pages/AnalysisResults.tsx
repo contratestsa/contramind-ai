@@ -195,7 +195,9 @@ export default function AnalysisResults() {
 
         {/* My Work Section */}
         <div className="bg-[#0C2836] text-white px-5 py-3">
-          <h3 className="text-base font-semibold">{t('عملي', 'My Work')}</h3>
+          <h3 className={cn("text-base font-semibold", isRTL ? "text-right" : "text-left")}>
+            {t('عملي', 'My Work')}
+          </h3>
         </div>
 
         {/* Navigation Items */}
@@ -265,7 +267,10 @@ export default function AnalysisResults() {
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
               <Bell className="w-5 h-5 text-gray-600" />
               {hasNotifications && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                <span className={cn(
+                  "absolute top-1 w-2 h-2 bg-red-500 rounded-full",
+                  isRTL ? "left-1" : "right-1"
+                )} />
               )}
             </button>
 
@@ -279,7 +284,10 @@ export default function AnalysisResults() {
             </button>
 
             {/* Token Counter */}
-            <div className="flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg">
+            <div className={cn(
+              "flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg",
+              isRTL ? "flex-row-reverse" : ""
+            )}>
               <span className="text-lg">🪙</span>
               <span className="text-sm font-medium">1,000 {t('توكن', 'Tokens')}</span>
             </div>
