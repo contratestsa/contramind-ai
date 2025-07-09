@@ -20,17 +20,12 @@ import {
   User,
   Building,
   Camera,
-  Info,
-  MessageSquare,
-  TicketIcon,
-  Sparkles
+  Info
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import FeedbackModal from "@/components/FeedbackModal";
-import TicketModal from "@/components/TicketModal";
 import {
   Select,
   SelectContent,
@@ -63,8 +58,6 @@ export default function PersonalSettings() {
   const { toast } = useToast();
   const [hasNotifications, setHasNotifications] = useState(true);
   const [expandedSettings, setExpandedSettings] = useState(true);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [showTicketModal, setShowTicketModal] = useState(false);
   const isRTL = language === 'ar';
 
   // Form states
@@ -101,7 +94,6 @@ export default function PersonalSettings() {
       ]
     },
     { icon: <Layers className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "صفقات مكدسة", en: "Deals Stack" }, path: "/deals" },
-    { icon: <HelpCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
   ];
 
   const bottomItems: SidebarItem[] = [
@@ -179,8 +171,6 @@ export default function PersonalSettings() {
                       return;
                     } else if (item.path === '/settings/organization') {
                       setLocation(item.path);
-                    } else if (item.path === '/help') {
-                      setLocation(item.path);
                     } else {
                       toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
                     }
@@ -228,29 +218,23 @@ export default function PersonalSettings() {
           </ul>
         </nav>
 
-        {/* Footer Quick Links */}
-        <div className="border-t border-gray-200 mt-auto p-4">
-          <button
-            onClick={() => setShowFeedbackModal(true)}
-            className="w-full h-[36px] px-3 flex items-center gap-2 hover:bg-[#E6E6E6] transition-colors rounded"
-          >
-            <MessageSquare className="w-4 h-4 text-gray-600" />
-            <span className="text-[12px] text-gray-600">{t('ملاحظات', 'Feedback')}</span>
-          </button>
-          <button
-            onClick={() => setShowTicketModal(true)}
-            className="w-full h-[36px] px-3 flex items-center gap-2 hover:bg-[#E6E6E6] transition-colors rounded"
-          >
-            <TicketIcon className="w-4 h-4 text-gray-600" />
-            <span className="text-[12px] text-gray-600">{t('رفع تذكرة', 'Raise Ticket')}</span>
-          </button>
-          <button
-            onClick={() => setLocation('/whats-new')}
-            className="w-full h-[36px] px-3 flex items-center gap-2 hover:bg-[#E6E6E6] transition-colors rounded"
-          >
-            <Sparkles className="w-4 h-4 text-gray-600" />
-            <span className="text-[12px] text-gray-600">{t('ما الجديد', "What's New")}</span>
-          </button>
+        {/* Bottom Items */}
+        <div className="border-t border-gray-300">
+          <ul className="py-2">
+            {bottomItems.map((item, index) => (
+              <li key={index}>
+                <button
+                  onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) })}
+                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
+                >
+                  {item.icon}
+                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                    {t(item.label.ar, item.label.en)}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
@@ -544,10 +528,6 @@ export default function PersonalSettings() {
           </div>
         </main>
       </div>
-
-      {/* Modals */}
-      {showFeedbackModal && <FeedbackModal onClose={() => setShowFeedbackModal(false)} />}
-      {showTicketModal && <TicketModal onClose={() => setShowTicketModal(false)} />}
     </div>
   );
 }

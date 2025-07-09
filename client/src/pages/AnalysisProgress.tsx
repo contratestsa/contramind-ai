@@ -21,17 +21,12 @@ import {
   Check,
   ChevronRight,
   User,
-  Building,
-  MessageSquare,
-  TicketIcon,
-  Sparkles
+  Building
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
-import FeedbackModal from "@/components/FeedbackModal";
-import TicketModal from "@/components/TicketModal";
 
 interface SidebarItem {
   icon: React.ReactNode;
@@ -63,8 +58,6 @@ export default function AnalysisProgress() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [expandedSettings, setExpandedSettings] = useState(false);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [showTicketModal, setShowTicketModal] = useState(false);
   const isRTL = language === 'ar';
 
   // Fetch user data
@@ -185,7 +178,6 @@ export default function AnalysisProgress() {
       ]
     },
     { icon: <Layers className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "صفقات مكدسة", en: "Deals Stack" }, path: "/deals" },
-    { icon: <HelpCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
   ];
 
   const bottomItems: SidebarItem[] = [
@@ -245,8 +237,6 @@ export default function AnalysisProgress() {
                       setLocation(item.path);
                     } else if (item.path === '/settings/organization') {
                       setLocation(item.path);
-                    } else if (item.path === '/help') {
-                      setLocation(item.path);
                     } else {
                       toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
                     }
@@ -288,31 +278,6 @@ export default function AnalysisProgress() {
               </li>
             ))}
           </ul>
-
-          {/* Footer Quick Links */}
-          <div className="border-t border-gray-200 mt-auto p-4">
-            <button
-              onClick={() => setShowFeedbackModal(true)}
-              className="w-full h-[36px] px-3 flex items-center gap-2 hover:bg-[#E6E6E6] transition-colors rounded"
-            >
-              <MessageSquare className="w-4 h-4 text-gray-600" />
-              <span className="text-[12px] text-gray-600">{t('ملاحظات', 'Feedback')}</span>
-            </button>
-            <button
-              onClick={() => setShowTicketModal(true)}
-              className="w-full h-[36px] px-3 flex items-center gap-2 hover:bg-[#E6E6E6] transition-colors rounded"
-            >
-              <TicketIcon className="w-4 h-4 text-gray-600" />
-              <span className="text-[12px] text-gray-600">{t('رفع تذكرة', 'Raise Ticket')}</span>
-            </button>
-            <button
-              onClick={() => setLocation('/whats-new')}
-              className="w-full h-[36px] px-3 flex items-center gap-2 hover:bg-[#E6E6E6] transition-colors rounded"
-            >
-              <Sparkles className="w-4 h-4 text-gray-600" />
-              <span className="text-[12px] text-gray-600">{t('ما الجديد', "What's New")}</span>
-            </button>
-          </div>
         </nav>
 
         {/* Bottom Items */}
@@ -465,10 +430,6 @@ export default function AnalysisProgress() {
           </div>
         </main>
       </div>
-
-      {/* Modals */}
-      {showFeedbackModal && <FeedbackModal onClose={() => setShowFeedbackModal(false)} />}
-      {showTicketModal && <TicketModal onClose={() => setShowTicketModal(false)} />}
     </div>
   );
 }

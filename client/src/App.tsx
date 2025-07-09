@@ -13,8 +13,6 @@ import AnalysisResults from "@/pages/AnalysisResults";
 import Repository from "@/pages/Repository";
 import PersonalSettings from "@/pages/PersonalSettings";
 import OrganizationSettings from "@/pages/OrganizationSettings";
-import HelpCenter from "@/pages/HelpCenter";
-import WhatsNew from "@/pages/WhatsNew";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 
@@ -29,8 +27,6 @@ function Router() {
       <Route path="/repository" component={Repository} />
       <Route path="/settings/personal" component={PersonalSettings} />
       <Route path="/settings/organization" component={OrganizationSettings} />
-      <Route path="/help" component={HelpCenter} />
-      <Route path="/whats-new" component={WhatsNew} />
 
       <Route component={NotFound} />
     </Switch>
