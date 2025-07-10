@@ -14,6 +14,8 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
   - **UI Updates**:
     - Changed "My Work" section background from dark blue to white with dark blue text
     - Updated onboarding form from full-screen overlay to centered card with backdrop blur
+    - Added 3D effect to sidebar with shadows and gradient background
+    - Customized Switch/Toggle components with ContraMind brand colors and modern styling
   - **Tasks Feature**: Implemented comprehensive task management for contract revisions
     - Created Tasks page (/tasks) accessible from all dashboard sidebars
     - Shows contracts under revision with status tracking (Draft, Under Review, Pending Approval, Revision Requested)
