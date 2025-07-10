@@ -334,6 +334,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Onboarding completion endpoint
+  app.post("/api/onboarding/complete", async (req, res) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const { companyNameEn, companyNameAr, country, contractRole } = req.body;
+      
+      // Validate required fields
+      if (!companyNameEn || !country || !contractRole) {
+        return res.status(400).json({ 
+          message: "Missing required fields" 
+        });
+      }
+
+      if (!['buyer', 'vendor'].includes(contractRole)) {
+        return res.status(400).json({ 
+          message: "Invalid contract role" 
+        });
+      }
+
+      // Update user onboarding data
+      const updatedUser = await storage.updateUserOnboarding(
+        (req.user as any).id, 
+        {
+          companyNameEn,
+          companyNameAr,
+          country,
+          contractRole
+        }
+      );
+
+      if (!updatedUser) {
+        return res.status(500).json({ 
+          message: "Failed to update onboarding data" 
+        });
+      }
+
+      // Remove password from response
+      const { password, ...userWithoutPassword } = updatedUser;
+      
+      res.json({ 
+        message: "Onboarding completed successfully",
+        user: userWithoutPassword 
+      });
+    } catch (error) {
+      console.error("Onboarding error:", error);
+      res.status(500).json({ 
+        message: "Failed to complete onboarding" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

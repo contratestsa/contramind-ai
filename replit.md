@@ -4,6 +4,25 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
+- **July 10, 2025**: Implemented onboarding flow for new users
+  - **Database Updates**: 
+    - Added onboarding fields to users table (onboardingCompleted, companyNameEn, companyNameAr, country, contractRole)
+    - Successfully migrated database schema with new columns
+  - **Onboarding Component**: Created 3-step onboarding flow
+    - Step 1: Welcome screen with ContraMind logo
+    - Step 2: Company information form (name in English/Arabic, country)
+    - Step 3: Contract role selection (buyer/vendor)
+    - Step 4: Completion screen with 1000 tokens granted
+  - **Backend Integration**: 
+    - Added /api/onboarding/complete endpoint
+    - Updated storage interface with updateUserOnboarding method
+  - **Dashboard Integration**: 
+    - Shows onboarding automatically for new users (onboardingCompleted = false)
+    - Full-screen overlay that cannot be skipped
+    - Refreshes dashboard after completion
+  - **Notification System**: 
+    - Removed "صفحات مكدسة" (Deals Stack) feature from all pages
+    - Maintained consistent notification dropdown across all dashboard pages
 - **July 9, 2025**: Fixed navigation and sidebar positioning for Arabic RTL layout
   - **Navigation Fixes**: 
     - Changed "لوحة القيادة" to "لوحة التحكم" across all dashboard pages for consistency

@@ -23,6 +23,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import UploadModal from "@/components/UploadModal";
+import Onboarding from "@/components/Onboarding";
 
 interface SidebarItem {
   icon: React.ReactNode;
@@ -38,6 +39,11 @@ interface User {
   fullName: string;
   emailVerified: boolean;
   profilePicture?: string;
+  onboardingCompleted: boolean;
+  companyNameEn?: string;
+  companyNameAr?: string;
+  country?: string;
+  contractRole?: string;
 }
 
 export default function Dashboard() {
@@ -49,6 +55,7 @@ export default function Dashboard() {
   const [expandedSettings, setExpandedSettings] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const isRTL = language === 'ar';
 
   const toggleLanguage = () => {
@@ -95,6 +102,13 @@ export default function Dashboard() {
       setLocation('/');
     }
   }, [error, isLoading, userData, setLocation]);
+
+  // Check if user needs onboarding
+  useEffect(() => {
+    if (userData?.user && !userData.user.onboardingCompleted) {
+      setShowOnboarding(true);
+    }
+  }, [userData]);
 
   // Close notifications when clicking outside
   useEffect(() => {
@@ -485,6 +499,17 @@ export default function Dashboard() {
         isOpen={isUploadModalOpen} 
         onClose={() => setIsUploadModalOpen(false)} 
       />
+
+      {/* Onboarding */}
+      {showOnboarding && (
+        <Onboarding 
+          onComplete={() => {
+            setShowOnboarding(false);
+            // Reload page to refresh user data
+            window.location.reload();
+          }} 
+        />
+      )}
     </div>
   );
 }

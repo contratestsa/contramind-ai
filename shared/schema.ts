@@ -11,6 +11,11 @@ export const users = pgTable("users", {
   profilePicture: text("profile_picture"),
   emailVerified: boolean("email_verified").default(false).notNull(),
   verificationToken: text("verification_token"),
+  onboardingCompleted: boolean("onboarding_completed").default(false).notNull(),
+  companyNameEn: text("company_name_en"),
+  companyNameAr: text("company_name_ar"),
+  country: text("country").default("saudi-arabia"),
+  contractRole: text("contract_role"), // 'buyer' or 'vendor'
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -16,6 +16,7 @@ export interface IStorage {
   getWaitlistCount(): Promise<number>;
   getWaitlistEntries(): Promise<WaitlistEntry[]>;
   createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
+  updateUserOnboarding(id: number, data: { companyNameEn: string; companyNameAr?: string; country: string; contractRole: string }): Promise<User | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -132,6 +133,21 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return message;
+  }
+
+  async updateUserOnboarding(id: number, data: { companyNameEn: string; companyNameAr?: string; country: string; contractRole: string }): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({
+        companyNameEn: data.companyNameEn,
+        companyNameAr: data.companyNameAr || null,
+        country: data.country,
+        contractRole: data.contractRole,
+        onboardingCompleted: true
+      })
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
   }
 }
 
