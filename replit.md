@@ -5,6 +5,10 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 10, 2025**: 
+  - **Logo Update**: Updated all dashboard pages with new ContraMind logo
+    - Replaced old CMYK logo with new RGB logo (RGB_Logo Design - ContraMind V001-01)
+    - Logo now takes full width of sidebar (200px) with no padding
+    - Updated logo in all pages: Dashboard, Repository, Tasks, PersonalSettings, OrganizationSettings, Chat, Help, AnalysisProgress, and AnalysisResults
   - **Tasks Feature**: Implemented comprehensive task management for contract revisions
     - Created Tasks page (/tasks) accessible from all dashboard sidebars
     - Shows contracts under revision with status tracking (Draft, Under Review, Pending Approval, Revision Requested)

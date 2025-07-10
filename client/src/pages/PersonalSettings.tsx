@@ -169,7 +169,7 @@ export default function PersonalSettings() {
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
-            className="w-full h-full object-contain px-2"
+            className="w-full h-full object-contain"
           />
         </div>
 
