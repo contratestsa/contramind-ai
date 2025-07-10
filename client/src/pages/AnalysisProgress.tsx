@@ -214,7 +214,7 @@ export default function AnalysisProgress() {
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
       {/* Sidebar */}
-      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10 shadow-2xl", isRTL ? "right-0 shadow-[-10px_0_30px_-5px_rgba(0,0,0,0.1)]" : "left-0 shadow-[10px_0_30px_-5px_rgba(0,0,0,0.1)]")}>
         {/* Logo */}
         <div className="h-[80px] flex items-center bg-[#0C2836]">
           <img 

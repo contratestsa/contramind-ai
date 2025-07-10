@@ -260,9 +260,9 @@ export default function Repository() {
       
       {/* Sidebar */}
       <div className={cn(
-        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0 shadow-2xl",
         showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
-        isRTL ? "right-0" : "left-0"
+        isRTL ? "right-0 shadow-[-10px_0_30px_-5px_rgba(0,0,0,0.1)]" : "left-0 shadow-[10px_0_30px_-5px_rgba(0,0,0,0.1)]"
       )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center bg-[#0C2836]">

@@ -175,9 +175,10 @@ export default function Dashboard() {
       
       {/* Sidebar */}
       <div className={cn(
-        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        "w-[200px] h-screen fixed z-50 transition-transform duration-300 md:translate-x-0 shadow-2xl",
+        "bg-gradient-to-br from-[#F8F9FA] via-[#F8F9FA] to-[#F0F1F2]",
         showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
-        isRTL ? "right-0" : "left-0"
+        isRTL ? "right-0 shadow-[-10px_0_30px_-5px_rgba(0,0,0,0.1)] border-l border-gray-200" : "left-0 shadow-[10px_0_30px_-5px_rgba(0,0,0,0.1)] border-r border-gray-200"
       )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center bg-[#0C2836]">
@@ -220,8 +221,8 @@ export default function Dashboard() {
                     }
                   }}
                   className={cn(
-                    "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                    item.path === '/dashboard' && "bg-[#E6E6E6]"
+                    "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] hover:shadow-sm transition-all",
+                    item.path === '/dashboard' && "bg-[#E6E6E6] shadow-inner"
                   )}
                 >
                   {item.subItems && (
@@ -243,7 +244,7 @@ export default function Dashboard() {
                         <button
                           onClick={() => setLocation(subItem.path)}
                           className={cn(
-                            "w-full h-[40px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
+                            "w-full h-[40px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] hover:shadow-sm transition-all",
                             isRTL ? "pr-10" : "pl-10"
                           )}
                         >
@@ -274,7 +275,7 @@ export default function Dashboard() {
                       toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
                     }
                   }}
-                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
+                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] hover:shadow-sm transition-all"
                 >
                   {item.icon}
                   <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
