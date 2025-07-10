@@ -16,7 +16,9 @@ import {
   Globe,
   ChevronRight,
   User,
-  Building
+  Building,
+  Menu,
+  X
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -56,6 +58,7 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const isRTL = language === 'ar';
 
   const toggleLanguage = () => {
