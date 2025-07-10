@@ -564,9 +564,9 @@ export default function Tasks() {
           <div className="space-y-4">
             {filteredTasks.map((task) => (
               <div key={task.id} className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 hover:shadow-md transition-shadow">
-                <div className={cn("flex flex-col md:flex-row justify-between gap-4")}>
+                <div className={cn("flex flex-col md:flex-row justify-between gap-4", isRTL ? "md:flex-row-reverse" : "")}>
                   {/* Left side - Contract Info */}
-                  <div className="flex-1">
+                  <div className={cn("flex-1", isRTL ? "order-2" : "order-1")}>
                     <div className={cn("flex items-start gap-3 mb-3", isRTL ? "flex-row-reverse" : "")}>
                       {getPriorityIcon(task.priority)}
                       <div className="flex-1">
@@ -620,7 +620,7 @@ export default function Tasks() {
                   </div>
                   
                   {/* Right side - Actions */}
-                  <div className={cn("flex gap-2")}>
+                  <div className={cn("flex gap-2", isRTL ? "order-1" : "order-2")}>
                     <button
                       onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t('عرض العقد قريباً', 'View contract coming soon') })}
                       className={cn(
