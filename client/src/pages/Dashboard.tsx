@@ -103,7 +103,7 @@ export default function Dashboard() {
     }
   }, [error, isLoading, userData, setLocation]);
 
-  // Check if user needs onboarding
+  // Check if user needs onboarding (only once per user journey)
   useEffect(() => {
     if (userData?.user && !userData.user.onboardingCompleted) {
       setShowOnboarding(true);
