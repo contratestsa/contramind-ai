@@ -265,11 +265,11 @@ export default function Repository() {
         isRTL ? "right-0" : "left-0"
       )}>
         {/* Logo */}
-        <div className="h-[80px] flex items-center bg-white">
+        <div className="h-[80px] flex items-center bg-[#0C2836]">
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
           />
         </div>
 
