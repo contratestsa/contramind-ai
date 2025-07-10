@@ -8,7 +8,6 @@ import {
   CheckCircle, 
   BarChart3, 
   Settings, 
-  Layers, 
   HelpCircle, 
   Calendar,
   LogOut,
@@ -89,7 +88,6 @@ export default function Help() {
         { icon: <Building className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "إعدادات المؤسسة", en: "Organization Settings" }, path: "/settings/organization" }
       ]
     },
-    { icon: <Layers className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "صفقات مكدسة", en: "Deals Stack" }, path: "/deals" },
   ];
 
   const faqItems: FAQItem[] = [
