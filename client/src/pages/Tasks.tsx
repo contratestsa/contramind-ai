@@ -620,17 +620,23 @@ export default function Tasks() {
                   </div>
                   
                   {/* Right side - Actions */}
-                  <div className={cn("flex gap-2", isRTL ? "flex-row-reverse" : "")}>
+                  <div className={cn("flex gap-2")}>
                     <button
                       onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t('عرض العقد قريباً', 'View contract coming soon') })}
-                      className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+                      className={cn(
+                        "px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2",
+                        isRTL ? "flex-row-reverse" : ""
+                      )}
                     >
                       <Eye className="w-4 h-4" />
                       <span className="hidden md:inline">{t('عرض', 'View')}</span>
                     </button>
                     <button
                       onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t('متابعة التحرير قريباً', 'Continue editing coming soon') })}
-                      className="px-4 py-2 bg-[#0C2836] text-white rounded-lg hover:bg-[#0A1F2B] transition-colors flex items-center gap-2"
+                      className={cn(
+                        "px-4 py-2 bg-[#0C2836] text-white rounded-lg hover:bg-[#0A1F2B] transition-colors flex items-center gap-2",
+                        isRTL ? "flex-row-reverse" : ""
+                      )}
                     >
                       <Edit className="w-4 h-4" />
                       <span className="hidden md:inline">{t('متابعة التحرير', 'Continue Editing')}</span>
