@@ -564,7 +564,7 @@ export default function Tasks() {
           <div className="space-y-4">
             {filteredTasks.map((task) => (
               <div key={task.id} className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 hover:shadow-md transition-shadow">
-                <div className={cn("flex flex-col md:flex-row justify-between gap-4", isRTL ? "md:flex-row-reverse" : "")}>
+                <div className={cn("flex flex-col md:flex-row justify-between gap-4")}>
                   {/* Left side - Contract Info */}
                   <div className="flex-1">
                     <div className={cn("flex items-start gap-3 mb-3", isRTL ? "flex-row-reverse" : "")}>
