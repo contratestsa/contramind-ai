@@ -14,7 +14,8 @@ import {
   Globe,
   ChevronRight,
   User,
-  Building
+  Building,
+  Menu
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -49,6 +50,7 @@ export default function Help() {
   const [hasNotifications, setHasNotifications] = useState(true);
   const [expandedSettings, setExpandedSettings] = useState(location.startsWith('/settings'));
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const isRTL = language === 'ar';
 
   // Fetch user data
@@ -149,8 +151,20 @@ export default function Help() {
 
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+      <div className={cn(
+        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
+        isRTL ? "right-0" : "left-0"
+      )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
           <div className="bg-white p-3 rounded-lg">
@@ -242,10 +256,17 @@ export default function Help() {
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1 flex flex-col", isRTL ? "mr-[200px]" : "ml-[200px]")}>
+      <div className={cn("flex-1 flex flex-col", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
         {/* Header */}
-        <header className="h-[72px] bg-white border-b border-[#E6E6E6] px-6 flex items-center justify-between">
+        <header className="h-[60px] md:h-[72px] bg-white border-b border-[#E6E6E6] px-4 md:px-6 flex items-center justify-between">
           <div className={cn("flex items-center", isRTL && "flex-row-reverse")}>
+            {/* Mobile hamburger menu */}
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden mr-2"
+              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            >
+              <Menu className="w-5 h-5 text-gray-600" />
+            </button>
             <span className="text-gray-700 text-sm font-medium">{t('مركز المساعدة', 'Help Center')}</span>
           </div>
 
@@ -310,10 +331,10 @@ export default function Help() {
         </header>
 
         {/* Main Content */}
-        <div className="flex-1 bg-white p-8">
+        <div className="flex-1 bg-white p-4 md:p-8">
           <div className="max-w-[800px] mx-auto">
             {/* FAQ Section */}
-            <h2 className={cn("text-[24px] font-['Space_Grotesk'] font-semibold text-[#0C2836] mb-8", isRTL && "text-right")}>
+            <h2 className={cn("text-[20px] md:text-[24px] font-['Space_Grotesk'] font-semibold text-[#0C2836] mb-6 md:mb-8", isRTL && "text-right")}>
               {t('الأسئلة الشائعة', 'Frequently Asked Questions')}
             </h2>
 
@@ -331,7 +352,7 @@ export default function Help() {
             </div>
 
             {/* Contact Section */}
-            <div className="bg-[#E8F4F8] p-[24px] rounded-lg mt-12">
+            <div className="bg-[#E8F4F8] p-4 md:p-[24px] rounded-lg mt-8 md:mt-12">
               <p className={cn("text-[16px] text-[#0C2836] mb-2", isRTL && "text-right")}>
                 {t('تحتاج إلى مزيد من المساعدة؟', 'Need more help?')}
               </p>

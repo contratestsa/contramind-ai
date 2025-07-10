@@ -19,7 +19,8 @@ import {
   User,
   Building,
   Camera,
-  Info
+  Info,
+  Menu
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -58,6 +59,7 @@ export default function PersonalSettings() {
   const [hasNotifications, setHasNotifications] = useState(true);
   const [expandedSettings, setExpandedSettings] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const isRTL = language === 'ar';
 
   // Form states
@@ -148,8 +150,20 @@ export default function PersonalSettings() {
 
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+      <div className={cn(
+        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
+        isRTL ? "right-0" : "left-0"
+      )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
           <div className="bg-white p-3 rounded-lg">
@@ -258,11 +272,18 @@ export default function PersonalSettings() {
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1", isRTL ? "mr-[200px]" : "ml-[200px]")}>
+      <div className={cn("flex-1", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
         {/* Top Header */}
-        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-4 md:px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
           {/* Breadcrumb */}
-          <div className={cn("text-sm text-gray-600", isRTL ? "text-right" : "text-left")}>
+          <div className={cn("text-xs md:text-sm text-gray-600 flex items-center", isRTL ? "text-right" : "text-left")}>
+            {/* Mobile hamburger menu */}
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden mr-2"
+              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            >
+              <Menu className="w-5 h-5 text-gray-600" />
+            </button>
             <span>{t('الإعدادات', 'Settings')}</span>
             <span className="mx-2">{'>'}</span>
             <span className="text-[#0C2836] font-medium">{t('الإعدادات الشخصية', 'Personal Settings')}</span>
@@ -362,16 +383,16 @@ export default function PersonalSettings() {
         </header>
 
         {/* Main Content */}
-        <main className="p-6">
+        <main className="p-4 md:p-6">
           {/* Profile Information */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-5">
-            <h2 className={cn("text-xl font-semibold text-[#0C2836] mb-6", isRTL ? "text-right" : "text-left")}>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 mb-4 md:mb-5">
+            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
               {t('معلومات الملف الشخصي', 'Profile Information')}
             </h2>
             
-            <div className={cn("flex items-start gap-6 mb-6", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-start gap-4 md:gap-6 mb-4 md:mb-6", isRTL ? "flex-row-reverse" : "")}>
               <div className="relative">
-                <div className="w-20 h-20 bg-[#0C2836] text-white rounded-full flex items-center justify-center text-2xl font-semibold">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-[#0C2836] text-white rounded-full flex items-center justify-center text-xl md:text-2xl font-semibold">
                   {userInitials}
                 </div>
                 <button className="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-1 hover:bg-gray-50">
@@ -456,8 +477,8 @@ export default function PersonalSettings() {
           </div>
 
           {/* Notification Preferences */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-5">
-            <h2 className={cn("text-xl font-semibold text-[#0C2836] mb-6", isRTL ? "text-right" : "text-left")}>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 mb-4 md:mb-5">
+            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
               {t('تفضيلات الإشعارات', 'Notification Preferences')}
             </h2>
 
@@ -538,8 +559,8 @@ export default function PersonalSettings() {
           </div>
 
           {/* Security Settings */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className={cn("text-xl font-semibold text-[#0C2836] mb-6", isRTL ? "text-right" : "text-left")}>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
+            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
               {t('إعدادات الأمان', 'Security Settings')}
             </h2>
 

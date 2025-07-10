@@ -20,7 +20,8 @@ import {
   ChevronRight,
   User,
   Building,
-  Bot
+  Bot,
+  Menu
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -60,6 +61,7 @@ export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [tokenCount, setTokenCount] = useState(100); // Mock token count
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const searchQuery = useSearch();
   const initialQuery = new URLSearchParams(searchQuery).get('q') || '';
@@ -233,8 +235,20 @@ export default function Chat() {
 
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+      <div className={cn(
+        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
+        isRTL ? "right-0" : "left-0"
+      )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
           <div className="bg-white p-3 rounded-lg">
@@ -327,23 +341,31 @@ export default function Chat() {
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1 flex flex-col", isRTL ? "mr-[200px]" : "ml-[200px]")}>
+      <div className={cn("flex-1 flex flex-col", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
         {/* Header */}
-        <header className="h-[72px] bg-white border-b border-[#E6E6E6] px-6 flex items-center justify-between">
+        <header className="h-[60px] md:h-[72px] bg-white border-b border-[#E6E6E6] px-4 md:px-6 flex items-center justify-between">
           <div className={cn("flex items-center", isRTL && "flex-row-reverse")}>
+            {/* Mobile hamburger menu */}
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden mr-2"
+              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            >
+              <Menu className="w-5 h-5 text-gray-600" />
+            </button>
             <button 
               onClick={() => setLocation('/dashboard')}
-              className="text-gray-500 text-sm hover:text-gray-700 transition-colors cursor-pointer"
+              className="text-gray-500 text-xs md:text-sm hover:text-gray-700 transition-colors cursor-pointer"
             >
               {t('لوحة التحكم', 'Dashboard')}
             </button>
-            <ChevronRight className={cn("w-4 h-4 text-gray-400 mx-2", isRTL && "rotate-180")} />
-            <span className="text-gray-700 text-sm font-medium">{t('مساعد العقود', 'Contract Assistant')}</span>
+            <ChevronRight className={cn("w-3 h-3 md:w-4 md:h-4 text-gray-400 mx-1 md:mx-2", isRTL && "rotate-180")} />
+            <span className="text-gray-700 text-xs md:text-sm font-medium">{t('مساعد العقود', 'Contract Assistant')}</span>
           </div>
 
-          <div className={cn("flex items-center gap-4", isRTL && "flex-row-reverse")}>
-            <div className={cn("flex items-center gap-2 text-sm text-gray-600", isRTL && "flex-row-reverse")}>
-              <span>{t('الرموز المتبقية:', 'Tokens remaining:')}</span>
+          <div className={cn("flex items-center gap-2 md:gap-4", isRTL && "flex-row-reverse")}>
+            <div className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm text-gray-600", isRTL && "flex-row-reverse")}>
+              <span className="hidden sm:inline">{t('الرموز المتبقية:', 'Tokens remaining:')}</span>
+              <span className="sm:hidden">{t('رموز:', 'Tokens:')}</span>
               <span className="font-semibold text-[#0C2836]">{tokenCount}</span>
             </div>
             
@@ -407,33 +429,33 @@ export default function Chat() {
         </header>
 
         {/* Chat Container */}
-        <div className="flex-1 flex justify-center items-start p-6 overflow-hidden">
+        <div className="flex-1 flex justify-center items-start p-4 md:p-6 overflow-hidden">
           <div className="w-full max-w-[800px] h-full bg-white border border-[#E6E6E6] rounded-lg flex flex-col">
             {/* Chat Header */}
-            <div className="bg-[#F8F9FA] px-6 py-4 border-b border-[#E6E6E6] flex items-center justify-between">
+            <div className="bg-[#F8F9FA] px-4 md:px-6 py-3 md:py-4 border-b border-[#E6E6E6] flex items-center justify-between">
               <div>
-                <h2 className={cn("text-lg font-semibold text-[#0C2836]", isRTL && "text-right")}>
-                  {t('مساعد عقود التكنولوجيا', 'Technology Contract Assistant')}
+                <h2 className={cn("text-sm md:text-lg font-semibold text-[#0C2836]", isRTL && "text-right")}>
+                  {t('مساعد العقود', 'Contract Assistant')}
                 </h2>
-                <p className={cn("text-sm text-gray-600 mt-1", isRTL && "text-right")}>
+                <p className={cn("text-xs md:text-sm text-gray-600 mt-1 hidden md:block", isRTL && "text-right")}>
                   {t('اسأل أسئلة حول عقود التكنولوجيا', 'Ask questions about technology contracts')}
                 </p>
               </div>
-              <div className={cn("flex items-center gap-3", isRTL && "flex-row-reverse")}>
-                <div className="bg-white px-3 py-1 rounded-full border border-[#E6E6E6] text-sm text-gray-600">
-                  {t('5 رموز لكل رسالة', '5 tokens per message')}
+              <div className={cn("flex items-center gap-2 md:gap-3", isRTL && "flex-row-reverse")}>
+                <div className="bg-white px-2 md:px-3 py-1 rounded-full border border-[#E6E6E6] text-xs md:text-sm text-gray-600">
+                  {t('5 رموز', '5 tokens')}
                 </div>
                 <button
                   onClick={() => setLocation('/dashboard')}
                   className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-600" />
+                  <X className="w-4 md:w-5 h-4 md:h-5 text-gray-600" />
                 </button>
               </div>
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -452,13 +474,13 @@ export default function Chat() {
                   
                   <div
                     className={cn(
-                      "max-w-[70%] rounded-2xl px-4 py-3 relative group",
+                      "max-w-[80%] md:max-w-[70%] rounded-2xl px-3 md:px-4 py-2 md:py-3 relative group",
                       message.role === 'user' && "bg-[#0C2836] text-white",
                       message.role === 'assistant' && "bg-[#F8F9FA] text-[#0C2836]",
                       message.role === 'system' && "bg-[#E8F4F8] text-gray-700 max-w-full text-center"
                     )}
                   >
-                    <p className={cn("text-sm", isRTL && "text-right")}>{message.content}</p>
+                    <p className={cn("text-xs md:text-sm", isRTL && "text-right")}>{message.content}</p>
                     
                     {message.role === 'assistant' && (
                       <button
@@ -502,13 +524,13 @@ export default function Chat() {
             </div>
 
             {/* Input Area */}
-            <div className="border-t border-[#E6E6E6] p-4 bg-white">
-              <div className="mb-3 flex gap-2 flex-wrap">
+            <div className="border-t border-[#E6E6E6] p-3 md:p-4 bg-white">
+              <div className="mb-2 md:mb-3 flex gap-1 md:gap-2 flex-wrap">
                 {suggestedQuestions.map((question, index) => (
                   <button
                     key={index}
                     onClick={() => setInputValue(t(question.ar, question.en))}
-                    className="px-3 py-1 text-sm bg-[#F8F9FA] text-gray-700 rounded-full border border-[#E6E6E6] hover:bg-gray-200 transition-colors"
+                    className="px-2 md:px-3 py-1 text-xs md:text-sm bg-[#F8F9FA] text-gray-700 rounded-full border border-[#E6E6E6] hover:bg-gray-200 transition-colors"
                   >
                     {t(question.ar, question.en)}
                   </button>
@@ -522,14 +544,14 @@ export default function Chat() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value.slice(0, 500))}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder={t('اسأل عن عقد التكنولوجيا الخاص بك...', 'Ask about your technology contract...')}
+                    placeholder={t('اسأل عن عقدك...', 'Ask about your contract...')}
                     className={cn(
-                      "w-full h-11 px-4 text-gray-800 placeholder-gray-400 border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#0C2836]",
+                      "w-full h-10 md:h-11 px-3 md:px-4 text-xs md:text-sm text-gray-800 placeholder-gray-400 border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#0C2836]",
                       isRTL && "text-right"
                     )}
                   />
                   {inputValue.length > 0 && (
-                    <span className={cn("absolute bottom-[-20px] text-xs text-gray-400", isRTL ? "left-0" : "right-0")}>
+                    <span className={cn("absolute bottom-[-18px] md:bottom-[-20px] text-[10px] md:text-xs text-gray-400", isRTL ? "left-0" : "right-0")}>
                       {inputValue.length}/500
                     </span>
                   )}
@@ -539,7 +561,7 @@ export default function Chat() {
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || tokenCount < 5}
                   className={cn(
-                    "h-11 px-4 bg-[#0C2836] text-white rounded-lg flex items-center gap-2 transition-all",
+                    "h-10 md:h-11 px-3 md:px-4 bg-[#0C2836] text-white rounded-lg flex items-center gap-1 md:gap-2 transition-all",
                     (!inputValue.trim() || tokenCount < 5) ? "opacity-50 cursor-not-allowed" : "hover:bg-[#0a1f2e]"
                   )}
                   title={tokenCount < 5 ? t('رموز غير كافية', 'Insufficient tokens') : t('5 رموز', '5 tokens')}

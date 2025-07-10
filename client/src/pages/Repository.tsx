@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -23,7 +23,9 @@ import {
   FileText,
   ChevronRight,
   User,
-  Building
+  Building,
+  Menu,
+  MoreVertical
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -83,6 +85,7 @@ export default function Repository() {
   const [deleteContractId, setDeleteContractId] = useState<string | null>(null);
   const [expandedSettings, setExpandedSettings] = useState(location.startsWith('/settings'));
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const isRTL = language === 'ar';
 
   // Fetch user data
@@ -247,8 +250,20 @@ export default function Repository() {
 
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+      <div className={cn(
+        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
+        isRTL ? "right-0" : "left-0"
+      )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
           <div className="bg-white p-3 rounded-lg">
@@ -358,18 +373,26 @@ export default function Repository() {
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1", isRTL ? "mr-[200px]" : "ml-[200px]")}>
+      <div className={cn("flex-1", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
         {/* Top Header */}
-        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-          {/* Breadcrumb */}
-          <div className={cn("text-sm text-gray-600", isRTL ? "text-right" : "text-left")}>
-            <span className="text-[#0C2836] font-medium">{t('ملفاتي', 'My Drive')}</span>
+        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-4 md:px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          {/* Left side - Hamburger menu on mobile & Breadcrumb */}
+          <div className="flex items-center gap-2">
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden"
+              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            >
+              <Menu className="w-5 h-5 text-gray-600" />
+            </button>
+            <div className={cn("text-sm text-gray-600", isRTL ? "text-right" : "text-left")}>
+              <span className="text-[#0C2836] font-medium">{t('ملفاتي', 'My Drive')}</span>
+            </div>
           </div>
 
           {/* Right side items */}
-          <div className={cn("flex items-center gap-4", isRTL ? "flex-row-reverse" : "")}>
-            {/* Inbox */}
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <div className={cn("flex items-center gap-2 md:gap-4", isRTL ? "flex-row-reverse" : "")}>
+            {/* Inbox - hide on mobile */}
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden md:block">
               <Inbox className="w-5 h-5 text-gray-600" />
             </button>
 
@@ -417,10 +440,10 @@ export default function Repository() {
               )}
             </div>
 
-            {/* Language Toggle */}
+            {/* Language Toggle - hide on mobile */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+              className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition-colors hidden md:flex"
             >
               <Globe className="w-4 h-4 text-gray-600" />
               <span className="text-sm font-medium text-gray-700">{language === 'ar' ? 'EN' : 'AR'}</span>
@@ -436,8 +459,8 @@ export default function Repository() {
             </div>
 
             {/* User Avatar */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#0C2836] text-white rounded-full flex items-center justify-center font-semibold overflow-hidden">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-[#0C2836] text-white rounded-full flex items-center justify-center font-semibold text-sm md:text-base overflow-hidden">
                 {user?.profilePicture ? (
                   <img 
                     src={user.profilePicture} 
@@ -450,7 +473,7 @@ export default function Repository() {
               </div>
               <button
                 onClick={() => setLocation('/')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden md:block"
                 title={t('تسجيل الخروج', 'Logout')}
               >
                 <LogOut className="w-5 h-5 text-gray-600" />
@@ -460,7 +483,7 @@ export default function Repository() {
         </header>
 
         {/* Main Content */}
-        <main className="p-6">
+        <main className="p-4 md:p-6">
           {/* Page Title */}
           <div className="mb-6">
             <h1 className={cn("text-2xl font-bold text-[#0C2836] mb-2", isRTL ? "text-right" : "text-left")}>
@@ -472,56 +495,56 @@ export default function Repository() {
           </div>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
             {/* Total Contracts */}
-            <div className="bg-white border border-[#E6E6E6] rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "")}>
-                <Folder className="w-8 h-8 text-gray-600" />
+            <div className="bg-white border border-[#E6E6E6] rounded-lg p-3 md:p-4 hover:shadow-md transition-shadow">
+              <div className={cn("flex items-center gap-2 md:gap-3", isRTL ? "flex-row-reverse" : "")}>
+                <Folder className="w-6 h-6 md:w-8 md:h-8 text-gray-600" />
                 <div className={cn("flex-1", isRTL ? "text-right" : "text-left")}>
-                  <p className="text-2xl font-bold text-[#0C2836]">{totalContracts}</p>
-                  <p className="text-sm text-gray-600">{t('إجمالي العقود', 'Total Contracts')}</p>
+                  <p className="text-lg md:text-2xl font-bold text-[#0C2836]">{totalContracts}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{t('إجمالي العقود', 'Total Contracts')}</p>
                 </div>
               </div>
             </div>
 
             {/* Analyzed */}
-            <div className="bg-white border border-[#E6E6E6] rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "")}>
-                <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className="bg-white border border-[#E6E6E6] rounded-lg p-3 md:p-4 hover:shadow-md transition-shadow">
+              <div className={cn("flex items-center gap-2 md:gap-3", isRTL ? "flex-row-reverse" : "")}>
+                <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-green-600" />
                 <div className={cn("flex-1", isRTL ? "text-right" : "text-left")}>
-                  <p className="text-2xl font-bold text-[#0C2836]">{analyzedContracts}</p>
-                  <p className="text-sm text-gray-600">{t('تم التحليل', 'Analyzed')}</p>
+                  <p className="text-lg md:text-2xl font-bold text-[#0C2836]">{analyzedContracts}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{t('تم التحليل', 'Analyzed')}</p>
                 </div>
               </div>
             </div>
 
             {/* Analyzing */}
-            <div className="bg-white border border-[#E6E6E6] rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "")}>
-                <Clock className="w-8 h-8 text-orange-600" />
+            <div className="bg-white border border-[#E6E6E6] rounded-lg p-3 md:p-4 hover:shadow-md transition-shadow">
+              <div className={cn("flex items-center gap-2 md:gap-3", isRTL ? "flex-row-reverse" : "")}>
+                <Clock className="w-6 h-6 md:w-8 md:h-8 text-orange-600" />
                 <div className={cn("flex-1", isRTL ? "text-right" : "text-left")}>
-                  <p className="text-2xl font-bold text-[#0C2836]">{analyzingContracts}</p>
-                  <p className="text-sm text-gray-600">{t('قيد التحليل', 'Analyzing')}</p>
+                  <p className="text-lg md:text-2xl font-bold text-[#0C2836]">{analyzingContracts}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{t('قيد التحليل', 'Analyzing')}</p>
                 </div>
               </div>
             </div>
 
             {/* High Risk */}
-            <div className="bg-white border border-[#E6E6E6] rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className={cn("flex items-center gap-3", isRTL ? "flex-row-reverse" : "")}>
-                <AlertTriangle className="w-8 h-8 text-red-600" />
+            <div className="bg-white border border-[#E6E6E6] rounded-lg p-3 md:p-4 hover:shadow-md transition-shadow">
+              <div className={cn("flex items-center gap-2 md:gap-3", isRTL ? "flex-row-reverse" : "")}>
+                <AlertTriangle className="w-6 h-6 md:w-8 md:h-8 text-red-600" />
                 <div className={cn("flex-1", isRTL ? "text-right" : "text-left")}>
-                  <p className="text-2xl font-bold text-[#0C2836]">{highRiskContracts}</p>
-                  <p className="text-sm text-gray-600">{t('مخاطر عالية', 'High Risk')}</p>
+                  <p className="text-lg md:text-2xl font-bold text-[#0C2836]">{highRiskContracts}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{t('مخاطر عالية', 'High Risk')}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Filter Bar */}
-          <div className={cn("flex gap-4 mb-6", isRTL ? "flex-row-reverse" : "")}>
+          <div className={cn("flex flex-col md:flex-row gap-3 md:gap-4 mb-6", isRTL ? "md:flex-row-reverse" : "")}>
             {/* Search */}
-            <div className="relative w-[300px]">
+            <div className="relative w-full md:w-[300px]">
               <Search className={cn("absolute top-3 w-4 h-4 text-gray-400", isRTL ? "right-3" : "left-3")} />
               <input
                 type="text"
@@ -535,36 +558,41 @@ export default function Repository() {
               />
             </div>
 
-            {/* Status Filter */}
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t('جميع الحالات', 'All Statuses')} />
-              </SelectTrigger>
+            {/* Filters Row on Mobile */}
+            <div className="flex gap-3 md:gap-4">
+              {/* Status Filter */}
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="flex-1 md:w-[180px]">
+                  <SelectValue placeholder={t('جميع الحالات', 'All Statuses')} />
+                </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t('الكل', 'All')}</SelectItem>
                 <SelectItem value="analyzed">{t('تم التحليل', 'Analyzed')}</SelectItem>
                 <SelectItem value="analyzing">{t('قيد التحليل', 'Analyzing')}</SelectItem>
                 <SelectItem value="uploaded">{t('تم الرفع', 'Uploaded')}</SelectItem>
               </SelectContent>
-            </Select>
+              </Select>
 
-            {/* Sort */}
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={t('الأحدث أولاً', 'Newest First')} />
-              </SelectTrigger>
+              {/* Sort */}
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="flex-1 md:w-[180px]">
+                  <SelectValue placeholder={t('الأحدث أولاً', 'Newest First')} />
+                </SelectTrigger>
               <SelectContent>
                 <SelectItem value="newest">{t('الأحدث أولاً', 'Newest First')}</SelectItem>
                 <SelectItem value="oldest">{t('الأقدم أولاً', 'Oldest First')}</SelectItem>
                 <SelectItem value="risk">{t('مستوى المخاطر', 'Risk Level')}</SelectItem>
               </SelectContent>
-            </Select>
+              </Select>
+            </div>
           </div>
 
-          {/* Contracts Table */}
+          {/* Contracts Table - Desktop */}
           {filteredContracts.length > 0 ? (
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-              <table className="w-full">
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden md:block bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className={cn("px-6 py-3 text-sm font-medium text-gray-700", isRTL ? "text-right" : "text-left")} style={{ width: '40%' }}>
@@ -676,8 +704,112 @@ export default function Repository() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
+                </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden grid gap-3">
+                {filteredContracts.map((contract) => (
+                  <div key={contract.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                    {/* Contract Header */}
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-medium text-gray-900 text-base">{contract.name}</h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {contract.partyRole === 'Service Provider' 
+                            ? t('مقدم الخدمة', 'Service Provider')
+                            : t('متلقي الخدمة', 'Service Recipient')
+                          }
+                        </p>
+                      </div>
+                      {/* Three dots menu */}
+                      <div className="relative">
+                        <button 
+                          className="p-1 hover:bg-gray-100 rounded-lg"
+                          onClick={() => handleView(contract.id)}
+                        >
+                          <MoreVertical className="w-5 h-5 text-gray-600" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Contract Details */}
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">{t('تاريخ الرفع', 'Upload Date')}</span>
+                        <span className="text-gray-900">{contract.uploadDate}</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">{t('نسبة المخاطر', 'Risk Score')}</span>
+                        <div className="flex items-center gap-2">
+                          {contract.riskScore ? (
+                            <>
+                              <span className={cn("w-2 h-2 rounded-full", getRiskDotColor(contract.riskScore, contract.riskLevel))} />
+                              <span className="text-gray-900">{contract.riskScore}%</span>
+                            </>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">{t('الحالة', 'Status')}</span>
+                        <span className={cn(
+                          "inline-flex px-2 py-1 text-xs font-medium rounded-full",
+                          getStatusBadgeClasses(contract.status)
+                        )}>
+                          {contract.status === 'analyzed' 
+                            ? t('تم التحليل', 'Analyzed')
+                            : contract.status === 'analyzing'
+                            ? t('قيد التحليل', 'Analyzing')
+                            : t('تم الرفع', 'Uploaded')
+                          }
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="mt-4 grid grid-cols-3 gap-2">
+                      <button
+                        onClick={() => handleView(contract.id)}
+                        disabled={contract.status !== 'analyzed'}
+                        className={cn(
+                          "flex items-center justify-center gap-1 py-2 text-sm rounded-lg",
+                          contract.status === 'analyzed'
+                            ? "text-[#0C2836] bg-gray-50 hover:bg-gray-100"
+                            : "text-gray-400 bg-gray-50 cursor-not-allowed"
+                        )}
+                      >
+                        <Eye className="w-4 h-4" />
+                        {t('عرض', 'View')}
+                      </button>
+                      <button
+                        onClick={() => handleDownload(contract.id)}
+                        disabled={contract.status !== 'analyzed'}
+                        className={cn(
+                          "flex items-center justify-center gap-1 py-2 text-sm rounded-lg",
+                          contract.status === 'analyzed'
+                            ? "text-[#0C2836] bg-gray-50 hover:bg-gray-100"
+                            : "text-gray-400 bg-gray-50 cursor-not-allowed"
+                        )}
+                      >
+                        <Download className="w-4 h-4" />
+                        {t('تنزيل', 'Download')}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(contract.id)}
+                        className="flex items-center justify-center gap-1 py-2 text-sm text-red-600 bg-red-50 hover:bg-red-100 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        {t('حذف', 'Delete')}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           ) : (
             /* Empty State */
             <div className="flex flex-col items-center justify-center py-16">

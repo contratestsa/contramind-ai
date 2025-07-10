@@ -165,8 +165,20 @@ export default function Dashboard() {
 
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+      <div className={cn(
+        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
+        isRTL ? "right-0" : "left-0"
+      )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
           <div className="bg-white p-3 rounded-lg">
@@ -276,16 +288,23 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1", isRTL ? "mr-[200px]" : "ml-[200px]")}>
+      <div className={cn("flex-1", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
         {/* Top Header */}
-        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-          {/* Left side (empty for now) */}
-          <div />
+        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-4 md:px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          {/* Left side - Hamburger menu on mobile */}
+          <div>
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden"
+              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            >
+              <Menu className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
 
           {/* Right side items */}
-          <div className={cn("flex items-center gap-4", isRTL ? "flex-row-reverse" : "")}>
-            {/* Inbox */}
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <div className={cn("flex items-center gap-2 md:gap-4", isRTL ? "flex-row-reverse" : "")}>
+            {/* Inbox - hide on mobile */}
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden md:block">
               <Inbox className="w-5 h-5 text-gray-600" />
             </button>
 
@@ -333,10 +352,10 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Language Toggle */}
+            {/* Language Toggle - hide on mobile */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+              className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition-colors hidden md:flex"
             >
               <Globe className="w-4 h-4 text-gray-600" />
               <span className="text-sm font-medium text-gray-700">{language === 'ar' ? 'EN' : 'AR'}</span>
@@ -355,8 +374,8 @@ export default function Dashboard() {
             </div>
 
             {/* User Avatar */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#0C2836] text-white rounded-full flex items-center justify-center font-semibold">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-[#0C2836] text-white rounded-full flex items-center justify-center font-semibold text-sm md:text-base">
                 {userInitials}
               </div>
               <button
@@ -365,7 +384,7 @@ export default function Dashboard() {
                   setLocation('/');
                 }}
                 disabled={logoutMutation.isPending}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden md:block"
                 title={t('تسجيل الخروج', 'Logout')}
               >
                 <LogOut className="w-5 h-5 text-gray-600" />
@@ -375,11 +394,11 @@ export default function Dashboard() {
         </header>
 
         {/* Main Content */}
-        <main className="p-8 flex flex-col items-center">
+        <main className="p-4 md:p-8 flex flex-col items-center">
           {/* User Welcome Section */}
           <div className="flex flex-col items-center">
             {/* User Avatar */}
-            <div className="w-20 h-20 rounded-full bg-[#0C2836] text-white flex items-center justify-center font-semibold text-2xl overflow-hidden">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#0C2836] text-white flex items-center justify-center font-semibold text-xl md:text-2xl overflow-hidden">
               {user?.profilePicture ? (
                 <img 
                   src={user.profilePicture} 
@@ -392,7 +411,7 @@ export default function Dashboard() {
             </div>
             
             {/* Greeting Text */}
-            <h2 className="mt-4 text-2xl font-semibold text-[#0C2836]">
+            <h2 className="mt-4 text-lg md:text-2xl font-semibold text-[#0C2836] text-center">
               {t(
                 `مرحباً ${user?.fullName?.split(' ')[0] || 'بك'}, ماذا تريد أن تفعل؟`,
                 `Hey ${user?.fullName?.split(' ')[0] || 'there'}, what do you want to do?`
@@ -401,7 +420,7 @@ export default function Dashboard() {
           </div>
 
           {/* Search Bar Section */}
-          <div className="mt-8 w-full max-w-[600px]">
+          <div className="mt-6 md:mt-8 w-full max-w-[600px] px-4 md:px-0">
             <div className="relative">
               <input
                 type="text"
@@ -462,9 +481,9 @@ export default function Dashboard() {
           </div>
 
           {/* Action Card */}
-          <div className="mt-10">
+          <div className="mt-8 md:mt-10 w-full max-w-[280px]">
             <button
-              className="relative w-[280px] h-[160px] bg-white border border-[#E6E6E6] rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center gap-2"
+              className="relative w-full h-[160px] bg-white border border-[#E6E6E6] rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center gap-2"
               onClick={() => setIsUploadModalOpen(true)}
             >
               {/* Token Badge */}
@@ -490,7 +509,7 @@ export default function Dashboard() {
               </svg>
               
               {/* Title */}
-              <h3 className="text-lg font-bold text-gray-800">
+              <h3 className="text-base md:text-lg font-bold text-gray-800">
                 {t('تحميل ومراجعة', 'Upload & Review')}
               </h3>
               

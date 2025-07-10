@@ -21,7 +21,8 @@ import {
   Info,
   Edit,
   Trash2,
-  AlertCircle
+  AlertCircle,
+  Menu
 } from "lucide-react";
 import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -77,6 +78,7 @@ export default function OrganizationSettings() {
   const [expandedSettings, setExpandedSettings] = useState(true);
   const [deleteSignatoryId, setDeleteSignatoryId] = useState<string | null>(null);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const isRTL = language === 'ar';
 
   // Form states
@@ -189,8 +191,20 @@ export default function OrganizationSettings() {
 
   return (
     <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={cn("w-[200px] h-screen bg-[#F8F9FA] fixed z-10", isRTL ? "right-0" : "left-0")}>
+      <div className={cn(
+        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
+        isRTL ? "right-0" : "left-0"
+      )}>
         {/* Logo */}
         <div className="h-[80px] flex items-center justify-center px-3 bg-white">
           <div className="bg-white p-3 rounded-lg">
@@ -299,11 +313,18 @@ export default function OrganizationSettings() {
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1", isRTL ? "mr-[200px]" : "ml-[200px]")}>
+      <div className={cn("flex-1", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
         {/* Top Header */}
-        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-4 md:px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
           {/* Breadcrumb */}
-          <div className={cn("text-sm text-gray-600", isRTL ? "text-right" : "text-left")}>
+          <div className={cn("text-xs md:text-sm text-gray-600 flex items-center", isRTL ? "text-right" : "text-left")}>
+            {/* Mobile hamburger menu */}
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden mr-2"
+              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            >
+              <Menu className="w-5 h-5 text-gray-600" />
+            </button>
             <span>{t('الإعدادات', 'Settings')}</span>
             <span className="mx-2">{'>'}</span>
             <span className="text-[#0C2836] font-medium">{t('إعدادات المؤسسة', 'Organization Settings')}</span>
@@ -403,9 +424,9 @@ export default function OrganizationSettings() {
         </header>
 
         {/* Main Content */}
-        <main className="p-6">
+        <main className="p-4 md:p-6">
           {/* Alert Banner */}
-          <div className={cn("bg-[#FFF3CD] border border-[#FFEAA7] rounded-lg p-4 mb-6 flex items-center gap-3", isRTL ? "flex-row-reverse" : "")}>
+          <div className={cn("bg-[#FFF3CD] border border-[#FFEAA7] rounded-lg p-3 md:p-4 mb-4 md:mb-6 flex items-center gap-3", isRTL ? "flex-row-reverse" : "")}>
             <Info className="w-5 h-5 text-[#856404] flex-shrink-0" />
             <p className={cn("text-sm text-[#856404]", isRTL ? "text-right" : "text-left")}>
               {t('أكمل ملف تعريف مؤسستك لفتح جميع الميزات', 'Complete your organization profile to unlock all features')}
@@ -413,12 +434,12 @@ export default function OrganizationSettings() {
           </div>
 
           {/* Company Information */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-5">
-            <h2 className={cn("text-xl font-semibold text-[#0C2836] mb-6", isRTL ? "text-right" : "text-left")}>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 mb-4 md:mb-5">
+            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
               {t('معلومات الشركة', 'Company Information')}
             </h2>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className={cn("block text-sm font-medium text-gray-700 mb-1", isRTL ? "text-right" : "text-left")}>
                   {t('اسم الشركة (بالعربية)', 'Company Name (Arabic)')} <span className="text-red-500">*</span>
@@ -512,7 +533,7 @@ export default function OrganizationSettings() {
                 />
               </div>
 
-              <div className="col-span-2">
+              <div className="col-span-1 md:col-span-2">
                 <label className={cn("block text-sm font-medium text-gray-700 mb-1", isRTL ? "text-right" : "text-left")}>
                   {t('العنوان', 'Address')}
                 </label>
@@ -539,9 +560,9 @@ export default function OrganizationSettings() {
           </div>
 
           {/* Authorized Signatories */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-5">
-            <div className={cn("flex items-center justify-between mb-6", isRTL ? "flex-row-reverse" : "")}>
-              <h2 className={cn("text-xl font-semibold text-[#0C2836]", isRTL ? "text-right" : "text-left")}>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 mb-4 md:mb-5">
+            <div className={cn("flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 md:mb-6", isRTL ? "md:flex-row-reverse" : "")}>
+              <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836]", isRTL ? "text-right" : "text-left")}>
                 {t('المفوضون بالتوقيع', 'Authorized Signatories')}
               </h2>
               <button
@@ -615,8 +636,8 @@ export default function OrganizationSettings() {
           </div>
 
           {/* Subscription & Tokens */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className={cn("text-xl font-semibold text-[#0C2836] mb-6", isRTL ? "text-right" : "text-left")}>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
+            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
               {t('الاشتراك والرصيد', 'Subscription & Tokens')}
             </h2>
 
