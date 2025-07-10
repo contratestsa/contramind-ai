@@ -373,7 +373,7 @@ export default function Tasks() {
           <div className={cn("text-xs md:text-sm text-gray-600 flex items-center", isRTL ? "text-right" : "text-left")}>
             {/* Mobile hamburger menu */}
             <button
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden mr-2"
+              className={cn("p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden", isRTL ? "ml-2" : "mr-2")}
               onClick={() => setShowMobileSidebar(!showMobileSidebar)}
             >
               <Menu className="w-5 h-5 text-gray-600" />
@@ -404,7 +404,7 @@ export default function Tasks() {
                   "absolute top-full mt-2 w-[250px] bg-white border border-[#E6E6E6] rounded-lg shadow-sm",
                   isRTL ? "left-0" : "right-0"
                 )}>
-                  <div className="p-3 border-b border-[#E6E6E6]">
+                  <div className={cn("p-3 border-b border-[#E6E6E6]", isRTL ? "text-right" : "text-left")}>
                     <p className="text-sm font-normal text-gray-800">
                       {t('تم طلب مراجعة للعقد', 'Contract revision requested')}
                     </p>
@@ -413,7 +413,7 @@ export default function Tasks() {
                     </p>
                   </div>
                   
-                  <div className="p-3">
+                  <div className={cn("p-3", isRTL ? "text-right" : "text-left")}>
                     <p className="text-sm font-normal text-gray-800">
                       {t('عقد جديد بانتظار المراجعة', 'New contract pending review')}
                     </p>
@@ -482,7 +482,7 @@ export default function Tasks() {
                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                     <Edit className="w-5 h-5 text-blue-600" />
                   </div>
-                  <div>
+                  <div className={cn(isRTL ? "text-right" : "text-left")}>
                     <p className="text-sm text-gray-600">{t('قيد المراجعة', 'Under Revision')}</p>
                     <p className="text-xl font-semibold text-[#0C2836]">4</p>
                   </div>
@@ -494,7 +494,7 @@ export default function Tasks() {
                   <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
                     <Clock className="w-5 h-5 text-yellow-600" />
                   </div>
-                  <div>
+                  <div className={cn(isRTL ? "text-right" : "text-left")}>
                     <p className="text-sm text-gray-600">{t('في انتظار الموافقة', 'Pending Approval')}</p>
                     <p className="text-xl font-semibold text-[#0C2836]">1</p>
                   </div>
@@ -506,7 +506,7 @@ export default function Tasks() {
                   <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                     <AlertCircle className="w-5 h-5 text-red-600" />
                   </div>
-                  <div>
+                  <div className={cn(isRTL ? "text-right" : "text-left")}>
                     <p className="text-sm text-gray-600">{t('عالية الأولوية', 'High Priority')}</p>
                     <p className="text-xl font-semibold text-[#0C2836]">2</p>
                   </div>
@@ -518,7 +518,7 @@ export default function Tasks() {
                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                     <FileCheck className="w-5 h-5 text-green-600" />
                   </div>
-                  <div>
+                  <div className={cn(isRTL ? "text-right" : "text-left")}>
                     <p className="text-sm text-gray-600">{t('مكتملة هذا الأسبوع', 'Completed This Week')}</p>
                     <p className="text-xl font-semibold text-[#0C2836]">7</p>
                   </div>
@@ -529,13 +529,13 @@ export default function Tasks() {
 
           {/* Filters */}
           <div className={cn("flex flex-col md:flex-row gap-4 mb-6", isRTL ? "md:flex-row-reverse" : "")}>
-            <div className="flex items-center gap-2">
+            <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
               <Filter className="w-5 h-5 text-gray-600" />
               <span className="text-sm font-medium text-gray-700">{t('تصفية:', 'Filter:')}</span>
             </div>
             
             <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className={cn("w-[200px]", isRTL ? "text-right" : "text-left")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -547,7 +547,7 @@ export default function Tasks() {
             </Select>
             
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className={cn("w-[200px]", isRTL ? "text-right" : "text-left")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -643,7 +643,7 @@ export default function Tasks() {
           
           {/* Empty State */}
           {filteredTasks.length === 0 && (
-            <div className="text-center py-12">
+            <div className={cn("text-center py-12", isRTL ? "text-right" : "text-left")}>
               <CheckCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-600">{t('لا توجد مهام مطابقة للفلاتر المحددة', 'No tasks match the selected filters')}</p>
             </div>
