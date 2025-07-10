@@ -494,6 +494,7 @@ export default function PersonalSettings() {
                   id="email-notifications"
                   checked={emailNotifications}
                   onCheckedChange={setEmailNotifications}
+                  isRTL={isRTL}
                 />
               </div>
 
@@ -510,6 +511,7 @@ export default function PersonalSettings() {
                   id="analysis-complete"
                   checked={analysisCompleteNotifications}
                   onCheckedChange={setAnalysisCompleteNotifications}
+                  isRTL={isRTL}
                 />
               </div>
 
@@ -526,6 +528,7 @@ export default function PersonalSettings() {
                   id="low-token-warnings"
                   checked={lowTokenWarnings}
                   onCheckedChange={setLowTokenWarnings}
+                  isRTL={isRTL}
                 />
               </div>
 
@@ -542,6 +545,7 @@ export default function PersonalSettings() {
                   id="weekly-summary"
                   checked={weeklySummary}
                   onCheckedChange={setWeeklySummary}
+                  isRTL={isRTL}
                 />
               </div>
             </div>
@@ -593,7 +597,7 @@ export default function PersonalSettings() {
                     {t('قريباً', 'Coming Soon')}
                   </p>
                 </div>
-                <Switch disabled />
+                <Switch disabled isRTL={isRTL} />
               </div>
             </div>
           </div>
