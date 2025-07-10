@@ -24,7 +24,7 @@ const Switch = React.forwardRef<
       className={cn(
         "pointer-events-none block h-4 w-4 rounded-full bg-white shadow-md ring-0 transition-transform",
         isRTL
-          ? "data-[state=checked]:-translate-x-[22px] data-[state=unchecked]:translate-x-0"
+          ? "data-[state=checked]:translate-x-0 data-[state=unchecked]:translate-x-[22px]"
           : "data-[state=checked]:translate-x-[22px] data-[state=unchecked]:translate-x-0"
       )}
     />
