@@ -126,7 +126,6 @@ export default function OrganizationSettings() {
 
   const bottomItems: SidebarItem[] = [
     { icon: <HelpCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
-    { icon: <Calendar className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "حجز عرض توضيحي", en: "Schedule Demo" }, path: "/demo" },
   ];
 
   const handleSaveCompanyInfo = () => {

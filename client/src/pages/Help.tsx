@@ -222,17 +222,7 @@ export default function Help() {
                 </span>
               </button>
             </li>
-            <li>
-              <button
-                onClick={() => toast({ title: t('قريباً', 'Coming Soon'), description: t('حجز عرض توضيحي قريباً', 'Schedule demo coming soon') })}
-                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
-              >
-                <Calendar className="w-[18px] h-[18px] text-gray-700" />
-                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                  {t('حجز عرض توضيحي', 'Schedule Demo')}
-                </span>
-              </button>
-            </li>
+
           </ul>
         </div>
       </div>
