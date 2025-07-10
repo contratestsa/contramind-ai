@@ -4,7 +4,16 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, and complete customer authentication.
 
 ## Recent Changes
-- **July 10, 2025**: Implemented onboarding flow for new users
+- **July 10, 2025**: 
+  - **Tasks Feature**: Implemented comprehensive task management for contract revisions
+    - Created Tasks page (/tasks) accessible from all dashboard sidebars
+    - Shows contracts under revision with status tracking (Draft, Under Review, Pending Approval, Revision Requested)
+    - Displays days in revision, assigned reviewers, progress bars, and priority indicators
+    - Added task statistics showing Under Revision, Pending Approval, High Priority, and Completed This Week counts
+    - Implemented filtering by category and status
+    - Quick actions for View Contract and Continue Editing
+    - Mobile responsive with hamburger menu and card layouts
+  - **Onboarding Flow**: Implemented onboarding flow for new users
   - **Database Updates**: 
     - Added onboarding fields to users table (onboardingCompleted, companyNameEn, companyNameAr, country, contractRole)
     - Successfully migrated database schema with new columns

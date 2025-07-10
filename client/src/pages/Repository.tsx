@@ -296,6 +296,8 @@ export default function Repository() {
                       return;
                     } else if (item.path === '/dashboard') {
                       setLocation('/dashboard');
+                    } else if (item.path === '/tasks') {
+                      setLocation('/tasks');
                     } else if (item.path === '/settings/personal') {
                       setLocation(item.path);
                     } else if (item.path === '/settings/organization') {

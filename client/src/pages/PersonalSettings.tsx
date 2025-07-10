@@ -191,7 +191,7 @@ export default function PersonalSettings() {
                   onClick={() => {
                     if (item.path === '/settings') {
                       setExpandedSettings(!expandedSettings);
-                    } else if (item.path === '/dashboard' || item.path === '/repository') {
+                    } else if (item.path === '/dashboard' || item.path === '/repository' || item.path === '/tasks') {
                       setLocation(item.path);
                     } else if (item.path === '/settings/personal') {
                       // Already on personal settings

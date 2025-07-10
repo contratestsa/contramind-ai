@@ -208,6 +208,8 @@ export default function Dashboard() {
                       setExpandedSettings(!expandedSettings);
                     } else if (item.path === '/repository') {
                       setLocation('/repository');
+                    } else if (item.path === '/tasks') {
+                      setLocation('/tasks');
                     } else if (item.path === '/dashboard') {
                       // Already on dashboard
                       return;

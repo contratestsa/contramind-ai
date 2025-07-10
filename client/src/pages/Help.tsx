@@ -192,7 +192,7 @@ export default function Help() {
                   onClick={() => {
                     if (item.path === '/settings') {
                       setExpandedSettings(!expandedSettings);
-                    } else if (item.path === '/dashboard' || item.path === '/repository') {
+                    } else if (item.path === '/dashboard' || item.path === '/repository' || item.path === '/tasks') {
                       setLocation(item.path);
                     } else {
                       toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
