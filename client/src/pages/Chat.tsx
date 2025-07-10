@@ -23,7 +23,7 @@ import {
   Bot,
   Menu
 } from "lucide-react";
-import logoImage from '@assets/CMYK_Logo Design - ContraMind (V001)-10_1752056001411.jpg';
+import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -250,14 +250,12 @@ export default function Chat() {
         isRTL ? "right-0" : "left-0"
       )}>
         {/* Logo */}
-        <div className="h-[80px] flex items-center justify-center px-3 bg-white">
-          <div className="bg-white p-3 rounded-lg">
-            <img 
-              src={logoImage} 
-              alt="ContraMind Logo" 
-              className="max-h-[50px] object-contain rounded-md"
-            />
-          </div>
+        <div className="h-[80px] flex items-center bg-white">
+          <img 
+            src={logoImage} 
+            alt="ContraMind Logo" 
+            className="w-full h-full object-contain px-2"
+          />
         </div>
 
         {/* My Work Section */}
@@ -276,7 +274,7 @@ export default function Chat() {
                   onClick={() => {
                     if (item.path === '/settings') {
                       setExpandedSettings(!expandedSettings);
-                    } else if (item.path === '/dashboard' || item.path === '/repository') {
+                    } else if (item.path === '/dashboard' || item.path === '/repository' || item.path === '/tasks') {
                       setLocation(item.path);
                     } else {
                       toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
