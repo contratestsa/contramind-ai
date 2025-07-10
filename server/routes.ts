@@ -357,6 +357,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Update user onboarding data
+      console.log('Updating onboarding for user:', (req.user as any).id);
+      console.log('Onboarding data:', { companyNameEn, companyNameAr, country, contractRole });
+      
       const updatedUser = await storage.updateUserOnboarding(
         (req.user as any).id, 
         {

@@ -31,19 +31,32 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       country: string; 
       contractRole: string;
     }) => {
-      return apiRequest('/api/onboarding/complete', {
+      const response = await fetch('/api/onboarding/complete', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to complete onboarding');
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
       setCurrentStep(4);
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error('Onboarding error:', error);
+      const errorMessage = error.message || t('حدث خطأ في حفظ البيانات', 'Failed to save onboarding data');
       toast({
         title: t('خطأ', 'Error'),
-        description: t('حدث خطأ في حفظ البيانات', 'Failed to save onboarding data'),
+        description: errorMessage,
         variant: 'destructive'
       });
     }

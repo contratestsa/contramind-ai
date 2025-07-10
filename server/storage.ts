@@ -136,18 +136,27 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserOnboarding(id: number, data: { companyNameEn: string; companyNameAr?: string; country: string; contractRole: string }): Promise<User | undefined> {
-    const [user] = await db
-      .update(users)
-      .set({
-        companyNameEn: data.companyNameEn,
-        companyNameAr: data.companyNameAr || null,
-        country: data.country,
-        contractRole: data.contractRole,
-        onboardingCompleted: true
-      })
-      .where(eq(users.id, id))
-      .returning();
-    return user || undefined;
+    try {
+      console.log('Updating user onboarding for ID:', id, 'with data:', data);
+      
+      const [user] = await db
+        .update(users)
+        .set({
+          companyNameEn: data.companyNameEn,
+          companyNameAr: data.companyNameAr || null,
+          country: data.country,
+          contractRole: data.contractRole,
+          onboardingCompleted: true
+        })
+        .where(eq(users.id, id))
+        .returning();
+      
+      console.log('Updated user:', user);
+      return user || undefined;
+    } catch (error) {
+      console.error('Error updating user onboarding:', error);
+      throw error;
+    }
   }
 }
 
