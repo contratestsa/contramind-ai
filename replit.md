@@ -16,6 +16,9 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Simple styling: 24px Space Grotesk for title, 16px Inter for questions (navy), 14px Inter for answers (grey)
     - Contact Section: Light blue background (#E8F4F8) with CEO email (Ceo@contramind.com)
     - Updated all dashboard pages to navigate to /help instead of showing "Coming Soon"
+  - **Navigation Updates**:
+    - Removed "Schedule Demo" button from all dashboard sidebars
+    - Changed "المستودع" to "ملفاتي" and "Repository" to "My Drive" across all pages
   - **Chat Interface**: Created comprehensive chat system accessible from dashboard search
     - Activation: User types in dashboard search bar and presses Enter to navigate to chat
     - Pre-fills user's question from search query

@@ -148,7 +148,7 @@ export default function Repository() {
   const sidebarItems: SidebarItem[] = [
     { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة التحكم", en: "Dashboard" }, path: "/dashboard" },
     { icon: <Plus className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "إنشاء", en: "Create" }, path: "/create" },
-    { icon: <Folder className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المستودع", en: "Repository" }, path: "/repository" },
+    { icon: <Folder className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "ملفاتي", en: "My Drive" }, path: "/repository" },
     { icon: <Bell className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
     { icon: <CheckCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المهام", en: "Tasks" }, path: "/tasks" },
     { icon: <BarChart3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التقارير", en: "Reports" }, path: "/reports" },
@@ -349,7 +349,7 @@ export default function Repository() {
         <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
           {/* Breadcrumb */}
           <div className={cn("text-sm text-gray-600", isRTL ? "text-right" : "text-left")}>
-            <span className="text-[#0C2836] font-medium">{t('المستودع', 'Repository')}</span>
+            <span className="text-[#0C2836] font-medium">{t('ملفاتي', 'My Drive')}</span>
           </div>
 
           {/* Right side items */}
