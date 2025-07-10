@@ -489,7 +489,7 @@ export default function Dashboard() {
             >
               {/* Token Badge */}
               <div className={cn(
-                "absolute top-4 bg-[#FFF3CD] border-2 border-[#0C2836] flex items-center gap-1 px-2 py-1 rounded-xl",
+                "absolute top-4 bg-[#E8F4F8] border-2 border-[#0C2836] flex items-center gap-1 px-2 py-1 rounded-xl",
                 isRTL ? "left-4 flex-row-reverse" : "right-4"
               )}>
                 <svg className="w-3 h-3 text-[#0C2836]" fill="currentColor" viewBox="0 0 20 20">
