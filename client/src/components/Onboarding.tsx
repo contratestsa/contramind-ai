@@ -125,7 +125,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                   value={companyNameEn}
                   onChange={(e) => setCompanyNameEn(e.target.value)}
                   className={cn(
-                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0C2836]",
+                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0C2836] text-gray-900 placeholder-gray-400",
                     isRTL && "text-right"
                   )}
                   placeholder={t('ادخل اسم الشركة', 'Enter company name')}
@@ -141,7 +141,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                   value={companyNameAr}
                   onChange={(e) => setCompanyNameAr(e.target.value)}
                   className={cn(
-                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0C2836]",
+                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0C2836] text-gray-900 placeholder-gray-400",
                     "text-right"
                   )}
                   placeholder={t('ادخل اسم الشركة', 'Enter company name')}
@@ -157,7 +157,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                   className={cn(
-                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0C2836]",
+                    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0C2836] text-gray-900",
                     isRTL && "text-right"
                   )}
                 >
