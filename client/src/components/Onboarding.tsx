@@ -6,7 +6,7 @@ import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle } from "lucide-react";
-import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (3)_1752052096349.png';
+import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-11_1752149448769.png';
 
 interface OnboardingProps {
   onComplete: () => void;
