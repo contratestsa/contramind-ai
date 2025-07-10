@@ -96,8 +96,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex items-center justify-center">
-      <div className="w-full max-w-[500px] px-8">
+    <div className="fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="w-full max-w-[500px] bg-white rounded-xl shadow-2xl p-8 max-h-[90vh] overflow-y-auto">
         {/* Step 1 - Welcome */}
         {currentStep === 1 && (
           <div className="text-center">

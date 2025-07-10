@@ -225,7 +225,7 @@ export default function AnalysisResults() {
         </div>
 
         {/* My Work Section */}
-        <div className="bg-[#0C2836] text-white px-5 py-3">
+        <div className="bg-white text-[#0C2836] px-5 py-3 border-b border-gray-200">
           <h3 className={cn("text-base font-semibold", isRTL ? "text-right" : "text-left")}>
             {t('عملي', 'My Work')}
           </h3>
