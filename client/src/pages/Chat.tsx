@@ -60,6 +60,7 @@ export default function Chat() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [tokenCount, setTokenCount] = useState(100); // Mock token count
+  const [showNotifications, setShowNotifications] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const searchQuery = useSearch();
   const initialQuery = new URLSearchParams(searchQuery).get('q') || '';
@@ -70,6 +71,21 @@ export default function Chat() {
     queryKey: ["/api/auth/me"],
     retry: false,
   });
+
+  // Close notifications when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.notification-area')) {
+        setShowNotifications(false);
+      }
+    };
+
+    if (showNotifications) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showNotifications]);
 
   // Initialize chat with system message and user's question
   useEffect(() => {
@@ -333,9 +349,9 @@ export default function Chat() {
               <span className="font-semibold text-[#0C2836]">{tokenCount}</span>
             </div>
             
-            <div className="relative">
+            <div className="relative notification-area">
               <button 
-                onClick={() => setHasNotifications(!hasNotifications)}
+                onClick={() => setShowNotifications(!showNotifications)}
                 className="relative w-[40px] h-[40px] flex items-center justify-center hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <Bell className="w-[20px] h-[20px] text-gray-700" />
@@ -343,6 +359,34 @@ export default function Chat() {
                   <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
                 )}
               </button>
+              
+              {/* Notification Dropdown */}
+              {showNotifications && (
+                <div className={cn(
+                  "absolute top-full mt-2 w-[250px] bg-white border border-[#E6E6E6] rounded-lg shadow-sm",
+                  isRTL ? "left-0" : "right-0"
+                )}>
+                  {/* Notification 1 */}
+                  <div className="p-3 border-b border-[#E6E6E6]">
+                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
+                      {t('اكتمل تحليل العقد', 'Contract analysis complete')}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
+                      {t('قبل 5 دقائق', '5 minutes ago')}
+                    </p>
+                  </div>
+                  
+                  {/* Notification 2 */}
+                  <div className="p-3">
+                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
+                      {t('مرحباً بك في ContraMind', 'Welcome to ContraMind')}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
+                      {t('اليوم', 'Today')}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <button

@@ -67,6 +67,7 @@ export default function AnalysisResults() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [selectedParty, setSelectedParty] = useState<string>('');
   const [expandedSettings, setExpandedSettings] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const isRTL = language === 'ar';
 
   // Fetch user data
@@ -74,6 +75,21 @@ export default function AnalysisResults() {
     queryKey: ["/api/auth/me"],
     retry: false,
   });
+
+  // Close notifications when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.notification-area')) {
+        setShowNotifications(false);
+      }
+    };
+
+    if (showNotifications) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showNotifications]);
 
   // Load analysis result from sessionStorage
   useEffect(() => {
@@ -328,15 +344,48 @@ export default function AnalysisResults() {
             </button>
 
             {/* Notifications */}
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
-              <Bell className="w-5 h-5 text-gray-600" />
-              {hasNotifications && (
-                <span className={cn(
-                  "absolute top-1 w-2 h-2 bg-red-500 rounded-full",
-                  isRTL ? "left-1" : "right-1"
-                )} />
+            <div className="relative notification-area">
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
+              >
+                <Bell className="w-5 h-5 text-gray-600" />
+                {hasNotifications && (
+                  <span className={cn(
+                    "absolute top-1 w-2 h-2 bg-red-500 rounded-full",
+                    isRTL ? "left-1" : "right-1"
+                  )} />
+                )}
+              </button>
+              
+              {/* Notification Dropdown */}
+              {showNotifications && (
+                <div className={cn(
+                  "absolute top-full mt-2 w-[250px] bg-white border border-[#E6E6E6] rounded-lg shadow-sm",
+                  isRTL ? "left-0" : "right-0"
+                )}>
+                  {/* Notification 1 */}
+                  <div className="p-3 border-b border-[#E6E6E6]">
+                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
+                      {t('اكتمل تحليل العقد', 'Contract analysis complete')}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
+                      {t('قبل 5 دقائق', '5 minutes ago')}
+                    </p>
+                  </div>
+                  
+                  {/* Notification 2 */}
+                  <div className="p-3">
+                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
+                      {t('مرحباً بك في ContraMind', 'Welcome to ContraMind')}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
+                      {t('اليوم', 'Today')}
+                    </p>
+                  </div>
+                </div>
               )}
-            </button>
+            </div>
 
             {/* Language Toggle */}
             <button
