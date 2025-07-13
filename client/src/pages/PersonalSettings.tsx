@@ -167,7 +167,7 @@ export default function PersonalSettings() {
           >
             <Menu className="w-5 h-5 text-white" />
           </button>
-          <span className="text-white font-medium">{t('الإعدادات', 'Settings')}</span>
+          <span className="font-medium text-[#06585c]">{t('الإعدادات', 'Settings')}</span>
           <div className="w-9" />
         </div>
 
