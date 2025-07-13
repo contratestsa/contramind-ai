@@ -70,6 +70,7 @@ export default function Dashboard() {
   const { toast } = useToast();
 
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -297,7 +298,8 @@ export default function Dashboard() {
     <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "w-[260px] bg-[#202123] text-white flex flex-col transition-all duration-300 shadow-xl",
+        "bg-[#202123] text-white flex flex-col transition-all duration-300 shadow-xl",
+        isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40",
         isRTL && "lg:order-2"
@@ -307,24 +309,27 @@ export default function Dashboard() {
           <img 
             src={logoImage} 
             alt="ContraMind" 
-            className="h-10 flex-1 object-contain"
+            className={cn(
+              "h-10 object-contain transition-all duration-300",
+              isSidebarCollapsed ? "w-0 opacity-0" : "flex-1"
+            )}
           />
           <button
-            onClick={() => setShowMobileSidebar(!showMobileSidebar)}
-            className="hidden lg:block p-2 hover:bg-gray-700 rounded-md transition-colors"
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            className="p-2 hover:bg-gray-700 rounded-md transition-colors flex-shrink-0"
           >
             <div className="w-5 h-5 relative">
               <span className={cn(
                 "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center",
-                showSlidingPanel ? "rotate-45 translate-y-[0.5625rem]" : "translate-y-0"
+                isSidebarCollapsed ? "rotate-45 translate-y-[0.5625rem]" : "translate-y-0"
               )} />
               <span className={cn(
                 "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out top-2",
-                showSlidingPanel && "opacity-0"
+                isSidebarCollapsed && "opacity-0"
               )} />
               <span className={cn(
                 "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center top-4",
-                showSlidingPanel ? "-rotate-45 -translate-y-[0.5625rem]" : "translate-y-0"
+                isSidebarCollapsed ? "-rotate-45 -translate-y-[0.5625rem]" : "translate-y-0"
               )} />
             </div>
           </button>
@@ -334,115 +339,142 @@ export default function Dashboard() {
         <div className="p-3 border-b border-gray-700">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+            className={cn(
+              "w-full flex items-center gap-2 py-2.5 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
+              isSidebarCollapsed ? "justify-center px-2" : "justify-center px-4"
+            )}
           >
-            <Plus className="w-4 h-4" />
-            <span>{t('تحليل عقد جديد', 'New Contract Analysis')}</span>
+            <Plus className="w-4 h-4 flex-shrink-0" />
+            {!isSidebarCollapsed && <span>{t('تحليل عقد جديد', 'New Contract Analysis')}</span>}
           </button>
         </div>
 
         {/* Contract Search Box */}
-        <div className="p-3 border-b border-gray-700">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              value={contractSearchQuery}
-              onChange={(e) => setContractSearchQuery(e.target.value)}
-              placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
-              className="w-full pl-10 pr-3 py-2 bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
-            />
+        {!isSidebarCollapsed && (
+          <div className="p-3 border-b border-gray-700">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={contractSearchQuery}
+                onChange={(e) => setContractSearchQuery(e.target.value)}
+                placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
+                className="w-full pl-10 pr-3 py-2 bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Navigation Section */}
         <div className="flex-1 overflow-y-auto">
           {/* Recent Contracts */}
-          <div className="p-3">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                {t('العقود الأخيرة', 'Recent Contracts')}
-              </h3>
-              <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
-                {t('عرض الكل', 'View All')}
-              </button>
-            </div>
-            <div className="space-y-1">
-              {recentContractsData?.contracts?.slice(0, 5).map((contract: any) => (
-                <button
-                  key={contract.id}
-                  onClick={() => {
-                    setSelectedContract(contract);
-                    openSlidingPanel('contractDetails');
-                  }}
-                  className={cn(
-                    "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors group",
-                    selectedContract?.id === contract.id && "bg-gray-700"
-                  )}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm truncate">{contract.title}</span>
-                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
-                    <span>{contract.partyName}</span>
-                    <span>•</span>
-                    <span>{new Date(contract.date).toLocaleDateString()}</span>
-                    <span className="ml-auto">
-                      {contract.riskLevel === 'low' && '🟢'}
-                      {contract.riskLevel === 'medium' && '🟡'}
-                      {contract.riskLevel === 'high' && '🔴'}
-                    </span>
-                  </div>
+          {!isSidebarCollapsed && (
+            <div className="p-3">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                  {t('العقود الأخيرة', 'Recent Contracts')}
+                </h3>
+                <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
+                  {t('عرض الكل', 'View All')}
                 </button>
-              ))}
-              {(!recentContractsData?.contracts || recentContractsData.contracts.length === 0) && (
-                <p className="text-xs text-gray-500 italic p-2">{t('لا توجد عقود بعد', 'No contracts yet')}</p>
-              )}
+              </div>
+              <div className="space-y-1">
+                {recentContractsData?.contracts?.slice(0, 5).map((contract: any) => (
+                  <button
+                    key={contract.id}
+                    onClick={() => {
+                      setSelectedContract(contract);
+                      openSlidingPanel('contractDetails');
+                    }}
+                    className={cn(
+                      "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors group",
+                      selectedContract?.id === contract.id && "bg-gray-700"
+                    )}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm truncate">{contract.title}</span>
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                      <span>{contract.partyName}</span>
+                      <span>•</span>
+                      <span>{new Date(contract.date).toLocaleDateString()}</span>
+                      <span className="ml-auto">
+                        {contract.riskLevel === 'low' && '🟢'}
+                        {contract.riskLevel === 'medium' && '🟡'}
+                        {contract.riskLevel === 'high' && '🔴'}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+                {(!recentContractsData?.contracts || recentContractsData.contracts.length === 0) && (
+                  <p className="text-xs text-gray-500 italic p-2">{t('لا توجد عقود بعد', 'No contracts yet')}</p>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Navigation Menu */}
           <nav className="px-3 pb-3">
             <div className="space-y-1">
               <button
                 onClick={() => setLocation('/analytics')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
               >
-                <BarChart3 className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>
+                <BarChart3 className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/parties')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
               >
-                <Users className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>
+                <Users className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/notifications')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('الإشعارات', 'Notifications') : undefined}
               >
-                <Bell className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>
+                <Bell className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/tags')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('العلامات والفئات', 'Tags & Categories') : undefined}
               >
-                <Tag className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>
+                <Tag className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/settings/personal')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('الإعدادات', 'Settings') : undefined}
               >
-                <Settings className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('الإعدادات', 'Settings')}</span>
+                <Settings className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('الإعدادات', 'Settings')}</span>}
               </button>
             </div>
           </nav>
@@ -452,34 +484,50 @@ export default function Dashboard() {
             <div className="space-y-1">
               <button
                 onClick={() => setLocation('/legal-resources')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('الموارد القانونية', 'Legal Resources') : undefined}
               >
-                <BookOpen className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('الموارد القانونية', 'Legal Resources')}</span>
+                <BookOpen className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('الموارد القانونية', 'Legal Resources')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/help')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('مركز المساعدة', 'Help Center') : undefined}
               >
-                <HelpCircle className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('مركز المساعدة', 'Help Center')}</span>
+                <HelpCircle className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('مركز المساعدة', 'Help Center')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/whats-new')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('ما الجديد', "What's New") : undefined}
               >
-                <Info className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('ما الجديد', "What's New")}</span>
+                <Info className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('ما الجديد', "What's New")}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/feedback')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isSidebarCollapsed ? t('التعليقات', 'Feedback') : undefined}
               >
-                <MessageSquare className="w-4 h-4 text-gray-400 group-hover:text-white" />
-                <span className="text-sm">{t('التعليقات', 'Feedback')}</span>
+                <MessageSquare className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                {!isSidebarCollapsed && <span className="text-sm">{t('التعليقات', 'Feedback')}</span>}
               </button>
             </div>
           </div>
@@ -489,26 +537,39 @@ export default function Dashboard() {
         <div className="border-t border-gray-700 p-3">
           <button
             onClick={() => setLocation('/profile')}
-            className="w-full flex items-center justify-between p-2 rounded hover:bg-gray-700 transition-colors group"
+            className={cn(
+              "w-full flex items-center p-2 rounded hover:bg-gray-700 transition-colors group",
+              isSidebarCollapsed ? "justify-center" : "justify-between"
+            )}
+            title={isSidebarCollapsed ? user?.fullName : undefined}
           >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+            <div className={cn(
+              "flex items-center",
+              isSidebarCollapsed ? "" : "gap-3"
+            )}>
+              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
                 <User className="w-4 h-4" />
               </div>
-              <div className="text-left">
-                <div className="text-sm font-medium">{user?.fullName}</div>
-                <div className="text-xs text-gray-400">{t('الملف الشخصي', 'Profile')}</div>
-              </div>
+              {!isSidebarCollapsed && (
+                <div className="text-left">
+                  <div className="text-sm font-medium">{user?.fullName}</div>
+                  <div className="text-xs text-gray-400">{t('الملف الشخصي', 'Profile')}</div>
+                </div>
+              )}
             </div>
-            <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white" />
+            {!isSidebarCollapsed && <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white" />}
           </button>
           
           <button
             onClick={() => logoutMutation.mutate()}
-            className="w-full mt-2 flex items-center justify-center gap-2 px-3 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
+            className={cn(
+              "w-full mt-2 flex items-center gap-2 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors",
+              isSidebarCollapsed ? "justify-center px-2" : "justify-center px-3"
+            )}
+            title={isSidebarCollapsed ? t('تسجيل الخروج', 'Sign Out') : undefined}
           >
-            <LogOut className="w-4 h-4" />
-            <span className="text-sm">{t('تسجيل الخروج', 'Sign Out')}</span>
+            <LogOut className="w-4 h-4 flex-shrink-0" />
+            {!isSidebarCollapsed && <span className="text-sm">{t('تسجيل الخروج', 'Sign Out')}</span>}
           </button>
         </div>
       </div>
