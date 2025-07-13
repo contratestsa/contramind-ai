@@ -41,6 +41,8 @@ interface Contract {
   name: string;
   uploadedAt: Date;
   status: 'analyzing' | 'ready';
+  riskLevel?: 'low' | 'medium' | 'high';
+  date?: string;
 }
 
 interface Message {
@@ -115,11 +117,17 @@ export default function Dashboard() {
   }, [messages]);
 
   const handleContractUpload = (file: File, partyType: string) => {
-    const newContract: Contract = {
+    // Generate random risk level for demo
+    const riskLevels: Array<'low' | 'medium' | 'high'> = ['low', 'medium', 'high'];
+    const randomRisk = riskLevels[Math.floor(Math.random() * riskLevels.length)];
+    
+    const newContract: Contract & { riskLevel: 'low' | 'medium' | 'high'; date: string } = {
       id: Date.now().toString(),
       name: file.name,
       uploadedAt: new Date(),
-      status: 'analyzing'
+      status: 'analyzing',
+      riskLevel: randomRisk,
+      date: new Date().toLocaleDateString()
     };
     
     setContracts([newContract, ...contracts]);
@@ -239,7 +247,7 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className={cn("flex h-screen bg-[#F7F7F8] overflow-hidden", isRTL && "flex-row-reverse")}>
+    <div className={cn("flex h-screen bg-[#343541] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
         "w-[260px] bg-[#202123] text-white flex flex-col transition-transform duration-300",
@@ -247,7 +255,7 @@ export default function Dashboard() {
         "fixed lg:relative inset-y-0 z-40"
       )}>
         {/* Logo */}
-        <div className="p-3 border-b border-white/20">
+        <div className="p-3">
           <img 
             src={logoImage} 
             alt="ContraMind" 
@@ -256,10 +264,10 @@ export default function Dashboard() {
         </div>
 
         {/* New Contract Button */}
-        <div className="p-3">
+        <div className="p-2">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-white/20 rounded-md hover:bg-white/10 transition-colors"
+            className="w-full flex items-center justify-center gap-2 p-3 border border-[#565869] rounded-md hover:bg-[#2A2B32] transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>{t('عقد جديد', 'New Contract')}</span>
@@ -268,38 +276,40 @@ export default function Dashboard() {
 
         {/* Contracts List */}
         <div className="flex-1 overflow-y-auto">
-          <div className="px-3 py-2">
-            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">
-              {t('العقود الأخيرة', 'Recent Contracts')}
-            </h3>
+          <div className="p-2">
             {contracts.map(contract => (
               <button
                 key={contract.id}
                 onClick={() => setSelectedContract(contract)}
                 className={cn(
-                  "w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-colors mb-1 truncate",
-                  selectedContract?.id === contract.id && "bg-white/20"
+                  "w-full text-left p-3 rounded hover:bg-[#2A2B32] transition-colors mb-1",
+                  selectedContract?.id === contract.id && "bg-[#343541]"
                 )}
               >
-                <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate text-sm">{contract.name}</span>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-medium truncate">{contract.name}</span>
+                  <span className="text-xs">
+                    {contract.riskLevel === 'low' && '🟢'}
+                    {contract.riskLevel === 'medium' && '🟡'}
+                    {contract.riskLevel === 'high' && '🔴'}
+                  </span>
                 </div>
+                <span className="text-xs text-gray-400">{contract.date}</span>
               </button>
             ))}
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-white/20 p-3">
-          <div className="flex items-center justify-between mb-3">
+        <div className="border-t border-[#565869] p-3">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4" />
               </div>
               <span className="text-sm truncate">{user?.fullName}</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setLocation('/settings/personal')}
                 className="p-1.5 hover:bg-white/10 rounded transition-colors"
@@ -320,8 +330,10 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
-          <div className="text-xs text-gray-400 text-center">
-            {t(`${userTokens} رمز متبقي`, `${userTokens} tokens remaining`)}
+          {/* Token Balance */}
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <span>🪙</span>
+            <span>{userTokens.toLocaleString()} tokens</span>
           </div>
         </div>
       </div>
@@ -338,12 +350,12 @@ export default function Dashboard() {
       </button>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col bg-[#343541]">
         {selectedContract ? (
           <>
             {/* Contract Header */}
-            <div className="bg-white border-b px-4 py-3">
-              <h1 className="text-lg font-semibold text-gray-800">{selectedContract.name}</h1>
+            <div className="bg-[#2A2B32] border-b border-[#565869] px-4 py-3">
+              <h1 className="text-lg font-medium text-white">{selectedContract.name}</h1>
             </div>
 
             {/* Messages Area */}
@@ -387,94 +399,85 @@ export default function Dashboard() {
             </div>
 
             {/* Input Area */}
-            <div className="bg-white border-t p-4">
+            <div className="fixed bottom-0 left-0 right-0 bg-[#40414F] border-t border-[#565869] p-4" style={{left: isRTL ? 'auto' : '260px', right: isRTL ? '260px' : 'auto'}}>
               <div className="max-w-3xl mx-auto">
-                <div className="flex gap-2">
-                  <div className="flex-1 relative">
-                    <textarea
-                      ref={inputRef}
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSendMessage();
-                        }
-                      }}
-                      placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                      className="w-full px-4 py-2 pr-12 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#0C2836]"
-                      rows={1}
-                      maxLength={500}
-                    />
-                    <span className="absolute bottom-2 right-2 text-xs text-gray-400">
-                      {inputValue.length}/500
-                    </span>
-                  </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    ref={inputRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
+                    className="w-full bg-[#40414F] border border-[#565869] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                    maxLength={500}
+                  />
                   <button
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || userTokens < 5}
                     className={cn(
-                      "px-4 py-2 rounded-lg transition-colors",
+                      "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded transition-colors",
                       inputValue.trim() && userTokens >= 5
-                        ? "bg-[#0C2836] text-white hover:bg-[#0C2836]/90"
-                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        ? "text-white hover:bg-[#2A2B32]"
+                        : "text-gray-600 cursor-not-allowed"
                     )}
                   >
                     <Send className="w-5 h-5" />
                   </button>
                 </div>
-                {userTokens < 5 && (
-                  <p className="text-xs text-red-500 mt-1">
-                    {t('رصيدك من الرموز غير كافٍ', 'Insufficient tokens')}
-                  </p>
-                )}
+                <div className="mt-2 text-xs text-gray-400 text-center">
+                  {t('5 رموز لكل سؤال', '5 tokens per question')}
+                </div>
               </div>
             </div>
           </>
         ) : (
           /* Empty State */
-          <div className="flex-1 flex items-center justify-center p-4">
-            <div className="max-w-2xl w-full">
-              <div className="text-center mb-12">
+          <div className="flex-1 flex items-center justify-center">
+            <div className="max-w-3xl w-full px-4">
+              <div className="text-center mb-8">
                 <img 
                   src={logoImage} 
                   alt="ContraMind" 
-                  className="h-20 mx-auto mb-6"
+                  className="h-16 mx-auto mb-6 opacity-70"
                 />
-                <h1 className="text-4xl font-medium mb-3">
-                  {t('قم برفع عقد للبدء', 'Upload a contract to start')}
+                <h1 className="text-3xl font-medium text-white mb-2">
+                  {t(`مرحباً ${user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${user?.fullName?.split(' ')[0] || ''}`)}
                 </h1>
-                <p className="text-lg text-gray-600">
+                <h2 className="text-2xl text-gray-300 mb-2">
+                  {t('قم برفع عقد للبدء', 'Upload a contract to start')}
+                </h2>
+                <p className="text-gray-400">
                   {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
                 </p>
               </div>
 
               {/* Example Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 {exampleCards.map((card, index) => (
                   <button
                     key={index}
                     onClick={() => setIsUploadModalOpen(true)}
-                    className="p-5 bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all hover:scale-[1.02] text-left group"
+                    className="p-4 bg-white rounded-lg hover:shadow-md transition-all text-left group min-h-[80px] flex items-center justify-between"
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-gray-100 transition-colors">
-                        {card.icon}
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                    <p className="text-base font-medium text-gray-800">{card.title}</p>
+                    <span className="text-base text-[#202123]">{card.title}</span>
+                    <span className="text-gray-400 ml-2">→</span>
                   </button>
                 ))}
               </div>
 
               {/* Upload Button */}
-              <div className="text-center">
+              <div className="text-center mt-6">
                 <button
                   onClick={() => setIsUploadModalOpen(true)}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-[#0C2836] text-white rounded-xl hover:bg-[#0C2836]/90 transition-all hover:scale-105 shadow-lg text-lg font-medium"
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-[#565869] text-white rounded-md hover:bg-[#2A2B32] transition-colors"
                 >
-                  <Upload className="w-6 h-6" />
+                  <Upload className="w-5 h-5" />
                   <span>{t('رفع عقد', 'Upload Contract')}</span>
                 </button>
               </div>

@@ -1,0 +1,107 @@
+Create a complete GPT-style dashboard for ContraMind with sidebar and personalized welcome:
+
+1. LAYOUT STRUCTURE:
+- Full height layout with two sections: sidebar (left) and main content (right)
+
+2. SIDEBAR (Left - 260px wide):
+Background: #202123 (dark grey)
+Padding: 8px
+
+Top Section:
+- ContraMind logo (white) with padding: 12px
+- "New Contract" button:
+  * Full width minus padding
+  * Border: 1px solid #565869
+  * Background: transparent
+  * Text: white
+  * Icon: + (plus sign)
+  * Padding: 12px
+  * Hover: background #2A2B32
+
+Contract History List:
+- Each item:
+  * Contract name (white text)
+  * Risk indicator (🟢 Low / 🟡 Medium / 🔴 High)
+  * Date (smaller, grey text)
+  * Padding: 12px
+  * Hover: background #2A2B32
+  * Active: background #343541
+
+Bottom Section (fixed to bottom):
+- Divider line (#565869)
+- User section:
+  * User avatar (32px circle)
+  * User name (white)
+  * Settings icon
+  * Logout icon
+- Token balance:
+  * 🪙 icon
+  * "1,000 tokens" (grey text)
+  * Small, subtle display
+
+3. MAIN CONTENT AREA:
+Background: #343541 (matches your screenshot)
+Display: flex, centered content
+Max-width: 768px for content
+
+Welcome Screen Content:
+- ContraMind logo (centered, lighter version)
+- Personalized heading: "Welcome back, [User's First Name]"
+- Subheading: "Upload a contract to start"
+- Description: "Smart contract analysis in Arabic and English"
+
+Example Cards Container:
+- 3 cards in a row (responsive grid)
+- Each card:
+  * White background
+  * Border-radius: 8px
+  * Padding: 16px 20px
+  * Min-height: 80px
+  * Hover: slight shadow
+  * Cursor: pointer
+  * Text color: #202123
+  * Arrow icon (→) on the right
+  * Font-size: 16px
+
+Card texts:
+1. "Analyze a vendor agreement"
+2. "Review liability clauses"
+3. "Check payment terms"
+
+Upload Button:
+- Margin-top: 24px
+- Background: transparent
+- Border: 1px solid #565869
+- Color: white
+- Padding: 12px 24px
+- Icon: Upload symbol
+- Text: "Upload Contract"
+- Hover: background #2A2B32
+
+4. CHAT INPUT BAR (when contract is active):
+Position: Fixed bottom
+Background: #40414F
+Border-top: 1px solid #565869
+Padding: 16px
+Content:
+- Input field:
+  * Background: #40414F
+  * Border: 1px solid #565869
+  * Border-radius: 8px
+  * Padding: 12px
+  * Color: white
+  * Placeholder: "Ask about this contract..."
+- Send button (right side)
+- Token cost note: "5 tokens per question"
+
+5. RESPONSIVE BEHAVIOR:
+- On mobile: Sidebar becomes hamburger menu
+- Cards stack vertically
+- Maintain readability
+
+6. PERSONALIZATION:
+- Get user's first name from authentication
+- Show in welcome message
+- Display user avatar from Google/Microsoft auth
+
+This creates the exact GPT-style interface with ContraMind branding.
