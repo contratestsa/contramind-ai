@@ -18,6 +18,7 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Improved error handling to gracefully handle email verification failures
     - Backend creates accounts successfully even if email service fails
     - Added console logging for debugging signup process
+    - Removed email verification requirement from login process for immediate access
 - **July 13, 2025 (Earlier)**:
   - **Complete Dashboard Redesign**: Redesigned entire dashboard to match ChatGPT interface style
     - Created narrow sidebar (260px) with dark background (#202123)
