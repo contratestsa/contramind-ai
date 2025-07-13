@@ -2,25 +2,17 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { 
-  Grid3X3, 
-  Plus, 
-  Folder, 
-  Bell, 
-  CheckCircle, 
-  BarChart3, 
   Settings, 
   HelpCircle, 
-  Calendar,
   LogOut,
-  Inbox,
-  Globe,
-  ChevronDown,
-  ChevronRight,
   User,
-  Building,
-  Camera,
-  Info,
-  Menu
+  Menu,
+  MessageSquare,
+  Plus,
+  Upload,
+  ArrowLeft,
+  ChevronRight,
+  Send
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -36,13 +28,6 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
-interface SidebarItem {
-  icon: React.ReactNode;
-  label: { ar: string; en: string };
-  path: string;
-  subItems?: SidebarItem[];
-}
-
 interface User {
   id: number;
   username: string;
@@ -53,12 +38,8 @@ interface User {
 
 export default function PersonalSettings() {
   const { t, language, setLanguage } = useLanguage();
-  const toggleLanguage = () => setLanguage(language === 'ar' ? 'en' : 'ar');
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
-  const [hasNotifications, setHasNotifications] = useState(true);
-  const [expandedSettings, setExpandedSettings] = useState(true);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const isRTL = language === 'ar';
 
@@ -79,23 +60,6 @@ export default function PersonalSettings() {
     retry: false,
   });
 
-  // Close notifications when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.notification-area')) {
-        setShowNotifications(false);
-      }
-    };
-
-    if (showNotifications) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [showNotifications]);
-
-
-
   const handleSaveProfile = () => {
     toast({
       title: t('تم حفظ التغييرات', 'Changes Saved'),
@@ -112,8 +76,8 @@ export default function PersonalSettings() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-gray-600">{t('جاري التحميل...', 'Loading...')}</div>
+      <div className="min-h-screen flex items-center justify-center bg-[#343541]">
+        <div className="text-white">{t('جاري التحميل...', 'Loading...')}</div>
       </div>
     );
   }
@@ -128,417 +92,249 @@ export default function PersonalSettings() {
     setFullName(user.fullName || '');
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setLocation('/');
+  };
+
   return (
-    <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+    <div className="min-h-screen bg-[#343541] flex">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setShowMobileSidebar(false)}
         />
       )}
       
-      {/* Sidebar */}
+      {/* Sidebar - GPT Style */}
       <div className={cn(
-        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0 shadow-2xl",
-        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
-        isRTL ? "right-0 shadow-[-10px_0_30px_-5px_rgba(0,0,0,0.1)]" : "left-0 shadow-[10px_0_30px_-5px_rgba(0,0,0,0.1)]"
+        "w-[260px] h-screen bg-[#202123] flex flex-col fixed z-50 transition-transform duration-300 lg:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Logo */}
-        <div className="h-[80px] flex items-center bg-[#0C2836]">
+        <div className="p-4 border-b border-gray-600">
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
-            className="w-full h-full object-cover"
+            className="w-full h-12 object-contain"
           />
         </div>
 
-        {/* My Work Section */}
-        <div className="bg-white text-[#0C2836] px-5 py-3 border-b border-gray-200">
-          <h3 className={cn("text-base font-semibold", isRTL ? "text-right" : "text-left")}>
-            {t('عملي', 'My Work')}
-          </h3>
-        </div>
-
-        {/* Navigation Items */}
-        <nav className="flex-1">
-          <ul className="py-2">
-            <li>
-              <button
-                onClick={() => setLocation('/dashboard')}
-                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
-              >
-                <ChevronRight className={cn("w-4 h-4 text-gray-700", isRTL && "rotate-180")} />
-                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                  {t('العودة للوحة التحكم', 'Back to Dashboard')}
-                </span>
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => setLocation('/settings/organization')}
-                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
-              >
-                <Building className="w-[18px] h-[18px] text-gray-700" />
-                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                  {t('إعدادات المؤسسة', 'Organization Settings')}
-                </span>
-              </button>
-            </li>
-          </ul>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          <button
+            onClick={() => setLocation('/dashboard')}
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm">{t('العودة للوحة التحكم', 'Back to Dashboard')}</span>
+          </button>
+          
+          <button
+            onClick={() => setLocation('/settings/personal')}
+            className="w-full flex items-center gap-3 p-3 rounded-lg bg-[#2A2B32] text-white"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="text-sm">{t('الإعدادات الشخصية', 'Personal Settings')}</span>
+          </button>
         </nav>
 
         {/* Bottom Items */}
-        <div className="border-t border-gray-300">
-          <ul className="py-2">
-            <li>
-              <button
-                onClick={() => setLocation('/help')}
-                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
-              >
-                <HelpCircle className="w-[18px] h-[18px] text-gray-700" />
-                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                  {t('المساعدة', 'Help')}
-                </span>
-              </button>
-            </li>
-          </ul>
+        <div className="p-4 border-t border-gray-600 space-y-2">
+          <button
+            onClick={() => setLocation('/help')}
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span className="text-sm">{t('المساعدة', 'Help')}</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">{t('تسجيل الخروج', 'Logout')}</span>
+          </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
-        {/* Top Header */}
-        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-4 md:px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-          {/* Breadcrumb */}
-          <div className={cn("text-xs md:text-sm text-gray-600 flex items-center", isRTL ? "text-right" : "text-left")}>
-            {/* Mobile hamburger menu */}
-            <button
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden mr-2"
-              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
-            >
-              <Menu className="w-5 h-5 text-gray-600" />
-            </button>
-            <span>{t('الإعدادات', 'Settings')}</span>
-            <span className="mx-2">{'>'}</span>
-            <span className="text-[#0C2836] font-medium">{t('الإعدادات الشخصية', 'Personal Settings')}</span>
-          </div>
-
-          {/* Right side items */}
-          <div className={cn("flex items-center gap-4", isRTL ? "flex-row-reverse" : "")}>
-            {/* Inbox */}
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <Inbox className="w-5 h-5 text-gray-600" />
-            </button>
-
-            {/* Notifications */}
-            <div className="relative notification-area">
-              <button 
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
-              >
-                <Bell className="w-5 h-5 text-gray-600" />
-                {hasNotifications && (
-                  <span className={cn(
-                    "absolute top-1 w-2 h-2 bg-red-500 rounded-full",
-                    isRTL ? "left-1" : "right-1"
-                  )} />
-                )}
-              </button>
-              
-              {/* Notification Dropdown */}
-              {showNotifications && (
-                <div className={cn(
-                  "absolute top-full mt-2 w-[250px] bg-white border border-[#E6E6E6] rounded-lg shadow-sm",
-                  isRTL ? "left-0" : "right-0"
-                )}>
-                  {/* Notification 1 */}
-                  <div className="p-3 border-b border-[#E6E6E6]">
-                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
-                      {t('اكتمل تحليل العقد', 'Contract analysis complete')}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
-                      {t('قبل 5 دقائق', '5 minutes ago')}
-                    </p>
-                  </div>
-                  
-                  {/* Notification 2 */}
-                  <div className="p-3">
-                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
-                      {t('مرحباً بك في ContraMind', 'Welcome to ContraMind')}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
-                      {t('اليوم', 'Today')}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Language Toggle */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <Globe className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">{language === 'ar' ? 'EN' : 'AR'}</span>
-            </button>
-
-            {/* Token Counter */}
-            <div className={cn(
-              "flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg",
-              isRTL ? "flex-row-reverse" : ""
-            )}>
-              <span className="text-lg">🪙</span>
-              <span className="text-sm font-medium">1,000 {t('توكن', 'Tokens')}</span>
-            </div>
-
-            {/* User Avatar */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#0C2836] text-white rounded-full flex items-center justify-center font-semibold overflow-hidden">
-                {user?.profilePicture ? (
-                  <img 
-                    src={user.profilePicture} 
-                    alt={user.fullName} 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  userInitials
-                )}
-              </div>
-              <button
-                onClick={() => setLocation('/')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                title={t('تسجيل الخروج', 'Logout')}
-              >
-                <LogOut className="w-5 h-5 text-gray-600" />
-              </button>
-            </div>
-          </div>
-        </header>
+      <div className="flex-1 lg:ml-[260px]">
+        {/* Mobile Header */}
+        <div className="lg:hidden flex items-center justify-between p-4 bg-[#40414F] border-b border-[#565869]">
+          <button
+            onClick={() => setShowMobileSidebar(true)}
+            className="p-2 hover:bg-[#565869] rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5 text-white" />
+          </button>
+          <span className="text-white font-medium">{t('الإعدادات', 'Settings')}</span>
+          <div className="w-9" />
+        </div>
 
         {/* Main Content */}
-        <main className="p-4 md:p-6">
-          {/* Profile Information */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 mb-4 md:mb-5">
-            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
-              {t('معلومات الملف الشخصي', 'Profile Information')}
-            </h2>
-            
-            <div className={cn("flex items-start gap-4 md:gap-6 mb-4 md:mb-6", isRTL ? "flex-row-reverse" : "")}>
-              <div className="relative">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-[#0C2836] text-white rounded-full flex items-center justify-center text-xl md:text-2xl font-semibold">
-                  {userInitials}
+        <div className="p-8 max-w-4xl mx-auto">
+          <div className="max-w-2xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-2xl font-semibold text-white mb-2">
+                {t('الإعدادات الشخصية', 'Personal Settings')}
+              </h1>
+              <p className="text-[#8E8EA0] text-sm">
+                {t('قم بتحديث معلومات ملفك الشخصي وتفضيلاتك', 'Update your profile information and preferences')}
+              </p>
+            </div>
+
+            {/* Profile Information Card */}
+            <div className="bg-[#40414F] border border-[#565869] rounded-lg p-6 space-y-4">
+              <h2 className="text-xl font-medium text-white mb-4">
+                {t('معلومات الملف الشخصي', 'Profile Information')}
+              </h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="fullName" className="text-[#8E8EA0] text-sm font-medium">
+                    {t('الاسم الكامل', 'Full Name')}
+                  </Label>
+                  <input
+                    id="fullName"
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="mt-1 w-full bg-[#343541] border border-[#565869] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#19C37D] focus:border-transparent"
+                    placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
+                  />
                 </div>
-                <button className="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-1 hover:bg-gray-50">
-                  <Camera className="w-4 h-4 text-gray-600" />
+
+                <div>
+                  <Label htmlFor="email" className="text-[#8E8EA0] text-sm font-medium">
+                    {t('البريد الإلكتروني', 'Email Address')}
+                  </Label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={user?.email || ''}
+                    disabled
+                    className="mt-1 w-full bg-[#343541] border border-[#565869] rounded-lg px-4 py-3 text-[#8E8EA0] cursor-not-allowed"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="phoneNumber" className="text-[#8E8EA0] text-sm font-medium">
+                    {t('رقم الهاتف', 'Phone Number')}
+                  </Label>
+                  <input
+                    id="phoneNumber"
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="mt-1 w-full bg-[#343541] border border-[#565869] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#19C37D] focus:border-transparent"
+                    placeholder={t('أدخل رقم الهاتف', 'Enter phone number')}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="language" className="text-[#8E8EA0] text-sm font-medium">
+                    {t('اللغة المفضلة', 'Preferred Language')}
+                  </Label>
+                  <Select value={preferredLanguage} onValueChange={setPreferredLanguage}>
+                    <SelectTrigger className="mt-1 w-full bg-[#343541] border border-[#565869] text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#343541] border border-[#565869]">
+                      <SelectItem value="ar" className="text-white hover:bg-[#2A2B32]">العربية</SelectItem>
+                      <SelectItem value="en" className="text-white hover:bg-[#2A2B32]">English</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <button
+                  onClick={handleSaveProfile}
+                  className="w-full bg-[#19C37D] hover:bg-[#16B374] text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                >
+                  {t('حفظ التغييرات', 'Save Changes')}
                 </button>
               </div>
-              <button className="text-[#0C2836] text-sm hover:underline">
-                {t('تغيير الصورة', 'Change Photo')}
-              </button>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className={cn("block text-sm font-medium text-gray-700 mb-1", isRTL ? "text-right" : "text-left")}>
-                  {t('الاسم الكامل', 'Full Name')}
-                </label>
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className={cn(
-                    "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0C2836]",
-                    isRTL ? "text-right" : "text-left"
-                  )}
-                />
-              </div>
-
-              <div>
-                <label className={cn("block text-sm font-medium text-gray-700 mb-1", isRTL ? "text-right" : "text-left")}>
-                  {t('البريد الإلكتروني', 'Email')}
-                </label>
-                <input
-                  type="email"
-                  value={user?.email || ''}
-                  disabled
-                  className={cn(
-                    "w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500",
-                    isRTL ? "text-right" : "text-left"
-                  )}
-                />
-              </div>
-
-              <div>
-                <label className={cn("block text-sm font-medium text-gray-700 mb-1", isRTL ? "text-right" : "text-left")}>
-                  {t('رقم الهاتف', 'Phone Number')}
-                </label>
-                <input
-                  type="tel"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className={cn(
-                    "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0C2836]",
-                    isRTL ? "text-right" : "text-left"
-                  )}
-                />
-              </div>
-
-              <div>
-                <label className={cn("block text-sm font-medium text-gray-700 mb-1", isRTL ? "text-right" : "text-left")}>
-                  {t('اللغة المفضلة', 'Preferred Language')}
-                </label>
-                <Select value={preferredLanguage} onValueChange={setPreferredLanguage}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">{t('الإنجليزية', 'English')}</SelectItem>
-                    <SelectItem value="ar">{t('العربية', 'Arabic')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className={cn("flex justify-end mt-6", isRTL ? "flex-row-reverse" : "")}>
-              <button
-                onClick={handleSaveProfile}
-                className="px-4 py-2 bg-[#0C2836] text-white rounded-lg hover:bg-[#0A1F2B] transition-colors"
-              >
-                {t('حفظ التغييرات', 'Save Changes')}
-              </button>
-            </div>
-          </div>
-
-          {/* Notification Preferences */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6 mb-4 md:mb-5">
-            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
-              {t('تفضيلات الإشعارات', 'Notification Preferences')}
-            </h2>
-
-            <div className="space-y-4">
-              <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                <div className={cn("space-y-0.5", isRTL ? "text-right" : "text-left")}>
-                  <Label htmlFor="email-notifications" className="text-sm font-medium">
-                    {t('الإشعارات عبر البريد الإلكتروني', 'Email notifications')}
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    {t('تلقي تحديثات مهمة عبر البريد الإلكتروني', 'Receive important updates via email')}
-                  </p>
-                </div>
-                <Switch
-                  id="email-notifications"
-                  checked={emailNotifications}
-                  onCheckedChange={setEmailNotifications}
-                  isRTL={isRTL}
-                />
-              </div>
-
-              <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                <div className={cn("space-y-0.5", isRTL ? "text-right" : "text-left")}>
-                  <Label htmlFor="analysis-complete" className="text-sm font-medium">
-                    {t('اكتمال تحليل العقد', 'Contract analysis complete')}
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    {t('الحصول على إشعار عند اكتمال تحليل العقد', 'Get notified when contract analysis is done')}
-                  </p>
-                </div>
-                <Switch
-                  id="analysis-complete"
-                  checked={analysisCompleteNotifications}
-                  onCheckedChange={setAnalysisCompleteNotifications}
-                  isRTL={isRTL}
-                />
-              </div>
-
-              <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                <div className={cn("space-y-0.5", isRTL ? "text-right" : "text-left")}>
-                  <Label htmlFor="low-token-warnings" className="text-sm font-medium">
-                    {t('تحذيرات انخفاض الرصيد', 'Low token warnings')}
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    {t('تنبيهات عندما ينخفض رصيد التوكنات', 'Alerts when token balance is running low')}
-                  </p>
-                </div>
-                <Switch
-                  id="low-token-warnings"
-                  checked={lowTokenWarnings}
-                  onCheckedChange={setLowTokenWarnings}
-                  isRTL={isRTL}
-                />
-              </div>
-
-              <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                <div className={cn("space-y-0.5", isRTL ? "text-right" : "text-left")}>
-                  <Label htmlFor="weekly-summary" className="text-sm font-medium">
-                    {t('الملخص الأسبوعي', 'Weekly summary')}
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    {t('تلقي ملخص أسبوعي لنشاطك', 'Receive a weekly summary of your activity')}
-                  </p>
-                </div>
-                <Switch
-                  id="weekly-summary"
-                  checked={weeklySummary}
-                  onCheckedChange={setWeeklySummary}
-                  isRTL={isRTL}
-                />
-              </div>
-            </div>
-
-            <div className={cn("flex justify-end mt-6", isRTL ? "flex-row-reverse" : "")}>
-              <button
-                onClick={handleSaveNotifications}
-                className="px-4 py-2 bg-[#0C2836] text-white rounded-lg hover:bg-[#0A1F2B] transition-colors"
-              >
-                {t('حفظ التفضيلات', 'Save Preferences')}
-              </button>
-            </div>
-          </div>
-
-          {/* Security Settings */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
-            <h2 className={cn("text-lg md:text-xl font-semibold text-[#0C2836] mb-4 md:mb-6", isRTL ? "text-right" : "text-left")}>
-              {t('إعدادات الأمان', 'Security Settings')}
-            </h2>
-
-            <div className="space-y-4">
-              <div className={cn("flex items-center justify-between py-3 border-b", isRTL ? "flex-row-reverse" : "")}>
-                <div className={cn(isRTL ? "text-right" : "text-left")}>
-                  <p className="text-sm font-medium text-gray-700">{t('آخر تسجيل دخول', 'Last login')}</p>
-                  <p className="text-sm text-gray-500">{t('اليوم في 2:30 م', 'Today at 2:30 PM')}</p>
-                </div>
-              </div>
-
-              <div className={cn("py-3 border-b", isRTL ? "text-right" : "text-left")}>
-                <p className="text-sm font-medium text-gray-700 mb-2">{t('الحسابات المتصلة', 'Connected accounts')}</p>
-                <div className="space-y-2">
-                  <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
-                    <div className="w-5 h-5 bg-blue-500 rounded flex items-center justify-center text-white text-xs">G</div>
-                    <span className="text-sm text-gray-600">Google</span>
+            {/* Notification Preferences Card */}
+            <div className="bg-[#40414F] border border-[#565869] rounded-lg p-6 space-y-4">
+              <h2 className="text-xl font-medium text-white mb-4">
+                {t('تفضيلات الإشعارات', 'Notification Preferences')}
+              </h2>
+              
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-white text-sm font-medium">
+                      {t('الإشعارات عبر البريد الإلكتروني', 'Email Notifications')}
+                    </Label>
+                    <p className="text-[#8E8EA0] text-xs mt-1">
+                      {t('استقبل الإشعارات عبر البريد الإلكتروني', 'Receive notifications via email')}
+                    </p>
                   </div>
-                  <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
-                    <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-white text-xs">M</div>
-                    <span className="text-sm text-gray-600">Microsoft</span>
-                  </div>
+                  <Switch
+                    checked={emailNotifications}
+                    onCheckedChange={setEmailNotifications}
+                  />
                 </div>
-              </div>
 
-              <div className={cn("flex items-center justify-between py-3", isRTL ? "flex-row-reverse" : "")}>
-                <div className={cn("space-y-0.5", isRTL ? "text-right" : "text-left")}>
-                  <Label className="text-sm font-medium">
-                    {t('المصادقة الثنائية', 'Two-factor authentication')}
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    {t('قريباً', 'Coming Soon')}
-                  </p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-white text-sm font-medium">
+                      {t('إشعارات اكتمال التحليل', 'Analysis Complete Notifications')}
+                    </Label>
+                    <p className="text-[#8E8EA0] text-xs mt-1">
+                      {t('عند انتهاء تحليل العقد', 'When contract analysis is complete')}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={analysisCompleteNotifications}
+                    onCheckedChange={setAnalysisCompleteNotifications}
+                  />
                 </div>
-                <Switch disabled isRTL={isRTL} />
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-white text-sm font-medium">
+                      {t('تحذيرات الرصيد المنخفض', 'Low Token Warnings')}
+                    </Label>
+                    <p className="text-[#8E8EA0] text-xs mt-1">
+                      {t('عندما يصبح رصيدك منخفضاً', 'When your token balance is low')}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={lowTokenWarnings}
+                    onCheckedChange={setLowTokenWarnings}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-white text-sm font-medium">
+                      {t('الملخص الأسبوعي', 'Weekly Summary')}
+                    </Label>
+                    <p className="text-[#8E8EA0] text-xs mt-1">
+                      {t('ملخص أسبوعي لنشاطك', 'Weekly summary of your activity')}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={weeklySummary}
+                    onCheckedChange={setWeeklySummary}
+                  />
+                </div>
+
+                <button
+                  onClick={handleSaveNotifications}
+                  className="w-full bg-[#19C37D] hover:bg-[#16B374] text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                >
+                  {t('حفظ التفضيلات', 'Save Preferences')}
+                </button>
               </div>
             </div>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

@@ -19,6 +19,17 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Backend creates accounts successfully even if email service fails
     - Added console logging for debugging signup process
     - Removed email verification requirement from login process for immediate access
+  - **Updated Settings and Help Pages to Match GPT-Style Dashboard**:
+    - Replaced old light grey sidebars with consistent dark GPT-style sidebar (#202123)
+    - Updated main content areas to use #343541 background (matching dashboard)
+    - Created card-based layouts with #40414F background and #565869 borders
+    - Implemented max-width 768px centered layout for content
+    - Added green save buttons (#19C37D) matching ChatGPT style
+    - Removed old navigation structure - now uses simple back/settings/help navigation
+    - Updated input fields with dark theme styling (#343541 background, #565869 borders)
+    - Added proper mobile responsive design with hamburger menu
+    - Simplified Help page to FAQ cards without complex navigation
+    - Removed organization settings to focus on personal settings only
 - **July 13, 2025 (Earlier)**:
   - **Complete Dashboard Redesign**: Redesigned entire dashboard to match ChatGPT interface style
     - Created narrow sidebar (260px) with dark background (#202123)

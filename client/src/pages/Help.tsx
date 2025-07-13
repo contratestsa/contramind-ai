@@ -1,38 +1,23 @@
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { 
-  Grid3X3, 
-  Plus, 
-  Folder, 
-  Bell, 
-  CheckCircle, 
-  BarChart3, 
-  Settings, 
   HelpCircle, 
-  Calendar,
+  Settings, 
   LogOut,
-  Globe,
-  ChevronRight,
-  User,
-  Building,
-  Menu
+  Menu,
+  ArrowLeft,
+  MessageCircle,
+  Mail
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import { useLanguage } from "@/hooks/useLanguage";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
-
-interface SidebarItem {
-  icon: React.ReactNode;
-  label: { ar: string; en: string };
-  path: string;
-  subItems?: SidebarItem[];
-}
 
 interface User {
   id: number;
   username: string;
+  email: string;
   fullName?: string;
   profilePicture?: string;
 }
@@ -43,324 +28,201 @@ interface FAQItem {
 }
 
 export default function Help() {
-  const { t, language, setLanguage } = useLanguage();
-  const toggleLanguage = () => setLanguage(language === 'ar' ? 'en' : 'ar');
+  const { t, language } = useLanguage();
   const [location, setLocation] = useLocation();
-  const { toast } = useToast();
-  const [hasNotifications, setHasNotifications] = useState(true);
-  const [expandedSettings, setExpandedSettings] = useState(location.startsWith('/settings'));
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const isRTL = language === 'ar';
 
   // Fetch user data
-  const { data: userData, isLoading: userLoading, error } = useQuery<{ user: User }>({
+  const { data: userData, isLoading } = useQuery<{ user: User }>({
     queryKey: ["/api/auth/me"],
     retry: false,
   });
 
-  // Close notifications when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.notification-area')) {
-        setShowNotifications(false);
-      }
-    };
-
-    if (showNotifications) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [showNotifications]);
-
-  const sidebarItems: SidebarItem[] = [
-    { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة التحكم", en: "Dashboard" }, path: "/dashboard" },
-    { icon: <Plus className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "إنشاء", en: "Create" }, path: "/create" },
-    { icon: <Folder className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "ملفاتي", en: "My Drive" }, path: "/repository" },
-    { icon: <Bell className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
-    { icon: <CheckCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المهام", en: "Tasks" }, path: "/tasks" },
-    { icon: <BarChart3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التقارير", en: "Reports" }, path: "/reports" },
-    { 
-      icon: <Settings className="w-[18px] h-[18px] text-gray-700" />, 
-      label: { ar: "الإعدادات", en: "Settings" }, 
-      path: "/settings",
-      subItems: [
-        { icon: <User className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "الإعدادات الشخصية", en: "Personal Settings" }, path: "/settings/personal" },
-        { icon: <Building className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "إعدادات المؤسسة", en: "Organization Settings" }, path: "/settings/organization" }
-      ]
-    },
-  ];
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setLocation('/');
+  };
 
   const faqItems: FAQItem[] = [
     {
       question: {
-        ar: 'كيف تُسهل ContraMind مهمة مراجعة وتحليل العقود؟',
-        en: 'How does ContraMind facilitate contract review and analysis?',
+        ar: "ما هو ContraMind؟",
+        en: "What is ContraMind?"
       },
       answer: {
-        ar: 'تستخدم ContraMind تقنيات الذكاء الاصطناعي المتقدمة لتحليل العقود تلقائياً وتحديد النقاط الحرجة والمخاطر المحتملة. تقوم المنصة بمراجعة شاملة للبنود والشروط، وتقدم تقارير مفصلة حول المخاطر القانونية، وتقترح تعديلات لتحسين العقد وحماية مصالحك.',
-        en: 'ContraMind uses advanced AI technologies to automatically analyze contracts and identify critical points and potential risks. The platform provides comprehensive review of terms and conditions, delivers detailed reports on legal risks, and suggests modifications to improve the contract and protect your interests.',
-      },
+        ar: "ContraMind هو منصة تقنية قانونية مدعومة بالذكاء الاصطناعي متخصصة في إدارة العقود لمنطقة الشرق الأوسط وشمال أفريقيا. نحن نقدم أدوات متقدمة لتحليل العقود ومراجعتها وإدارتها.",
+        en: "ContraMind is an AI-powered legal technology platform specializing in contract management for the MENA region. We provide advanced tools for contract analysis, review, and management."
+      }
     },
     {
       question: {
-        ar: 'ما الأنظمة القانونية التي تغطيها المنصة؟',
-        en: 'What legal systems does the platform cover?',
+        ar: "كيف يعمل تحليل العقود؟",
+        en: "How does contract analysis work?"
       },
       answer: {
-        ar: 'نغطي جميع القوانين التجارية الأساسية بما في ذلك قانون الشركات، قانون العمل، قانون التجارة الإلكترونية، وأنظمة الاستثمار الأجنبي ، وجميع القوانين المتعلقه بالعقود.ونقوم بتحديث قاعدة البيانات باستمرار لتشمل جميع التعديلات الجديدة.',
-        en: 'We cover all fundamental commercial laws including Companies Law, Labor Law, E-Commerce Law, Foreign Investment regulations, and all contract-related laws. We continuously update our database to include all new amendments.',
-      },
+        ar: "يستخدم ContraMind الذكاء الاصطناعي المتقدم لتحليل العقود وتحديد المخاطر والفرص والقضايا المحتملة. يتم تقديم التحليل باللغة العربية والإنجليزية مع توصيات قابلة للتنفيذ.",
+        en: "ContraMind uses advanced AI to analyze contracts and identify risks, opportunities, and potential issues. Analysis is provided in both Arabic and English with actionable recommendations."
+      }
     },
     {
       question: {
-        ar: 'هل تدعم ContraMind مراجعة وتحليل العقود باللغة العربية بشكل احترافي؟',
-        en: 'Does ContraMind support professional contract review and analysis in Arabic?',
+        ar: "ما هي الرموز المميزة (Tokens) وكيف تعمل؟",
+        en: "What are tokens and how do they work?"
       },
       answer: {
-        ar: 'نعم بالتأكيد. ContraMind هي أول منصة ذكاء اصطناعي متخصصة في مراجعة وتحليل العقود باللغة العربية. نستخدم نماذج ذكاء اصطناعي مدربة خصيصاً على النصوص القانونية العربية والمصطلحات التجارية المحلية، مما يضمن فهماً دقيقاً للسياق القانوني والثقافي. المنصة تحلل العقود العربية بدقة عالية وتقدم تقارير شاملة بالعربية مع اقتراحات لتحسين البنود والشروط.',
-        en: 'Absolutely. ContraMind is the first AI platform specialized in Arabic contract review and analysis. We use AI models specifically trained on Arabic legal texts and local commercial terminology, ensuring precise understanding of legal and cultural context. The platform analyzes Arabic contracts with high accuracy and provides comprehensive reports in Arabic with suggestions for improving terms and conditions.',
-      },
+        ar: "الرموز المميزة هي وحدات الاستخدام في ContraMind. كل عملية تحليل عقد أو استفسار يستهلك عدداً معيناً من الرموز. يمكنك شراء المزيد من الرموز حسب احتياجاتك.",
+        en: "Tokens are usage units in ContraMind. Each contract analysis or query consumes a certain number of tokens. You can purchase more tokens based on your needs."
+      }
     },
     {
       question: {
-        ar: 'كيف يمكن الاستفادة من منصة ContraMind في عملي؟',
-        en: 'How can I benefit from ContraMind platform in my business?',
+        ar: "هل يدعم ContraMind اللغة العربية؟",
+        en: "Does ContraMind support Arabic language?"
       },
       answer: {
-        ar: 'يمكنك استخدام ContraMind لمراجعة جميع أنواع العقود التجارية بسرعة ودقة. المنصة توفر الوقت والجهد من خلال تحليل العقود في ثوانٍ بدلاً من ساعات، تحديد المخاطر القانونية المحتملة، اقتراح تعديلات للحماية، وضمان الامتثال للقوانين السعودية. كما توفر مكتبة من النماذج القانونية المعتمدة وإدارة مركزية لجميع عقودك.',
-        en: 'You can use ContraMind to review all types of commercial contracts quickly and accurately. The platform saves time and effort by analyzing contracts in seconds instead of hours, identifying potential legal risks, suggesting protective amendments, and ensuring compliance with Saudi laws. It also provides a library of approved legal templates and centralized management for all your contracts.',
-      },
+        ar: "نعم، ContraMind مصمم خصيصاً لدعم اللغة العربية والإنجليزية. يمكنك تحليل العقود بكلا اللغتين والحصول على نتائج دقيقة ومفصلة.",
+        en: "Yes, ContraMind is specifically designed to support both Arabic and English languages. You can analyze contracts in both languages and receive accurate, detailed results."
+      }
     },
     {
       question: {
-        ar: 'هل تحفظ المنصة سرية وأمان البيانات والعقود؟',
-        en: 'Does the platform maintain confidentiality and security of data and contracts?',
+        ar: "كيف يمكنني البدء في استخدام ContraMind؟",
+        en: "How can I get started with ContraMind?"
       },
       answer: {
-        ar: 'نضع أمان وسرية بياناتك في أعلى أولوياتنا. جميع البيانات مشفرة باستخدام أحدث تقنيات التشفير، ونتبع معايير الأمان العالمية ISO 27001. لا يتم مشاركة أي بيانات مع أطراف ثالثة، وجميع العقود تخزن في بيئة آمنة معزولة. نضمن الامتثال الكامل لقوانين حماية البيانات المحلية والدولية.',
-        en: 'We place your data security and confidentiality as our highest priority. All data is encrypted using the latest encryption technologies, and we follow international security standards ISO 27001. No data is shared with third parties, and all contracts are stored in a secure isolated environment. We ensure full compliance with local and international data protection laws.',
-      },
-    },
+        ar: "يمكنك البدء بإنشاء حساب مجاني والحصول على رموز مجانية للتجربة. بعد ذلك، يمكنك تحميل عقدك الأول والحصول على تحليل شامل خلال دقائق.",
+        en: "You can start by creating a free account and receiving free tokens for trial. After that, you can upload your first contract and get comprehensive analysis within minutes."
+      }
+    }
   ];
 
-  if (userLoading || !userData) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#343541]">
+        <div className="text-white">{t('جاري التحميل...', 'Loading...')}</div>
+      </div>
+    );
   }
 
   return (
-    <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
+    <div className="min-h-screen bg-[#343541] flex">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setShowMobileSidebar(false)}
         />
       )}
       
-      {/* Sidebar */}
+      {/* Sidebar - GPT Style */}
       <div className={cn(
-        "w-[200px] h-screen bg-[#F8F9FA] fixed z-50 transition-transform duration-300 md:translate-x-0 shadow-2xl",
-        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
-        isRTL ? "right-0 shadow-[-10px_0_30px_-5px_rgba(0,0,0,0.1)]" : "left-0 shadow-[10px_0_30px_-5px_rgba(0,0,0,0.1)]"
+        "w-[260px] h-screen bg-[#202123] flex flex-col fixed z-50 transition-transform duration-300 lg:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Logo */}
-        <div className="h-[80px] flex items-center bg-[#0C2836]">
+        <div className="p-4 border-b border-gray-600">
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
-            className="w-full h-full object-cover"
+            className="w-full h-12 object-contain"
           />
         </div>
 
-        {/* My Work Section */}
-        <div className="bg-white text-[#0C2836] px-5 py-3 border-b border-gray-200">
-          <h3 className={cn("text-base font-semibold", isRTL ? "text-right" : "text-left")}>
-            {t('عملي', 'My Work')}
-          </h3>
-        </div>
-
-        {/* Navigation Items */}
-        <nav className="flex-1">
-          <ul className="py-2">
-            {sidebarItems.map((item, index) => (
-              <li key={index}>
-                <button
-                  onClick={() => {
-                    if (item.path === '/settings') {
-                      setExpandedSettings(!expandedSettings);
-                    } else if (item.path === '/dashboard' || item.path === '/repository' || item.path === '/tasks') {
-                      setLocation(item.path);
-                    } else {
-                      toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
-                    }
-                  }}
-                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
-                >
-                  {item.subItems && (
-                    <div className={cn("transition-transform", expandedSettings ? "rotate-90" : "", isRTL ? "order-last" : "order-first")}>
-                      <ChevronRight className="w-4 h-4 text-gray-500" />
-                    </div>
-                  )}
-                  {item.icon}
-                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                    {t(item.label.ar, item.label.en)}
-                  </span>
-                </button>
-
-                {/* Sub-items */}
-                {item.subItems && expandedSettings && (
-                  <ul>
-                    {item.subItems.map((subItem, subIndex) => (
-                      <li key={subIndex}>
-                        <button
-                          onClick={() => setLocation(subItem.path)}
-                          className={cn(
-                            "w-full h-[40px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                            isRTL ? "pr-10" : "pl-10"
-                          )}
-                        >
-                          {subItem.icon}
-                          <span className={cn("text-[14px] text-gray-600 flex-1", isRTL ? "text-right" : "text-left")}>
-                            {t(subItem.label.ar, subItem.label.en)}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          <button
+            onClick={() => setLocation('/dashboard')}
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm">{t('العودة للوحة التحكم', 'Back to Dashboard')}</span>
+          </button>
+          
+          <button
+            onClick={() => setLocation('/settings/personal')}
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="text-sm">{t('الإعدادات', 'Settings')}</span>
+          </button>
         </nav>
 
-        {/* Bottom Section */}
-        <div className="p-4 mt-auto">
-          <ul className="space-y-1">
-            <li>
-              <button
-                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors bg-[#E6E6E6]"
-              >
-                <HelpCircle className="w-[18px] h-[18px] text-gray-700" />
-                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                  {t('المساعدة', 'Help')}
-                </span>
-              </button>
-            </li>
-
-          </ul>
+        {/* Bottom Items */}
+        <div className="p-4 border-t border-gray-600 space-y-2">
+          <button
+            onClick={() => setLocation('/help')}
+            className="w-full flex items-center gap-3 p-3 rounded-lg bg-[#2A2B32] text-white"
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span className="text-sm">{t('المساعدة', 'Help')}</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">{t('تسجيل الخروج', 'Logout')}</span>
+          </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1 flex flex-col", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
-        {/* Header */}
-        <header className="h-[60px] md:h-[72px] bg-white border-b border-[#E6E6E6] px-4 md:px-6 flex items-center justify-between">
-          <div className={cn("flex items-center", isRTL && "flex-row-reverse")}>
-            {/* Mobile hamburger menu */}
-            <button
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden mr-2"
-              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
-            >
-              <Menu className="w-5 h-5 text-gray-600" />
-            </button>
-            <span className="text-gray-700 text-sm font-medium">{t('مركز المساعدة', 'Help Center')}</span>
-          </div>
-
-          <div className={cn("flex items-center gap-4", isRTL && "flex-row-reverse")}>
-            <div className="relative notification-area">
-              <button 
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="relative w-[40px] h-[40px] flex items-center justify-center hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <Bell className="w-[20px] h-[20px] text-gray-700" />
-                {hasNotifications && (
-                  <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
-                )}
-              </button>
-              
-              {/* Notification Dropdown */}
-              {showNotifications && (
-                <div className={cn(
-                  "absolute top-full mt-2 w-[250px] bg-white border border-[#E6E6E6] rounded-lg shadow-sm",
-                  isRTL ? "left-0" : "right-0"
-                )}>
-                  {/* Notification 1 */}
-                  <div className="p-3 border-b border-[#E6E6E6]">
-                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
-                      {t('اكتمل تحليل العقد', 'Contract analysis complete')}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
-                      {t('قبل 5 دقائق', '5 minutes ago')}
-                    </p>
-                  </div>
-                  
-                  {/* Notification 2 */}
-                  <div className="p-3">
-                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
-                      {t('مرحباً بك في ContraMind', 'Welcome to ContraMind')}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
-                      {t('اليوم', 'Today')}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={toggleLanguage}
-              className="w-[40px] h-[40px] flex items-center justify-center hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <Globe className="w-[20px] h-[20px] text-gray-700" />
-            </button>
-
-            <button
-              onClick={() => {
-                toast({ title: t('تسجيل الخروج', 'Logging out') });
-                setLocation('/');
-              }}
-              className="w-[40px] h-[40px] flex items-center justify-center hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <LogOut className="w-[20px] h-[20px] text-gray-700" />
-            </button>
-          </div>
-        </header>
+      <div className="flex-1 lg:ml-[260px]">
+        {/* Mobile Header */}
+        <div className="lg:hidden flex items-center justify-between p-4 bg-[#40414F] border-b border-[#565869]">
+          <button
+            onClick={() => setShowMobileSidebar(true)}
+            className="p-2 hover:bg-[#565869] rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5 text-white" />
+          </button>
+          <span className="text-white font-medium">{t('المساعدة', 'Help')}</span>
+          <div className="w-9" />
+        </div>
 
         {/* Main Content */}
-        <div className="flex-1 bg-white p-4 md:p-8">
-          <div className="max-w-[800px] mx-auto">
-            {/* FAQ Section */}
-            <h2 className={cn("text-[20px] md:text-[24px] font-['Space_Grotesk'] font-semibold text-[#0C2836] mb-6 md:mb-8", isRTL && "text-right")}>
-              {t('الأسئلة الشائعة', 'Frequently Asked Questions')}
-            </h2>
+        <div className="p-8 max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-2xl font-semibold text-white mb-2">
+                {t('مركز المساعدة', 'Help Center')}
+              </h1>
+              <p className="text-[#8E8EA0] text-sm">
+                {t('الأسئلة الشائعة ومعلومات الدعم', 'Frequently asked questions and support information')}
+              </p>
+            </div>
 
-            <div className="space-y-[16px]">
+            {/* FAQ Section */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-medium text-white mb-4">
+                {t('الأسئلة الشائعة', 'Frequently Asked Questions')}
+              </h2>
+              
               {faqItems.map((item, index) => (
-                <div key={index} className="mb-[16px]">
-                  <h3 className={cn("text-[16px] font-['Inter'] text-[#0C2836] mb-2", isRTL && "text-right")}>
-                    {t(item.question.ar, item.question.en)}
+                <div key={index} className="bg-[#40414F] border border-[#565869] rounded-lg p-6">
+                  <h3 className="text-white font-medium mb-3 text-base">
+                    {language === 'ar' ? item.question.ar : item.question.en}
                   </h3>
-                  <p className={cn("text-[14px] font-['Inter'] text-[#6C757D]", isRTL && "text-right")}>
-                    {t(item.answer.ar, item.answer.en)}
+                  <p className="text-[#8E8EA0] text-sm leading-relaxed">
+                    {language === 'ar' ? item.answer.ar : item.answer.en}
                   </p>
                 </div>
               ))}
             </div>
 
             {/* Contact Section */}
-            <div className="bg-[#E8F4F8] p-4 md:p-[24px] rounded-lg mt-8 md:mt-12">
-              <p className={cn("text-[16px] text-[#0C2836] mb-2", isRTL && "text-right")}>
-                {t('تحتاج إلى مزيد من المساعدة؟', 'Need more help?')}
+            <div className="bg-[#E8F4F8] rounded-lg p-6 mt-8">
+              <h2 className="text-[#0C2836] text-xl font-medium mb-4">
+                {t('تحتاج إلى مساعدة إضافية؟', 'Need Additional Help?')}
+              </h2>
+              <p className="text-[#0C2836] text-sm mb-4">
+                {t('تواصل مع فريق الدعم لدينا للحصول على المساعدة المباشرة', 'Contact our support team for direct assistance')}
               </p>
-              <a 
-                href="mailto:Ceo@contramind.com"
-                className="text-[#0C2836] underline hover:opacity-80 transition-opacity"
-                dir={isRTL ? "rtl" : "ltr"}
-              >
-                Ceo@contramind.com
-              </a>
+              <div className="flex items-center gap-2 text-[#0C2836]">
+                <Mail className="w-4 h-4" />
+                <span className="text-sm font-medium">Ceo@contramind.com</span>
+              </div>
             </div>
           </div>
         </div>
