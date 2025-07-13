@@ -236,17 +236,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Send login confirmation email
-      const emailResult = await sendLoginConfirmationEmail({
-        email: user.email,
-        fullName: user.fullName
-      });
-
-      if (!emailResult.success) {
-        console.error('Failed to send login confirmation email:', emailResult.error);
-      }
-
-      // Log user in using passport
+      // Log user in using passport (skip email confirmation)
       req.login(user, (err) => {
         if (err) {
           return res.status(500).json({ 
@@ -259,8 +249,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         res.json({ 
           message: "Login successful",
-          user: userWithoutPassword,
-          emailSent: emailResult.success
+          user: userWithoutPassword
         });
       });
     } catch (error) {
