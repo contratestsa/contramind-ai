@@ -249,7 +249,7 @@ export default function PersonalSettings() {
 
                 <button
                   onClick={handleSaveProfile}
-                  className="w-full bg-[#0C2836] hover:bg-[#0A1F2A] text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-white hover:bg-gray-50 text-[#0A1F2A] font-medium py-3 px-6 rounded-lg transition-colors border border-gray-200"
                 >
                   {t('حفظ التغييرات', 'Save Changes')}
                 </button>
@@ -325,7 +325,7 @@ export default function PersonalSettings() {
 
                 <button
                   onClick={handleSaveNotifications}
-                  className="w-full bg-[#0C2836] hover:bg-[#0A1F2A] text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-white hover:bg-gray-50 text-[#0A1F2A] font-medium py-3 px-6 rounded-lg transition-colors border border-gray-200"
                 >
                   {t('حفظ التفضيلات', 'Save Preferences')}
                 </button>
