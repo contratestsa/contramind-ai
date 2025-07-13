@@ -159,22 +159,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.updateUserVerification(user.email, verificationToken);
 
       // Send verification email
-      const emailResult = await sendVerificationEmail({
-        email: user.email,
-        fullName: user.fullName,
-        verificationToken
-      });
-
-      if (!emailResult.success) {
-        console.error('Failed to send verification email:', emailResult.error);
+      let emailSent = false;
+      try {
+        const emailResult = await sendVerificationEmail({
+          email: user.email,
+          fullName: user.fullName,
+          verificationToken
+        });
+        
+        emailSent = emailResult.success;
+        if (!emailResult.success) {
+          console.error('Failed to send verification email:', emailResult.error);
+        }
+      } catch (emailError) {
+        console.error('Error sending verification email:', emailError);
+        // Continue with signup even if email fails
       }
 
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
 
       res.status(201).json({ 
-        message: "Account created successfully",
-        user: userWithoutPassword 
+        message: emailSent 
+          ? "Account created successfully. Please check your email to verify your account."
+          : "Account created successfully. Email verification may be pending.", 
+        user: userWithoutPassword,
+        emailSent
       });
     } catch (error) {
       console.error("Signup error:", error);

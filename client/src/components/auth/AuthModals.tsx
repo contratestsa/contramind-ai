@@ -77,22 +77,32 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
   // Signup mutation
   const signupMutation = useMutation({
     mutationFn: async (data: any) => {
+      console.log('Attempting signup with data:', { ...data, password: '[HIDDEN]' });
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+      const responseData = await response.json();
+      console.log('Signup response:', response.status, responseData);
+      
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Signup failed');
+        throw new Error(responseData.message || 'Signup failed');
       }
-      return response.json();
+      return responseData;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Signup successful:', data);
+      // Show prominent success message
       toast({
-        title: t('تم إنشاء الحساب بنجاح', 'Account Created Successfully'),
-        description: t('يمكنك الآن تسجيل الدخول', 'You can now sign in')
+        title: t('✅ تم إنشاء الحساب بنجاح', '✅ Account Created Successfully'),
+        description: data.emailSent 
+          ? t('تم إرسال رسالة التحقق إلى بريدك الإلكتروني. يمكنك الآن تسجيل الدخول.', 'A verification email has been sent. You can now sign in.')
+          : t('يمكنك الآن تسجيل الدخول', 'You can now sign in'),
+        duration: 5000 // Show for 5 seconds
       });
+      
+      // Clear form and switch to login
       setIsSignupOpen(false);
       setIsLoginOpen(true);
       setSignupData({
@@ -104,12 +114,17 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
         jobTitle: '',
         acceptTerms: false
       });
+      
+      // Pre-fill email in login form
+      setLoginData(prev => ({ ...prev, email: data.user?.email || '' }));
     },
     onError: (error: Error) => {
+      console.error('Signup error:', error);
       toast({
-        title: t('خطأ في إنشاء الحساب', 'Signup Error'),
+        title: t('❌ خطأ في إنشاء الحساب', '❌ Signup Error'),
         description: error.message,
-        variant: "destructive"
+        variant: "destructive",
+        duration: 5000
       });
     }
   });
@@ -135,6 +150,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Signup form submitted');
     
     // Validate required fields
     if (!signupData.fullName || !signupData.email || !signupData.password || !signupData.confirmPassword) {
@@ -150,6 +166,15 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       toast({
         title: t('خطأ في كلمة المرور', 'Password Error'),
         description: t('كلمتا المرور غير متطابقتين', 'Passwords do not match'),
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (signupData.password.length < 3) {
+      toast({
+        title: t('خطأ في كلمة المرور', 'Password Error'),
+        description: t('كلمة المرور يجب أن تكون 3 أحرف على الأقل', 'Password must be at least 3 characters'),
         variant: "destructive"
       });
       return;
