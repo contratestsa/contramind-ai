@@ -83,6 +83,7 @@ export default function Dashboard() {
   const [contractSearchQuery, setContractSearchQuery] = useState('');
   const [showSlidingPanel, setShowSlidingPanel] = useState(false);
   const [slidingPanelContent, setSlidingPanelContent] = useState<'prompts' | 'contractDetails' | null>(null);
+  const [activePromptTab, setActivePromptTab] = useState<'suggested' | 'myPrompts'>('suggested');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isRTL = language === 'ar';
@@ -732,6 +733,90 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
+              
+              {/* Prompt Selection System */}
+              <div className="mt-4">
+                <div className="bg-[#0C2836] rounded-lg p-4">
+                  {/* Tab Headers */}
+                  <div className="flex space-x-1 mb-4 bg-[rgba(183,222,232,0.1)] p-1 rounded-lg">
+                    <button
+                      className={cn(
+                        "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300",
+                        activePromptTab === 'suggested' 
+                          ? "bg-[#B7DEE8] text-[#0C2836] shadow-sm" 
+                          : "text-[rgba(183,222,232,0.6)] hover:text-white"
+                      )}
+                      onClick={() => setActivePromptTab('suggested')}
+                    >
+                      {t('مقترحة', 'Suggested')}
+                    </button>
+                    <button
+                      className={cn(
+                        "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300",
+                        activePromptTab === 'myPrompts' 
+                          ? "bg-[#B7DEE8] text-[#0C2836] shadow-sm" 
+                          : "text-[rgba(183,222,232,0.6)] hover:text-white"
+                      )}
+                      onClick={() => setActivePromptTab('myPrompts')}
+                    >
+                      {t('موجهاتي', 'My Prompts')}
+                    </button>
+                  </div>
+                  
+                  {/* Prompts Content */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {activePromptTab === 'suggested' ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+                            if (input) input.value = t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks');
+                          }}
+                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                        >
+                          <p className="text-sm text-white">{t('تحليل المخاطر', 'Risk Analysis')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('حدد المخاطر الرئيسية', 'Identify key risks')}</p>
+                        </button>
+                        <button
+                          onClick={() => {
+                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+                            if (input) input.value = t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract');
+                          }}
+                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                        >
+                          <p className="text-sm text-white">{t('ملخص العقد', 'Contract Summary')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('البنود الرئيسية', 'Key clauses')}</p>
+                        </button>
+                        <button
+                          onClick={() => {
+                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+                            if (input) input.value = t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?');
+                          }}
+                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                        >
+                          <p className="text-sm text-white">{t('شروط الدفع', 'Payment Terms')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('تفاصيل الدفع', 'Payment details')}</p>
+                        </button>
+                        <button
+                          onClick={() => {
+                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+                            if (input) input.value = t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses');
+                          }}
+                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                        >
+                          <p className="text-sm text-white">{t('بنود الإنهاء', 'Termination Clauses')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('شروط الإلغاء', 'Cancellation terms')}</p>
+                        </button>
+                      </>
+                    ) : (
+                      <div className="col-span-2 text-center py-8">
+                        <p className="text-[rgba(183,222,232,0.6)] text-sm">{t('لا توجد موجهات محفوظة', 'No saved prompts')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
               </div>
             </div>
           </div>
