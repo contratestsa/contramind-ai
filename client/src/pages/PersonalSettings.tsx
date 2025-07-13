@@ -106,7 +106,6 @@ export default function PersonalSettings() {
           onClick={() => setShowMobileSidebar(false)}
         />
       )}
-      
       {/* Sidebar - GPT Style */}
       <div className={cn(
         "w-[260px] h-screen bg-[#202123] flex flex-col fixed z-50 transition-transform duration-300 lg:translate-x-0",
@@ -158,11 +157,10 @@ export default function PersonalSettings() {
           </button>
         </div>
       </div>
-
       {/* Main Content Area */}
       <div className="flex-1 lg:ml-[260px]">
         {/* Mobile Header */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-[#40414F] border-b border-[#565869]">
+        <div className="lg:hidden flex items-center justify-between p-4 border-b border-[#565869] bg-[#ffffff] text-[#063333]">
           <button
             onClick={() => setShowMobileSidebar(true)}
             className="p-2 hover:bg-[#565869] rounded-lg transition-colors"
