@@ -24,7 +24,8 @@ import {
   Info,
   MessageSquare,
   ChevronDown,
-  Star
+  Star,
+  Globe
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import iconImage from '@assets/Profile Picture - ContraMind (V001)-1_1752437530152.png';
@@ -68,7 +69,7 @@ interface Message {
 }
 
 export default function Dashboard() {
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
 
@@ -536,6 +537,19 @@ export default function Dashboard() {
         <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
+            
+            {/* Language Toggle */}
+            <button
+              onClick={() => {
+                const newLang = language === 'ar' ? 'en' : 'ar';
+                setLanguage(newLang);
+              }}
+              className="mr-4 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2"
+            >
+              <Globe className="w-4 h-4" />
+              {language === 'ar' ? 'EN' : 'AR'}
+            </button>
+            
             {/* Profile Dropdown */}
             <ProfileDropdown user={user} />
           </div>
