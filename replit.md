@@ -14,7 +14,8 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Updated all gray icon colors to rgba(183,222,232,0.6)
     - Changed all border colors to rgba(183,222,232,0.2)
     - Updated loading spinner to use sky blue (#B7DEE8)
-    - Changed input chat bar text color to dark (text-gray-900) for better readability
+    - Changed input chat bar text color to dark (text-gray-900) then reverted back to white (text-white)
+    - Removed border line below profile dropdown (SA. icon) in top header bar
     - Maintained consistent color scheme across sidebar, main content area, and sliding panels
 - **July 13, 2025**:
   - **Hamburger Menu Animation Enhancement**: 

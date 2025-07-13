@@ -532,7 +532,7 @@ export default function Dashboard() {
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {/* Top Header Bar */}
-        <div className="flex-shrink-0 bg-[#0C2836] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">
+        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             {/* Profile Dropdown */}
@@ -620,7 +620,7 @@ export default function Dashboard() {
                       }
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="w-full bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-gray-900 placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
+                    className="w-full bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
                     maxLength={500}
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -691,7 +691,7 @@ export default function Dashboard() {
                     <input
                     type="text"
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="w-full bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-gray-900 placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
+                    className="w-full bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !selectedContract) {
                         toast({
