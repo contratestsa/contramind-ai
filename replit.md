@@ -24,7 +24,7 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Updated main content areas to use #343541 background (matching dashboard)
     - Created card-based layouts with #40414F background and #565869 borders
     - Implemented max-width 768px centered layout for content
-    - Added green save buttons (#19C37D) matching ChatGPT style
+    - Added ContraMind brand colored save buttons (#0C2836) with hover effects
     - Removed old navigation structure - now uses simple back/settings/help navigation
     - Updated input fields with dark theme styling (#343541 background, #565869 borders)
     - Added proper mobile responsive design with hamburger menu

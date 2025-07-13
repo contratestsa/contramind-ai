@@ -202,7 +202,7 @@ export default function PersonalSettings() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="mt-1 w-full bg-[#343541] border border-[#565869] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#19C37D] focus:border-transparent"
+                    className="mt-1 w-full bg-[#343541] border border-[#565869] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#0C2836] focus:border-transparent"
                     placeholder={t('أدخل اسمك الكامل', 'Enter your full name')}
                   />
                 </div>
@@ -229,7 +229,7 @@ export default function PersonalSettings() {
                     type="tel"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="mt-1 w-full bg-[#343541] border border-[#565869] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#19C37D] focus:border-transparent"
+                    className="mt-1 w-full bg-[#343541] border border-[#565869] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#0C2836] focus:border-transparent"
                     placeholder={t('أدخل رقم الهاتف', 'Enter phone number')}
                   />
                 </div>
@@ -251,7 +251,7 @@ export default function PersonalSettings() {
 
                 <button
                   onClick={handleSaveProfile}
-                  className="w-full bg-[#19C37D] hover:bg-[#16B374] text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-[#0C2836] hover:bg-[#0A1F2A] text-white font-medium py-3 px-6 rounded-lg transition-colors"
                 >
                   {t('حفظ التغييرات', 'Save Changes')}
                 </button>
@@ -327,7 +327,7 @@ export default function PersonalSettings() {
 
                 <button
                   onClick={handleSaveNotifications}
-                  className="w-full bg-[#19C37D] hover:bg-[#16B374] text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-[#0C2836] hover:bg-[#0A1F2A] text-white font-medium py-3 px-6 rounded-lg transition-colors"
                 >
                   {t('حفظ التفضيلات', 'Save Preferences')}
                 </button>
