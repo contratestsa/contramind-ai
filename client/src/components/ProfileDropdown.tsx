@@ -125,7 +125,7 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
       label: t('إعدادات مساحة العمل', 'Workspace settings'),
       onClick: () => {
         setIsOpen(false);
-        setLocation('/organization-settings');
+        setLocation('/settings/organization');
       }
     },
     {
@@ -146,7 +146,7 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
       label: t('الإعدادات', 'Settings'),
       onClick: () => {
         setIsOpen(false);
-        setLocation('/settings');
+        setLocation('/settings/personal');
       }
     },
     {
