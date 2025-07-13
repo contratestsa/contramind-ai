@@ -478,6 +478,7 @@ export default function Dashboard() {
                     <button
                       className="p-2 text-gray-400 hover:text-white transition-colors"
                       title={t('إرفاق ملف', 'Attach file')}
+                      onClick={() => setIsUploadModalOpen(true)}
                     >
                       <Paperclip className="w-5 h-5" />
                     </button>
@@ -514,16 +515,7 @@ export default function Dashboard() {
                   ))}
                 </div>
 
-                {/* Upload Button */}
-                <div className="text-center mt-6">
-                  <button
-                    onClick={() => setIsUploadModalOpen(true)}
-                    className="inline-flex items-center gap-2 px-6 py-3 border border-[#565869] text-white rounded-md hover:bg-[#2A2B32] transition-colors"
-                  >
-                    <Upload className="w-5 h-5" />
-                    <span>{t('رفع عقد', 'Upload Contract')}</span>
-                  </button>
-                </div>
+
               </div>
             </div>
           </div>
