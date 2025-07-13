@@ -1,0 +1,27 @@
+NORMAL STATE:                                    PANEL OPEN STATE:
+┌─────────────────────────────────────────┐    ┌─────────────────────────────────────────┐
+│ ┌─────────────┐ ┌─────────────────────┐ │    │ ┌─────────────┐ ┌──────────┬──────────┐ │
+│ │   SIDEBAR   │ │    MAIN CONTENT     │ │    │ │   SIDEBAR   │ │   MAIN   │  PANEL   │ │
+│ │             │ │                     │ │    │ │             │ │  CONTENT │          │ │
+│ │ [≡] Menu    │ │   AI Assistant      │ │    │ │ [≡] Menu    │ │          │ All      │ │
+│ │             │ │                     │ │    │ │             │ │ (Pushed) │ Contracts│ │
+│ │ + New Chat  │ │  Welcome Message    │ │    │ │ + New Chat  │ │          │          │ │
+│ │             │ │                     │ │    │ │             │ │          │ [X]Close │ │
+│ │ Recent (5)  │ │  [Quick Actions]    │ │    │ │ Recent (5)  │ │          │          │ │
+│ │ ┌─────────┐ │ │                     │ │    │ │ ┌─────────┐ │ │          │ Search:  │ │
+│ │ │View All │ │ │                     │ │    │ │ │View All │ │ │          │ [______] │ │
+│ │ └─────────┘ │ │                     │ │    │ │ └─────────┘ │ │          │          │ │
+│ │ • Contract1 │ │                     │ │    │ │ (Active)    │ │          │ Filters: │ │
+│ │ • Contract2 │ │                     │ │    │ │             │ │          │ □ Active │ │
+│ │ • Contract3 │ │                     │ │    │ │ Analytics   │ │          │ □ Draft  │ │
+│ │             │ │                     │ │    │ │ Parties     │ │          │ □ Signed │ │
+│ │ Analytics   │ │                     │ │    │ │ Notifs      │ │          │          │ │
+│ │ Parties     │ │                     │ │    │ │ Tags        │ │          │ List:    │ │
+│ │ Notifs      │ │  [Input Area]       │ │    │ │             │ │          │ • Cont.1 │ │
+│ │ Tags        │ │                     │ │    │ │ Settings    │ │          │ • Cont.2 │ │
+│ │             │ │                     │ │    │ │ Help        │ │          │ • Cont.3 │ │
+│ │ Settings    │ │                     │ │    │ │ Profile     │ │          │ • Cont.4 │ │
+│ │ Help        │ │                     │ │    │ │             │ │          │ • Cont.5 │ │
+│ │ Profile     │ │                     │ │    │ │             │ │          │ • More...│ │
+│ └─────────────┘ └─────────────────────┘ │    │ └─────────────┘ └──────────┴──────────┘ │
+└─────────────────────────────────────────┘    └─────────────────────────────────────────┘
