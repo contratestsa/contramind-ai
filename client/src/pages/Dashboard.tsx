@@ -26,6 +26,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
+import iconImage from '@assets/Profile Picture - ContraMind (V001)-1_1752437530152.png';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -328,9 +329,9 @@ export default function Dashboard() {
               <span className="absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center top-4 translate-y-0" />
             </div>
             
-            {/* ContraMind Logo */}
+            {/* ContraMind Icon */}
             <img 
-              src={logoImage} 
+              src={iconImage} 
               alt="ContraMind" 
               className={cn(
                 "w-6 h-6 object-contain absolute transition-all duration-300",
