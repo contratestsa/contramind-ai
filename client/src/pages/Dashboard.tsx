@@ -501,73 +501,8 @@ export default function Dashboard() {
                 <Tag className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
                 {!isSidebarCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
-              
-              <button
-                onClick={() => setLocation('/settings/personal')}
-                className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
-                )}
-                title={isSidebarCollapsed ? t('الإعدادات', 'Settings') : undefined}
-              >
-                <Settings className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
-                {!isSidebarCollapsed && <span className="text-sm">{t('الإعدادات', 'Settings')}</span>}
-              </button>
             </div>
           </nav>
-
-          {/* Help Section */}
-          <div className="px-3 pb-3 border-t border-gray-700 pt-3">
-            <div className="space-y-1">
-              <button
-                onClick={() => setLocation('/legal-resources')}
-                className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
-                )}
-                title={isSidebarCollapsed ? t('الموارد القانونية', 'Legal Resources') : undefined}
-              >
-                <BookOpen className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
-                {!isSidebarCollapsed && <span className="text-sm">{t('الموارد القانونية', 'Legal Resources')}</span>}
-              </button>
-              
-              <button
-                onClick={() => setLocation('/help')}
-                className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
-                )}
-                title={isSidebarCollapsed ? t('مركز المساعدة', 'Help Center') : undefined}
-              >
-                <HelpCircle className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
-                {!isSidebarCollapsed && <span className="text-sm">{t('مركز المساعدة', 'Help Center')}</span>}
-              </button>
-              
-              <button
-                onClick={() => setLocation('/whats-new')}
-                className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
-                )}
-                title={isSidebarCollapsed ? t('ما الجديد', "What's New") : undefined}
-              >
-                <Info className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
-                {!isSidebarCollapsed && <span className="text-sm">{t('ما الجديد', "What's New")}</span>}
-              </button>
-              
-              <button
-                onClick={() => setLocation('/feedback')}
-                className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
-                )}
-                title={isSidebarCollapsed ? t('التعليقات', 'Feedback') : undefined}
-              >
-                <MessageSquare className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
-                {!isSidebarCollapsed && <span className="text-sm">{t('التعليقات', 'Feedback')}</span>}
-              </button>
-            </div>
-          </div>
         </div>
 
 
