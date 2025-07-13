@@ -13,7 +13,8 @@ import {
   ChevronRight,
   Copy,
   User,
-  LogOut
+  LogOut,
+  Paperclip
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -438,48 +439,93 @@ export default function Dashboard() {
           </>
         ) : (
           /* Empty State */
-          <div className="flex-1 flex items-center justify-center">
-            <div className="max-w-3xl w-full px-4">
-              <div className="text-center mb-8">
-                <img 
-                  src={logoImage} 
-                  alt="ContraMind" 
-                  className="h-16 mx-auto mb-6 opacity-70"
-                />
-                <h1 className="text-3xl font-medium text-white mb-2">
-                  {t(`مرحباً ${user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${user?.fullName?.split(' ')[0] || ''}`)}
-                </h1>
-                <h2 className="text-2xl text-gray-300 mb-2">
-                  {t('قم برفع عقد للبدء', 'Upload a contract to start')}
-                </h2>
-                <p className="text-gray-400">
-                  {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
-                </p>
-              </div>
+          <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex items-center justify-center pb-24">
+              <div className="max-w-3xl w-full px-4">
+                <div className="text-center mb-8">
+                  <img 
+                    src={logoImage} 
+                    alt="ContraMind" 
+                    className="h-16 mx-auto mb-6 opacity-70"
+                  />
+                  <h1 className="text-3xl font-medium text-white mb-2">
+                    {t(`مرحباً ${user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${user?.fullName?.split(' ')[0] || ''}`)}
+                  </h1>
+                  <h2 className="text-2xl text-gray-300 mb-2">
+                    {t('قم برفع عقد للبدء', 'Upload a contract to start')}
+                  </h2>
+                  <p className="text-gray-400">
+                    {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
+                  </p>
+                </div>
 
-              {/* Example Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {exampleCards.map((card, index) => (
+                {/* Example Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  {exampleCards.map((card, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setIsUploadModalOpen(true)}
+                      className="p-4 bg-white rounded-lg hover:shadow-md transition-all text-left group min-h-[80px] flex items-center justify-between"
+                    >
+                      <span className="text-base text-[#202123]">{card.title}</span>
+                      <span className="text-gray-400 ml-2">→</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Upload Button */}
+                <div className="text-center mt-6">
                   <button
-                    key={index}
                     onClick={() => setIsUploadModalOpen(true)}
-                    className="p-4 bg-white rounded-lg hover:shadow-md transition-all text-left group min-h-[80px] flex items-center justify-between"
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-[#565869] text-white rounded-md hover:bg-[#2A2B32] transition-colors"
                   >
-                    <span className="text-base text-[#202123]">{card.title}</span>
-                    <span className="text-gray-400 ml-2">→</span>
+                    <Upload className="w-5 h-5" />
+                    <span>{t('رفع عقد', 'Upload Contract')}</span>
                   </button>
-                ))}
+                </div>
               </div>
+            </div>
 
-              {/* Upload Button */}
-              <div className="text-center mt-6">
-                <button
-                  onClick={() => setIsUploadModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-[#565869] text-white rounded-md hover:bg-[#2A2B32] transition-colors"
-                >
-                  <Upload className="w-5 h-5" />
-                  <span>{t('رفع عقد', 'Upload Contract')}</span>
-                </button>
+            {/* Chat Input Bar */}
+            <div className="fixed bottom-0 left-0 right-0 bg-[#40414F] border-t border-[#565869] p-4" style={{left: isRTL ? 'auto' : '260px', right: isRTL ? '260px' : 'auto'}}>
+              <div className="max-w-3xl mx-auto">
+                <div className="relative flex items-center gap-2">
+                  <button
+                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                    title={t('إرفاق ملف', 'Attach file')}
+                  >
+                    <Paperclip className="w-5 h-5" />
+                  </button>
+                  <input
+                    type="text"
+                    placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
+                    className="flex-1 bg-[#40414F] border border-[#565869] rounded-lg px-3 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !selectedContract) {
+                        toast({
+                          title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
+                          variant: 'destructive'
+                        });
+                      }
+                    }}
+                  />
+                  <button
+                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                    onClick={() => {
+                      if (!selectedContract) {
+                        toast({
+                          title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
+                          variant: 'destructive'
+                        });
+                      }
+                    }}
+                  >
+                    <Send className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="mt-2 text-xs text-gray-400 text-center">
+                  {t('5 رموز لكل سؤال', '5 tokens per question')}
+                </div>
               </div>
             </div>
           </div>
