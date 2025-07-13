@@ -297,20 +297,7 @@ export default function Dashboard() {
     setShowSlidingPanel(false);
   };
 
-  const exampleCards = [
-    {
-      title: t('تحليل اتفاقية البائع', 'Analyze a vendor agreement'),
-      icon: <FileText className="w-5 h-5" />
-    },
-    {
-      title: t('مراجعة بنود المسؤولية', 'Review liability clauses'),
-      icon: <FileText className="w-5 h-5" />
-    },
-    {
-      title: t('فحص شروط الدفع', 'Check payment terms'),
-      icon: <FileText className="w-5 h-5" />
-    }
-  ];
+
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-screen bg-[#343541]">
@@ -694,7 +681,7 @@ export default function Dashboard() {
 
             {/* Input Area - Lifted by 32px */}
             <div 
-              className="fixed bg-[#40414F] border-t border-[#565869] p-3"
+              className="fixed bg-[#40414F] p-3"
               style={{ 
                 left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
@@ -765,26 +752,12 @@ export default function Dashboard() {
                 {/* Spacer to push cards to bottom */}
                 <div className="flex-1"></div>
 
-                {/* Quick Action Cards - Positioned above input bar */}
-                {messages.length === 0 && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pb-4">
-                    {exampleCards.map((card, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setIsUploadModalOpen(true)}
-                        className="p-3 bg-[#40414F] border border-[#565869] rounded-lg hover:bg-[#494A54] transition-all text-left group"
-                      >
-                        <span className="text-sm text-gray-300 font-normal">{card.title}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
 
             {/* Fixed Input Bar - Lifted by 32px */}
             <div 
-              className="fixed bg-[#40414F] border-t border-[#565869] p-3"
+              className="fixed bg-[#40414F] p-3"
               style={{ 
                 left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
