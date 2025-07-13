@@ -316,22 +316,27 @@ export default function Dashboard() {
           />
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="p-2 hover:bg-gray-700 rounded-md transition-colors flex-shrink-0"
+            className="p-2 hover:bg-gray-700 rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
           >
-            <div className="w-5 h-5 relative">
-              <span className={cn(
-                "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center",
-                isSidebarCollapsed ? "rotate-45 translate-y-[0.5625rem]" : "translate-y-0"
-              )} />
-              <span className={cn(
-                "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out top-2",
-                isSidebarCollapsed && "opacity-0"
-              )} />
-              <span className={cn(
-                "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center top-4",
-                isSidebarCollapsed ? "-rotate-45 -translate-y-[0.5625rem]" : "translate-y-0"
-              )} />
+            {/* Hamburger Menu */}
+            <div className={cn(
+              "w-5 h-5 absolute transition-all duration-300",
+              isSidebarCollapsed ? "opacity-0 scale-75" : "opacity-100 scale-100"
+            )}>
+              <span className="absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center translate-y-0" />
+              <span className="absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out top-2" />
+              <span className="absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center top-4 translate-y-0" />
             </div>
+            
+            {/* ContraMind Logo */}
+            <img 
+              src={logoImage} 
+              alt="ContraMind" 
+              className={cn(
+                "w-6 h-6 object-contain absolute transition-all duration-300",
+                isSidebarCollapsed ? "opacity-100 scale-100" : "opacity-0 scale-75"
+              )}
+            />
           </button>
         </div>
 

@@ -5,9 +5,18 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 13, 2025**:
+  - **Hamburger Menu Animation Enhancement**: 
+    - Changed X animation to display ContraMind logo icon when sidebar is collapsed
+    - Implemented smooth fade and scale transitions (300ms) between hamburger and logo
+    - Menu shows three lines when expanded, ContraMind logo when collapsed
+    - Added hover effects and proper centering for both states
   - **Dashboard Redesign Phase 2 Complete**: Implemented new sidebar navigation and sliding panel interface
     - Step 3 - New Sidebar Component:
-      - Redesigned sidebar with animated hamburger menu (3-line to X transition with 300ms animation)
+      - Redesigned sidebar with animated hamburger menu (3-line to ContraMind logo transition with 300ms animation)
+      - Added sidebar collapse functionality (260px → 60px width)
+      - Logo fades out when sidebar collapsed
+      - Navigation items show only icons with tooltips when collapsed
+      - Search box and Recent Contracts section hide when collapsed
       - Added contract search box for searching chat history
       - Implemented complete navigation structure with icons:
         - Recent Contracts section showing 5 most recent with risk indicators
