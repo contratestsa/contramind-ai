@@ -242,10 +242,9 @@ export default function Dashboard() {
     <div className={cn("flex h-screen bg-[#F7F7F8] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "w-[260px] bg-[#202123] text-white flex flex-col transition-transform duration-300 lg:translate-x-0",
-        showMobileSidebar ? "translate-x-0" : "-translate-x-full",
-        "fixed lg:relative inset-y-0 z-40",
-        isRTL && "lg:translate-x-0"
+        "w-[260px] bg-[#202123] text-white flex flex-col transition-transform duration-300",
+        showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        "fixed lg:relative inset-y-0 z-40"
       )}>
         {/* Logo */}
         <div className="p-3 border-b border-white/20">
@@ -434,35 +433,37 @@ export default function Dashboard() {
           </>
         ) : (
           /* Empty State */
-          <div className="flex-1 flex items-center justify-center">
-            <div className="max-w-3xl w-full px-4">
-              <div className="text-center mb-8">
+          <div className="flex-1 flex items-center justify-center p-4">
+            <div className="max-w-2xl w-full">
+              <div className="text-center mb-12">
                 <img 
                   src={logoImage} 
                   alt="ContraMind" 
-                  className="h-16 mx-auto mb-4 opacity-80"
+                  className="h-20 mx-auto mb-6"
                 />
-                <h1 className="text-3xl font-semibold text-gray-800 mb-2">
+                <h1 className="text-4xl font-medium mb-3">
                   {t('قم برفع عقد للبدء', 'Upload a contract to start')}
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-lg text-gray-600">
                   {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
                 </p>
               </div>
 
               {/* Example Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
                 {exampleCards.map((card, index) => (
                   <button
                     key={index}
                     onClick={() => setIsUploadModalOpen(true)}
-                    className="p-4 bg-white rounded-lg border hover:shadow-md transition-shadow text-left"
+                    className="p-5 bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all hover:scale-[1.02] text-left group"
                   >
-                    <div className="flex items-center gap-3 mb-2">
-                      {card.icon}
-                      <ChevronRight className="w-4 h-4 ml-auto text-gray-400" />
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-gray-100 transition-colors">
+                        {card.icon}
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
                     </div>
-                    <p className="text-sm text-gray-700">{card.title}</p>
+                    <p className="text-base font-medium text-gray-800">{card.title}</p>
                   </button>
                 ))}
               </div>
@@ -471,9 +472,9 @@ export default function Dashboard() {
               <div className="text-center">
                 <button
                   onClick={() => setIsUploadModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#0C2836] text-white rounded-lg hover:bg-[#0C2836]/90 transition-colors"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-[#0C2836] text-white rounded-xl hover:bg-[#0C2836]/90 transition-all hover:scale-105 shadow-lg text-lg font-medium"
                 >
-                  <Upload className="w-5 h-5" />
+                  <Upload className="w-6 h-6" />
                   <span>{t('رفع عقد', 'Upload Contract')}</span>
                 </button>
               </div>
