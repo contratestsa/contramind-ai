@@ -5,6 +5,14 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 13, 2025**:
+  - **Database Migration**: Successfully migrated from Neon database to Alibaba Cloud ApsaraDB PostgreSQL
+    - Removed @neondatabase/serverless package
+    - Installed standard PostgreSQL drivers (pg, @types/pg)
+    - Updated server/db.ts to use node-postgres driver
+    - Connected to PostgreSQL 15.12 on Alibaba Cloud
+    - All database queries and API endpoints working correctly
+    - Maintained all existing data (122 waitlist entries)
+- **July 13, 2025 (Earlier)**:
   - **Complete Dashboard Redesign**: Redesigned entire dashboard to match ChatGPT interface style
     - Created narrow sidebar (260px) with dark background (#202123)
     - Main content area with background #343541 (matching GPT dark theme)
