@@ -93,6 +93,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
     },
     onSuccess: (data) => {
       console.log('Signup successful:', data);
+      
+      // Show alert first to ensure user sees it
+      alert(t('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.', 'Account created successfully! You can now sign in.'));
+      
       // Show prominent success message
       toast({
         title: t('✅ تم إنشاء الحساب بنجاح', '✅ Account Created Successfully'),
@@ -120,6 +124,10 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
     },
     onError: (error: Error) => {
       console.error('Signup error:', error);
+      
+      // Show alert for errors too
+      alert(t('خطأ: ', 'Error: ') + error.message);
+      
       toast({
         title: t('❌ خطأ في إنشاء الحساب', '❌ Signup Error'),
         description: error.message,
@@ -189,6 +197,12 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       return;
     }
 
+    console.log('Calling signup mutation with:', {
+      fullName: signupData.fullName,
+      email: signupData.email,
+      username: signupData.email
+    });
+    
     signupMutation.mutate({
       fullName: signupData.fullName,
       email: signupData.email,
@@ -434,8 +448,17 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
               disabled={signupMutation.isPending}
               className="w-full h-14 bg-[#0C2836] text-white font-medium text-lg rounded-full transition-colors duration-200 hover:bg-[#2b4f62] focus:outline-none focus:ring-4 focus:ring-[#B7DEE8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              <UserPlus className="w-4 h-4" />
-              {signupMutation.isPending ? t('جاري إنشاء الحساب...', 'Creating account...') : t('إنشاء حساب', 'Create Account')}
+              {signupMutation.isPending ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>{t('جاري إنشاء الحساب...', 'Creating account...')}</span>
+                </div>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4" />
+                  <span>{t('إنشاء حساب', 'Create Account')}</span>
+                </>
+              )}
             </button>
 
             <div className="text-center pt-2">
