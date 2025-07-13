@@ -95,7 +95,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       console.log('Signup successful:', data);
       
       // Show alert first to ensure user sees it
-      alert(t('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.', 'Account created successfully! You can now sign in.'));
+      window.alert(t('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.', 'Account created successfully! You can now sign in.'));
       
       // Show prominent success message
       toast({
@@ -126,7 +126,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       console.error('Signup error:', error);
       
       // Show alert for errors too
-      alert(t('خطأ: ', 'Error: ') + error.message);
+      window.alert(t('خطأ: ', 'Error: ') + error.message);
       
       toast({
         title: t('❌ خطأ في إنشاء الحساب', '❌ Signup Error'),
