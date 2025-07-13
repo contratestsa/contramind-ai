@@ -730,34 +730,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-                
-                {/* Quick Action Cards - Only shown when no messages */}
-                {messages.length === 0 && (
-                  <div className="mt-4 grid grid-cols-3 gap-3">
-                    <button 
-                      onClick={() => setIsUploadModalOpen(true)}
-                      className="p-3 bg-[#444654] hover:bg-[#565869] rounded-lg text-left transition-colors"
-                    >
-                      <h3 className="text-sm font-medium text-white mb-1">{t('تحليل عقد جديد', 'Analyze new contract')}</h3>
-                      <p className="text-xs text-gray-400">{t('ابدأ بتحميل عقد', 'Start by uploading a contract')}</p>
-                    </button>
-                    
-                    <button 
-                      onClick={() => openSlidingPanel('prompts')}
-                      className="p-3 bg-[#444654] hover:bg-[#565869] rounded-lg text-left transition-colors"
-                    >
-                      <h3 className="text-sm font-medium text-white mb-1">{t('استخدم موجه', 'Use a prompt')}</h3>
-                      <p className="text-xs text-gray-400">{t('اختر من الموجهات المعدة', 'Choose from pre-made prompts')}</p>
-                    </button>
-                    
-                    <button 
-                      className="p-3 bg-[#444654] hover:bg-[#565869] rounded-lg text-left transition-colors"
-                    >
-                      <h3 className="text-sm font-medium text-white mb-1">{t('مراجعة العقود السابقة', 'Review past contracts')}</h3>
-                      <p className="text-xs text-gray-400">{t('تصفح محفوظاتك', 'Browse your archive')}</p>
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </div>
