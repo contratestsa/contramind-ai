@@ -4,7 +4,15 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import passport from "./passport";
 import { storage } from "./storage";
-import { insertWaitlistSchema, insertContactSchema, insertUserSchema, loginSchema } from "@shared/schema";
+import { 
+  insertWaitlistSchema, 
+  insertContactSchema, 
+  insertUserSchema, 
+  loginSchema,
+  insertContractSchema,
+  insertContractChatSchema,
+  insertSavedPromptSchema 
+} from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail, sendLoginConfirmationEmail } from "./emailService";
 
 // >>> PDF ANALYSIS START
@@ -371,6 +379,361 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Failed to send message" 
         });
       }
+    }
+  });
+
+  // Onboarding endpoint
+  app.post("/api/onboarding/complete", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const { companyNameEn, companyNameAr, country, contractRole } = req.body;
+      
+      const updatedUser = await storage.updateUserOnboarding(req.user.id, {
+        companyNameEn,
+        companyNameAr,
+        country,
+        contractRole
+      });
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { password: _, ...userWithoutPassword } = updatedUser;
+      res.json({ 
+        message: "Onboarding completed successfully", 
+        user: userWithoutPassword 
+      });
+    } catch (error) {
+      console.error('Onboarding error:', error);
+      res.status(500).json({ message: "Failed to complete onboarding" });
+    }
+  });
+
+  // Contract endpoints
+  app.get("/api/contracts", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const { status, type, search } = req.query;
+      const contracts = await storage.getUserContracts(req.user.id, {
+        status: status as string,
+        type: type as string,
+        search: search as string
+      });
+
+      res.json({ contracts });
+    } catch (error) {
+      console.error('Error fetching contracts:', error);
+      res.status(500).json({ message: "Failed to fetch contracts" });
+    }
+  });
+
+  app.get("/api/contracts/recent", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+      const contracts = await storage.getRecentContracts(req.user.id, limit);
+
+      res.json({ contracts });
+    } catch (error) {
+      console.error('Error fetching recent contracts:', error);
+      res.status(500).json({ message: "Failed to fetch recent contracts" });
+    }
+  });
+
+  app.get("/api/contracts/:id", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const contract = await storage.getContract(parseInt(req.params.id));
+      
+      if (!contract) {
+        return res.status(404).json({ message: "Contract not found" });
+      }
+
+      // Check if user owns this contract
+      if (contract.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      res.json({ contract });
+    } catch (error) {
+      console.error('Error fetching contract:', error);
+      res.status(500).json({ message: "Failed to fetch contract" });
+    }
+  });
+
+  app.post("/api/contracts", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const validatedData = insertContractSchema.parse(req.body);
+      const contract = await storage.createContract({
+        ...validatedData,
+        userId: req.user.id
+      });
+
+      res.status(201).json({ 
+        message: "Contract created successfully",
+        contract 
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ 
+          message: "Invalid data", 
+          errors: error.errors 
+        });
+      } else {
+        console.error('Error creating contract:', error);
+        res.status(500).json({ message: "Failed to create contract" });
+      }
+    }
+  });
+
+  app.patch("/api/contracts/:id", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const contractId = parseInt(req.params.id);
+      const contract = await storage.getContract(contractId);
+      
+      if (!contract) {
+        return res.status(404).json({ message: "Contract not found" });
+      }
+
+      if (contract.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const updatedContract = await storage.updateContract(contractId, req.body);
+
+      res.json({ 
+        message: "Contract updated successfully",
+        contract: updatedContract 
+      });
+    } catch (error) {
+      console.error('Error updating contract:', error);
+      res.status(500).json({ message: "Failed to update contract" });
+    }
+  });
+
+  app.delete("/api/contracts/:id", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const contractId = parseInt(req.params.id);
+      const contract = await storage.getContract(contractId);
+      
+      if (!contract) {
+        return res.status(404).json({ message: "Contract not found" });
+      }
+
+      if (contract.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const deleted = await storage.deleteContract(contractId);
+
+      if (deleted) {
+        res.json({ message: "Contract deleted successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to delete contract" });
+      }
+    } catch (error) {
+      console.error('Error deleting contract:', error);
+      res.status(500).json({ message: "Failed to delete contract" });
+    }
+  });
+
+  // Contract chat endpoints
+  app.get("/api/contracts/:id/chats", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const contractId = parseInt(req.params.id);
+      const contract = await storage.getContract(contractId);
+      
+      if (!contract) {
+        return res.status(404).json({ message: "Contract not found" });
+      }
+
+      if (contract.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const chats = await storage.getContractChats(contractId);
+      res.json({ chats });
+    } catch (error) {
+      console.error('Error fetching contract chats:', error);
+      res.status(500).json({ message: "Failed to fetch contract chats" });
+    }
+  });
+
+  app.post("/api/contracts/:id/chats", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const contractId = parseInt(req.params.id);
+      const contract = await storage.getContract(contractId);
+      
+      if (!contract) {
+        return res.status(404).json({ message: "Contract not found" });
+      }
+
+      if (contract.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const validatedData = insertContractChatSchema.parse(req.body);
+      const chat = await storage.createContractChat({
+        ...validatedData,
+        contractId,
+        userId: req.user.id
+      });
+
+      res.status(201).json({ 
+        message: "Chat message created successfully",
+        chat 
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ 
+          message: "Invalid data", 
+          errors: error.errors 
+        });
+      } else {
+        console.error('Error creating contract chat:', error);
+        res.status(500).json({ message: "Failed to create chat message" });
+      }
+    }
+  });
+
+  app.get("/api/contracts/search/chats", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const searchTerm = req.query.q as string;
+      
+      if (!searchTerm) {
+        return res.status(400).json({ message: "Search term is required" });
+      }
+
+      const results = await storage.searchContractChats(req.user.id, searchTerm);
+      res.json({ results });
+    } catch (error) {
+      console.error('Error searching contract chats:', error);
+      res.status(500).json({ message: "Failed to search contract chats" });
+    }
+  });
+
+  // Saved prompts endpoints
+  app.get("/api/prompts", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const [userPrompts, systemPrompts] = await Promise.all([
+        storage.getUserPrompts(req.user.id),
+        storage.getSystemPrompts()
+      ]);
+
+      res.json({ 
+        userPrompts,
+        systemPrompts 
+      });
+    } catch (error) {
+      console.error('Error fetching prompts:', error);
+      res.status(500).json({ message: "Failed to fetch prompts" });
+    }
+  });
+
+  app.post("/api/prompts", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const validatedData = insertSavedPromptSchema.parse(req.body);
+      const prompt = await storage.createSavedPrompt({
+        ...validatedData,
+        userId: req.user.id,
+        isSystem: false
+      });
+
+      res.status(201).json({ 
+        message: "Prompt saved successfully",
+        prompt 
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ 
+          message: "Invalid data", 
+          errors: error.errors 
+        });
+      } else {
+        console.error('Error creating prompt:', error);
+        res.status(500).json({ message: "Failed to save prompt" });
+      }
+    }
+  });
+
+  app.post("/api/prompts/:id/use", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const promptId = parseInt(req.params.id);
+      await storage.updatePromptUsage(promptId);
+
+      res.json({ message: "Prompt usage updated" });
+    } catch (error) {
+      console.error('Error updating prompt usage:', error);
+      res.status(500).json({ message: "Failed to update prompt usage" });
+    }
+  });
+
+  app.delete("/api/prompts/:id", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const promptId = parseInt(req.params.id);
+      const deleted = await storage.deleteSavedPrompt(promptId, req.user.id);
+
+      if (deleted) {
+        res.json({ message: "Prompt deleted successfully" });
+      } else {
+        res.status(404).json({ message: "Prompt not found or access denied" });
+      }
+    } catch (error) {
+      console.error('Error deleting prompt:', error);
+      res.status(500).json({ message: "Failed to delete prompt" });
     }
   });
 
