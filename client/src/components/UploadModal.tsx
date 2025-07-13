@@ -9,9 +9,10 @@ import PartySelectionModal from "./PartySelectionModal";
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onUpload?: (file: File, partyType: string) => void;
 }
 
-export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
+export default function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
   const { t, language } = useLanguage();
   const { toast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
@@ -84,6 +85,9 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
     if (!selectedFile) return;
     
     setIsUploading(true);
+    // Store the file for later use
+    const fileToUpload = selectedFile;
+    
     // Mock upload - in reality this would upload to server
     setTimeout(() => {
       toast({
@@ -95,9 +99,28 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
         setIsUploading(false);
         setSelectedFile(null);
         onClose();
+        // Pass the file to the party selection modal
         setShowPartySelection(true);
+        // Store file temporarily for party selection
+        sessionStorage.setItem('uploadedFile', JSON.stringify({
+          name: fileToUpload.name,
+          size: fileToUpload.size,
+          type: fileToUpload.type
+        }));
       }, 1000);
     }, 1000);
+  };
+
+  const handlePartySelection = (partyType: string) => {
+    setShowPartySelection(false);
+    const fileData = sessionStorage.getItem('uploadedFile');
+    if (onUpload && fileData) {
+      const file = JSON.parse(fileData);
+      // Create a mock file object for now
+      const mockFile = new File([], file.name, { type: file.type });
+      onUpload(mockFile, partyType);
+      sessionStorage.removeItem('uploadedFile');
+    }
   };
 
   const formatFileSize = (bytes: number) => {
@@ -214,7 +237,8 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
     {/* Party Selection Modal */}
     <PartySelectionModal 
       isOpen={showPartySelection} 
-      onClose={() => setShowPartySelection(false)} 
+      onClose={() => setShowPartySelection(false)}
+      onSelect={handlePartySelection}
     />
     </>
   );

@@ -8,6 +8,7 @@ import { useLocation } from "wouter";
 interface PartySelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSelect?: (partyType: string) => void;
 }
 
 interface PartyCard {
@@ -18,7 +19,7 @@ interface PartyCard {
   examples: { ar: string; en: string };
 }
 
-export default function PartySelectionModal({ isOpen, onClose }: PartySelectionModalProps) {
+export default function PartySelectionModal({ isOpen, onClose, onSelect }: PartySelectionModalProps) {
   const { t, language } = useLanguage();
   const [location, setLocation] = useLocation();
   const [selectedParty, setSelectedParty] = useState<string | null>(null);
@@ -52,12 +53,13 @@ export default function PartySelectionModal({ isOpen, onClose }: PartySelectionM
   const handleContinue = () => {
     if (!selectedParty) return;
     
-    // Store party selection in sessionStorage
-    sessionStorage.setItem('selectedParty', selectedParty);
+    // Call the onSelect callback if provided
+    if (onSelect) {
+      onSelect(selectedParty);
+    }
     
-    // Close modal and navigate to analysis progress
+    // Close modal
     onClose();
-    setLocation('/analysis-progress');
   };
 
   const handleClose = () => {

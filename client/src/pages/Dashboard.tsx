@@ -1,38 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { 
-  Grid3X3, 
-  Plus, 
-  Folder, 
-  Bell, 
-  CheckCircle, 
-  BarChart3, 
-  Settings, 
-  HelpCircle, 
-  Calendar,
-  LogOut,
-  Inbox,
-  Globe,
-  ChevronRight,
-  User,
-  Building,
+  Plus,
+  Settings,
+  HelpCircle,
   Menu,
-  X
+  X,
+  Send,
+  FileText,
+  Upload,
+  ChevronRight,
+  Copy,
+  User,
+  LogOut
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import UploadModal from "@/components/UploadModal";
-import Onboarding from "@/components/Onboarding";
-
-interface SidebarItem {
-  icon: React.ReactNode;
-  label: { ar: string; en: string };
-  path: string;
-  subItems?: SidebarItem[];
-}
+import { queryClient } from "@/lib/queryClient";
 
 interface User {
   id: number;
@@ -48,22 +36,35 @@ interface User {
   contractRole?: string;
 }
 
+interface Contract {
+  id: string;
+  name: string;
+  uploadedAt: Date;
+  status: 'analyzing' | 'ready';
+}
+
+interface Message {
+  id: string;
+  type: 'user' | 'system';
+  content: string;
+  timestamp: Date;
+}
+
 export default function Dashboard() {
-  const { t, language, setLanguage } = useLanguage();
+  const { t, language } = useLanguage();
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
-  const [hasNotifications, setHasNotifications] = useState(true);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [expandedSettings, setExpandedSettings] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const isRTL = language === 'ar';
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'ar' ? 'en' : 'ar');
-  };
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [userTokens, setUserTokens] = useState(1000);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const isRTL = language === 'ar';
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -106,439 +107,387 @@ export default function Dashboard() {
     }
   }, [error, isLoading, userData, setLocation]);
 
-  // Check if user needs onboarding (only once per user journey)
-  useEffect(() => {
-    if (userData?.user && !userData.user.onboardingCompleted) {
-      setShowOnboarding(true);
-    }
-  }, [userData]);
 
-  // Close notifications when clicking outside
+
+  // Scroll to bottom when messages change
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.notification-area')) {
-        setShowNotifications(false);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleContractUpload = (file: File, partyType: string) => {
+    const newContract: Contract = {
+      id: Date.now().toString(),
+      name: file.name,
+      uploadedAt: new Date(),
+      status: 'analyzing'
+    };
+    
+    setContracts([newContract, ...contracts]);
+    setSelectedContract(newContract);
+    
+    // Add initial messages
+    const initialMessages: Message[] = [
+      {
+        id: '1',
+        type: 'system',
+        content: t(
+          `تم رفع العقد: ${file.name}`,
+          `Contract uploaded: ${file.name}`
+        ),
+        timestamp: new Date()
+      },
+      {
+        id: '2',
+        type: 'system',
+        content: t(
+          `تحليل كـ: ${partyType === 'buyer' ? 'مشتري' : 'بائع'}`,
+          `Analyzing as: ${partyType}`
+        ),
+        timestamp: new Date()
+      },
+      {
+        id: '3',
+        type: 'system',
+        content: t(
+          'جاري تحليل العقد... سيستغرق هذا بضع ثوانٍ.',
+          'Analyzing contract... This will take a few seconds.'
+        ),
+        timestamp: new Date()
       }
+    ];
+    
+    setMessages(initialMessages);
+    
+    // Simulate analysis completion
+    setTimeout(() => {
+      const analysisMessage: Message = {
+        id: '4',
+        type: 'system',
+        content: t(
+          'تم اكتمال التحليل! وجدت 3 مخاطر عالية و5 متوسطة. يمكنك طرح أي أسئلة حول العقد.',
+          'Analysis complete! Found 3 high risks and 5 medium risks. You can ask any questions about the contract.'
+        ),
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, analysisMessage]);
+      
+      // Update contract status
+      setContracts(prev => prev.map(c => 
+        c.id === newContract.id ? { ...c, status: 'ready' } : c
+      ));
+    }, 3000);
+  };
+
+  const handleSendMessage = () => {
+    if (!inputValue.trim() || userTokens < 5) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: inputValue,
+      timestamp: new Date()
     };
 
-    if (showNotifications) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [showNotifications]);
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setUserTokens(prev => prev - 5);
 
-  const sidebarItems: SidebarItem[] = [
-    { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة التحكم", en: "Dashboard" }, path: "/dashboard" },
-    { icon: <Plus className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "إنشاء", en: "Create" }, path: "/create" },
-    { icon: <Folder className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "ملفاتي", en: "My Drive" }, path: "/repository" },
-    { icon: <Bell className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
-    { icon: <CheckCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المهام", en: "Tasks" }, path: "/tasks" },
-    { icon: <BarChart3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التقارير", en: "Reports" }, path: "/reports" },
-    { 
-      icon: <Settings className="w-[18px] h-[18px] text-gray-700" />, 
-      label: { ar: "الإعدادات", en: "Settings" }, 
-      path: "/settings",
-      subItems: [
-        { icon: <User className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "الإعدادات الشخصية", en: "Personal Settings" }, path: "/settings/personal" },
-        { icon: <Building className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "إعدادات المؤسسة", en: "Organization Settings" }, path: "/settings/organization" }
-      ]
+    // Simulate AI response
+    setTimeout(() => {
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'system',
+        content: t(
+          'شكراً على سؤالك. بناءً على تحليلي للعقد، إليك ما وجدته...',
+          'Thank you for your question. Based on my analysis of the contract, here\'s what I found...'
+        ),
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, aiResponse]);
+    }, 1000);
+  };
+
+  const copyMessage = (content: string) => {
+    navigator.clipboard.writeText(content);
+    toast({
+      title: t('تم النسخ', 'Copied'),
+      description: t('تم نسخ الرسالة إلى الحافظة', 'Message copied to clipboard')
+    });
+  };
+
+  const exampleCards = [
+    {
+      title: t('تحليل اتفاقية البائع', 'Analyze a vendor agreement'),
+      icon: <FileText className="w-5 h-5" />
     },
-  ];
-
-  const bottomItems: SidebarItem[] = [
-    { icon: <HelpCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
+    {
+      title: t('مراجعة بنود المسؤولية', 'Review liability clauses'),
+      icon: <FileText className="w-5 h-5" />
+    },
+    {
+      title: t('فحص شروط الدفع', 'Check payment terms'),
+      icon: <FileText className="w-5 h-5" />
+    }
   ];
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-gray-600">{t('جاري التحميل...', 'Loading...')}</div>
-      </div>
-    );
+    return <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+    </div>;
   }
 
   const user = userData?.user;
-  const userInitials = user?.fullName
-    ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()
-    : user?.username?.[0]?.toUpperCase() || 'U';
 
   return (
-    <div className={cn("min-h-screen flex bg-white", isRTL ? "flex-row-reverse" : "flex-row")}>
-      {/* Mobile Sidebar Overlay */}
-      {showMobileSidebar && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={() => setShowMobileSidebar(false)}
-        />
-      )}
-      
+    <div className={cn("flex h-screen bg-[#F7F7F8] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "w-[200px] h-screen fixed z-50 transition-transform duration-300 md:translate-x-0 shadow-2xl",
-        "bg-gradient-to-br from-[#F8F9FA] via-[#F8F9FA] to-[#F0F1F2]",
-        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full" : "-translate-x-full",
-        isRTL ? "right-0 shadow-[-10px_0_30px_-5px_rgba(0,0,0,0.1)] border-l border-gray-200" : "left-0 shadow-[10px_0_30px_-5px_rgba(0,0,0,0.1)] border-r border-gray-200"
+        "w-[260px] bg-[#202123] text-white flex flex-col transition-transform duration-300 lg:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : "-translate-x-full",
+        "fixed lg:relative inset-y-0 z-40",
+        isRTL && "lg:translate-x-0"
       )}>
         {/* Logo */}
-        <div className="h-[80px] flex items-center bg-[#0C2836]">
+        <div className="p-3 border-b border-white/20">
           <img 
             src={logoImage} 
-            alt="ContraMind Logo" 
-            className="w-full h-full object-cover"
+            alt="ContraMind" 
+            className="h-10 w-full object-contain filter brightness-0 invert"
           />
         </div>
 
-        {/* My Work Section */}
-        <div className="bg-white text-[#0C2836] px-5 py-3 border-b border-gray-200">
-          <h3 className={cn("text-base font-semibold", isRTL ? "text-right" : "text-left")}>
-            {t('عملي', 'My Work')}
-          </h3>
+        {/* New Contract Button */}
+        <div className="p-3">
+          <button
+            onClick={() => setIsUploadModalOpen(true)}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-white/20 rounded-md hover:bg-white/10 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{t('عقد جديد', 'New Contract')}</span>
+          </button>
         </div>
 
-        {/* Navigation Items */}
-        <nav className="flex-1">
-          <ul className="py-2">
-            {sidebarItems.map((item, index) => (
-              <li key={index}>
-                <button
-                  onClick={() => {
-                    if (item.path === '/settings') {
-                      setExpandedSettings(!expandedSettings);
-                    } else if (item.path === '/repository') {
-                      setLocation('/repository');
-                    } else if (item.path === '/tasks') {
-                      setLocation('/tasks');
-                    } else if (item.path === '/dashboard') {
-                      // Already on dashboard
-                      return;
-                    } else if (item.path === '/settings/personal') {
-                      setLocation(item.path);
-                    } else if (item.path === '/settings/organization') {
-                      setLocation(item.path);
-                    } else {
-                      toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
-                    }
-                  }}
-                  className={cn(
-                    "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] hover:shadow-sm transition-all",
-                    item.path === '/dashboard' && "bg-[#E6E6E6] shadow-inner"
-                  )}
-                >
-                  {item.subItems && (
-                    <div className={cn("transition-transform", expandedSettings ? "rotate-90" : "", isRTL ? "order-last" : "order-first")}>
-                      <ChevronRight className="w-4 h-4 text-gray-500" />
-                    </div>
-                  )}
-                  {item.icon}
-                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                    {t(item.label.ar, item.label.en)}
-                  </span>
-                </button>
-
-                {/* Sub-items */}
-                {item.subItems && expandedSettings && (
-                  <ul>
-                    {item.subItems.map((subItem, subIndex) => (
-                      <li key={subIndex}>
-                        <button
-                          onClick={() => setLocation(subItem.path)}
-                          className={cn(
-                            "w-full h-[40px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] hover:shadow-sm transition-all",
-                            isRTL ? "pr-10" : "pl-10"
-                          )}
-                        >
-                          {subItem.icon}
-                          <span className={cn("text-[14px] text-gray-600 flex-1", isRTL ? "text-right" : "text-left")}>
-                            {t(subItem.label.ar, subItem.label.en)}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+        {/* Contracts List */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-3 py-2">
+            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">
+              {t('العقود الأخيرة', 'Recent Contracts')}
+            </h3>
+            {contracts.map(contract => (
+              <button
+                key={contract.id}
+                onClick={() => setSelectedContract(contract)}
+                className={cn(
+                  "w-full text-left px-3 py-2 rounded-md hover:bg-white/10 transition-colors mb-1 truncate",
+                  selectedContract?.id === contract.id && "bg-white/20"
                 )}
-              </li>
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate text-sm">{contract.name}</span>
+                </div>
+              </button>
             ))}
-          </ul>
-        </nav>
+          </div>
+        </div>
 
-        {/* Bottom Items */}
-        <div className="border-t border-gray-300">
-          <ul className="py-2">
-            {bottomItems.map((item, index) => (
-              <li key={index}>
-                <button
-                  onClick={() => {
-                    if (item.path === '/help') {
-                      setLocation('/help');
-                    } else {
-                      toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
-                    }
-                  }}
-                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] hover:shadow-sm transition-all"
-                >
-                  {item.icon}
-                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                    {t(item.label.ar, item.label.en)}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+        {/* Bottom Section */}
+        <div className="border-t border-white/20 p-3">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                <User className="w-4 h-4" />
+              </div>
+              <span className="text-sm truncate">{user?.fullName}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setLocation('/settings/personal')}
+                className="p-1.5 hover:bg-white/10 rounded transition-colors"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setLocation('/help')}
+                className="p-1.5 hover:bg-white/10 rounded transition-colors"
+              >
+                <HelpCircle className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => logoutMutation.mutate()}
+                className="p-1.5 hover:bg-white/10 rounded transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          <div className="text-xs text-gray-400 text-center">
+            {t(`${userTokens} رمز متبقي`, `${userTokens} tokens remaining`)}
+          </div>
         </div>
       </div>
+
+      {/* Mobile Sidebar Toggle */}
+      <button
+        onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+        className={cn(
+          "lg:hidden fixed top-4 z-50 p-2 bg-[#202123] text-white rounded-md",
+          isRTL ? "right-4" : "left-4"
+        )}
+      >
+        {showMobileSidebar ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
 
       {/* Main Content Area */}
-      <div className={cn("flex-1", isRTL ? "md:mr-[200px]" : "md:ml-[200px]")}>
-        {/* Top Header */}
-        <header className="h-[60px] bg-white shadow-sm flex items-center justify-between px-4 md:px-6" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-          {/* Left side - Hamburger menu on mobile */}
-          <div>
-            <button
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors md:hidden"
-              onClick={() => setShowMobileSidebar(!showMobileSidebar)}
-            >
-              <Menu className="w-5 h-5 text-gray-600" />
-            </button>
-          </div>
+      <div className="flex-1 flex flex-col">
+        {selectedContract ? (
+          <>
+            {/* Contract Header */}
+            <div className="bg-white border-b px-4 py-3">
+              <h1 className="text-lg font-semibold text-gray-800">{selectedContract.name}</h1>
+            </div>
 
-          {/* Right side items */}
-          <div className={cn("flex items-center gap-2 md:gap-4", isRTL ? "flex-row-reverse" : "")}>
-            {/* Inbox - hide on mobile */}
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden md:block">
-              <Inbox className="w-5 h-5 text-gray-600" />
-            </button>
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="max-w-3xl mx-auto p-4">
+                {messages.map(message => (
+                  <div
+                    key={message.id}
+                    className={cn(
+                      "mb-4 flex",
+                      message.type === 'user' ? 'justify-end' : 'justify-start'
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "max-w-[80%] rounded-lg px-4 py-2",
+                        message.type === 'user' 
+                          ? 'bg-[#0C2836] text-white' 
+                          : 'bg-gray-100 text-gray-800'
+                      )}
+                    >
+                      <p className="whitespace-pre-wrap">{message.content}</p>
+                      <div className="flex items-center justify-between mt-2 opacity-70">
+                        <span className="text-xs">
+                          {message.timestamp.toLocaleTimeString()}
+                        </span>
+                        {message.type === 'system' && (
+                          <button
+                            onClick={() => copyMessage(message.content)}
+                            className="ml-2 hover:opacity-100"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+            </div>
 
-            {/* Notifications */}
-            <div className="relative notification-area">
-              <button 
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
-                <Bell className="w-5 h-5 text-gray-600" />
-                {hasNotifications && (
-                  <span className={cn(
-                    "absolute top-1 w-2 h-2 bg-red-500 rounded-full",
-                    isRTL ? "left-1" : "right-1"
-                  )} />
-                )}
-              </button>
-              
-              {/* Notification Dropdown */}
-              {showNotifications && (
-                <div className={cn(
-                  "absolute top-full mt-2 w-[250px] bg-white border border-[#E6E6E6] rounded-lg shadow-sm",
-                  isRTL ? "left-0" : "right-0"
-                )}>
-                  {/* Notification 1 */}
-                  <div className="p-3 border-b border-[#E6E6E6]">
-                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
-                      {t('اكتمل تحليل العقد', 'Contract analysis complete')}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
-                      {t('قبل 5 دقائق', '5 minutes ago')}
-                    </p>
+            {/* Input Area */}
+            <div className="bg-white border-t p-4">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex gap-2">
+                  <div className="flex-1 relative">
+                    <textarea
+                      ref={inputRef}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendMessage();
+                        }
+                      }}
+                      placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
+                      className="w-full px-4 py-2 pr-12 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#0C2836]"
+                      rows={1}
+                      maxLength={500}
+                    />
+                    <span className="absolute bottom-2 right-2 text-xs text-gray-400">
+                      {inputValue.length}/500
+                    </span>
                   </div>
-                  
-                  {/* Notification 2 */}
-                  <div className="p-3">
-                    <p className="text-sm font-normal text-gray-800" style={{ fontFamily: 'Inter' }}>
-                      {t('مرحباً بك في ContraMind', 'Welcome to ContraMind')}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1" style={{ fontFamily: 'Inter' }}>
-                      {t('اليوم', 'Today')}
-                    </p>
-                  </div>
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!inputValue.trim() || userTokens < 5}
+                    className={cn(
+                      "px-4 py-2 rounded-lg transition-colors",
+                      inputValue.trim() && userTokens >= 5
+                        ? "bg-[#0C2836] text-white hover:bg-[#0C2836]/90"
+                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    )}
+                  >
+                    <Send className="w-5 h-5" />
+                  </button>
                 </div>
-              )}
-            </div>
-
-            {/* Language Toggle - hide on mobile */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded-lg transition-colors hidden md:flex"
-            >
-              <Globe className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">{language === 'ar' ? 'EN' : 'AR'}</span>
-            </button>
-
-            {/* Token Counter */}
-            <div className={cn(
-              "flex items-center gap-1 px-3 py-1.5 bg-[#0C2836] text-white rounded-lg border-2 border-[#0a1f2a]",
-              isRTL ? "flex-row-reverse" : ""
-            )}>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
-              </svg>
-              <span className="text-sm font-medium">1,000 {t('توكن', 'Tokens')}</span>
-            </div>
-
-            {/* User Avatar */}
-            <div className="flex items-center gap-2 md:gap-3">
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-[#0C2836] text-white rounded-full flex items-center justify-center font-semibold text-sm md:text-base">
-                {userInitials}
+                {userTokens < 5 && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {t('رصيدك من الرموز غير كافٍ', 'Insufficient tokens')}
+                  </p>
+                )}
               </div>
-              <button
-                onClick={() => {
-                  logoutMutation.mutate();
-                  setLocation('/');
-                }}
-                disabled={logoutMutation.isPending}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden md:block"
-                title={t('تسجيل الخروج', 'Logout')}
-              >
-                <LogOut className="w-5 h-5 text-gray-600" />
-              </button>
             </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="p-4 md:p-8 flex flex-col items-center">
-          {/* User Welcome Section */}
-          <div className="flex flex-col items-center">
-            {/* User Avatar */}
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#0C2836] text-white flex items-center justify-center font-semibold text-xl md:text-2xl overflow-hidden">
-              {user?.profilePicture ? (
+          </>
+        ) : (
+          /* Empty State */
+          <div className="flex-1 flex items-center justify-center">
+            <div className="max-w-3xl w-full px-4">
+              <div className="text-center mb-8">
                 <img 
-                  src={user.profilePicture} 
-                  alt={user.fullName} 
-                  className="w-full h-full object-cover"
+                  src={logoImage} 
+                  alt="ContraMind" 
+                  className="h-16 mx-auto mb-4 opacity-80"
                 />
-              ) : (
-                userInitials
-              )}
-            </div>
-            
-            {/* Greeting Text */}
-            <h2 className="mt-4 text-lg md:text-2xl font-semibold text-[#0C2836] text-center">
-              {t(
-                `مرحباً ${user?.fullName?.split(' ')[0] || 'بك'}, ماذا تريد أن تفعل؟`,
-                `Hey ${user?.fullName?.split(' ')[0] || 'there'}, what do you want to do?`
-              )}
-            </h2>
-          </div>
-
-          {/* Search Bar Section */}
-          <div className="mt-6 md:mt-8 w-full max-w-[600px] px-4 md:px-0">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && searchQuery.trim()) {
-                    setLocation(`/chat?q=${encodeURIComponent(searchQuery)}`);
-                  }
-                }}
-                placeholder={t('اسأل عن العقود التقنية...', 'Ask about technology contracts...')}
-                className={cn(
-                  "w-full h-12 text-base text-gray-800 placeholder-gray-400 border border-[#E6E6E6] rounded-lg focus:outline-none focus:border-[#B7DEE8] transition-colors",
-                  isRTL ? "pr-12 pl-12 text-right" : "pl-12 pr-12 text-left"
-                )}
-              />
-              {/* Search Icon */}
-              <svg 
-                className={cn(
-                  "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400",
-                  isRTL ? "right-4" : "left-4"
-                )}
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              {/* Send Button */}
-              <button 
-                onClick={() => {
-                  if (searchQuery.trim()) {
-                    setLocation(`/chat?q=${encodeURIComponent(searchQuery)}`);
-                  }
-                }}
-                className={cn(
-                  "absolute top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-md transition-colors",
-                  isRTL ? "left-2" : "right-2"
-                )}
-              >
-                <svg 
-                  className="w-5 h-5 text-gray-600"
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              </button>
-            </div>
-            {/* Info tooltip */}
-            <div className="mt-2 flex items-center justify-center gap-1 text-sm text-gray-500">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>{t('الدردشة تكلف 5 توكن لكل رسالة', 'Chat costs 5 tokens per message')}</span>
-            </div>
-          </div>
-
-          {/* Action Card */}
-          <div className="mt-8 md:mt-10 w-full max-w-[280px]">
-            <button
-              className="relative w-full h-[160px] bg-white border border-[#E6E6E6] rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center gap-2"
-              onClick={() => setIsUploadModalOpen(true)}
-            >
-              {/* Token Badge */}
-              <div className={cn(
-                "absolute top-4 bg-[#E8F4F8] border-2 border-[#0C2836] flex items-center gap-1 px-2 py-1 rounded-xl",
-                isRTL ? "left-4 flex-row-reverse" : "right-4"
-              )}>
-                <svg className="w-3 h-3 text-[#0C2836]" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
-                </svg>
-                <span className="text-xs font-medium text-[#0C2836]">{t('10 توكن', '10 tokens')}</span>
+                <h1 className="text-3xl font-semibold text-gray-800 mb-2">
+                  {t('قم برفع عقد للبدء', 'Upload a contract to start')}
+                </h1>
+                <p className="text-gray-600">
+                  {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
+                </p>
               </div>
-              
-              {/* Upload Icon */}
-              <svg 
-                className="w-8 h-8 text-gray-600"
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              
-              {/* Title */}
-              <h3 className="text-base md:text-lg font-bold text-gray-800">
-                {t('تحميل ومراجعة', 'Upload & Review')}
-              </h3>
-              
-              {/* Subtitle */}
-              <p className="text-sm text-[#6C757D] text-center">
-                {t('حلل عقدك التقني', 'Analyze your technology contract')}
-              </p>
-            </button>
+
+              {/* Example Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                {exampleCards.map((card, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setIsUploadModalOpen(true)}
+                    className="p-4 bg-white rounded-lg border hover:shadow-md transition-shadow text-left"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      {card.icon}
+                      <ChevronRight className="w-4 h-4 ml-auto text-gray-400" />
+                    </div>
+                    <p className="text-sm text-gray-700">{card.title}</p>
+                  </button>
+                ))}
+              </div>
+
+              {/* Upload Button */}
+              <div className="text-center">
+                <button
+                  onClick={() => setIsUploadModalOpen(true)}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#0C2836] text-white rounded-lg hover:bg-[#0C2836]/90 transition-colors"
+                >
+                  <Upload className="w-5 h-5" />
+                  <span>{t('رفع عقد', 'Upload Contract')}</span>
+                </button>
+              </div>
+            </div>
           </div>
-        </main>
+        )}
       </div>
 
-      {/* Upload Modal */}
+      {/* Modals */}
       <UploadModal 
         isOpen={isUploadModalOpen} 
-        onClose={() => setIsUploadModalOpen(false)} 
+        onClose={() => setIsUploadModalOpen(false)}
+        onUpload={handleContractUpload}
       />
-
-      {/* Onboarding */}
-      {showOnboarding && (
-        <Onboarding 
-          onComplete={() => {
-            setShowOnboarding(false);
-            // Reload page to refresh user data
-            window.location.reload();
-          }} 
-        />
-      )}
     </div>
   );
 }
