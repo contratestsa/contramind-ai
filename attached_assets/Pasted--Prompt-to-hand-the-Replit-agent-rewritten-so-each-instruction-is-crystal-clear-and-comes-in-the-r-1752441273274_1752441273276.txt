@@ -1,0 +1,71 @@
+**Prompt to hand the Replit agent (rewritten so each instruction is crystal-clear and comes in the right order)**
+
+---
+
+> **Context – middle panel only**
+> You are touching **only** the main content area that lives to the right of the sidebar. Leave the sidebar exactly as it is.
+>
+> **Goal**
+> Convert that middle panel from a landing-page look into a clean, ChatGPT-style chat pane and remove the visual clutter left by the old hero section.
+
+---
+
+### Step-by-step build order
+
+1. **Create one full-height column**
+
+   * Wrap the messages list and the input bar in a single parent div.
+   * Give that parent: `display: flex; flex-direction: column; height: 100vh;` so it stretches from the very top to the very bottom of the viewport.
+
+2. **Make the messages area scrollable**
+
+   * Inside the new column, set the messages container to `flex: 1 1 auto; overflow-y: auto;`.
+   * Result: it fills all leftover height and gains its own vertical scrollbar.
+
+3. **Pin the input bar to the bottom**
+
+   * Keep the text-entry bar visible with **either** `flex: 0 0 auto;` **or** `position: sticky; bottom: 0;`, whichever fits your codebase.
+   * This bar must never scroll away.
+
+4. **Control hero visibility**
+
+   * Show the “Welcome / Upload a contract” hero **only when the conversation is empty**.
+   * As soon as a file is uploaded or the first message is sent, animate the hero out (fade or slide) and keep it hidden.
+
+5. **Relocate and restyle quick-action cards**
+
+   * Move the three cards (“Analyze a vendor agreement”, etc.) directly **above** the input bar, inside the scrollable messages area.
+   * Restyle them like GPT examples: flat dark-gray surface, 1 px border, subtle hover opacity. Hide them after the first user message.
+
+6. **Unify the background**
+
+   * Pick only one surface style:
+
+     * *Option A*: keep the blue gradient and tint the input bar to match it, **or**
+     * *Option B*: replace the gradient with the dark-charcoal GPT palette (#202123 main pane, #343541 sidebar).
+   * Whichever you choose, the messages area and the input bar must share the same color scheme.
+
+7. **Tidy the input bar**
+
+   * Reduce its height by \~10 px, use a thinner border, and place the attach/drop-down icons inline inside the text field so it feels integrated.
+
+8. **Standardize type and spacing**
+
+   * Shrink the hero headline to 24 px weight-500 and its subline to 16 px weight-400.
+   * Apply a consistent 16 px vertical rhythm to all padding and gaps.
+
+---
+
+**End state you should see**
+
+* First load: hero + three quick-action cards are visible above the bottom-docked textbox.
+* After the first interaction: hero disappears, cards sit just above the textbox (then hide after the first real message), and the messages list fills the full column, scrolling naturally while the input bar stays fixed.
+* The sidebar remains unchanged throughout.
+
+---
+
+**Deliverables**
+
+1. Updated JSX/HTML structure implementing the eight steps above.
+2. Tailwind/CSS (or plain CSS) rules that apply the new layout and styles.
+3. Simple state logic that hides the hero and cards at the right moments.
