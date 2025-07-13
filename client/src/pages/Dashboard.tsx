@@ -260,7 +260,7 @@ export default function Dashboard() {
           <img 
             src={logoImage} 
             alt="ContraMind" 
-            className="h-10 w-full object-contain filter brightness-0 invert"
+            className="h-10 w-full object-contain"
           />
         </div>
 
@@ -443,11 +443,6 @@ export default function Dashboard() {
             <div className="flex-1 flex items-center justify-center pb-24">
               <div className="max-w-3xl w-full px-4">
                 <div className="text-center mb-8">
-                  <img 
-                    src={logoImage} 
-                    alt="ContraMind" 
-                    className="h-16 mx-auto mb-6 opacity-70"
-                  />
                   <h1 className="text-3xl font-medium text-white mb-2">
                     {t(`مرحباً ${user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${user?.fullName?.split(' ')[0] || ''}`)}
                   </h1>
