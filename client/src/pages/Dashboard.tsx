@@ -680,6 +680,7 @@ export default function Dashboard() {
                 right: 0,
                 top: 0,
                 bottom: 0,
+                paddingRight: '20%',
                 transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
