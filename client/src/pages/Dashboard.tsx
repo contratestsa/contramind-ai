@@ -473,6 +473,47 @@ export default function Dashboard() {
                   ))}
                 </div>
 
+                {/* Chat Input Bar */}
+                <div className="mt-8 bg-[#40414F] border border-[#565869] rounded-lg p-4">
+                  <div className="relative flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
+                      className="flex-1 bg-[#40414F] border border-[#565869] rounded-lg px-3 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !selectedContract) {
+                          toast({
+                            title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
+                            variant: 'destructive'
+                          });
+                        }
+                      }}
+                    />
+                    <button
+                      className="p-2 text-gray-400 hover:text-white transition-colors"
+                      title={t('إرفاق ملف', 'Attach file')}
+                    >
+                      <Paperclip className="w-5 h-5" />
+                    </button>
+                    <button
+                      className="p-2 text-gray-400 hover:text-white transition-colors"
+                      onClick={() => {
+                        if (!selectedContract) {
+                          toast({
+                            title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
+                            variant: 'destructive'
+                          });
+                        }
+                      }}
+                    >
+                      <Send className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="mt-2 text-xs text-gray-400 text-center">
+                    {t('5 رموز لكل سؤال', '5 tokens per question')}
+                  </div>
+                </div>
+
                 {/* Upload Button */}
                 <div className="text-center mt-6">
                   <button
@@ -482,49 +523,6 @@ export default function Dashboard() {
                     <Upload className="w-5 h-5" />
                     <span>{t('رفع عقد', 'Upload Contract')}</span>
                   </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Chat Input Bar */}
-            <div className="fixed bottom-0 left-0 right-0 bg-[#40414F] border-t border-[#565869] p-4" style={{left: isRTL ? 'auto' : '260px', right: isRTL ? '260px' : 'auto'}}>
-              <div className="max-w-3xl mx-auto">
-                <div className="relative flex items-center gap-2">
-                  <button
-                    className="p-2 text-gray-400 hover:text-white transition-colors"
-                    title={t('إرفاق ملف', 'Attach file')}
-                  >
-                    <Paperclip className="w-5 h-5" />
-                  </button>
-                  <input
-                    type="text"
-                    placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="flex-1 bg-[#40414F] border border-[#565869] rounded-lg px-3 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !selectedContract) {
-                        toast({
-                          title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
-                          variant: 'destructive'
-                        });
-                      }
-                    }}
-                  />
-                  <button
-                    className="p-2 text-gray-400 hover:text-white transition-colors"
-                    onClick={() => {
-                      if (!selectedContract) {
-                        toast({
-                          title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
-                          variant: 'destructive'
-                        });
-                      }
-                    }}
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="mt-2 text-xs text-gray-400 text-center">
-                  {t('5 رموز لكل سؤال', '5 tokens per question')}
                 </div>
               </div>
             </div>
