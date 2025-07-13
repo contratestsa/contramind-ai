@@ -603,9 +603,9 @@ export default function Dashboard() {
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {selectedContract ? (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full bg-[#343541]">
             {/* Contract Header */}
-            <div className="flex-shrink-0 bg-[#0a1f2a] bg-opacity-80 backdrop-blur-lg border-b border-[#1a4a5e] px-4 py-3">
+            <div className="flex-shrink-0 bg-[#202123] border-b border-[#40414F] px-4 py-3">
               <h1 className="text-lg font-medium text-white">{selectedContract.name}</h1>
             </div>
 
@@ -624,8 +624,8 @@ export default function Dashboard() {
                       className={cn(
                         "max-w-[80%] rounded-lg px-4 py-2",
                         message.type === 'user' 
-                          ? 'bg-[#0C2836] text-white' 
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-[#40414F] text-white' 
+                          : 'bg-[#444654] text-gray-100'
                       )}
                     >
                       <p className="whitespace-pre-wrap">{message.content}</p>
@@ -650,9 +650,9 @@ export default function Dashboard() {
             </div>
 
             {/* Input Area */}
-            <div className="flex-shrink-0 bg-[#40414F] border-t border-[#565869] p-4">
+            <div className="flex-shrink-0 bg-[#40414F] border-t border-[#565869] p-3">
               <div className="max-w-3xl mx-auto">
-                <div className="relative flex items-center gap-2">
+                <div className="relative">
                   <input
                     type="text"
                     ref={inputRef}
@@ -665,89 +665,80 @@ export default function Dashboard() {
                       }
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="flex-1 bg-[#40414F] border border-[#565869] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                    className="w-full bg-[#40414F] border border-[#565869] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
                     maxLength={500}
                   />
-                  <button
-                    onClick={() => openSlidingPanel('prompts')}
-                    className="p-3 bg-[#40414F] border border-[#565869] rounded-lg text-white hover:bg-[#2A2B32] transition-colors"
-                    title={t('اختر موجه', 'Select prompt')}
-                  >
-                    <ChevronDown className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={handleSendMessage}
-                    disabled={!inputValue.trim() || userTokens < 5}
-                    className={cn(
-                      "absolute right-14 top-1/2 -translate-y-1/2 p-2 rounded transition-colors",
-                      inputValue.trim() && userTokens >= 5
-                        ? "text-white hover:bg-[#2A2B32]"
-                        : "text-gray-600 cursor-not-allowed"
-                    )}
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="mt-2 text-xs text-gray-400 text-center">
-                  {t('5 رموز لكل سؤال', '5 tokens per question')}
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <button
+                      onClick={() => openSlidingPanel('prompts')}
+                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                      title={t('اختر موجه', 'Select prompt')}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={handleSendMessage}
+                      disabled={!inputValue.trim() || userTokens < 5}
+                      className={cn(
+                        "p-1.5 rounded transition-colors",
+                        inputValue.trim() && userTokens >= 5
+                          ? "text-white hover:bg-[#2A2B32]"
+                          : "text-gray-600 cursor-not-allowed"
+                      )}
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         ) : (
           /* Empty State */
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full bg-[#343541]">
             {/* Messages/Content Area */}
-            <div className="flex-1 overflow-y-auto">
-              <div className="flex items-center justify-center min-h-full">
-                <div className="max-w-3xl w-full px-4 py-8">
-                  <div className="text-center mb-8">
-                    <h1 className="text-3xl font-medium text-white mb-2">
+            <div className="flex-1 overflow-y-auto flex flex-col">
+              <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
+                {/* Hero Section - Only shown when no messages */}
+                {messages.length === 0 && (
+                  <div className="text-center pt-32 pb-8 transition-all duration-300">
+                    <h1 className="text-2xl font-medium text-white mb-2">
                       {t(`مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`)}
                     </h1>
-                    <h2 className="text-2xl text-gray-300 mb-2">
+                    <p className="text-base font-normal text-gray-400">
                       {t('قم برفع عقد للبدء', 'Upload a contract to start')}
-                    </h2>
-                    <p className="text-gray-400">
-                      {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
                     </p>
-                    {/* Temporary test button */}
-                    <button 
-                      onClick={() => {
-                        console.log('Test button clicked!');
-                        openSlidingPanel('prompts');
-                      }}
-                      className="mt-4 px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded hover:bg-opacity-90"
-                    >
-                      Test Sliding Panel
-                    </button>
                   </div>
+                )}
 
-                  {/* Suggested Questions */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                {/* Spacer to push cards to bottom */}
+                <div className="flex-1"></div>
+
+                {/* Quick Action Cards - Positioned above input bar */}
+                {messages.length === 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pb-4">
                     {exampleCards.map((card, index) => (
                       <button
                         key={index}
                         onClick={() => setIsUploadModalOpen(true)}
-                        className="p-4 bg-white rounded-lg hover:shadow-md transition-all text-left group min-h-[80px] flex items-center justify-between"
+                        className="p-3 bg-[#40414F] border border-[#565869] rounded-lg hover:bg-[#494A54] transition-all text-left group"
                       >
-                        <span className="text-base text-gray-800 font-medium">{card.title}</span>
-                        <span className="text-gray-600 ml-2">→</span>
+                        <span className="text-sm text-gray-300 font-normal">{card.title}</span>
                       </button>
                     ))}
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
             {/* Fixed Input Bar */}
-            <div className="flex-shrink-0 bg-[#40414F] border-t border-[#565869] p-4">
+            <div className="flex-shrink-0 bg-[#40414F] border-t border-[#565869] p-3">
               <div className="max-w-3xl mx-auto">
-                <div className="relative flex items-center gap-2">
+                <div className="relative">
                   <input
                     type="text"
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="flex-1 bg-[#40414F] border border-[#565869] rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                    className="w-full bg-[#40414F] border border-[#565869] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !selectedContract) {
                         toast({
@@ -757,36 +748,35 @@ export default function Dashboard() {
                       }
                     }}
                   />
-                  <button
-                    className="p-3 bg-[#40414F] border border-[#565869] rounded-lg text-white hover:bg-[#2A2B32] transition-colors"
-                    title={t('إرفاق ملف', 'Attach file')}
-                    onClick={() => setIsUploadModalOpen(true)}
-                  >
-                    <Paperclip className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => openSlidingPanel('prompts')}
-                    className="p-3 bg-[#40414F] border border-[#565869] rounded-lg text-white hover:bg-[#2A2B32] transition-colors"
-                    title={t('اختر موجه', 'Select prompt')}
-                  >
-                    <ChevronDown className="w-5 h-5" />
-                  </button>
-                  <button
-                    className="absolute right-14 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-white transition-colors"
-                    onClick={() => {
-                      if (!selectedContract) {
-                        toast({
-                          title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
-                          variant: 'destructive'
-                        });
-                      }
-                    }}
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="mt-2 text-xs text-gray-400 text-center">
-                  {t('5 رموز لكل سؤال', '5 tokens per question')}
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <button
+                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                      title={t('إرفاق ملف', 'Attach file')}
+                      onClick={() => setIsUploadModalOpen(true)}
+                    >
+                      <Paperclip className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => openSlidingPanel('prompts')}
+                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                      title={t('اختر موجه', 'Select prompt')}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                    <button
+                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                      onClick={() => {
+                        if (!selectedContract) {
+                          toast({
+                            title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
+                            variant: 'destructive'
+                          });
+                        }
+                      }}
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
