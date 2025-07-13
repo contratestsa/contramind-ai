@@ -696,7 +696,7 @@ export default function Dashboard() {
             <div 
               className="fixed bg-[#40414F] border-t border-[#565869] p-3"
               style={{ 
-                left: isCollapsed ? '60px' : '260px',
+                left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
                 bottom: '32px',
                 transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
@@ -786,7 +786,7 @@ export default function Dashboard() {
             <div 
               className="fixed bg-[#40414F] border-t border-[#565869] p-3"
               style={{ 
-                left: isCollapsed ? '60px' : '260px',
+                left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
                 bottom: '32px',
                 transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
