@@ -75,6 +75,8 @@ export default function Dashboard() {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [userTokens, setUserTokens] = useState(1000);
   const [contractSearchQuery, setContractSearchQuery] = useState('');
+  const [showSlidingPanel, setShowSlidingPanel] = useState(false);
+  const [slidingPanelContent, setSlidingPanelContent] = useState<'prompts' | 'contractDetails' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isRTL = language === 'ar';
@@ -240,6 +242,18 @@ export default function Dashboard() {
     });
   };
 
+  const openSlidingPanel = (content: 'prompts' | 'contractDetails') => {
+    setSlidingPanelContent(content);
+    setShowSlidingPanel(true);
+  };
+
+  const closeSlidingPanel = () => {
+    setShowSlidingPanel(false);
+    setTimeout(() => {
+      setSlidingPanelContent(null);
+    }, 300); // Wait for animation to complete
+  };
+
   const exampleCards = [
     {
       title: t('تحليل اتفاقية البائع', 'Analyze a vendor agreement'),
@@ -341,22 +355,28 @@ export default function Dashboard() {
               {recentContractsData?.contracts?.slice(0, 5).map((contract: any) => (
                 <button
                   key={contract.id}
-                  onClick={() => setSelectedContract(contract)}
+                  onClick={() => {
+                    setSelectedContract(contract);
+                    openSlidingPanel('contractDetails');
+                  }}
                   className={cn(
-                    "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors",
+                    "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors group",
                     selectedContract?.id === contract.id && "bg-gray-700"
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm truncate">{contract.title}</span>
-                    <span className="text-xs">
+                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                    <span>{contract.partyName}</span>
+                    <span>•</span>
+                    <span>{new Date(contract.date).toLocaleDateString()}</span>
+                    <span className="ml-auto">
                       {contract.riskLevel === 'low' && '🟢'}
                       {contract.riskLevel === 'medium' && '🟡'}
                       {contract.riskLevel === 'high' && '🔴'}
                     </span>
-                  </div>
-                  <div className="text-xs text-gray-400 mt-0.5">
-                    {contract.partyName} • {new Date(contract.date).toLocaleDateString()}
                   </div>
                 </button>
               ))}
@@ -494,7 +514,11 @@ export default function Dashboard() {
       </button>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      <div className={cn(
+        "flex-1 flex flex-col transition-all duration-300",
+        showSlidingPanel && "mr-[40%]",
+        isRTL && showSlidingPanel && "mr-0 ml-[40%]"
+      )}>
         {selectedContract ? (
           <>
             {/* Contract Header */}
@@ -543,9 +567,15 @@ export default function Dashboard() {
             </div>
 
             {/* Input Area */}
-            <div className="fixed bottom-0 left-0 right-0 bg-[#40414F] border-t border-[#565869] p-4" style={{left: isRTL ? 'auto' : '260px', right: isRTL ? '260px' : 'auto'}}>
+            <div className={cn(
+              "fixed bottom-0 bg-[#40414F] border-t border-[#565869] p-4 transition-all duration-300",
+              !isRTL ? "left-[260px]" : "right-[260px]",
+              showSlidingPanel && !isRTL && "right-[40%]",
+              showSlidingPanel && isRTL && "left-[40%]",
+              !showSlidingPanel && "right-0"
+            )}>
               <div className="max-w-3xl mx-auto">
-                <div className="relative">
+                <div className="relative flex items-center gap-2">
                   <input
                     type="text"
                     ref={inputRef}
@@ -558,14 +588,21 @@ export default function Dashboard() {
                       }
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="w-full bg-[#40414F] border border-[#565869] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                    className="flex-1 bg-[#40414F] border border-[#565869] rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
                     maxLength={500}
                   />
+                  <button
+                    onClick={() => openSlidingPanel('prompts')}
+                    className="p-3 bg-[#40414F] border border-[#565869] rounded-lg text-white hover:bg-[#2A2B32] transition-colors"
+                    title={t('اختر موجه', 'Select prompt')}
+                  >
+                    <ChevronDown className="w-5 h-5" />
+                  </button>
                   <button
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || userTokens < 5}
                     className={cn(
-                      "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded transition-colors",
+                      "absolute right-14 top-1/2 -translate-y-1/2 p-2 rounded transition-colors",
                       inputValue.trim() && userTokens >= 5
                         ? "text-white hover:bg-[#2A2B32]"
                         : "text-gray-600 cursor-not-allowed"
@@ -666,6 +703,118 @@ export default function Dashboard() {
         onClose={() => setIsUploadModalOpen(false)}
         onUpload={handleContractUpload}
       />
+
+      {/* Sliding Panel */}
+      <div className={cn(
+        "fixed inset-y-0 right-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out z-50",
+        showSlidingPanel ? "translate-x-0" : "translate-x-full",
+        isRTL && "right-auto left-0",
+        isRTL && showSlidingPanel ? "-translate-x-0" : isRTL && "-translate-x-full"
+      )}>
+        <div className="h-full flex flex-col">
+          {/* Panel Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-800">
+              {slidingPanelContent === 'prompts' && t('اختر موجه', 'Select a Prompt')}
+              {slidingPanelContent === 'contractDetails' && t('تفاصيل العقد', 'Contract Details')}
+            </h2>
+            <button
+              onClick={closeSlidingPanel}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
+          </div>
+
+          {/* Panel Content */}
+          <div className="flex-1 overflow-y-auto">
+            {slidingPanelContent === 'prompts' && (
+              <div className="p-4">
+                {/* Prompt Tabs */}
+                <div className="flex space-x-1 mb-4 bg-gray-100 p-1 rounded-lg">
+                  <button
+                    className={cn(
+                      "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200",
+                      "bg-white text-gray-900 shadow-sm"
+                    )}
+                  >
+                    {t('موجهات ContraMind', 'ContraMind Prompts')}
+                  </button>
+                  <button
+                    className={cn(
+                      "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200",
+                      "text-gray-600 hover:text-gray-900"
+                    )}
+                  >
+                    {t('موجهاتي المحفوظة', 'My Saved Prompts')}
+                  </button>
+                </div>
+
+                {/* ContraMind Prompts List */}
+                <div className="space-y-3">
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('تحليل شامل للعقد', 'Comprehensive Contract Analysis')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل كامل للعقد مع تحديد المخاطر والفرص', 'Complete contract analysis with risk and opportunity identification')}</p>
+                  </div>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('مراجعة بنود المسؤولية', 'Liability Clause Review')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل مفصل لبنود المسؤولية والتعويضات', 'Detailed analysis of liability and indemnification clauses')}</p>
+                  </div>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('فحص شروط الدفع', 'Payment Terms Check')}</h3>
+                    <p className="text-sm text-gray-600">{t('مراجعة شروط الدفع والجداول الزمنية', 'Review payment terms and schedules')}</p>
+                  </div>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('تحليل الملكية الفكرية', 'IP Rights Analysis')}</h3>
+                    <p className="text-sm text-gray-600">{t('مراجعة حقوق الملكية الفكرية والترخيص', 'Review intellectual property rights and licensing')}</p>
+                  </div>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('شروط الإنهاء', 'Termination Clauses')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل شروط إنهاء العقد والعواقب', 'Analyze contract termination conditions and consequences')}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {slidingPanelContent === 'contractDetails' && (
+              <div className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('اسم العقد', 'Contract Name')}</h3>
+                    <p className="text-gray-900">{selectedContract?.name}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('التاريخ', 'Date')}</h3>
+                    <p className="text-gray-900">{selectedContract?.date}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('مستوى المخاطر', 'Risk Level')}</h3>
+                    <p className="text-gray-900">
+                      {selectedContract?.riskLevel === 'low' && '🟢 ' + t('منخفض', 'Low')}
+                      {selectedContract?.riskLevel === 'medium' && '🟡 ' + t('متوسط', 'Medium')}
+                      {selectedContract?.riskLevel === 'high' && '🔴 ' + t('عالي', 'High')}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('الحالة', 'Status')}</h3>
+                    <p className="text-gray-900">
+                      {selectedContract?.status === 'analyzing' ? t('قيد التحليل', 'Analyzing') : t('جاهز', 'Ready')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Overlay when panel is open */}
+      {showSlidingPanel && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+          onClick={closeSlidingPanel}
+        />
+      )}
     </div>
   );
 }
