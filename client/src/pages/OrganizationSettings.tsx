@@ -227,22 +227,7 @@ export default function OrganizationSettings() {
           </ul>
         </nav>
 
-        {/* Bottom Items */}
-        <div className="border-t border-gray-300">
-          <ul className="py-2">
-            <li>
-              <button
-                onClick={() => setLocation('/help')}
-                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
-              >
-                <HelpCircle className="w-[18px] h-[18px] text-gray-700" />
-                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                  {t('المساعدة', 'Help')}
-                </span>
-              </button>
-            </li>
-          </ul>
-        </div>
+
       </div>
 
       {/* Main Content Area */}

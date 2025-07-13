@@ -142,13 +142,6 @@ export default function PersonalSettings() {
         {/* Bottom Items */}
         <div className="p-4 border-t border-[rgba(183,222,232,0.1)] space-y-2">
           <button
-            onClick={() => setLocation('/help')}
-            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
-          >
-            <HelpCircle className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('المساعدة', 'Help')}</span>
-          </button>
-          <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
           >
