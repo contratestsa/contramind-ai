@@ -109,10 +109,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getWaitlistCount(): Promise<number> {
-    const result = await db
-      .select({ count: waitlistEntries.id })
-      .from(waitlistEntries);
-    return result.length;
+    try {
+      console.log("Executing waitlist count query...");
+      const result = await db
+        .select({ count: waitlistEntries.id })
+        .from(waitlistEntries);
+      console.log("Query result:", result);
+      return result.length;
+    } catch (error) {
+      console.error("Database error in getWaitlistCount:", error);
+      throw error;
+    }
   }
 
   async getWaitlistEntries(): Promise<WaitlistEntry[]> {

@@ -98,9 +98,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/waitlist/count", async (req, res) => {
     try {
+      console.log("Attempting to get waitlist count...");
       const count = await storage.getWaitlistCount();
+      console.log("Waitlist count retrieved:", count);
       res.json({ count });
     } catch (error) {
+      console.error("Error getting waitlist count:", error);
       res.status(500).json({ 
         message: "Internal server error" 
       });
