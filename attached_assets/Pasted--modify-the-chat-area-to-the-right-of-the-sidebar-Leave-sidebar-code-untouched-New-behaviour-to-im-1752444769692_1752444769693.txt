@@ -1,0 +1,16 @@
+ modify the chat area to the right of the sidebar. Leave sidebar code untouched.
+New behaviour to implement
+A. Input-bar placement rules
+1. Pre-chat state (no messages yet) – The input bar must sit vertically in the centre of the middle panel.   • Wrap the bar in a container with position: absolute; top: 50%; left: {sidebarWidth}px; right: 0; transform: translateY(-50%); or keep it in the flex column and give the messages wrapper display: none; so the bar naturally centres with margin: auto.   • Make sure the three quick-action cards remain just beneath the centred bar (use the same centring container so they travel together).
+2. Active-chat state (≥ 1 message) – The bar moves to its fixed chat position 32 px above the bottom edge.   • Switch to position: fixed; left: {sidebarWidth}px; right: 0; bottom: 32px; (or revert to the flex column with margin-bottom: 32px;).   • Reveal the messages wrapper (display: block;), ensure it has padding-bottom: 80px; (32 px offset + bar height) so the last bubble never hides behind the bar.   • Hide the quick-action cards after the first message, as before.
+Use a simple boolean flag like hasStartedChat in component state to toggle between the centred and bottom-offset styles.
+B. Remove the thin horizontal “ruler” line • The line directly above the input bar is coming from an element (or a border) that spans the panel width. Delete that element or set border-top: none; on the bar/container so no extra rule appears in either state.
+
+Each phase builds upon the previous one, ensuring a smooth implementation process. We'll use Framer Motion for animations, maintain the existing ContraMind color scheme (#0C2836, #B7DEE8), and ensure all components are bilingual.
+Deliverables
+1. Updated JSX/HTML that introduces the centring container and toggles styles based on hasStartedChat.
+2. CSS/Tailwind classes for both states (centred vs. fixed-bottom-32px) plus the extra bottom padding on the messages area.
+3. Removal (or border-top: none;) of the stray horizontal rule.
+
+
+

@@ -550,7 +550,11 @@ export default function Dashboard() {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto">
-              <div className="max-w-3xl mx-auto p-4 pb-32">
+              <div 
+                className="max-w-3xl mx-auto p-4"
+                style={{
+                  paddingBottom: messages.length > 0 ? '120px' : '20px'
+                }}>
                 {messages.map(message => (
                   <div
                     key={message.id}
@@ -588,14 +592,17 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Input Area - Lifted by 32px */}
+            {/* Input Area - Centered when no messages, Fixed at bottom when messages exist */}
             <div 
               className="fixed bg-[#40414F] p-3"
               style={{ 
                 left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
-                bottom: '32px',
-                transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                ...(messages.length === 0 
+                  ? { top: '50%', transform: 'translateY(-50%)' }
+                  : { bottom: '32px' }
+                ),
+                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               <div className="max-w-3xl mx-auto">
@@ -642,7 +649,7 @@ export default function Dashboard() {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex flex-col h-full bg-[#343541]">
+          <div className="flex flex-col h-full bg-[#343541] relative">
             {/* Messages/Content Area */}
             <div className="flex-1 overflow-y-auto flex flex-col">
               <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
@@ -664,19 +671,22 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Fixed Input Bar - Lifted by 32px */}
+            {/* Centered Input Bar Container - Only when no chat started */}
             <div 
-              className="fixed bg-[#40414F] p-3"
+              className="absolute"
               style={{ 
                 left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
-                bottom: '32px',
+                top: '50%',
+                transform: 'translateY(-50%)',
                 transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               <div className="max-w-3xl mx-auto">
-                <div className="relative">
-                  <input
+                {/* Input Bar */}
+                <div className="bg-[#40414F] p-3 rounded-lg">
+                  <div className="relative">
+                    <input
                     type="text"
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className="w-full bg-[#40414F] border border-[#565869] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
@@ -719,6 +729,35 @@ export default function Dashboard() {
                     </button>
                   </div>
                 </div>
+              </div>
+                
+                {/* Quick Action Cards - Only shown when no messages */}
+                {messages.length === 0 && (
+                  <div className="mt-4 grid grid-cols-3 gap-3">
+                    <button 
+                      onClick={() => setIsUploadModalOpen(true)}
+                      className="p-3 bg-[#444654] hover:bg-[#565869] rounded-lg text-left transition-colors"
+                    >
+                      <h3 className="text-sm font-medium text-white mb-1">{t('تحليل عقد جديد', 'Analyze new contract')}</h3>
+                      <p className="text-xs text-gray-400">{t('ابدأ بتحميل عقد', 'Start by uploading a contract')}</p>
+                    </button>
+                    
+                    <button 
+                      onClick={() => openSlidingPanel('prompts')}
+                      className="p-3 bg-[#444654] hover:bg-[#565869] rounded-lg text-left transition-colors"
+                    >
+                      <h3 className="text-sm font-medium text-white mb-1">{t('استخدم موجه', 'Use a prompt')}</h3>
+                      <p className="text-xs text-gray-400">{t('اختر من الموجهات المعدة', 'Choose from pre-made prompts')}</p>
+                    </button>
+                    
+                    <button 
+                      className="p-3 bg-[#444654] hover:bg-[#565869] rounded-lg text-left transition-colors"
+                    >
+                      <h3 className="text-sm font-medium text-white mb-1">{t('مراجعة العقود السابقة', 'Review past contracts')}</h3>
+                      <p className="text-xs text-gray-400">{t('تصفح محفوظاتك', 'Browse your archive')}</p>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
