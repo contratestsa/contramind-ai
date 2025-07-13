@@ -31,6 +31,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import UploadModal from "@/components/UploadModal";
+import ProfileDropdown from "@/components/ProfileDropdown";
 import { queryClient } from "@/lib/queryClient";
 
 interface User {
@@ -569,45 +570,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Profile Section */}
-        <div className="border-t border-gray-700 p-3">
-          <button
-            onClick={() => setLocation('/profile')}
-            className={cn(
-              "w-full flex items-center p-2 rounded hover:bg-gray-700 transition-colors group",
-              isSidebarCollapsed ? "justify-center" : "justify-between"
-            )}
-            title={isSidebarCollapsed ? user?.fullName : undefined}
-          >
-            <div className={cn(
-              "flex items-center",
-              isSidebarCollapsed ? "" : "gap-3"
-            )}>
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
-                <User className="w-4 h-4" />
-              </div>
-              {!isSidebarCollapsed && (
-                <div className="text-left">
-                  <div className="text-sm font-medium">{user?.fullName}</div>
-                  <div className="text-xs text-gray-400">{t('الملف الشخصي', 'Profile')}</div>
-                </div>
-              )}
-            </div>
-            {!isSidebarCollapsed && <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white" />}
-          </button>
-          
-          <button
-            onClick={() => logoutMutation.mutate()}
-            className={cn(
-              "w-full mt-2 flex items-center gap-2 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors",
-              isSidebarCollapsed ? "justify-center px-2" : "justify-center px-3"
-            )}
-            title={isSidebarCollapsed ? t('تسجيل الخروج', 'Sign Out') : undefined}
-          >
-            <LogOut className="w-4 h-4 flex-shrink-0" />
-            {!isSidebarCollapsed && <span className="text-sm">{t('تسجيل الخروج', 'Sign Out')}</span>}
-          </button>
-        </div>
+
       </div>
 
       {/* Mobile Sidebar Toggle - Outside sidebar */}
@@ -632,11 +595,22 @@ export default function Dashboard() {
         showSlidingPanel && "mr-[40%]",
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
+        {/* Top Header Bar */}
+        <div className="flex-shrink-0 bg-[#343541] border-b border-[#40414F] px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex-1"></div>
+            {/* Profile Dropdown */}
+            <ProfileDropdown user={user} />
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
         {selectedContract ? (
           <div className="flex flex-col h-full bg-[#343541]">
             {/* Contract Header */}
             <div className="flex-shrink-0 bg-[#202123] border-b border-[#40414F] px-4 py-3">
-              <h1 className="text-lg font-medium text-white">{selectedContract.name}</h1>
+              <h1 className="text-lg font-medium text-white">{selectedContract.title}</h1>
             </div>
 
             {/* Messages Area */}
@@ -814,6 +788,7 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+        </div>
       </div>
 
       {/* Modals */}
