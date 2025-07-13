@@ -509,8 +509,8 @@ export default function Dashboard() {
                       onClick={() => setIsUploadModalOpen(true)}
                       className="p-4 bg-white rounded-lg hover:shadow-md transition-all text-left group min-h-[80px] flex items-center justify-between"
                     >
-                      <span className="text-base text-[#202123]">{card.title}</span>
-                      <span className="text-gray-400 ml-2">→</span>
+                      <span className="text-base text-gray-800 font-medium">{card.title}</span>
+                      <span className="text-gray-600 ml-2">→</span>
                     </button>
                   ))}
                 </div>
