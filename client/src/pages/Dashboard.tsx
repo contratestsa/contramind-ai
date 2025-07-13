@@ -295,20 +295,20 @@ export default function Dashboard() {
           />
           <button
             onClick={() => setShowMobileSidebar(!showMobileSidebar)}
-            className="lg:hidden p-2 hover:bg-gray-700 rounded-md transition-colors"
+            className="hidden lg:block p-2 hover:bg-gray-700 rounded-md transition-colors"
           >
             <div className="w-5 h-5 relative">
               <span className={cn(
-                "absolute block h-0.5 w-5 bg-current transform transition-all duration-300",
-                showMobileSidebar ? "rotate-45 translate-y-2" : "-translate-y-1.5"
+                "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center",
+                showSlidingPanel ? "rotate-45 translate-y-[0.5625rem]" : "translate-y-0"
               )} />
               <span className={cn(
-                "absolute block h-0.5 w-5 bg-current transform transition-all duration-300 top-2",
-                showMobileSidebar && "opacity-0"
+                "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out top-2",
+                showSlidingPanel && "opacity-0"
               )} />
               <span className={cn(
-                "absolute block h-0.5 w-5 bg-current transform transition-all duration-300 top-4",
-                showMobileSidebar ? "-rotate-45 -translate-y-2" : "translate-y-1.5"
+                "absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center top-4",
+                showSlidingPanel ? "-rotate-45 -translate-y-[0.5625rem]" : "translate-y-0"
               )} />
             </div>
           </button>
@@ -656,6 +656,13 @@ export default function Dashboard() {
                       onClick={() => setIsUploadModalOpen(true)}
                     >
                       <Paperclip className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => openSlidingPanel('prompts')}
+                      className="p-2 text-gray-400 hover:text-white transition-colors"
+                      title={t('اختر موجه', 'Select prompt')}
+                    >
+                      <ChevronDown className="w-5 h-5" />
                     </button>
                     <button
                       className="p-2 text-gray-400 hover:text-white transition-colors"
