@@ -594,7 +594,7 @@ export default function Dashboard() {
 
             {/* Input Area - Centered when no messages, Fixed at bottom when messages exist */}
             <div 
-              className="fixed flex justify-center"
+              className="fixed bg-[#40414F] p-3"
               style={{ 
                 left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
@@ -605,8 +605,7 @@ export default function Dashboard() {
                 transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <div className="w-full max-w-2xl px-6">
-                <div className="bg-[#40414F] p-3 rounded-lg">
+              <div className="max-w-3xl mx-auto">
                 <div className="relative">
                   <input
                     type="text"
@@ -683,7 +682,7 @@ export default function Dashboard() {
                 transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <div className="w-full max-w-2xl px-6">
+              <div className="w-full max-w-3xl px-6">
                 {/* Input Bar */}
                 <div className="bg-[#40414F] p-3 rounded-lg">
                   <div className="relative">
@@ -730,6 +729,7 @@ export default function Dashboard() {
                     </button>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           </div>
