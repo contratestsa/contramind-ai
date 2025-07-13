@@ -1,0 +1,63 @@
+Dashboard Redesign Implementation Plan
+Phase 1: Core Architecture & Sidebar Implementation
+* Database Schema Updates
+    * Add contracts table with fields: id, title, partyName, type, status, date, userId, createdAt, updatedAt
+    * Add contract_chats table for chat history
+    * Add saved_prompts table for user-saved prompts
+    * Update shared/schema.ts with new models
+* Backend API Routes
+    * Create /api/contracts endpoints (list, filter, search)
+    * Create /api/contract-chats endpoints
+    * Create /api/prompts endpoints (user saved & system prompts)
+    * Update server/routes.ts and storage.ts
+* Sidebar Restructure with Hamburger Menu
+    * Add hamburger menu icon (three lines → X animation) at top of sidebar
+    * Create smooth sidebar collapse/expand animation
+    * Maintain sidebar state in localStorage
+    * Ensure logo remains visible in collapsed state
+* Contract Chat History Search
+    * Place search box below hamburger menu, above "Recent Contracts"
+    * Style with ContraMind colors and proper spacing
+    * Add search icon and clear button
+    * Implement real-time search filtering
+* Sidebar Navigation Items
+    * Add "New Contract Analysis" button
+    * Implement Recent Contracts section (5 items max)
+    * Add remaining navigation items with proper icons
+    * Style with hover effects and active states
+
+Phase 2: Integration, Testing, & Enhancements
+* Component Integration
+    * Update Dashboard.tsx with new layout
+    * Integrate all API endpoints
+    * Add loading states and error handling
+* Sliding Panel Component
+    * Create reusable sliding panel for "View All" contracts
+    * Implement 300ms animation (main content 100% → 60%, panel 0% → 40%)
+    * Add search, filters (Active, Draft, Under Review, Signed, Expired)
+    * Add sorting dropdown
+* Enhancement Suggestions
+    * Smart Search: Add fuzzy search for contract history with highlighting
+    * Quick Actions: Add hover actions on contract items (View, Edit, Download)
+    * Prompt Categories: Group prompts by type (Review, Analysis, Compliance)
+    * Recent Prompts: Show 3 most recently used prompts for quick access
+    * Keyboard Shortcuts: Cmd/Ctrl + K for search, Tab for prompt selection
+    * Visual Indicators: Show contract status badges and unread message counts
+* Testing & Refinement
+    * Verify animations work smoothly
+    * Test RTL layout in Arabic
+    * Ensure accessibility compliance
+    * Performance optimization
+    * Add tooltips for icons
+    * Implement proper error states
+    * Add success animations
+    * Create onboarding hints for new features
+
+Key UI/UX Best Practices
+* Progressive Disclosure: Prompts hidden until needed
+* Familiar Patterns: ChatGPT-style interface users already know
+* Smooth Animations: 300ms transitions for natural feel
+* Clear Visual Hierarchy: Important actions prominently displayed
+* Responsive Design: Adapts elegantly to all screen sizes
+* * Accessibility: Keyboard navigation and ARIA labels
+

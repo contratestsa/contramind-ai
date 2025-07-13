@@ -243,6 +243,7 @@ export default function Dashboard() {
   };
 
   const openSlidingPanel = (content: 'prompts' | 'contractDetails') => {
+    console.log('Opening sliding panel:', content);
     setSlidingPanelContent(content);
     setShowSlidingPanel(true);
   };
@@ -278,7 +279,7 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className={cn("flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
+    <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
         "w-[260px] bg-[#202123] text-white flex flex-col transition-all duration-300 shadow-xl",
@@ -619,7 +620,7 @@ export default function Dashboard() {
           </>
         ) : (
           /* Empty State */
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col relative">
             <div className="flex-1 flex items-center justify-center pb-24">
               <div className="max-w-3xl w-full px-4">
                 <div className="text-center mb-8">
@@ -683,6 +684,19 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                {/* Debug Info - Remove in production */}
+                <div className="mt-4 text-center space-y-2">
+                  <div className="text-xs text-gray-400">
+                    Panel State: {showSlidingPanel ? 'Open' : 'Closed'} | Content: {slidingPanelContent || 'None'}
+                  </div>
+                  <button 
+                    onClick={() => openSlidingPanel('prompts')}
+                    className="px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded-lg hover:bg-opacity-90 transition-all text-sm font-medium"
+                  >
+                    Test Open Panel
+                  </button>
+                </div>
+
                 {/* Suggested Questions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                   {exampleCards.map((card, index) => (
@@ -713,10 +727,10 @@ export default function Dashboard() {
 
       {/* Sliding Panel */}
       <div className={cn(
-        "fixed inset-y-0 right-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out z-50",
-        showSlidingPanel ? "translate-x-0" : "translate-x-full",
-        isRTL && "right-auto left-0",
-        isRTL && showSlidingPanel ? "-translate-x-0" : isRTL && "-translate-x-full"
+        "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out z-[60]",
+        !isRTL ? "right-0" : "left-0",
+        !isRTL && (showSlidingPanel ? "translate-x-0" : "translate-x-full"),
+        isRTL && (showSlidingPanel ? "translate-x-0" : "-translate-x-full")
       )}>
         <div className="h-full flex flex-col">
           {/* Panel Header */}
