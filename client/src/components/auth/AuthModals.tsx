@@ -55,15 +55,16 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Login successful, response:', data);
       toast({
         title: t('تم تسجيل الدخول بنجاح', 'Login Successful'),
         description: t('مرحباً بك في ContraMind', 'Welcome to ContraMind')
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
-      // Redirect to dashboard page
-      setLocation('/dashboard');
+      // Force redirect to dashboard page
+      window.location.href = '/dashboard';
     },
     onError: (error: Error) => {
       toast({
