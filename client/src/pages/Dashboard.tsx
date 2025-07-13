@@ -248,10 +248,10 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className={cn("flex h-screen bg-[#343541] overflow-hidden", isRTL && "flex-row-reverse")}>
+    <div className={cn("flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "w-[260px] bg-[#202123] text-white flex flex-col transition-transform duration-300",
+        "w-[260px] bg-[#0a1f2a] text-white flex flex-col transition-transform duration-300 backdrop-blur-lg bg-opacity-90",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40"
       )}>
@@ -268,7 +268,7 @@ export default function Dashboard() {
         <div className="p-2">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="w-full flex items-center justify-center gap-2 p-3 border border-[#565869] rounded-md hover:bg-[#2A2B32] transition-colors"
+            className="w-full flex items-center justify-center gap-2 p-3 border border-[#1a4a5e] rounded-md hover:bg-[#1a4a5e] transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>{t('عقد جديد', 'New Contract')}</span>
@@ -283,8 +283,8 @@ export default function Dashboard() {
                 key={contract.id}
                 onClick={() => setSelectedContract(contract)}
                 className={cn(
-                  "w-full text-left p-3 rounded hover:bg-[#2A2B32] transition-colors mb-1",
-                  selectedContract?.id === contract.id && "bg-[#343541]"
+                  "w-full text-left p-3 rounded hover:bg-[#1a4a5e] transition-colors mb-1",
+                  selectedContract?.id === contract.id && "bg-[#1a4a5e]"
                 )}
               >
                 <div className="flex items-center justify-between mb-1">
@@ -302,7 +302,7 @@ export default function Dashboard() {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-[#565869] p-3">
+        <div className="border-t border-[#1a4a5e] p-3">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
@@ -351,11 +351,11 @@ export default function Dashboard() {
       </button>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col bg-[#343541]">
+      <div className="flex-1 flex flex-col">
         {selectedContract ? (
           <>
             {/* Contract Header */}
-            <div className="bg-[#2A2B32] border-b border-[#565869] px-4 py-3">
+            <div className="bg-[#0a1f2a] bg-opacity-80 backdrop-blur-lg border-b border-[#1a4a5e] px-4 py-3">
               <h1 className="text-lg font-medium text-white">{selectedContract.name}</h1>
             </div>
 
@@ -460,12 +460,12 @@ export default function Dashboard() {
                 </div>
 
                 {/* Chat Input Bar */}
-                <div className="mt-8 bg-[#40414F] border border-[#565869] rounded-lg p-4">
+                <div className="mt-8 bg-[#0a1f2a] bg-opacity-80 backdrop-blur-lg border border-[#1a4a5e] rounded-lg p-4">
                   <div className="relative flex items-center gap-2">
                     <input
                       type="text"
                       placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                      className="flex-1 bg-[#40414F] border border-[#565869] rounded-lg px-3 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                      className="flex-1 bg-[#0a1f2a] bg-opacity-50 border border-[#1a4a5e] rounded-lg px-3 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#2a6a8e]"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' && !selectedContract) {
                           toast({
