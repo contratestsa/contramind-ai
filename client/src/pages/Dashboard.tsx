@@ -85,6 +85,16 @@ export default function Dashboard() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isRTL = language === 'ar';
 
+  // Archive state
+  const [archivedChats, setArchivedChats] = useState<{
+    id: string;
+    filename: string;
+    timestamp: Date;
+    lastMessageSnippet: string;
+    messages: Message[];
+    contract: Contract;
+  }[]>([]);
+
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
     queryKey: ["/api/auth/me"],
@@ -257,6 +267,36 @@ export default function Dashboard() {
     }, 300); // Wait for animation to complete
   };
 
+  // Archive current chat and start new
+  const archiveCurrentChat = () => {
+    if (selectedContract && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      const archivedChat = {
+        id: Date.now().toString(),
+        filename: selectedContract.title,
+        timestamp: new Date(),
+        lastMessageSnippet: lastMessage.content.substring(0, 50) + '...',
+        messages: [...messages],
+        contract: { ...selectedContract }
+      };
+      
+      setArchivedChats([archivedChat, ...archivedChats]);
+    }
+    
+    // Clear current chat
+    setMessages([]);
+    setSelectedContract(null);
+    setInputValue('');
+  };
+
+  // Load archived chat
+  const loadArchivedChat = (archivedChat: typeof archivedChats[0]) => {
+    setSelectedContract(archivedChat.contract);
+    setMessages(archivedChat.messages);
+    // Close sliding panel if open
+    setShowSlidingPanel(false);
+  };
+
   const exampleCards = [
     {
       title: t('تحليل اتفاقية البائع', 'Analyze a vendor agreement'),
@@ -344,7 +384,10 @@ export default function Dashboard() {
         {/* New Contract Analysis Button */}
         <div className="p-3 border-b border-gray-700">
           <button
-            onClick={() => setIsUploadModalOpen(true)}
+            onClick={() => {
+              archiveCurrentChat();
+              setIsUploadModalOpen(true);
+            }}
             className={cn(
               "w-full flex items-center gap-2 py-2.5 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
               isSidebarCollapsed ? "justify-center px-2" : "justify-center px-4"
@@ -385,36 +428,36 @@ export default function Dashboard() {
                 </button>
               </div>
               <div className="space-y-1">
-                {recentContractsData?.contracts?.slice(0, 5).map((contract: any) => (
-                  <button
-                    key={contract.id}
-                    onClick={() => {
-                      setSelectedContract(contract);
-                      openSlidingPanel('contractDetails');
-                    }}
-                    className={cn(
-                      "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors group",
-                      selectedContract?.id === contract.id && "bg-gray-700"
-                    )}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm truncate">{contract.title}</span>
-                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
-                      <span>{contract.partyName}</span>
-                      <span>•</span>
-                      <span>{new Date(contract.date).toLocaleDateString()}</span>
-                      <span className="ml-auto">
-                        {contract.riskLevel === 'low' && '🟢'}
-                        {contract.riskLevel === 'medium' && '🟡'}
-                        {contract.riskLevel === 'high' && '🔴'}
+                {archivedChats.length === 0 ? (
+                  <p className="text-xs text-gray-500 italic p-2">
+                    {t('لا توجد محادثات مؤرشفة', 'No archived chats')}
+                  </p>
+                ) : (
+                  archivedChats.slice(0, 5).map((archive) => (
+                    <button
+                      key={archive.id}
+                      onClick={() => loadArchivedChat(archive)}
+                      className={cn(
+                        "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors group",
+                        selectedContract?.id === archive.contract.id && "bg-gray-700"
+                      )}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm truncate">{archive.filename}</span>
+                        <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                        <span>{archive.contract.partyName}</span>
+                        <span>•</span>
+                        <span>{new Date(archive.timestamp).toLocaleDateString()}</span>
+                        <span className="ml-auto">
+                          {archive.contract.riskLevel === 'low' && '🟢'}
+                          {archive.contract.riskLevel === 'medium' && '🟡'}
+                          {archive.contract.riskLevel === 'high' && '🔴'}
                       </span>
                     </div>
                   </button>
-                ))}
-                {(!recentContractsData?.contracts || recentContractsData.contracts.length === 0) && (
-                  <p className="text-xs text-gray-500 italic p-2">{t('لا توجد عقود بعد', 'No contracts yet')}</p>
+                  ))
                 )}
               </div>
             </div>
@@ -611,7 +654,7 @@ export default function Dashboard() {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto">
-              <div className="max-w-3xl mx-auto p-4">
+              <div className="max-w-3xl mx-auto p-4 pb-32">
                 {messages.map(message => (
                   <div
                     key={message.id}
@@ -649,8 +692,16 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Input Area */}
-            <div className="flex-shrink-0 bg-[#40414F] border-t border-[#565869] p-3">
+            {/* Input Area - Lifted by 32px */}
+            <div 
+              className="fixed bg-[#40414F] border-t border-[#565869] p-3"
+              style={{ 
+                left: isCollapsed ? '60px' : '260px',
+                right: 0,
+                bottom: '32px',
+                transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
               <div className="max-w-3xl mx-auto">
                 <div className="relative">
                   <input
@@ -731,8 +782,16 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Fixed Input Bar */}
-            <div className="flex-shrink-0 bg-[#40414F] border-t border-[#565869] p-3">
+            {/* Fixed Input Bar - Lifted by 32px */}
+            <div 
+              className="fixed bg-[#40414F] border-t border-[#565869] p-3"
+              style={{ 
+                left: isCollapsed ? '60px' : '260px',
+                right: 0,
+                bottom: '32px',
+                transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
               <div className="max-w-3xl mx-auto">
                 <div className="relative">
                   <input
