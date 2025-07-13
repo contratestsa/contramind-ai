@@ -92,23 +92,19 @@ interface SimpleLanguageProviderProps {
 }
 
 export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(() => detectBrowserLanguage());
+  const [language, setLanguageState] = useState<Language>(detectBrowserLanguage);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('language', lang);
-        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        document.documentElement.setAttribute('lang', lang);
-        document.documentElement.setAttribute('data-language', lang);
-        
-        // Force page reload for complete language switch
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-      } catch {}
-    }
+    localStorage.setItem('language', lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('data-language', lang);
+    
+    // Force page reload for complete language switch
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   const t = (ar: string, en: string) => {
@@ -121,14 +117,10 @@ export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps
 
   useEffect(() => {
     // Set initial document attributes
-    if (typeof window !== 'undefined') {
-      try {
-        const dir = getDir();
-        document.documentElement.setAttribute('dir', dir);
-        document.documentElement.setAttribute('lang', language);
-        document.documentElement.setAttribute('data-language', language);
-      } catch {}
-    }
+    const dir = getDir();
+    document.documentElement.setAttribute('dir', dir);
+    document.documentElement.setAttribute('lang', language);
+    document.documentElement.setAttribute('data-language', language);
   }, [language]);
 
   const value = {
