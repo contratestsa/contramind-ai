@@ -100,7 +100,8 @@ export default function Dashboard() {
     mutationFn: async () => {
       const response = await fetch('/api/auth/logout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
       });
       if (!response.ok) {
         throw new Error('Logout failed');
@@ -123,12 +124,7 @@ export default function Dashboard() {
     }
   });
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (error || (!isLoading && !userData?.user)) {
-      setLocation('/');
-    }
-  }, [error, isLoading, userData, setLocation]);
+  // Handle authentication status - removed redirect to allow proper loading
 
 
 
@@ -275,8 +271,23 @@ export default function Dashboard() {
   ];
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+    return <div className="flex items-center justify-center h-screen bg-[#343541]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+    </div>;
+  }
+
+  if (error || !userData?.user) {
+    return <div className="flex items-center justify-center h-screen bg-[#343541] text-white">
+      <div className="text-center">
+        <h1 className="text-2xl mb-4">{t('جلسة انتهت', 'Session Expired')}</h1>
+        <p className="mb-4">{t('يرجى تسجيل الدخول مرة أخرى', 'Please login again')}</p>
+        <button
+          onClick={() => window.location.href = '/'}
+          className="px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded hover:bg-opacity-90"
+        >
+          {t('العودة للصفحة الرئيسية', 'Return to Homepage')}
+        </button>
+      </div>
     </div>;
   }
 
@@ -629,7 +640,7 @@ export default function Dashboard() {
               <div className="max-w-3xl w-full px-4">
                 <div className="text-center mb-8">
                   <h1 className="text-3xl font-medium text-white mb-2">
-                    {t(`مرحباً ${user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${user?.fullName?.split(' ')[0] || ''}`)}
+                    {t(`مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`)}
                   </h1>
                   <h2 className="text-2xl text-gray-300 mb-2">
                     {t('قم برفع عقد للبدء', 'Upload a contract to start')}

@@ -8,6 +8,7 @@ import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '@/lib/queryClient';
 
 interface AuthModalsProps {
   triggerLoginButton?: React.ReactNode;
@@ -47,6 +48,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data)
       });
       if (!response.ok) {
@@ -55,7 +57,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       }
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log('Login successful, response:', data);
       toast({
         title: t('تم تسجيل الدخول بنجاح', 'Login Successful'),
@@ -63,8 +65,14 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       });
       setIsLoginOpen(false);
       setLoginData({ email: '', password: '', rememberMe: false });
-      // Force redirect to dashboard page
-      window.location.href = '/dashboard';
+      
+      // Invalidate auth query to ensure fresh data
+      await queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      
+      // Add small delay to ensure session is established before redirect
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 200);
     },
     onError: (error: Error) => {
       toast({
@@ -82,6 +90,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data)
       });
       const responseData = await response.json();
