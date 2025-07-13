@@ -673,16 +673,16 @@ export default function Dashboard() {
 
             {/* Centered Input Bar Container - Only when no chat started */}
             <div 
-              className="absolute"
+              className="absolute flex items-center justify-center"
               style={{ 
                 left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
-                top: '50%',
-                transform: 'translateY(-50%)',
+                top: 0,
+                bottom: 0,
                 transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <div className="max-w-3xl mx-auto">
+              <div className="w-full max-w-3xl px-6">
                 {/* Input Bar */}
                 <div className="bg-[#40414F] p-3 rounded-lg">
                   <div className="relative">
