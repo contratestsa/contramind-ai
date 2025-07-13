@@ -47,12 +47,14 @@ interface User {
 }
 
 interface Contract {
-  id: string;
-  name: string;
+  id: number;
+  title: string;
+  partyName: string;
   uploadedAt: Date;
-  status: 'analyzing' | 'ready';
+  status: string;
   riskLevel?: 'low' | 'medium' | 'high';
-  date?: string;
+  date: string;
+  type?: string;
 }
 
 interface Message {
@@ -140,13 +142,15 @@ export default function Dashboard() {
     const riskLevels: Array<'low' | 'medium' | 'high'> = ['low', 'medium', 'high'];
     const randomRisk = riskLevels[Math.floor(Math.random() * riskLevels.length)];
     
-    const newContract: Contract & { riskLevel: 'low' | 'medium' | 'high'; date: string } = {
-      id: Date.now().toString(),
-      name: file.name,
+    const newContract: Contract = {
+      id: Date.now(),
+      title: file.name,
+      partyName: partyType === 'buyer' ? 'Buyer' : 'Vendor',
       uploadedAt: new Date(),
       status: 'analyzing',
       riskLevel: randomRisk,
-      date: new Date().toLocaleDateString()
+      date: new Date().toISOString(),
+      type: 'purchase'
     };
     
     setContracts([newContract, ...contracts]);
@@ -633,6 +637,16 @@ export default function Dashboard() {
                   <p className="text-gray-400">
                     {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
                   </p>
+                  {/* Temporary test button */}
+                  <button 
+                    onClick={() => {
+                      console.log('Test button clicked!');
+                      openSlidingPanel('prompts');
+                    }}
+                    className="mt-4 px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded hover:bg-opacity-90"
+                  >
+                    Test Sliding Panel
+                  </button>
                 </div>
 
                 {/* Chat Input Bar */}
@@ -684,18 +698,7 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Debug Info - Remove in production */}
-                <div className="mt-4 text-center space-y-2">
-                  <div className="text-xs text-gray-400">
-                    Panel State: {showSlidingPanel ? 'Open' : 'Closed'} | Content: {slidingPanelContent || 'None'}
-                  </div>
-                  <button 
-                    onClick={() => openSlidingPanel('prompts')}
-                    className="px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded-lg hover:bg-opacity-90 transition-all text-sm font-medium"
-                  >
-                    Test Open Panel
-                  </button>
-                </div>
+
 
                 {/* Suggested Questions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -726,12 +729,17 @@ export default function Dashboard() {
       />
 
       {/* Sliding Panel */}
-      <div className={cn(
-        "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out z-[60]",
-        !isRTL ? "right-0" : "left-0",
-        !isRTL && (showSlidingPanel ? "translate-x-0" : "translate-x-full"),
-        isRTL && (showSlidingPanel ? "translate-x-0" : "-translate-x-full")
-      )}>
+      <div 
+        className={cn(
+          "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out",
+          !isRTL ? "right-0" : "left-0"
+        )}
+        style={{ 
+          zIndex: 9999,
+          transform: showSlidingPanel 
+            ? 'translateX(0)' 
+            : (!isRTL ? 'translateX(100%)' : 'translateX(-100%)')
+        }}>
         <div className="h-full flex flex-col">
           {/* Panel Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -802,7 +810,7 @@ export default function Dashboard() {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">{t('اسم العقد', 'Contract Name')}</h3>
-                    <p className="text-gray-900">{selectedContract?.name}</p>
+                    <p className="text-gray-900">{selectedContract?.title}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">{t('التاريخ', 'Date')}</h3>
@@ -832,7 +840,8 @@ export default function Dashboard() {
       {/* Overlay when panel is open */}
       {showSlidingPanel && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
+          style={{ zIndex: 9998 }}
           onClick={closeSlidingPanel}
         />
       )}
