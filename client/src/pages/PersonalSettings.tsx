@@ -94,27 +94,7 @@ export default function PersonalSettings() {
     }
   }, [showNotifications]);
 
-  const sidebarItems: SidebarItem[] = [
-    { icon: <Grid3X3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "لوحة التحكم", en: "Dashboard" }, path: "/dashboard" },
-    { icon: <Plus className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "إنشاء", en: "Create" }, path: "/create" },
-    { icon: <Folder className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "ملفاتي", en: "My Drive" }, path: "/repository" },
-    { icon: <Bell className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التنبيهات", en: "Alerts" }, path: "/alerts" },
-    { icon: <CheckCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المهام", en: "Tasks" }, path: "/tasks" },
-    { icon: <BarChart3 className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "التقارير", en: "Reports" }, path: "/reports" },
-    { 
-      icon: <Settings className="w-[18px] h-[18px] text-gray-700" />, 
-      label: { ar: "الإعدادات", en: "Settings" }, 
-      path: "/settings",
-      subItems: [
-        { icon: <User className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "الإعدادات الشخصية", en: "Personal Settings" }, path: "/settings/personal" },
-        { icon: <Building className="w-[16px] h-[16px] text-gray-600" />, label: { ar: "إعدادات المؤسسة", en: "Organization Settings" }, path: "/settings/organization" }
-      ]
-    },
-  ];
 
-  const bottomItems: SidebarItem[] = [
-    { icon: <HelpCircle className="w-[18px] h-[18px] text-gray-700" />, label: { ar: "المساعدة", en: "Help" }, path: "/help" },
-  ];
 
   const handleSaveProfile = () => {
     toast({
@@ -183,88 +163,45 @@ export default function PersonalSettings() {
         {/* Navigation Items */}
         <nav className="flex-1">
           <ul className="py-2">
-            {sidebarItems.map((item, index) => (
-              <li key={index}>
-                <button
-                  onClick={() => {
-                    if (item.path === '/settings') {
-                      setExpandedSettings(!expandedSettings);
-                    } else if (item.path === '/dashboard' || item.path === '/repository' || item.path === '/tasks') {
-                      setLocation(item.path);
-                    } else if (item.path === '/settings/personal') {
-                      // Already on personal settings
-                      return;
-                    } else if (item.path === '/settings/organization') {
-                      setLocation(item.path);
-                    } else {
-                      toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
-                    }
-                  }}
-                  className={cn(
-                    "w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                    (item.path === '/settings' && location.startsWith('/settings')) && "bg-[#E6E6E6]"
-                  )}
-                >
-                  {item.subItems && (
-                    <div className={cn("transition-transform", expandedSettings ? "rotate-90" : "", isRTL ? "order-last" : "order-first")}>
-                      <ChevronRight className="w-4 h-4 text-gray-500" />
-                    </div>
-                  )}
-                  {item.icon}
-                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                    {t(item.label.ar, item.label.en)}
-                  </span>
-                </button>
-
-                {/* Sub-items */}
-                {item.subItems && expandedSettings && (
-                  <ul>
-                    {item.subItems.map((subItem, subIndex) => (
-                      <li key={subIndex}>
-                        <button
-                          onClick={() => setLocation(subItem.path)}
-                          className={cn(
-                            "w-full h-[40px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors",
-                            isRTL ? "pr-10" : "pl-10",
-                            location === subItem.path && "bg-[#E6E6E6]"
-                          )}
-                        >
-                          {subItem.icon}
-                          <span className={cn("text-[14px] text-gray-600 flex-1", isRTL ? "text-right" : "text-left")}>
-                            {t(subItem.label.ar, subItem.label.en)}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
+            <li>
+              <button
+                onClick={() => setLocation('/dashboard')}
+                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
+              >
+                <ChevronRight className={cn("w-4 h-4 text-gray-700", isRTL && "rotate-180")} />
+                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                  {t('العودة للوحة التحكم', 'Back to Dashboard')}
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setLocation('/settings/organization')}
+                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
+              >
+                <Building className="w-[18px] h-[18px] text-gray-700" />
+                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                  {t('إعدادات المؤسسة', 'Organization Settings')}
+                </span>
+              </button>
+            </li>
           </ul>
         </nav>
 
         {/* Bottom Items */}
         <div className="border-t border-gray-300">
           <ul className="py-2">
-            {bottomItems.map((item, index) => (
-              <li key={index}>
-                <button
-                  onClick={() => {
-                    if (item.path === '/help') {
-                      setLocation('/help');
-                    } else {
-                      toast({ title: t('قريباً', 'Coming Soon'), description: t(`${item.label.ar} قريباً`, `${item.label.en} coming soon`) });
-                    }
-                  }}
-                  className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
-                >
-                  {item.icon}
-                  <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
-                    {t(item.label.ar, item.label.en)}
-                  </span>
-                </button>
-              </li>
-            ))}
+            <li>
+              <button
+                onClick={() => setLocation('/help')}
+                className="w-full h-[44px] px-5 flex items-center gap-3 hover:bg-[#E6E6E6] transition-colors"
+              >
+                <HelpCircle className="w-[18px] h-[18px] text-gray-700" />
+                <span className={cn("text-[15px] text-gray-700 flex-1", isRTL ? "text-right" : "text-left")}>
+                  {t('المساعدة', 'Help')}
+                </span>
+              </button>
+            </li>
           </ul>
         </div>
       </div>

@@ -20,6 +20,12 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
   - **Authentication Fix**: Fixed missing login route in server/routes.ts
     - Added complete login endpoint with email verification check
     - Verified user emails in database for testing
+  - **Sidebar Simplification**: Removed old dashboard navigation from settings pages
+    - Updated PersonalSettings and OrganizationSettings to use simplified sidebar
+    - Removed complex navigation items (Dashboard, Create, My Drive, Alerts, Tasks, Reports)
+    - Settings pages now only show: Back to Dashboard, Personal/Organization Settings toggle, and Help
+    - Settings and Help icons in main dashboard now navigate directly to their respective pages
+    - Activated attach file icon in chat bar to trigger upload modal functionality
 - **July 10, 2025**: 
   - **Logo Update**: Updated all dashboard pages with new ContraMind logo
     - Replaced old CMYK logo with new RGB logo (RGB_Logo Design - ContraMind V001-01)
