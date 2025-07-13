@@ -626,13 +626,6 @@ export default function Dashboard() {
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                     <button
-                      onClick={() => openSlidingPanel('prompts')}
-                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
-                      title={t('اختر موجه', 'Select prompt')}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </button>
-                    <button
                       onClick={handleSendMessage}
                       disabled={!inputValue.trim() || userTokens < 5}
                       className={cn(
@@ -709,13 +702,6 @@ export default function Dashboard() {
                       onClick={() => setIsUploadModalOpen(true)}
                     >
                       <Paperclip className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => openSlidingPanel('prompts')}
-                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
-                      title={t('اختر موجه', 'Select prompt')}
-                    >
-                      <ChevronDown className="w-4 h-4" />
                     </button>
                     <button
                       className="p-1.5 text-gray-400 hover:text-white transition-colors"
