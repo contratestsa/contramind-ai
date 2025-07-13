@@ -459,20 +459,6 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                {/* Example Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  {exampleCards.map((card, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setIsUploadModalOpen(true)}
-                      className="p-4 bg-white rounded-lg hover:shadow-md transition-all text-left group min-h-[80px] flex items-center justify-between"
-                    >
-                      <span className="text-base text-[#202123]">{card.title}</span>
-                      <span className="text-gray-400 ml-2">→</span>
-                    </button>
-                  ))}
-                </div>
-
                 {/* Chat Input Bar */}
                 <div className="mt-8 bg-[#40414F] border border-[#565869] rounded-lg p-4">
                   <div className="relative flex items-center gap-2">
@@ -512,6 +498,20 @@ export default function Dashboard() {
                   <div className="mt-2 text-xs text-gray-400 text-center">
                     {t('5 رموز لكل سؤال', '5 tokens per question')}
                   </div>
+                </div>
+
+                {/* Suggested Questions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  {exampleCards.map((card, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setIsUploadModalOpen(true)}
+                      className="p-4 bg-white rounded-lg hover:shadow-md transition-all text-left group min-h-[80px] flex items-center justify-between"
+                    >
+                      <span className="text-base text-[#202123]">{card.title}</span>
+                      <span className="text-gray-400 ml-2">→</span>
+                    </button>
+                  ))}
                 </div>
 
                 {/* Upload Button */}
