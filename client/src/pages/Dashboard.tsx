@@ -14,7 +14,16 @@ import {
   Copy,
   User,
   LogOut,
-  Paperclip
+  Paperclip,
+  Search,
+  BarChart3,
+  Users,
+  Bell,
+  Tag,
+  BookOpen,
+  Info,
+  MessageSquare,
+  ChevronDown
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -65,6 +74,7 @@ export default function Dashboard() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [userTokens, setUserTokens] = useState(1000);
+  const [contractSearchQuery, setContractSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isRTL = language === 'ar';
@@ -73,6 +83,12 @@ export default function Dashboard() {
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
     queryKey: ["/api/auth/me"],
     retry: false,
+  });
+
+  // Fetch recent contracts
+  const { data: recentContractsData } = useQuery<{ contracts: any[] }>({
+    queryKey: ["/api/contracts/recent"],
+    enabled: !!userData?.user,
   });
 
   // Logout mutation
@@ -251,103 +267,230 @@ export default function Dashboard() {
     <div className={cn("flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "w-[260px] bg-[#0a1f2a] text-white flex flex-col transition-transform duration-300 backdrop-blur-lg bg-opacity-90",
+        "w-[260px] bg-[#202123] text-white flex flex-col transition-all duration-300 shadow-xl",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-        "fixed lg:relative inset-y-0 z-40"
+        "fixed lg:relative inset-y-0 z-40",
+        isRTL && "lg:order-2"
       )}>
-        {/* Logo */}
-        <div className="p-3">
+        {/* Logo and Hamburger */}
+        <div className="flex items-center justify-between p-3 border-b border-gray-700">
           <img 
             src={logoImage} 
             alt="ContraMind" 
-            className="h-10 w-full object-contain"
+            className="h-10 flex-1 object-contain"
           />
-        </div>
-
-        {/* New Contract Button */}
-        <div className="p-2">
           <button
-            onClick={() => setIsUploadModalOpen(true)}
-            className="w-full flex items-center justify-center gap-2 p-3 border border-[#1a4a5e] rounded-md hover:bg-[#1a4a5e] transition-colors"
+            onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            className="lg:hidden p-2 hover:bg-gray-700 rounded-md transition-colors"
           >
-            <Plus className="w-4 h-4" />
-            <span>{t('عقد جديد', 'New Contract')}</span>
+            <div className="w-5 h-5 relative">
+              <span className={cn(
+                "absolute block h-0.5 w-5 bg-current transform transition-all duration-300",
+                showMobileSidebar ? "rotate-45 translate-y-2" : "-translate-y-1.5"
+              )} />
+              <span className={cn(
+                "absolute block h-0.5 w-5 bg-current transform transition-all duration-300 top-2",
+                showMobileSidebar && "opacity-0"
+              )} />
+              <span className={cn(
+                "absolute block h-0.5 w-5 bg-current transform transition-all duration-300 top-4",
+                showMobileSidebar ? "-rotate-45 -translate-y-2" : "translate-y-1.5"
+              )} />
+            </div>
           </button>
         </div>
 
-        {/* Contracts List */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-2">
-            {contracts.map(contract => (
-              <button
-                key={contract.id}
-                onClick={() => setSelectedContract(contract)}
-                className={cn(
-                  "w-full text-left p-3 rounded hover:bg-[#1a4a5e] transition-colors mb-1",
-                  selectedContract?.id === contract.id && "bg-[#1a4a5e]"
-                )}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium truncate">{contract.name}</span>
-                  <span className="text-xs">
-                    {contract.riskLevel === 'low' && '🟢'}
-                    {contract.riskLevel === 'medium' && '🟡'}
-                    {contract.riskLevel === 'high' && '🔴'}
-                  </span>
-                </div>
-                <span className="text-xs text-gray-400">{contract.date}</span>
-              </button>
-            ))}
+        {/* New Contract Analysis Button */}
+        <div className="p-3 border-b border-gray-700">
+          <button
+            onClick={() => setIsUploadModalOpen(true)}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{t('تحليل عقد جديد', 'New Contract Analysis')}</span>
+          </button>
+        </div>
+
+        {/* Contract Search Box */}
+        <div className="p-3 border-b border-gray-700">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              value={contractSearchQuery}
+              onChange={(e) => setContractSearchQuery(e.target.value)}
+              placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
+              className="w-full pl-10 pr-3 py-2 bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
+            />
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-[#1a4a5e] p-3">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
+        {/* Navigation Section */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Recent Contracts */}
+          <div className="p-3">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                {t('العقود الأخيرة', 'Recent Contracts')}
+              </h3>
+              <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
+                {t('عرض الكل', 'View All')}
+              </button>
+            </div>
+            <div className="space-y-1">
+              {recentContractsData?.contracts?.slice(0, 5).map((contract: any) => (
+                <button
+                  key={contract.id}
+                  onClick={() => setSelectedContract(contract)}
+                  className={cn(
+                    "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors",
+                    selectedContract?.id === contract.id && "bg-gray-700"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm truncate">{contract.title}</span>
+                    <span className="text-xs">
+                      {contract.riskLevel === 'low' && '🟢'}
+                      {contract.riskLevel === 'medium' && '🟡'}
+                      {contract.riskLevel === 'high' && '🔴'}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-400 mt-0.5">
+                    {contract.partyName} • {new Date(contract.date).toLocaleDateString()}
+                  </div>
+                </button>
+              ))}
+              {(!recentContractsData?.contracts || recentContractsData.contracts.length === 0) && (
+                <p className="text-xs text-gray-500 italic p-2">{t('لا توجد عقود بعد', 'No contracts yet')}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Navigation Menu */}
+          <nav className="px-3 pb-3">
+            <div className="space-y-1">
+              <button
+                onClick={() => setLocation('/analytics')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <BarChart3 className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>
+              </button>
+              
+              <button
+                onClick={() => setLocation('/parties')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <Users className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>
+              </button>
+              
+              <button
+                onClick={() => setLocation('/notifications')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <Bell className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>
+              </button>
+              
+              <button
+                onClick={() => setLocation('/tags')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <Tag className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>
+              </button>
+              
+              <button
+                onClick={() => setLocation('/settings/personal')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <Settings className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('الإعدادات', 'Settings')}</span>
+              </button>
+            </div>
+          </nav>
+
+          {/* Help Section */}
+          <div className="px-3 pb-3 border-t border-gray-700 pt-3">
+            <div className="space-y-1">
+              <button
+                onClick={() => setLocation('/legal-resources')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <BookOpen className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('الموارد القانونية', 'Legal Resources')}</span>
+              </button>
+              
+              <button
+                onClick={() => setLocation('/help')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <HelpCircle className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('مركز المساعدة', 'Help Center')}</span>
+              </button>
+              
+              <button
+                onClick={() => setLocation('/whats-new')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <Info className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('ما الجديد', "What's New")}</span>
+              </button>
+              
+              <button
+                onClick={() => setLocation('/feedback')}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition-colors group"
+              >
+                <MessageSquare className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                <span className="text-sm">{t('التعليقات', 'Feedback')}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Section */}
+        <div className="border-t border-gray-700 p-3">
+          <button
+            onClick={() => setLocation('/profile')}
+            className="w-full flex items-center justify-between p-2 rounded hover:bg-gray-700 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4" />
               </div>
-              <span className="text-sm truncate">{user?.fullName}</span>
+              <div className="text-left">
+                <div className="text-sm font-medium">{user?.fullName}</div>
+                <div className="text-xs text-gray-400">{t('الملف الشخصي', 'Profile')}</div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setLocation('/settings/personal')}
-                className="p-1.5 hover:bg-white/10 rounded transition-colors"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setLocation('/help')}
-                className="p-1.5 hover:bg-white/10 rounded transition-colors"
-              >
-                <HelpCircle className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => logoutMutation.mutate()}
-                className="p-1.5 hover:bg-white/10 rounded transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-          {/* Token Balance */}
-          <div className="flex items-center gap-2 text-xs text-gray-400">
-            <span>🪙</span>
-            <span>{userTokens.toLocaleString()} tokens</span>
-          </div>
+            <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white" />
+          </button>
+          
+          <button
+            onClick={() => logoutMutation.mutate()}
+            className="w-full mt-2 flex items-center justify-center gap-2 px-3 py-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">{t('تسجيل الخروج', 'Sign Out')}</span>
+          </button>
         </div>
       </div>
 
-      {/* Mobile Sidebar Toggle */}
+      {/* Mobile Sidebar Toggle - Outside sidebar */}
       <button
         onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[#202123] text-white rounded-md",
-          isRTL ? "right-4" : "left-4"
+          "lg:hidden fixed top-4 z-50 p-2 bg-[#202123] text-white rounded-md shadow-lg",
+          isRTL ? "right-4" : "left-4",
+          showMobileSidebar && "hidden"
         )}
       >
-        {showMobileSidebar ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        <div className="w-5 h-5 relative">
+          <span className="absolute block h-0.5 w-5 bg-current transform -translate-y-1.5" />
+          <span className="absolute block h-0.5 w-5 bg-current transform top-2" />
+          <span className="absolute block h-0.5 w-5 bg-current transform translate-y-1.5 top-4" />
+        </div>
       </button>
 
       {/* Main Content Area */}
