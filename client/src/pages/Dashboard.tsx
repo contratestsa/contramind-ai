@@ -302,13 +302,13 @@ export default function Dashboard() {
 
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen bg-[#343541]">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+    return <div className="flex items-center justify-center h-screen bg-[#0C2836]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B7DEE8]"></div>
     </div>;
   }
 
   if (error || !userData?.user) {
-    return <div className="flex items-center justify-center h-screen bg-[#343541] text-white">
+    return <div className="flex items-center justify-center h-screen bg-[#0C2836] text-white">
       <div className="text-center">
         <h1 className="text-2xl mb-4">{t('جلسة انتهت', 'Session Expired')}</h1>
         <p className="mb-4">{t('يرجى تسجيل الدخول مرة أخرى', 'Please login again')}</p>
@@ -328,14 +328,14 @@ export default function Dashboard() {
     <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "bg-[#202123] text-white flex flex-col transition-all duration-300 shadow-xl",
+        "bg-[#0C2836] text-white flex flex-col transition-all duration-300 shadow-xl",
         isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40",
         isRTL && "lg:order-2"
       )}>
         {/* Logo and Hamburger */}
-        <div className="flex items-center justify-between p-3 border-b border-gray-700">
+        <div className="flex items-center justify-between p-3 border-b border-[rgba(183,222,232,0.2)]">
           <img 
             src={logoImage} 
             alt="ContraMind" 
@@ -346,7 +346,7 @@ export default function Dashboard() {
           />
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="p-2 hover:bg-gray-700 rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
+            className="p-2 hover:bg-[rgba(183,222,232,0.1)] rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
           >
             {/* Hamburger Menu */}
             <div className={cn(
@@ -371,7 +371,7 @@ export default function Dashboard() {
         </div>
 
         {/* New Contract Analysis Button */}
-        <div className="p-3 border-b border-gray-700">
+        <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
           <button
             onClick={() => {
               archiveCurrentChat();
@@ -389,15 +389,15 @@ export default function Dashboard() {
 
         {/* Contract Search Box */}
         {!isSidebarCollapsed && (
-          <div className="p-3 border-b border-gray-700">
+          <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[rgba(183,222,232,0.6)]" />
               <input
                 type="text"
                 value={contractSearchQuery}
                 onChange={(e) => setContractSearchQuery(e.target.value)}
                 placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
-                className="w-full pl-10 pr-3 py-2 bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
+                className="w-full pl-10 pr-3 py-2 bg-[rgba(183,222,232,0.1)] text-white placeholder-[rgba(183,222,232,0.6)] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
               />
             </div>
           </div>
@@ -409,7 +409,7 @@ export default function Dashboard() {
           {!isSidebarCollapsed && (
             <div className="p-3">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
                 <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
@@ -418,7 +418,7 @@ export default function Dashboard() {
               </div>
               <div className="space-y-1">
                 {archivedChats.length === 0 ? (
-                  <p className="text-xs text-gray-500 italic p-2">
+                  <p className="text-xs text-[rgba(183,222,232,0.6)] italic p-2">
                     {t('لا توجد محادثات مؤرشفة', 'No archived chats')}
                   </p>
                 ) : (
@@ -427,15 +427,15 @@ export default function Dashboard() {
                       key={archive.id}
                       onClick={() => loadArchivedChat(archive)}
                       className={cn(
-                        "w-full text-left p-2 rounded hover:bg-gray-700 transition-colors group",
-                        selectedContract?.id === archive.contract.id && "bg-gray-700"
+                        "w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                        selectedContract?.id === archive.contract.id && "bg-[rgba(183,222,232,0.1)]"
                       )}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-sm truncate">{archive.filename}</span>
-                        <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ChevronRight className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                      <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">
                         <span>{archive.contract.partyName}</span>
                         <span>•</span>
                         <span>{new Date(archive.timestamp).toLocaleDateString()}</span>
@@ -458,48 +458,48 @@ export default function Dashboard() {
               <button
                 onClick={() => setLocation('/analytics')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isSidebarCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
               >
-                <BarChart3 className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                <BarChart3 className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isSidebarCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/parties')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isSidebarCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
               >
-                <Users className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                <Users className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/notifications')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isSidebarCollapsed ? t('الإشعارات', 'Notifications') : undefined}
               >
-                <Bell className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                <Bell className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/tags')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-gray-700 transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isSidebarCollapsed ? t('العلامات والفئات', 'Tags & Categories') : undefined}
               >
-                <Tag className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0" />
+                <Tag className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isSidebarCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
             </div>
@@ -513,7 +513,7 @@ export default function Dashboard() {
       <button
         onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[#202123] text-white rounded-md shadow-lg",
+          "lg:hidden fixed top-4 z-50 p-2 bg-[#0C2836] text-white rounded-md shadow-lg",
           isRTL ? "right-4" : "left-4",
           showMobileSidebar && "hidden"
         )}
@@ -532,7 +532,7 @@ export default function Dashboard() {
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {/* Top Header Bar */}
-        <div className="flex-shrink-0 bg-[#343541] border-b border-[#40414F] px-4 py-3">
+        <div className="flex-shrink-0 bg-[#0C2836] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             {/* Profile Dropdown */}
@@ -543,9 +543,9 @@ export default function Dashboard() {
         {/* Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
         {selectedContract ? (
-          <div className="flex flex-col h-full bg-[#343541]">
+          <div className="flex flex-col h-full bg-[#0C2836]">
             {/* Contract Header */}
-            <div className="flex-shrink-0 bg-[#202123] border-b border-[#40414F] px-4 py-3">
+            <div className="flex-shrink-0 bg-[#0C2836] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">
               <h1 className="text-lg font-medium text-white">{selectedContract.title}</h1>
             </div>
 
@@ -568,8 +568,8 @@ export default function Dashboard() {
                       className={cn(
                         "max-w-[80%] rounded-lg px-4 py-2",
                         message.type === 'user' 
-                          ? 'bg-[#40414F] text-white' 
-                          : 'bg-[#444654] text-gray-100'
+                          ? 'bg-[#1a4158] text-white' 
+                          : 'bg-[rgba(183,222,232,0.1)] text-gray-100 border border-[rgba(183,222,232,0.2)]'
                       )}
                     >
                       <p className="whitespace-pre-wrap">{message.content}</p>
@@ -595,7 +595,7 @@ export default function Dashboard() {
 
             {/* Input Area - Centered when no messages, Fixed at bottom when messages exist */}
             <div 
-              className="fixed bg-[#40414F] p-3"
+              className="fixed bg-[rgba(183,222,232,0.1)] p-3"
               style={{ 
                 left: isSidebarCollapsed ? '60px' : '260px',
                 right: 0,
@@ -620,7 +620,7 @@ export default function Dashboard() {
                       }
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="w-full bg-[#40414F] border border-[#565869] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                    className="w-full bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
                     maxLength={500}
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -637,7 +637,7 @@ export default function Dashboard() {
                       className={cn(
                         "p-1.5 rounded transition-colors",
                         inputValue.trim() && userTokens >= 5
-                          ? "text-white hover:bg-[#2A2B32]"
+                          ? "text-white hover:bg-[rgba(183,222,232,0.1)]"
                           : "text-gray-600 cursor-not-allowed"
                       )}
                     >
@@ -650,7 +650,7 @@ export default function Dashboard() {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex flex-col h-full bg-[#343541] relative">
+          <div className="flex flex-col h-full bg-[#0C2836] relative">
             {/* Messages/Content Area */}
             <div className="flex-1 overflow-y-auto flex flex-col">
               <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
@@ -686,12 +686,12 @@ export default function Dashboard() {
             >
               <div className="w-full max-w-3xl px-6">
                 {/* Input Bar */}
-                <div className="bg-[#40414F] p-3 rounded-lg">
+                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                   <div className="relative">
                     <input
                     type="text"
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="w-full bg-[#40414F] border border-[#565869] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-gray-400"
+                    className="w-full bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !selectedContract) {
                         toast({
