@@ -19,17 +19,19 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Backend creates accounts successfully even if email service fails
     - Added console logging for debugging signup process
     - Removed email verification requirement from login process for immediate access
-  - **Updated Settings and Help Pages to Match GPT-Style Dashboard**:
-    - Replaced old light grey sidebars with consistent dark GPT-style sidebar (#202123)
-    - Updated main content areas to use #343541 background (matching dashboard)
-    - Created card-based layouts with #40414F background and #565869 borders
-    - Implemented max-width 768px centered layout for content
-    - Added clean white save buttons with ContraMind text color (#0A1F2A) and subtle borders
-    - Removed old navigation structure - now uses simple back/settings/help navigation
-    - Updated input fields with dark theme styling (#343541 background, #565869 borders)
-    - Added proper mobile responsive design with hamburger menu
-    - Simplified Help page to FAQ cards without complex navigation
-    - Removed organization settings to focus on personal settings only
+  - **Updated Settings and Help Pages with ContraMind Brand Colors**:
+    - Applied ContraMind navy (#0C2836) as main background instead of generic grey
+    - Updated sidebars to use navy background with sky blue accents (#B7DEE8)
+    - Card backgrounds now use subtle white overlay (rgba(255,255,255,0.05))
+    - Card borders use sky blue transparency (rgba(183,222,232,0.1))
+    - Input fields styled with ContraMind colors and sky blue focus rings
+    - Labels use ContraMind sky blue (#B7DEE8) color
+    - Save buttons use sky blue background (#B7DEE8) with navy text (#0C2836)
+    - Switch components styled with ContraMind brand colors
+    - FAQ cards have hover effects with sky blue background
+    - Contact section uses ContraMind brand styling
+    - All text colors updated to use white and transparent white variants
+    - Maintained GPT-style layout with ContraMind brand identity
 - **July 13, 2025 (Earlier)**:
   - **Complete Dashboard Redesign**: Redesigned entire dashboard to match ChatGPT interface style
     - Created narrow sidebar (260px) with dark background (#202123)

@@ -105,7 +105,7 @@ export default function Help() {
   }
 
   return (
-    <div className="min-h-screen bg-[#343541] flex">
+    <div className="min-h-screen bg-[#0C2836] flex">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
@@ -116,11 +116,11 @@ export default function Help() {
       
       {/* Sidebar - GPT Style */}
       <div className={cn(
-        "w-[260px] h-screen bg-[#202123] flex flex-col fixed z-50 transition-transform duration-300 lg:translate-x-0",
+        "w-[260px] h-screen bg-[#0C2836] flex flex-col fixed z-50 transition-transform duration-300 lg:translate-x-0",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Logo */}
-        <div className="p-4 border-b border-gray-600">
+        <div className="p-4 border-b border-[rgba(183,222,232,0.1)]">
           <img 
             src={logoImage} 
             alt="ContraMind Logo" 
@@ -132,35 +132,35 @@ export default function Help() {
         <nav className="flex-1 p-4 space-y-2">
           <button
             onClick={() => setLocation('/dashboard')}
-            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 text-[#B7DEE8]" />
             <span className="text-sm">{t('العودة للوحة التحكم', 'Back to Dashboard')}</span>
           </button>
           
           <button
             onClick={() => setLocation('/settings/personal')}
-            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-4 h-4 text-[#B7DEE8]" />
             <span className="text-sm">{t('الإعدادات', 'Settings')}</span>
           </button>
         </nav>
 
         {/* Bottom Items */}
-        <div className="p-4 border-t border-gray-600 space-y-2">
+        <div className="p-4 border-t border-[rgba(183,222,232,0.1)] space-y-2">
           <button
             onClick={() => setLocation('/help')}
-            className="w-full flex items-center gap-3 p-3 rounded-lg bg-[#2A2B32] text-white"
+            className="w-full flex items-center gap-3 p-3 rounded-lg bg-[rgba(183,222,232,0.1)] text-white"
           >
-            <HelpCircle className="w-4 h-4" />
+            <HelpCircle className="w-4 h-4 text-[#B7DEE8]" />
             <span className="text-sm">{t('المساعدة', 'Help')}</span>
           </button>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#2A2B32] transition-colors text-white"
+            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4 text-[#B7DEE8]" />
             <span className="text-sm">{t('تسجيل الخروج', 'Logout')}</span>
           </button>
         </div>
@@ -188,7 +188,7 @@ export default function Help() {
               <h1 className="text-2xl font-semibold text-white mb-2">
                 {t('مركز المساعدة', 'Help Center')}
               </h1>
-              <p className="text-[#8E8EA0] text-sm">
+              <p className="text-[rgba(255,255,255,0.7)] text-sm">
                 {t('الأسئلة الشائعة ومعلومات الدعم', 'Frequently asked questions and support information')}
               </p>
             </div>
@@ -200,11 +200,11 @@ export default function Help() {
               </h2>
               
               {faqItems.map((item, index) => (
-                <div key={index} className="bg-[#40414F] border border-[#565869] rounded-lg p-6">
+                <div key={index} className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors">
                   <h3 className="text-white font-medium mb-3 text-base">
                     {language === 'ar' ? item.question.ar : item.question.en}
                   </h3>
-                  <p className="text-[#8E8EA0] text-sm leading-relaxed">
+                  <p className="text-[rgba(255,255,255,0.7)] text-sm leading-relaxed">
                     {language === 'ar' ? item.answer.ar : item.answer.en}
                   </p>
                 </div>
@@ -212,14 +212,14 @@ export default function Help() {
             </div>
 
             {/* Contact Section */}
-            <div className="bg-[#E8F4F8] rounded-lg p-6 mt-8">
-              <h2 className="text-[#0C2836] text-xl font-medium mb-4">
+            <div className="bg-[rgba(183,222,232,0.1)] rounded-lg p-6 mt-8 border border-[rgba(183,222,232,0.2)]">
+              <h2 className="text-[#B7DEE8] text-xl font-medium mb-4">
                 {t('تحتاج إلى مساعدة إضافية؟', 'Need Additional Help?')}
               </h2>
-              <p className="text-[#0C2836] text-sm mb-4">
+              <p className="text-[rgba(255,255,255,0.7)] text-sm mb-4">
                 {t('تواصل مع فريق الدعم لدينا للحصول على المساعدة المباشرة', 'Contact our support team for direct assistance')}
               </p>
-              <div className="flex items-center gap-2 text-[#0C2836]">
+              <div className="flex items-center gap-2 text-[#B7DEE8]">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm font-medium">Ceo@contramind.com</span>
               </div>
