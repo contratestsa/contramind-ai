@@ -58,7 +58,7 @@ export default function Dashboard() {
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
 
-  // Remove unused sidebar state
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -248,56 +248,110 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden">
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-10 p-4 flex items-center justify-between bg-[#0a1f2a] bg-opacity-80 backdrop-blur-lg border-b border-[#1a4a5e]">
-        <div className="flex items-center gap-4">
+    <div className={cn("flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
+      {/* Sidebar */}
+      <div className={cn(
+        "w-[260px] bg-[#0a1f2a] text-white flex flex-col transition-transform duration-300 backdrop-blur-lg bg-opacity-90",
+        showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        "fixed lg:relative inset-y-0 z-40"
+      )}>
+        {/* Logo */}
+        <div className="p-3">
           <img 
             src={logoImage} 
             alt="ContraMind" 
-            className="h-8 w-auto object-contain"
+            className="h-10 w-full object-contain"
           />
-          <h1 className="text-xl font-medium text-white">
-            {t(`مرحباً ${user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${user?.fullName?.split(' ')[0] || ''}`)}
-          </h1>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-gray-300">
-            <span>🪙</span>
-            <span>{userTokens.toLocaleString()} tokens</span>
-          </div>
+
+        {/* New Contract Button */}
+        <div className="p-2">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] text-white rounded-lg hover:bg-[#1a4a5e] transition-colors"
+            className="w-full flex items-center justify-center gap-2 p-3 border border-[#1a4a5e] rounded-md hover:bg-[#1a4a5e] transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>{t('عقد جديد', 'New Contract')}</span>
           </button>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setLocation('/settings/personal')}
-              className="p-2 hover:bg-white/10 rounded transition-colors text-white"
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setLocation('/help')}
-              className="p-2 hover:bg-white/10 rounded transition-colors text-white"
-            >
-              <HelpCircle className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => logoutMutation.mutate()}
-              className="p-2 hover:bg-white/10 rounded transition-colors text-white"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+        </div>
+
+        {/* Contracts List */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-2">
+            {contracts.map(contract => (
+              <button
+                key={contract.id}
+                onClick={() => setSelectedContract(contract)}
+                className={cn(
+                  "w-full text-left p-3 rounded hover:bg-[#1a4a5e] transition-colors mb-1",
+                  selectedContract?.id === contract.id && "bg-[#1a4a5e]"
+                )}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-medium truncate">{contract.name}</span>
+                  <span className="text-xs">
+                    {contract.riskLevel === 'low' && '🟢'}
+                    {contract.riskLevel === 'medium' && '🟡'}
+                    {contract.riskLevel === 'high' && '🔴'}
+                  </span>
+                </div>
+                <span className="text-xs text-gray-400">{contract.date}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div className="border-t border-[#1a4a5e] p-3">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                <User className="w-4 h-4" />
+              </div>
+              <span className="text-sm truncate">{user?.fullName}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setLocation('/settings/personal')}
+                className="p-1.5 hover:bg-white/10 rounded transition-colors"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setLocation('/help')}
+                className="p-1.5 hover:bg-white/10 rounded transition-colors"
+              >
+                <HelpCircle className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => logoutMutation.mutate()}
+                className="p-1.5 hover:bg-white/10 rounded transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          {/* Token Balance */}
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <span>🪙</span>
+            <span>{userTokens.toLocaleString()} tokens</span>
           </div>
         </div>
       </div>
 
+      {/* Mobile Sidebar Toggle */}
+      <button
+        onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+        className={cn(
+          "lg:hidden fixed top-4 z-50 p-2 bg-[#202123] text-white rounded-md",
+          isRTL ? "right-4" : "left-4"
+        )}
+      >
+        {showMobileSidebar ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col pt-20">
+      <div className="flex-1 flex flex-col">
         {selectedContract ? (
           <>
             {/* Contract Header */}
@@ -346,7 +400,7 @@ export default function Dashboard() {
             </div>
 
             {/* Input Area */}
-            <div className="fixed bottom-0 left-0 right-0 bg-[#40414F] border-t border-[#565869] p-4">
+            <div className="fixed bottom-0 left-0 right-0 bg-[#40414F] border-t border-[#565869] p-4" style={{left: isRTL ? 'auto' : '260px', right: isRTL ? '260px' : 'auto'}}>
               <div className="max-w-3xl mx-auto">
                 <div className="relative">
                   <input
@@ -387,57 +441,21 @@ export default function Dashboard() {
           /* Empty State */
           <div className="flex-1 flex flex-col">
             <div className="flex-1 flex items-center justify-center pb-24">
-              <div className="max-w-4xl w-full px-4">
-                <div className="text-center mb-12">
-                  <h2 className="text-3xl font-medium text-white mb-2">
+              <div className="max-w-3xl w-full px-4">
+                <div className="text-center mb-8">
+                  <h1 className="text-3xl font-medium text-white mb-2">
+                    {t(`مرحباً ${user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${user?.fullName?.split(' ')[0] || ''}`)}
+                  </h1>
+                  <h2 className="text-2xl text-gray-300 mb-2">
                     {t('قم برفع عقد للبدء', 'Upload a contract to start')}
                   </h2>
-                  <p className="text-gray-400 text-lg">
+                  <p className="text-gray-400">
                     {t('تحليل ذكي للعقود باللغتين العربية والإنجليزية', 'Smart contract analysis in Arabic and English')}
                   </p>
                 </div>
 
-                {/* Contracts List */}
-                {contracts.length > 0 && (
-                  <div className="mb-8">
-                    <h3 className="text-xl text-white mb-4">{t('العقود المرفوعة', 'Uploaded Contracts')}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {contracts.map(contract => (
-                        <button
-                          key={contract.id}
-                          onClick={() => setSelectedContract(contract)}
-                          className="p-4 bg-[#0a1f2a] bg-opacity-80 backdrop-blur-lg border border-[#1a4a5e] rounded-lg hover:bg-[#1a4a5e] transition-colors text-left"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-white font-medium truncate">{contract.name}</span>
-                            <span className="text-lg">
-                              {contract.riskLevel === 'low' && '🟢'}
-                              {contract.riskLevel === 'medium' && '🟡'}
-                              {contract.riskLevel === 'high' && '🔴'}
-                            </span>
-                          </div>
-                          <span className="text-sm text-gray-400">{contract.date}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Example Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                  {exampleCards.map((card, index) => (
-                    <div key={index} className="bg-white rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow">
-                      <div className="flex items-center gap-3">
-                        <div className="text-gray-600">{card.icon}</div>
-                        <span className="text-gray-800">{card.title}</span>
-                        <ChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
                 {/* Chat Input Bar */}
-                <div className="bg-[#0a1f2a] bg-opacity-80 backdrop-blur-lg border border-[#1a4a5e] rounded-lg p-4">
+                <div className="mt-8 bg-[#0a1f2a] bg-opacity-80 backdrop-blur-lg border border-[#1a4a5e] rounded-lg p-4">
                   <div className="relative flex items-center gap-2">
                     <input
                       type="text"
