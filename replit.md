@@ -17,6 +17,9 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Changed input chat bar text color from white to dark gray (text-gray-900) for better visibility
     - Removed border line below profile dropdown (SA. icon) in top header bar
     - Maintained consistent color scheme across sidebar, main content area, and sliding panels
+    - Fixed input field visibility with white background and dark text for proper contrast
+    - Increased spacing between language toggle and profile dropdown (mr-8) for better visual separation
+    - Adjusted welcome text positioning above chatbar with 48px spacing
 - **July 13, 2025**:
   - **Hamburger Menu Animation Enhancement**: 
     - Changed X animation to display ContraMind logo icon when sidebar is collapsed
