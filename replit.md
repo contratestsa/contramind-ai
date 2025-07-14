@@ -4,19 +4,7 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
-- **July 14, 2025** (Latest):
-  - **Light Theme Conversion Complete**: Converted all four sidebar pages to light theme
-    - Analytics & Reports: Charts, metrics cards, and analytics sections with light backgrounds
-    - Parties & Contacts: Table-based layout with light theme styling and gray borders
-    - Notifications: Tabs, notification items, badges, and preference toggles in light theme
-    - Tags & Categories: Category cards, tag details panel, and governance rules with light backgrounds
-    - All pages now use ContraMind colors (#0C2836 navy, #B7DEE8 sky blue) on light backgrounds
-    - Maintained 16-px vertical rhythm and 150ms Framer Motion animations
-  - **Database Fix**: Fixed getRecentContracts query to handle database column name mismatches
-    - Database uses different column names (name/parties/start_date) than schema (title/partyName/date)
-    - Implemented raw SQL query with COALESCE to handle column variations
-    - Added 5 sample contracts for testing (service, nda, employment, sales types)
-- **July 14, 2025** (Earlier):
+- **July 14, 2025**:
   - **Help Center Enhancement**: Added three new Help menu pages while preserving existing Help Center
     - Created Desktop App page (/help/desktop-app) with download cards for macOS and Windows
     - Added Release Notes page (/help/release-notes) with timeline view and filter chips

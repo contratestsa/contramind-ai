@@ -253,27 +253,27 @@ export class DatabaseStorage implements IStorage {
 
   async getRecentContracts(userId: number, limit: number = 5): Promise<any[]> {
     try {
-      // Use raw SQL to avoid column mapping issues
-      const result = await db.execute<any>(`
-        SELECT 
-          id,
-          user_id as "userId",
-          COALESCE(title, name, 'Untitled Contract') as title,
-          COALESCE(party_name, parties, '') as "partyName",
-          type,
-          status,
-          COALESCE(start_date, created_at) as date,
-          risk_level as "riskLevel",
-          COALESCE(file_path, '') as "fileUrl",
-          created_at as "createdAt",
-          updated_at as "updatedAt"
-        FROM contracts
-        WHERE user_id = ${userId}
-        ORDER BY created_at DESC
-        LIMIT ${limit}
-      `);
+      const result = await db
+        .select()
+        .from(contracts)
+        .where(eq(contracts.userId, userId))
+        .orderBy(desc(contracts.createdAt))
+        .limit(limit);
       
-      return result.rows || [];
+      // Map database columns to expected interface
+      return result.map(contract => ({
+        id: contract.id,
+        userId: contract.userId,
+        title: contract.title || (contract as any).name || 'Untitled Contract',
+        partyName: contract.partyName || (contract as any).parties || '',
+        type: contract.type,
+        status: contract.status,
+        date: (contract as any).startDate || contract.createdAt,
+        riskLevel: contract.riskLevel,
+        fileUrl: (contract as any).filePath || (contract as any).fileUrl,
+        createdAt: contract.createdAt,
+        updatedAt: contract.updatedAt
+      }));
     } catch (error) {
       console.error('Error in getRecentContracts:', error);
       // Return empty array on error to avoid breaking the UI
