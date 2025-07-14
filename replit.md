@@ -5,6 +5,11 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 14, 2025**:
+  - **Profile Dropdown Update**: Removed "Workspace settings" option from profile dropdown
+    - Deleted the workspace settings menu item that was showing "Coming Soon"
+    - Cleaned up unused Building icon import from lucide-react
+    - Simplified profile dropdown menu to focus on active features
+- **July 14, 2025** (Earlier):
   - **Arabic UI Chat Controls Positioning**: Fixed chat controls positioning for RTL layout
     - Updated both empty state and active chat positioning to use dynamic RTL-aware logic
     - Chat controls now use `right: ${sidebarWidth}px` for Arabic and `left: ${sidebarWidth}px` for English

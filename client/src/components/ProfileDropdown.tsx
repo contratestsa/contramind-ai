@@ -8,8 +8,7 @@ import {
   Settings, 
   Palette, 
   HelpCircle, 
-  LogOut,
-  Building
+  LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -117,15 +116,6 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
           title: t('قريباً', 'Coming Soon'),
           description: t('هذه الميزة قيد التطوير', 'This feature is under development')
         });
-      }
-    },
-    {
-      type: 'item' as const,
-      icon: Building,
-      label: t('إعدادات مساحة العمل', 'Workspace settings'),
-      onClick: () => {
-        setIsOpen(false);
-        setLocation('/settings/organization');
       }
     },
     {
