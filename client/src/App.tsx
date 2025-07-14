@@ -39,7 +39,7 @@ function Router() {
       <Route path="/tasks" component={Tasks} />
       <Route path="/release-notes" component={ReleaseNotes} />
       <Route path="/terms" component={Terms} />
-      <Route path="/desktop-app" component={DownloadApps} />
+      <Route path="/download-apps" component={DownloadApps} />
       <Route path="/keyboard-shortcuts" component={KeyboardShortcuts} />
 
       <Route component={NotFound} />

@@ -71,9 +71,9 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
     },
     {
       icon: Download,
-      label: t('تطبيق سطح المكتب', 'Desktop App'),
-      path: '/desktop-app',
-      ariaLabel: 'Desktop App'
+      label: t('تحميل التطبيقات', 'Download Apps'),
+      path: '/download-apps',
+      ariaLabel: 'Download Apps'
     },
     {
       icon: Command,
