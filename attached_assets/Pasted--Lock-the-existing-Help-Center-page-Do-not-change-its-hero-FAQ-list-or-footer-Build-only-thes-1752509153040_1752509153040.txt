@@ -1,0 +1,50 @@
+* Lock the existing Help Center page. Do not change its hero, FAQ list, or footer.
+* Build only these three Help-menu pages:
+    1. Desktop App
+    2. Release Notes
+    3. Terms & Policies
+* Remove every trace of “Keyboard Shortcuts” from menus, routes, and code.
+1 Bilingual / RTL–LTR Requirements – non-negotiable
+* Every new component must render identically in Arabic (RTL) and English (LTR).
+    * Grids, paddings, icon placement, breadcrumbs, and animation directions must flip correctly when RTL is active.
+    * Use the existing language-toggle hook; verify each page in both directions before marking complete.
+* Framer Motion slide-in/out must originate from the logical edge (left in LTR, right in RTL).
+* Apply the approved Arabic font stack; keep line-height equal to English.
+2 Design System Constraints
+* Colours: primary #0C2836, accent #B7DEE8.
+* 16 px vertical rhythm on all spacing.
+* Page-enter and hover transitions = 150 ms fade/slide via Framer Motion.
+* Provide skeleton loaders or “Coming soon” placeholders where real content isn’t ready.
+* All interactive elements keyboard-navigable and aria-labelled in both languages.
+3 Page Specifications
+
+Page( Desktop App)
+Mandatory sections
+ Intro blurb: “Install ContraMind on your desktop for a faster, native experience.”
+• Two download cards – macOS (.dmg) and Windows (.exe) – each with icon, file size, version, QR code, and “Download” button.
+• Teaser strip: “Linux support coming soon — sign up for updates.”
+• System-requirements bullet list at bottom.
+
+Page(Release Notes)  
+Mandatory sections
+• Header: “What’s New”.
+• Filter chips: All · Web · Desktop · Mobile.
+• Vertical timeline with five sample version entries (tag, date, three-bullet highlights).
+• Sticky “Latest Release” badge that scroll-jumps to newest entry.
+
+ Page(Terms & Policies)
+• Sticky side TOC with anchors: Terms of Service, Privacy Policy, Cookie Policy (mirrored for RTL).
+• Long-form placeholder content under each H2 heading.
+• Optional acceptance banner (“By continuing, you agree…”) toggleable during sign-up flow.
+
+4 Routing & Breadcrumbs
+* Clean URLs: /help/desktop-app, /help/release-notes, /help/terms.
+* Breadcrumb format: Help › {Page Name} (order flips in RTL).
+5 Deliverables
+1. Page components for Desktop App, Release Notes, Terms & Policies, fully styled and bilingual.
+2. Route registrations and breadcrumb hooks.
+3. Removal of all Keyboard Shortcuts references.
+4. Verification checklist (RTL/LTR, keyboard navigation, aria labels, motion).
+Reminder: Help Center remains untouched. Build only the three pages above, and ensure flawless Arabic–English symmetry throughout.
+
+

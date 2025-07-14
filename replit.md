@@ -5,6 +5,14 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 14, 2025**:
+  - **Help Center Enhancement**: Added three new Help menu pages while preserving existing Help Center
+    - Created Desktop App page (/help/desktop-app) with download cards for macOS and Windows
+    - Added Release Notes page (/help/release-notes) with timeline view and filter chips
+    - Implemented Terms & Policies page (/help/terms) with sticky TOC and scrollable sections
+    - All pages fully bilingual with RTL/LTR support and proper Arabic font rendering
+    - Updated Help Center with navigation cards to new pages without modifying FAQ or footer
+    - Applied 150ms Framer Motion transitions and ContraMind brand colors throughout
+    - Added breadcrumb navigation on all new pages with RTL-aware ordering
   - **Profile Dropdown Update**: Removed "Workspace settings" option from profile dropdown
     - Deleted the workspace settings menu item that was showing "Coming Soon"
     - Cleaned up unused Building icon import from lucide-react

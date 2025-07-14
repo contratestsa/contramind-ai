@@ -8,7 +8,11 @@ import {
   Menu,
   ArrowLeft,
   MessageCircle,
-  Mail
+  Mail,
+  Monitor,
+  FileText,
+  Shield,
+  ChevronRight
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import { useLanguage } from "@/hooks/useLanguage";
@@ -191,6 +195,63 @@ export default function Help() {
               <p className="text-[rgba(255,255,255,0.7)] text-sm">
                 {t('الأسئلة الشائعة ومعلومات الدعم', 'Frequently asked questions and support information')}
               </p>
+            </div>
+
+            {/* Quick Links */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <button
+                onClick={() => setLocation('/help/desktop-app')}
+                className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors text-left group"
+              >
+                <div className={cn("flex items-start justify-between", language === 'ar' && "flex-row-reverse")}>
+                  <div className={cn("flex-1", language === 'ar' && "text-right")}>
+                    <Monitor className="w-8 h-8 text-[#B7DEE8] mb-3" />
+                    <h3 className="text-white font-medium text-lg mb-2">
+                      {t('تطبيق سطح المكتب', 'Desktop App')}
+                    </h3>
+                    <p className="text-[rgba(255,255,255,0.6)] text-sm">
+                      {t('تحميل ContraMind لنظام macOS و Windows', 'Download ContraMind for macOS and Windows')}
+                    </p>
+                  </div>
+                  <ChevronRight className={cn("w-5 h-5 text-[#B7DEE8] mt-1 opacity-0 group-hover:opacity-100 transition-opacity", language === 'ar' && "rotate-180")} />
+                </div>
+              </button>
+
+              <button
+                onClick={() => setLocation('/help/release-notes')}
+                className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors text-left group"
+              >
+                <div className={cn("flex items-start justify-between", language === 'ar' && "flex-row-reverse")}>
+                  <div className={cn("flex-1", language === 'ar' && "text-right")}>
+                    <FileText className="w-8 h-8 text-[#B7DEE8] mb-3" />
+                    <h3 className="text-white font-medium text-lg mb-2">
+                      {t('ملاحظات الإصدار', 'Release Notes')}
+                    </h3>
+                    <p className="text-[rgba(255,255,255,0.6)] text-sm">
+                      {t('تابع آخر التحديثات والميزات الجديدة', 'Keep track of updates and new features')}
+                    </p>
+                  </div>
+                  <ChevronRight className={cn("w-5 h-5 text-[#B7DEE8] mt-1 opacity-0 group-hover:opacity-100 transition-opacity", language === 'ar' && "rotate-180")} />
+                </div>
+              </button>
+
+              <button
+                onClick={() => setLocation('/help/terms')}
+                className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors text-left group"
+              >
+                <div className={cn("flex items-start justify-between", language === 'ar' && "flex-row-reverse")}>
+                  <div className={cn("flex-1", language === 'ar' && "text-right")}>
+                    <Shield className="w-8 h-8 text-[#B7DEE8] mb-3" />
+                    <h3 className="text-white font-medium text-lg mb-2">
+                      {t('الشروط والسياسات', 'Terms & Policies')}
+                    </h3>
+                    <p className="text-[rgba(255,255,255,0.6)] text-sm">
+                      {t('شروط الخدمة وسياسات الخصوصية', 'Terms of Service and Privacy Policies')}
+                    </p>
+                  </div>
+                  <ChevronRight className={cn("w-5 h-5 text-[#B7DEE8] mt-1 opacity-0 group-hover:opacity-100 transition-opacity", language === 'ar' && "rotate-180")} />
+                </div>
+              </button>
             </div>
 
             {/* FAQ Section */}
