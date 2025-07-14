@@ -640,7 +640,7 @@ export default function Dashboard() {
                       }
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="w-full bg-[#1a3a4a] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
+                    className="w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50"
                     maxLength={500}
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -704,7 +704,7 @@ export default function Dashboard() {
                     <input
                     type="text"
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
-                    className="w-full bg-[#1a3a4a] border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-white placeholder-[rgba(183,222,232,0.6)] focus:outline-none focus:border-[#B7DEE8]"
+                    className="w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg pl-4 pr-24 py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !selectedContract) {
                         toast({
