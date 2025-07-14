@@ -6,17 +6,31 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
   Plus, Edit2, Trash2, Lock, Unlock, Zap, Hash,
-  FolderOpen, ChevronDown, Search
+  FolderOpen, ChevronDown, Search, Menu, Globe
 } from 'lucide-react';
+import DashboardSidebar from '@/components/DashboardSidebar';
+import ProfileDropdown from '@/components/ProfileDropdown';
+import { useToast } from '@/hooks/use-toast';
 
 export default function TagsCategories() {
   const [, setLocation] = useLocation();
   const { user, isLoading } = useAuth();
-  const { language, t } = useLanguage();
+  const { language, t, setLanguage } = useLanguage();
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['contract-type', 'risk']);
   const [selectedTag, setSelectedTag] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const { toast } = useToast();
+  const isRTL = language === 'ar';
+
+  const handleNewContract = () => {
+    toast({
+      title: t('قريباً', 'Coming Soon'),
+      description: t('هذه الميزة قيد التطوير', 'This feature is under development')
+    });
+  };
 
   if (isLoading) {
     return (
@@ -130,9 +144,58 @@ export default function TagsCategories() {
   })).filter(category => category.children.length > 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Main Content - Scrollable Column Shell */}
-      <div className="p-4 md:p-6 max-w-7xl mx-auto">
+    <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
+      {/* Sidebar */}
+      <DashboardSidebar
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+        showMobile={showMobileSidebar}
+        setShowMobile={setShowMobileSidebar}
+        activePage="tags"
+        onNewContract={handleNewContract}
+      />
+
+      {/* Mobile Sidebar Toggle */}
+      <button
+        onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+        className={cn(
+          "lg:hidden fixed top-4 z-50 p-2 bg-[#0C2836] text-white rounded-md shadow-lg",
+          isRTL ? "right-4" : "left-4",
+          showMobileSidebar && "hidden"
+        )}
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {/* Main Content Area */}
+      <div className="flex-1 h-screen flex flex-col bg-gray-50">
+        {/* Top Header Bar */}
+        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3 relative z-30">
+          <div className="flex items-center justify-between">
+            <div className="flex-1"></div>
+            
+            {/* Language Toggle */}
+            <button
+              onClick={() => {
+                const newLang = language === 'ar' ? 'en' : 'ar';
+                setLanguage(newLang);
+              }}
+              className="mr-8 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2"
+            >
+              <Globe className="w-4 h-4" />
+              {language === 'ar' ? 'EN' : 'AR'}
+            </button>
+            
+            {/* Profile Dropdown */}
+            <div className="relative z-50">
+              <ProfileDropdown user={user} />
+            </div>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4 md:p-6 max-w-7xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -374,18 +437,20 @@ export default function TagsCategories() {
             </div>
           </motion.div>
         </motion.div>
-      </div>
+          </div>
+        </div>
 
-      {/* FAB */}
-      <button 
-        onClick={() => setShowAddModal(true)}
-        className={cn(
-          "fixed bottom-8 w-14 h-14 bg-[#0C2836] rounded-full shadow-lg flex items-center justify-center hover:bg-[#1a4158] transition-colors duration-150",
-          language === 'ar' ? "left-8" : "right-8"
-        )}
-      >
-        <span className="text-white text-2xl">+</span>
-      </button>
+        {/* FAB */}
+        <button 
+          onClick={() => setShowAddModal(true)}
+          className={cn(
+            "fixed bottom-8 w-14 h-14 bg-[#0C2836] rounded-full shadow-lg flex items-center justify-center hover:bg-[#1a4158] transition-colors duration-150",
+            language === 'ar' ? "left-8" : "right-8"
+          )}
+        >
+          <span className="text-white text-2xl">+</span>
+        </button>
+      </div>
     </div>
   );
 }
