@@ -1,5 +1,5 @@
-import { useLanguage as useLanguageContext } from '@/components/SimpleLanguage';
+import { useSimpleLanguage } from './useSimpleLanguage';
 
 export function useLanguage() {
-  return useLanguageContext();
+  return useSimpleLanguage();
 }
