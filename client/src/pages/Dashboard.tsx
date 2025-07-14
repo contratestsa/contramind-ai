@@ -674,9 +674,6 @@ export default function Dashboard() {
                     <h1 className="text-2xl font-medium text-white mb-2">
                       {t(`مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`)}
                     </h1>
-                    <p className="text-base font-normal text-gray-400">
-                      {t('قم برفع عقد للبدء', 'Upload a contract to start')}
-                    </p>
                   </div>
                 )}
 
