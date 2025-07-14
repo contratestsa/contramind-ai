@@ -610,10 +610,10 @@ export default function Dashboard() {
 
             {/* Input Area - Centered when no messages, Fixed at bottom when messages exist */}
             <div 
-              className="fixed bg-[rgba(183,222,232,0.1)] p-3"
+              className="fixed inset-x-0 bg-[rgba(183,222,232,0.1)] p-3"
               style={{ 
-                left: isSidebarCollapsed ? '60px' : '260px',
-                right: 0,
+                paddingLeft: isSidebarCollapsed ? '60px' : '260px',
+                paddingRight: 0,
                 ...(messages.length === 0 
                   ? { top: '50%', transform: 'translateY(-50%)' }
                   : { bottom: '32px' }
@@ -682,14 +682,11 @@ export default function Dashboard() {
 
             {/* Centered Input Bar Container - Only when no chat started */}
             <div 
-              className="absolute flex items-center justify-center"
+              className="absolute inset-0 flex items-center justify-center"
               style={{ 
-                left: isSidebarCollapsed ? '60px' : '260px',
-                right: 0,
-                top: 0,
-                bottom: 0,
-                paddingRight: '20%',
-                transition: 'left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                paddingLeft: isSidebarCollapsed ? '60px' : '260px',
+                paddingRight: '0px',
+                transition: 'padding-left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               <div className="w-full max-w-3xl px-6">
