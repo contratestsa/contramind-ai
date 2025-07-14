@@ -462,7 +462,10 @@ export default function Dashboard() {
           <nav className="px-3 pb-3">
             <div className="space-y-1">
               <button
-                onClick={() => setLocation('/analytics')}
+                onClick={() => {
+                  console.log('Navigating to /analytics');
+                  setLocation('/analytics');
+                }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
@@ -474,7 +477,10 @@ export default function Dashboard() {
               </button>
               
               <button
-                onClick={() => setLocation('/parties')}
+                onClick={() => {
+                  console.log('Navigating to /parties');
+                  setLocation('/parties');
+                }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
@@ -486,7 +492,10 @@ export default function Dashboard() {
               </button>
               
               <button
-                onClick={() => setLocation('/notifications')}
+                onClick={() => {
+                  console.log('Navigating to /notifications');
+                  setLocation('/notifications');
+                }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
@@ -498,7 +507,10 @@ export default function Dashboard() {
               </button>
               
               <button
-                onClick={() => setLocation('/tags')}
+                onClick={() => {
+                  console.log('Navigating to /tags');
+                  setLocation('/tags');
+                }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3"
