@@ -1,14 +1,39 @@
+import { useState } from 'react';
+import { useLocation } from 'wouter';
+import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
-  TrendingUp, Clock, Shield, DollarSign, FileText,
-  Calendar, BarChart2, Activity
+  ArrowLeft, Menu, Settings, HelpCircle, LogOut, ChevronRight,
+  TrendingUp, Clock, Shield, DollarSign, FileText, Download,
+  Calendar, AlertTriangle, BarChart2, Activity, Send
 } from 'lucide-react';
-import DashboardLayout from '@/components/DashboardLayout';
+import logoImage from "@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png";
 
 export default function AnalyticsReports() {
+  const [, setLocation] = useLocation();
+  const { user, isLoading, logout } = useAuth();
   const { language, t } = useLanguage();
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    setLocation('/');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#343541]">
+        <div className="text-white">{t('جاري التحميل...', 'Loading...')}</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    setLocation('/');
+    return null;
+  }
 
   // KPI Data - exactly 5 cards as requested
   const kpiData = [
@@ -51,9 +76,123 @@ export default function AnalyticsReports() {
   ];
 
   return (
-    <DashboardLayout currentPage="analytics">
-      {/* Main Content - 16px vertical rhythm */}
-      <div className="p-4 md:p-6 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#0C2836] flex">
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={cn(
+        "w-[260px] h-screen bg-[#0C2836] flex flex-col fixed z-50 transition-transform duration-300",
+        language === 'ar' ? "right-0" : "left-0",
+        showMobileSidebar ? "translate-x-0" : language === 'ar' ? "translate-x-full" : "-translate-x-full",
+        !showMobileSidebar && "lg:translate-x-0"
+      )}>
+        {/* Logo */}
+        <div className="p-4 border-b border-[rgba(183,222,232,0.1)]">
+          <img 
+            src={logoImage} 
+            alt="ContraMind Logo" 
+            className="w-full h-12 object-contain"
+          />
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          <button
+            onClick={() => setLocation('/dashboard')}
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white", 
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <ArrowLeft className={cn("w-4 h-4 text-[#B7DEE8]", language === 'ar' && "rotate-180")} />
+            <span className="text-sm">{t('العودة للوحة التحكم', 'Back to Dashboard')}</span>
+          </button>
+          
+          <button
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg bg-[rgba(183,222,232,0.1)] text-white",
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <BarChart2 className="w-4 h-4 text-[#B7DEE8]" />
+            <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>
+          </button>
+
+          <button
+            onClick={() => setLocation('/parties')}
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <FileText className="w-4 h-4 text-[#B7DEE8]" />
+            <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>
+          </button>
+
+          <button
+            onClick={() => setLocation('/notifications')}
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <AlertTriangle className="w-4 h-4 text-[#B7DEE8]" />
+            <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>
+          </button>
+
+          <button
+            onClick={() => setLocation('/tags')}
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <Activity className="w-4 h-4 text-[#B7DEE8]" />
+            <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>
+          </button>
+        </nav>
+
+        {/* Bottom Items */}
+        <div className="p-4 border-t border-[rgba(183,222,232,0.1)] space-y-2">
+          <button
+            onClick={() => setLocation('/settings/personal')}
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <Settings className="w-4 h-4 text-[#B7DEE8]" />
+            <span className="text-sm">{t('الإعدادات', 'Settings')}</span>
+          </button>
+          <button
+            onClick={() => setLocation('/help')}
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <HelpCircle className="w-4 h-4 text-[#B7DEE8]" />
+            <span className="text-sm">{t('المساعدة', 'Help')}</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
+          >
+            <LogOut className="w-4 h-4 text-[#B7DEE8]" />
+            <span className="text-sm">{t('تسجيل الخروج', 'Logout')}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content Area - Scrollable Column Shell */}
+      <div className={cn("flex-1 bg-[#f8f9fa] overflow-y-auto", language === 'ar' ? "lg:mr-[260px]" : "lg:ml-[260px]")}>
+        {/* Mobile Header */}
+        <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-gray-200">
+          <button
+            onClick={() => setShowMobileSidebar(true)}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5 text-[#0C2836]" />
+          </button>
+          <span className="text-[#0C2836] font-medium">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>
+          <div className="w-9" />
+        </div>
+
+        {/* Main Content - 16px vertical rhythm */}
+        <div className="p-4 md:p-6 max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -261,6 +400,7 @@ export default function AnalyticsReports() {
         <button className="fixed bottom-8 right-8 w-14 h-14 bg-[#B7DEE8] rounded-full shadow-lg flex items-center justify-center hover:bg-[rgba(183,222,232,0.9)] transition-colors">
           <span className="text-[#0C2836] text-2xl">+</span>
         </button>
-    </DashboardLayout>
+      </div>
+    </div>
   );
 }
