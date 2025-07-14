@@ -256,12 +256,12 @@ export default function Help() {
 
             {/* FAQ Section */}
             <div className="space-y-4">
-              <h2 className={cn("text-xl font-medium text-white mb-4", language === 'ar' && "text-right")}>
+              <h2 className="text-xl font-medium text-white mb-4 text-center">
                 {t('الأسئلة الشائعة', 'Frequently Asked Questions')}
               </h2>
               
               {faqItems.map((item, index) => (
-                <div key={index} className={cn("bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors", language === 'ar' && "text-right")}>
+                <div key={index} className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors text-center">
                   <h3 className="text-white font-medium mb-3 text-base">
                     {language === 'ar' ? item.question.ar : item.question.en}
                   </h3>
@@ -273,14 +273,14 @@ export default function Help() {
             </div>
 
             {/* Contact Section */}
-            <div className={cn("bg-[rgba(183,222,232,0.1)] rounded-lg p-6 mt-8 border border-[rgba(183,222,232,0.2)]", language === 'ar' && "text-right")}>
+            <div className="bg-[rgba(183,222,232,0.1)] rounded-lg p-6 mt-8 border border-[rgba(183,222,232,0.2)] text-center">
               <h2 className="text-[#B7DEE8] text-xl font-medium mb-4">
                 {t('تحتاج إلى مساعدة إضافية؟', 'Need Additional Help?')}
               </h2>
               <p className="text-[rgba(255,255,255,0.7)] text-sm mb-4">
                 {t('تواصل مع فريق الدعم لدينا للحصول على المساعدة المباشرة', 'Contact our support team for direct assistance')}
               </p>
-              <div className={cn("flex items-center gap-2 text-[#B7DEE8]", language === 'ar' && "flex-row-reverse justify-end")}>
+              <div className="flex items-center gap-2 text-[#B7DEE8] justify-center">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm font-medium">Ceo@contramind.com</span>
               </div>
