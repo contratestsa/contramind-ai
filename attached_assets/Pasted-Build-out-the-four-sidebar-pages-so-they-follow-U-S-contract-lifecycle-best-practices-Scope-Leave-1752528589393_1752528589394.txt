@@ -1,0 +1,32 @@
+Build out the four sidebar pages so they follow U.S. contract-lifecycle best practices)
+
+Scope
+Leave all existing screens intact and create full, first-pass pages for the four sidebar modules:
+1. Analytics & Reports
+2. Parties & Contacts
+3. Notifications
+4. Tags & Categories
+Each new page must inherit the same scrollable-column shell used in the chat view, respect ContraMind colors , the 16-px vertical rhythm, Framer Motion 150 ms fades/slides, and bilingual RTL/LTR behaviour.
+
+Functional blueprint for each page
+Page	Mandatory sections / components
+Analytics & Reports	KPI ribbon (cycle-time, on-time renewals %, active obligations, avg risk score, savings captured) · Trend dashboards (line – cycle-time by contract type; bar – amendments/quarter; heatmap – risk vs counterparty) · Renewal & expiry radar (90 / 60 / 30-day countdown tiles with renew / renegotiate / terminate CTAs) · Clause usage & deviation drill-down (top ten negotiated clauses + deviation %) · Export & scheduling (PDF/Excel + “email weekly digest” toggle)
+Parties & Contacts	Global search + filters (name, FEIN/DUNS, country, vendor type, internal owner) · Counterparty profile (org info, W-9/W-8BEN status, diversity flags, sanctions screen result, master agreement link) · Contact directory (cards with role, phone, email, LinkedIn, “primary signatory” toggle) · Engagement timeline (chronological list of contracts & amendments) · Risk & compliance panel (litigation check, OFAC screen date, insurance-cert expiry) · Bulk actions (send NDA, request updated COI, link to CRM)
+Notifications	Three buckets: Action required (approval, signature, draft ready) shown as sticky priority cards with SLA timer · Upcoming deadlines (renewal, obligation, audit) sorted by due date with T-24 h escalation · System alerts (integration failure, permission change) collapsible list with “mute 7 days” · Preference center for email / in-app / Slack / push toggles. Keep a read/unread audit log.
+Tags & Categories	Hierarchical taxonomy builder (parent → child) · Bulk tag manager (add/merge/retire + “used N times” badge) · Governance rules (role-based edit rights, mandatory tags by contract type) · AI auto-suggest tags from clause extraction · Reporting hooks (surface tag counts to Analytics).
+
+Shared implementation rules
+* Layout: use same main-column shell; pin a small “+ New” FAB bottom-right for quick create.
+* Security: every export/download action behind permission gate with audit log entry.
+* Workflow hooks: add a “Send to Chat” icon near key widgets so users can drop insights straight into an active conversation.
+* RTL/LTR: tables and timelines must flip order in Arabic; center-aligned icons to avoid mirroring issues.
+* Placeholders: seed each chart/table with mock data and skeleton loaders; real data will hook in later.
+
+Deliverables
+1. Four page components with the sections listed above, styled and motion-ready.
+2. Updated routing and breadcrumb entries (e.g., /analytics, /parties, /notifications, /tags).
+3. Permission checks on export buttons and audit-log stubs.
+4. Verification checklist showing RTL/LTR pass, keyboard accessibility, and sample Framer Motion animations.
+
+Each phase builds upon the previous one, ensuring a smooth implementation process. We'll use Framer Motion for animations, maintain the existing ContraMind color scheme (#0C2836, #B7DEE8), and ensure all components are bilingual.
+
