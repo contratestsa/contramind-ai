@@ -670,7 +670,7 @@ export default function Dashboard() {
               <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
                 {/* Hero Section - Only shown when no messages */}
                 {messages.length === 0 && (
-                  <div className="text-center pt-32 pb-8 transition-all duration-300">
+                  <div className="text-center pt-32 pb-8 mb-16 transition-all duration-300">
                     <h1 className="text-2xl font-medium text-white mb-2">
                       {t(`مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`)}
                     </h1>
