@@ -13,6 +13,11 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Ensured horizontal centering remains consistent regardless of language direction
     - Chat controls respond dynamically to sidebar width changes in both languages
     - Fixed scrollable messages area padding to account for input bar height in both languages
+    - **Chat Input Icons**: Fixed icon positioning in chatbar for RTL layout
+      - Icons now appear on the left side of input field for Arabic (RTL)
+      - Icons remain on the right side for English (LTR)
+      - Updated padding to accommodate icon positioning (pl-24 for Arabic, pr-24 for English)
+      - Applied to both active chat and empty state input areas
 - **July 14, 2025** (Earlier):
   - **Dashboard Color Update**: Updated entire dashboard to use ContraMind brand colors
     - Replaced ChatGPT-style colors (#343541, #202123, #40414F) with ContraMind navy (#0C2836)
