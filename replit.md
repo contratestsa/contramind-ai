@@ -18,6 +18,15 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
       - Icons remain on the right side for English (LTR)
       - Updated padding to accommodate icon positioning (pl-24 for Arabic, pr-24 for English)
       - Applied to both active chat and empty state input areas
+    - **Prompt Button Functionality**: Fixed prompts to update chat input instead of sidebar search
+      - Changed onClick handlers to use setInputValue() instead of querySelector
+      - Prompts now properly populate the chat input field when clicked
+      - Added input focus after prompt selection for better UX
+    - **Welcome Text Positioning**: Moved welcome text to appear directly above chatbar
+      - Welcome text now displays "مرحباً Sarah" for Arabic and "Welcome back, Sarah" for English
+      - Positioned above the input area in empty state (centered vertically with input)
+      - Removed duplicate welcome text from content area
+      - Text dynamically switches based on language selection
 - **July 14, 2025** (Earlier):
   - **Dashboard Color Update**: Updated entire dashboard to use ContraMind brand colors
     - Replaced ChatGPT-style colors (#343541, #202123, #40414F) with ContraMind navy (#0C2836)

@@ -630,6 +630,17 @@ export default function Dashboard() {
               }}
             >
               <div className="w-full max-w-3xl px-6">
+                {/* Welcome Text Above Input Bar - Only when no messages */}
+                {!hasStartedChat && (
+                  <div className="text-center mb-12">
+                    <h1 className="text-2xl font-medium text-white">
+                      {isRTL 
+                        ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
+                        : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
+                      }
+                    </h1>
+                  </div>
+                )}
                 <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                 <div className="relative">
                   <input
@@ -678,17 +689,7 @@ export default function Dashboard() {
             {/* Messages/Content Area */}
             <div className="flex-1 overflow-y-auto flex flex-col">
               <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
-                {/* Hero Section - Only shown when no messages */}
-                {messages.length === 0 && (
-                  <div className="text-center pt-32 pb-8 mb-12 transition-all duration-300">
-                    <h1 className="text-2xl font-medium text-white mb-2">
-                      {t(`مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`, `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`)}
-                    </h1>
-                    <p className="text-base font-normal text-gray-400">
-                      {t('قم برفع عقد للبدء', 'Upload a contract to start')}
-                    </p>
-                  </div>
-                )}
+
 
                 {/* Spacer to push cards to bottom */}
                 <div className="flex-1"></div>
@@ -710,6 +711,16 @@ export default function Dashboard() {
               }}
             >
               <div className="w-full max-w-3xl px-6">
+                {/* Welcome Text Above Input Bar */}
+                <div className="text-center mb-12">
+                  <h1 className="text-2xl font-medium text-white">
+                    {isRTL 
+                      ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
+                      : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
+                    }
+                  </h1>
+                </div>
+                
                 {/* Input Bar */}
                 <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                   <div className="relative">
