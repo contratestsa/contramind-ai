@@ -86,8 +86,12 @@ export default function Dashboard() {
   const [slidingPanelContent, setSlidingPanelContent] = useState<'prompts' | 'contractDetails' | null>(null);
   const [activePromptTab, setActivePromptTab] = useState<'suggested' | 'myPrompts'>('suggested');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const isRTL = language === 'ar';
+  
+  // Dynamic sidebar width for layout calculations
+  const sidebarWidth = isSidebarCollapsed ? 60 : 260;
+  const hasStartedChat = messages.length > 0;
 
   // Archive state
   const [archivedChats, setArchivedChats] = useState<{
@@ -610,18 +614,19 @@ export default function Dashboard() {
 
             {/* Input Area - Centered when no messages, Fixed at bottom when messages exist */}
             <div 
-              className="fixed inset-x-0 bg-[rgba(183,222,232,0.1)] p-3"
+              className="fixed flex items-center justify-center"
               style={{ 
-                paddingLeft: isSidebarCollapsed ? '60px' : '260px',
-                paddingRight: 0,
-                ...(messages.length === 0 
-                  ? { top: '50%', transform: 'translateY(-50%)' }
-                  : { bottom: '32px' }
+                left: `${sidebarWidth}px`,
+                right: 0,
+                ...(hasStartedChat 
+                  ? { bottom: '32px', height: 'auto' }
+                  : { top: 0, bottom: 0 }
                 ),
                 transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
-              <div className="max-w-3xl mx-auto">
+              <div className="w-full max-w-3xl px-6">
+                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                 <div className="relative">
                   <input
                     type="text"
@@ -653,6 +658,7 @@ export default function Dashboard() {
                     </button>
                   </div>
                 </div>
+                </div>
               </div>
             </div>
           </div>
@@ -682,11 +688,13 @@ export default function Dashboard() {
 
             {/* Centered Input Bar Container - Only when no chat started */}
             <div 
-              className="absolute inset-0 flex items-center justify-center"
+              className="fixed flex items-center justify-center"
               style={{ 
-                paddingLeft: isSidebarCollapsed ? '60px' : '260px',
-                paddingRight: '0px',
-                transition: 'padding-left 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                left: `${sidebarWidth}px`,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             >
               <div className="w-full max-w-3xl px-6">
