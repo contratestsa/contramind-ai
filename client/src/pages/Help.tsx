@@ -188,7 +188,7 @@ export default function Help() {
         <div className="p-8 max-w-4xl mx-auto">
           <div className="max-w-3xl mx-auto space-y-6">
             {/* Header */}
-            <div className="mb-8">
+            <div className={cn("mb-8", language === 'ar' && "text-right")}>
               <h1 className="text-2xl font-semibold text-white mb-2">
                 {t('مركز المساعدة', 'Help Center')}
               </h1>
@@ -201,11 +201,11 @@ export default function Help() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <button
                 onClick={() => setLocation('/help/desktop-app')}
-                className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors text-left group"
+                className={cn("bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors group", language === 'ar' ? "text-right" : "text-left")}
               >
                 <div className={cn("flex items-start justify-between", language === 'ar' && "flex-row-reverse")}>
-                  <div className={cn("flex-1", language === 'ar' && "text-right")}>
-                    <Monitor className="w-8 h-8 text-[#B7DEE8] mb-3" />
+                  <div className="flex-1">
+                    <Monitor className={cn("w-8 h-8 text-[#B7DEE8] mb-3", language === 'ar' && "mr-auto")} />
                     <h3 className="text-white font-medium text-lg mb-2">
                       {t('تطبيق سطح المكتب', 'Desktop App')}
                     </h3>
@@ -219,11 +219,11 @@ export default function Help() {
 
               <button
                 onClick={() => setLocation('/help/release-notes')}
-                className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors text-left group"
+                className={cn("bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors group", language === 'ar' ? "text-right" : "text-left")}
               >
                 <div className={cn("flex items-start justify-between", language === 'ar' && "flex-row-reverse")}>
-                  <div className={cn("flex-1", language === 'ar' && "text-right")}>
-                    <FileText className="w-8 h-8 text-[#B7DEE8] mb-3" />
+                  <div className="flex-1">
+                    <FileText className={cn("w-8 h-8 text-[#B7DEE8] mb-3", language === 'ar' && "mr-auto")} />
                     <h3 className="text-white font-medium text-lg mb-2">
                       {t('ملاحظات الإصدار', 'Release Notes')}
                     </h3>
@@ -237,11 +237,11 @@ export default function Help() {
 
               <button
                 onClick={() => setLocation('/help/terms')}
-                className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors text-left group"
+                className={cn("bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors group", language === 'ar' ? "text-right" : "text-left")}
               >
                 <div className={cn("flex items-start justify-between", language === 'ar' && "flex-row-reverse")}>
-                  <div className={cn("flex-1", language === 'ar' && "text-right")}>
-                    <Shield className="w-8 h-8 text-[#B7DEE8] mb-3" />
+                  <div className="flex-1">
+                    <Shield className={cn("w-8 h-8 text-[#B7DEE8] mb-3", language === 'ar' && "mr-auto")} />
                     <h3 className="text-white font-medium text-lg mb-2">
                       {t('الشروط والسياسات', 'Terms & Policies')}
                     </h3>
@@ -256,12 +256,12 @@ export default function Help() {
 
             {/* FAQ Section */}
             <div className="space-y-4">
-              <h2 className="text-xl font-medium text-white mb-4">
+              <h2 className={cn("text-xl font-medium text-white mb-4", language === 'ar' && "text-right")}>
                 {t('الأسئلة الشائعة', 'Frequently Asked Questions')}
               </h2>
               
               {faqItems.map((item, index) => (
-                <div key={index} className="bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors">
+                <div key={index} className={cn("bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.1)] rounded-lg p-6 hover:bg-[rgba(183,222,232,0.1)] transition-colors", language === 'ar' && "text-right")}>
                   <h3 className="text-white font-medium mb-3 text-base">
                     {language === 'ar' ? item.question.ar : item.question.en}
                   </h3>
@@ -273,14 +273,14 @@ export default function Help() {
             </div>
 
             {/* Contact Section */}
-            <div className="bg-[rgba(183,222,232,0.1)] rounded-lg p-6 mt-8 border border-[rgba(183,222,232,0.2)]">
+            <div className={cn("bg-[rgba(183,222,232,0.1)] rounded-lg p-6 mt-8 border border-[rgba(183,222,232,0.2)]", language === 'ar' && "text-right")}>
               <h2 className="text-[#B7DEE8] text-xl font-medium mb-4">
                 {t('تحتاج إلى مساعدة إضافية؟', 'Need Additional Help?')}
               </h2>
               <p className="text-[rgba(255,255,255,0.7)] text-sm mb-4">
                 {t('تواصل مع فريق الدعم لدينا للحصول على المساعدة المباشرة', 'Contact our support team for direct assistance')}
               </p>
-              <div className="flex items-center gap-2 text-[#B7DEE8]">
+              <div className={cn("flex items-center gap-2 text-[#B7DEE8]", language === 'ar' && "flex-row-reverse justify-end")}>
                 <Mail className="w-4 h-4" />
                 <span className="text-sm font-medium">Ceo@contramind.com</span>
               </div>
