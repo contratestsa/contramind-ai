@@ -5,6 +5,15 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 15, 2025**:
+  - **Added Main Dashboard Sidebar to All Four Core Pages**: Successfully integrated DashboardSidebar component
+    - ✓ Analytics & Reports - Dashboard sidebar integrated
+    - ✓ Parties & Contacts - Dashboard sidebar integrated  
+    - ✓ Notifications - Dashboard sidebar integrated
+    - ✓ Tags & Categories - Dashboard sidebar integrated
+    - All pages now have consistent sidebar navigation with mobile responsive design
+    - Fixed database schema mismatch where actual columns differed from schema.ts definitions
+    - Updated getRecentContracts to use raw SQL with correct column mappings (name→title, parties→partyName, start_date→date)
+    - Added 5 sample contracts to database for testing
   - **Removed Sub-Sidebars from All Four Core Pages**: Successfully removed individual page sidebars
     - Removed sidebar from Tags & Categories page - now shows hierarchical tag taxonomy directly
     - Removed sidebar from Analytics & Reports page - displays KPI cards and charts without navigation
