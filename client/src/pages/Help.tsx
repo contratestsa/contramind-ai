@@ -120,8 +120,10 @@ export default function Help() {
       
       {/* Sidebar - GPT Style */}
       <div className={cn(
-        "w-[260px] h-screen bg-[#0C2836] flex flex-col fixed z-50 transition-transform duration-300 lg:translate-x-0",
-        showMobileSidebar ? "translate-x-0" : "-translate-x-full"
+        "w-[260px] h-screen bg-[#0C2836] flex flex-col fixed z-50 transition-transform duration-300",
+        language === 'ar' ? "right-0" : "left-0",
+        showMobileSidebar ? "translate-x-0" : language === 'ar' ? "translate-x-full" : "-translate-x-full",
+        !showMobileSidebar && "lg:translate-x-0"
       )}>
         {/* Logo */}
         <div className="p-4 border-b border-[rgba(183,222,232,0.1)]">
@@ -136,15 +138,17 @@ export default function Help() {
         <nav className="flex-1 p-4 space-y-2">
           <button
             onClick={() => setLocation('/dashboard')}
-            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white", 
+              language === 'ar' && "flex-row-reverse")}
           >
-            <ArrowLeft className="w-4 h-4 text-[#B7DEE8]" />
+            <ArrowLeft className={cn("w-4 h-4 text-[#B7DEE8]", language === 'ar' && "rotate-180")} />
             <span className="text-sm">{t('العودة للوحة التحكم', 'Back to Dashboard')}</span>
           </button>
           
           <button
             onClick={() => setLocation('/settings/personal')}
-            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
           >
             <Settings className="w-4 h-4 text-[#B7DEE8]" />
             <span className="text-sm">{t('الإعدادات', 'Settings')}</span>
@@ -155,14 +159,16 @@ export default function Help() {
         <div className="p-4 border-t border-[rgba(183,222,232,0.1)] space-y-2">
           <button
             onClick={() => setLocation('/help')}
-            className="w-full flex items-center gap-3 p-3 rounded-lg bg-[rgba(183,222,232,0.1)] text-white"
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg bg-[rgba(183,222,232,0.1)] text-white",
+              language === 'ar' && "flex-row-reverse")}
           >
             <HelpCircle className="w-4 h-4 text-[#B7DEE8]" />
             <span className="text-sm">{t('المساعدة', 'Help')}</span>
           </button>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white"
+            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
+              language === 'ar' && "flex-row-reverse")}
           >
             <LogOut className="w-4 h-4 text-[#B7DEE8]" />
             <span className="text-sm">{t('تسجيل الخروج', 'Logout')}</span>
@@ -171,7 +177,7 @@ export default function Help() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 lg:ml-[260px]">
+      <div className={cn("flex-1", language === 'ar' ? "lg:mr-[260px]" : "lg:ml-[260px]")}>
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between p-4 bg-[#40414F] border-b border-[#565869]">
           <button
