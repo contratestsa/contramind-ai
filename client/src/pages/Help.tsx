@@ -198,9 +198,6 @@ export default function Help() {
               <h1 className="text-2xl font-semibold text-white mb-2">
                 {t('مركز المساعدة', 'Help Center')}
               </h1>
-              <p className="text-[rgba(255,255,255,0.7)] text-sm">
-                {t('الأسئلة الشائعة ومعلومات الدعم', 'Frequently asked questions and support information')}
-              </p>
             </div>
 
             {/* Quick Links */}
