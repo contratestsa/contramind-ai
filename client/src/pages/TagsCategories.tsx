@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
@@ -33,6 +33,11 @@ export default function TagsCategories() {
         <div className="text-white">{t('جاري التحميل...', 'Loading...')}</div>
       </div>
     );
+  }
+
+  if (!user) {
+    setLocation('/');
+    return null;
   }
 
   // Mock taxonomy data
