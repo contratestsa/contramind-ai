@@ -20,15 +20,18 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
       - Applied to both active chat and empty state input areas
   - **Help Dropdown Expansion**: Implemented ChatGPT-style nested Help submenu
     - Added secondary panel that opens when clicking Help in the profile dropdown
-    - Created five new pages: Help Center, Release Notes, Terms & Policies, Download Apps, Keyboard Shortcuts
+    - Created five new pages: Help Center, Release Notes, Terms & Policies, Desktop App, Keyboard Shortcuts
     - Implemented hover/click interaction with smooth 150ms animations
     - Added proper icons for each menu item (HelpCircle, Megaphone, FileText, Download, Command)
     - Submenu positioned with RTL support (appears on left for Arabic, right for English)
     - Added 8px gap between submenu items for better visual separation
     - All pages route internally without full app reload
-    - Placeholder pages display "Coming soon" message with back navigation to dashboard
     - Menu closes automatically when selecting any item
     - Keyboard navigation support with Escape key to close menus
+    - **Release Notes page**: Vertical timeline with version history, filter bar (All/Web/Desktop/Mobile), latest release callout card
+    - **Terms & Policies page**: Sticky TOC sidebar with anchors, long-form documents for Terms of Service, Privacy Policy, Cookie Policy
+    - **Desktop App page**: Platform cards for macOS/Windows downloads, QR codes for quick download, Linux coming soon teaser, system requirements
+    - **Keyboard Shortcuts page**: Categorized shortcuts grid, automatic OS detection (Mac/Windows), visual key representations with proper styling
 - **July 14, 2025** (Earlier):
   - **Dashboard Color Update**: Updated entire dashboard to use ContraMind brand colors
     - Replaced ChatGPT-style colors (#343541, #202123, #40414F) with ContraMind navy (#0C2836)
