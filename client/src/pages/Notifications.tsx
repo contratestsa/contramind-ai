@@ -5,33 +5,24 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
-  ArrowLeft, Menu, Settings, HelpCircle, LogOut, Bell, Clock,
-  AlertCircle, CheckCircle, X, Mail, Smartphone, MessageSquare,
-  FileText, BarChart2, Activity, AlertTriangle, Calendar, Eye,
-  BellOff, Filter, Check
+  Bell, Clock, AlertCircle, CheckCircle, X, Mail, Smartphone, MessageSquare,
+  Calendar, Eye, BellOff, Filter, Check, AlertTriangle
 } from 'lucide-react';
-import logoImage from "@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png";
 
 export default function Notifications() {
   const [, setLocation] = useLocation();
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading } = useAuth();
   const { language, t } = useLanguage();
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [activeTab, setActiveTab] = useState('action');
   const [emailNotifs, setEmailNotifs] = useState(true);
   const [inAppNotifs, setInAppNotifs] = useState(true);
   const [slackNotifs, setSlackNotifs] = useState(false);
   const [pushNotifs, setPushNotifs] = useState(true);
 
-  const handleLogout = async () => {
-    await logout();
-    setLocation('/');
-  };
-
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#343541]">
-        <div className="text-white">{t('جاري التحميل...', 'Loading...')}</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-gray-600">{t('جاري التحميل...', 'Loading...')}</div>
       </div>
     );
   }
@@ -175,361 +166,280 @@ export default function Notifications() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'approval':
-      case 'renewal':
-        return CheckCircle;
       case 'signature':
-        return FileText;
+        return <CheckCircle className="w-5 h-5 text-[#0C2836]" />;
       case 'draft':
+        return <Bell className="w-5 h-5 text-[#B7DEE8]" />;
+      case 'renewal':
       case 'obligation':
-        return FileText;
+        return <Calendar className="w-5 h-5 text-[#0C2836]" />;
       case 'audit':
-        return AlertCircle;
+        return <AlertTriangle className="w-5 h-5 text-red-600" />;
       case 'integration':
       case 'permission':
       case 'system':
-        return AlertTriangle;
+        return <AlertCircle className="w-5 h-5 text-gray-600" />;
       default:
-        return Bell;
+        return <Bell className="w-5 h-5 text-gray-600" />;
     }
   };
 
-  const notifications = getNotificationsByTab();
+  const tabs = [
+    { id: 'action', label: t('يتطلب إجراء', 'Action Required'), count: actionRequiredNotifications.filter(n => !n.read).length },
+    { id: 'deadlines', label: t('المواعيد النهائية', 'Upcoming Deadlines'), count: upcomingDeadlines.filter(n => !n.read).length },
+    { id: 'system', label: t('تنبيهات النظام', 'System Alerts'), count: systemAlerts.filter(n => !n.read).length }
+  ];
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] flex">
-      {/* Mobile Sidebar Overlay */}
-      {showMobileSidebar && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setShowMobileSidebar(false)}
-        />
-      )}
-      
-      {/* Sidebar */}
-      <div className={cn(
-        "w-[260px] h-screen bg-[#0C2836] flex flex-col fixed z-50 transition-transform duration-300",
-        language === 'ar' ? "right-0" : "left-0",
-        showMobileSidebar ? "translate-x-0" : language === 'ar' ? "translate-x-full" : "-translate-x-full",
-        !showMobileSidebar && "lg:translate-x-0"
-      )}>
-        {/* Logo */}
-        <div className="p-4 border-b border-[rgba(183,222,232,0.1)]">
-          <img 
-            src={logoImage} 
-            alt="ContraMind Logo" 
-            className="w-full h-12 object-contain"
-          />
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Main Content - Scrollable Column Shell */}
+      <div className="p-4 md:p-6 max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15 }}
+          className="space-y-4"
+        >
+          {/* Header */}
+          <div className={cn("mb-4", language === 'ar' && "text-right")}>
+            <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
+              {t('الإشعارات', 'Notifications')}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              {t('إدارة التنبيهات والمواعيد النهائية', 'Manage alerts and deadlines')}
+            </p>
+          </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
-          <button
-            onClick={() => setLocation('/dashboard')}
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white", 
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <ArrowLeft className={cn("w-4 h-4 text-[#B7DEE8]", language === 'ar' && "rotate-180")} />
-            <span className="text-sm">{t('العودة للوحة التحكم', 'Back to Dashboard')}</span>
-          </button>
-          
-          <button
-            onClick={() => setLocation('/analytics')}
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <BarChart2 className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>
-          </button>
-
-          <button
-            onClick={() => setLocation('/parties')}
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <FileText className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>
-          </button>
-
-          <button
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg bg-[rgba(183,222,232,0.1)] text-white",
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <AlertTriangle className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>
-          </button>
-
-          <button
-            onClick={() => setLocation('/tags')}
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <Activity className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>
-          </button>
-        </nav>
-
-        {/* Bottom Items */}
-        <div className="p-4 border-t border-[rgba(183,222,232,0.1)] space-y-2">
-          <button
-            onClick={() => setLocation('/settings/personal')}
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <Settings className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('الإعدادات', 'Settings')}</span>
-          </button>
-          <button
-            onClick={() => setLocation('/help')}
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <HelpCircle className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('المساعدة', 'Help')}</span>
-          </button>
-          <button
-            onClick={handleLogout}
-            className={cn("w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[rgba(183,222,232,0.1)] transition-colors text-white",
-              language === 'ar' && "flex-row-reverse")}
-          >
-            <LogOut className="w-4 h-4 text-[#B7DEE8]" />
-            <span className="text-sm">{t('تسجيل الخروج', 'Logout')}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className={cn("flex-1", language === 'ar' ? "lg:mr-[260px]" : "lg:ml-[260px]")}>
-        {/* Mobile Header */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-[#40414F] border-b border-[#565869]">
-          <button
-            onClick={() => setShowMobileSidebar(true)}
-            className="p-2 hover:bg-[#565869] rounded-lg transition-colors"
-          >
-            <Menu className="w-5 h-5 text-white" />
-          </button>
-          <span className="text-white font-medium">{t('الإشعارات', 'Notifications')}</span>
-          <div className="w-9" />
-        </div>
-
-        {/* Main Content - Scrollable Column Shell */}
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.15 }}
-            className="space-y-4"
-          >
-            {/* Header */}
-            <div className={cn("mb-4", language === 'ar' && "text-right")}>
-              <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
-                {t('الإشعارات', 'Notifications')}
-              </h1>
-              <p className="text-gray-600 text-sm">
-                {t('إدارة الإشعارات والتنبيهات', 'Manage notifications and alerts')}
-              </p>
-            </div>
-
-            {/* Tabs */}
-            <div className="bg-white rounded-lg p-1 shadow-sm mb-4">
-              <div className={cn("flex", language === 'ar' && "flex-row-reverse")}>
-                {[
-                  { id: 'action', label: t('إجراء مطلوب', 'Action Required'), count: actionRequiredNotifications.filter(n => !n.read).length },
-                  { id: 'deadlines', label: t('المواعيد القادمة', 'Upcoming Deadlines'), count: upcomingDeadlines.filter(n => !n.read).length },
-                  { id: 'system', label: t('تنبيهات النظام', 'System Alerts'), count: systemAlerts.filter(n => !n.read).length }
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={cn(
-                      "flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150 relative",
-                      activeTab === tab.id
-                        ? "bg-[#B7DEE8] text-[#0C2836]"
-                        : "text-gray-600 hover:text-gray-900"
-                    )}
-                  >
-                    {tab.label}
+          {/* Tabs */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className={cn("flex border-b border-gray-200", language === 'ar' && "flex-row-reverse")}>
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex-1 px-4 py-3 text-sm font-medium transition-colors relative",
+                    activeTab === tab.id
+                      ? "text-[#0C2836] bg-gray-50"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  )}
+                >
+                  <div className={cn("flex items-center justify-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                    <span>{tab.label}</span>
                     {tab.count > 0 && (
-                      <span className={cn(
-                        "absolute top-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center",
-                        language === 'ar' ? "left-2" : "right-2"
-                      )}>
+                      <span className="px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full">
                         {tab.count}
                       </span>
                     )}
-                  </button>
-                ))}
-              </div>
+                  </div>
+                  {activeTab === tab.id && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0C2836]" />
+                  )}
+                </button>
+              ))}
             </div>
 
             {/* Notifications List */}
-            <div className="space-y-4">
-              {notifications.map((notification, index) => {
-                const Icon = getNotificationIcon(notification.type);
-                const isAction = activeTab === 'action';
-                const isDeadline = activeTab === 'deadlines';
-                const isSystem = activeTab === 'system';
-
-                return (
-                  <motion.div
-                    key={notification.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.15, delay: index * 0.02 }}
-                    className={cn(
-                      "bg-white rounded-lg p-4 shadow-sm border transition-all duration-150",
-                      !notification.read ? "border-[#B7DEE8]" : "border-gray-200",
-                      isAction && notification.priority === 'high' && "border-red-300 bg-red-50",
-                      isDeadline && notification.escalated && "border-yellow-300 bg-yellow-50"
-                    )}
-                  >
-                    <div className={cn("flex items-start gap-4", language === 'ar' && "flex-row-reverse")}>
-                      <div className={cn(
-                        "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
-                        !notification.read ? "bg-[#f0f9ff]" : "bg-gray-100"
-                      )}>
-                        <Icon className={cn(
-                          "w-5 h-5",
-                          !notification.read ? "text-[#0C2836]" : "text-gray-500"
-                        )} />
-                      </div>
-
-                      <div className="flex-1">
-                        <div className={cn("flex items-start justify-between mb-2", language === 'ar' && "flex-row-reverse")}>
-                          <div className={cn(language === 'ar' && "text-right")}>
-                            <h3 className={cn(
-                              "font-medium",
-                              !notification.read ? "text-gray-900" : "text-gray-700"
-                            )}>
-                              {language === 'ar' ? notification.titleAr : notification.title}
-                            </h3>
-                            <p className="text-gray-600 text-sm mt-1">
-                              {language === 'ar' ? notification.descriptionAr : notification.description}
-                            </p>
-                          </div>
-
-                          <div className={cn("flex items-center gap-2 ml-4", language === 'ar' && "mr-4 ml-0 flex-row-reverse")}>
-                            {isAction && (
-                              <div className={cn(
-                                "flex items-center gap-1 px-2 py-1 rounded text-xs font-medium",
-                                notification.priority === 'high' ? "bg-red-100 text-red-800" :
-                                notification.priority === 'medium' ? "bg-yellow-100 text-yellow-800" :
-                                "bg-green-100 text-green-800"
-                              )}>
-                                <Clock className="w-3 h-3" />
-                                <span>{notification.slaTimer}</span>
-                              </div>
-                            )}
-                            {isDeadline && (
-                              <div className={cn(
-                                "px-2 py-1 rounded text-xs font-medium",
-                                notification.daysRemaining <= 1 ? "bg-red-100 text-red-800" :
-                                notification.daysRemaining <= 7 ? "bg-yellow-100 text-yellow-800" :
-                                "bg-green-100 text-green-800"
-                              )}>
-                                {notification.daysRemaining}d
-                              </div>
-                            )}
-                            {isSystem && notification.muted && (
-                              <BellOff className="w-4 h-4 text-gray-400" />
-                            )}
-                          </div>
-                        </div>
-
-                        <div className={cn("flex items-center justify-between mt-3", language === 'ar' && "flex-row-reverse")}>
-                          <span className="text-gray-500 text-xs">{notification.timestamp}</span>
+            <div className="divide-y divide-gray-200">
+              {getNotificationsByTab().map((notification, index) => (
+                <motion.div
+                  key={notification.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.15, delay: index * 0.02 }}
+                  className={cn(
+                    "p-4 hover:bg-gray-50 transition-colors",
+                    !notification.read && "bg-blue-50"
+                  )}
+                >
+                  <div className={cn("flex items-start gap-3", language === 'ar' && "flex-row-reverse")}>
+                    {getNotificationIcon(notification.type)}
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className={cn("flex items-start justify-between gap-4", language === 'ar' && "flex-row-reverse")}>
+                        <div className={cn(language === 'ar' && "text-right")}>
+                          <h3 className="text-gray-900 font-medium">
+                            {language === 'ar' ? notification.titleAr : notification.title}
+                          </h3>
+                          <p className="text-gray-600 text-sm mt-0.5">
+                            {language === 'ar' ? notification.descriptionAr : notification.description}
+                          </p>
                           
-                          <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
-                            {isAction && (
-                              <>
-                                <button className="px-3 py-1 bg-[#0C2836] text-white rounded text-xs font-medium hover:bg-[#1a4158] transition-colors duration-150">
-                                  {notification.type === 'approval' ? t('موافقة', 'Approve') :
-                                   notification.type === 'signature' ? t('توقيع', 'Sign') :
-                                   t('مراجعة', 'Review')}
-                                </button>
-                                <button className="px-3 py-1 border border-[#B7DEE8] text-[#0C2836] rounded text-xs hover:bg-[#f0f9ff] transition-colors duration-150">
-                                  {t('تأجيل', 'Snooze')}
-                                </button>
-                              </>
+                          {/* SLA Timer or Due Date */}
+                          <div className={cn("flex items-center gap-4 mt-2", language === 'ar' && "flex-row-reverse")}>
+                            {notification.slaTimer && (
+                              <div className={cn("flex items-center gap-1", language === 'ar' && "flex-row-reverse")}>
+                                <Clock className="w-3 h-3 text-gray-400" />
+                                <span className={cn(
+                                  "text-xs font-medium",
+                                  notification.priority === 'high' ? "text-red-600" :
+                                  notification.priority === 'medium' ? "text-yellow-600" :
+                                  "text-gray-600"
+                                )}>
+                                  {t('متبقي', 'SLA')}: {notification.slaTimer}
+                                </span>
+                              </div>
                             )}
-                            {isDeadline && (
-                              <button className="px-3 py-1 border border-[#B7DEE8] text-[#0C2836] rounded text-xs hover:bg-[#f0f9ff] transition-colors duration-150">
-                                {t('عرض العقد', 'View Contract')}
-                              </button>
+                            
+                            {notification.daysRemaining !== undefined && (
+                              <div className={cn("flex items-center gap-1", language === 'ar' && "flex-row-reverse")}>
+                                <Calendar className="w-3 h-3 text-gray-400" />
+                                <span className={cn(
+                                  "text-xs font-medium",
+                                  notification.daysRemaining <= 1 ? "text-red-600" :
+                                  notification.daysRemaining <= 7 ? "text-yellow-600" :
+                                  "text-gray-600"
+                                )}>
+                                  {notification.daysRemaining} {t('يوم متبقي', 'days remaining')}
+                                </span>
+                              </div>
                             )}
-                            {isSystem && !notification.muted && (
-                              <button className="px-3 py-1 border border-[#B7DEE8] text-[#0C2836] rounded text-xs hover:bg-[#f0f9ff] transition-colors duration-150">
-                                {t('كتم لمدة 7 أيام', 'Mute 7 days')}
-                              </button>
-                            )}
-                            {!notification.read && (
-                              <button className="p-1 hover:bg-gray-100 rounded transition-colors duration-150">
-                                <Eye className="w-4 h-4 text-[#0C2836]" />
-                              </button>
-                            )}
+                            
+                            <span className="text-xs text-gray-500">{notification.timestamp}</span>
                           </div>
+                        </div>
+
+                        <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                          {!notification.read && (
+                            <button className="p-1 hover:bg-gray-200 rounded transition-colors">
+                              <Eye className="w-4 h-4 text-gray-600" />
+                            </button>
+                          )}
+                          {notification.muted !== undefined && (
+                            <button className="p-1 hover:bg-gray-200 rounded transition-colors">
+                              {notification.muted ? (
+                                <BellOff className="w-4 h-4 text-gray-400" />
+                              ) : (
+                                <Bell className="w-4 h-4 text-gray-600" />
+                              )}
+                            </button>
+                          )}
+                          <button className="p-1 hover:bg-gray-200 rounded transition-colors">
+                            <X className="w-4 h-4 text-gray-600" />
+                          </button>
                         </div>
                       </div>
                     </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            {/* Preference Center */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15, delay: 0.1 }}
-              className="bg-white rounded-lg p-6 shadow-sm mt-6"
-            >
-              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
-                {t('إعدادات الإشعارات', 'Notification Preferences')}
-              </h3>
-              
-              <div className="space-y-4">
-                {[
-                  { id: 'email', icon: Mail, label: t('البريد الإلكتروني', 'Email'), value: emailNotifs, setter: setEmailNotifs },
-                  { id: 'inapp', icon: Bell, label: t('داخل التطبيق', 'In-App'), value: inAppNotifs, setter: setInAppNotifs },
-                  { id: 'slack', icon: MessageSquare, label: 'Slack', value: slackNotifs, setter: setSlackNotifs },
-                  { id: 'push', icon: Smartphone, label: t('إشعارات الدفع', 'Push Notifications'), value: pushNotifs, setter: setPushNotifs }
-                ].map((pref) => (
-                  <div key={pref.id} className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
-                    <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                      <pref.icon className="w-4 h-4 text-[#0C2836]" />
-                      <span className="text-gray-700 text-sm">{pref.label}</span>
-                    </div>
-                    <button
-                      onClick={() => pref.setter(!pref.value)}
-                      className={cn(
-                        "w-12 h-6 rounded-full relative transition-colors duration-150",
-                        pref.value ? "bg-[#B7DEE8]" : "bg-gray-200"
-                      )}
-                    >
-                      <div className={cn(
-                        "w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform shadow-sm",
-                        pref.value ? "translate-x-6" : "translate-x-0.5"
-                      )} />
-                    </button>
                   </div>
-                ))}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Notification Preferences */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.15, delay: 0.2 }}
+            className="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+          >
+            <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+              {t('تفضيلات الإشعارات', 'Notification Preferences')}
+            </h3>
+
+            <div className="space-y-4">
+              {/* Email Notifications */}
+              <div className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
+                <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
+                  <Mail className="w-5 h-5 text-[#0C2836]" />
+                  <div className={cn(language === 'ar' && "text-right")}>
+                    <p className="text-gray-900 font-medium">{t('إشعارات البريد الإلكتروني', 'Email Notifications')}</p>
+                    <p className="text-gray-600 text-sm">{t('تلقي التحديثات المهمة عبر البريد الإلكتروني', 'Receive important updates via email')}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setEmailNotifs(!emailNotifs)}
+                  className={cn(
+                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                    emailNotifs ? "bg-[#0C2836]" : "bg-gray-200"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      emailNotifs ? "translate-x-6" : "translate-x-1"
+                    )}
+                  />
+                </button>
               </div>
 
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <p className={cn("text-gray-500 text-xs", language === 'ar' && "text-right")}>
-                  {t('سجل القراءة/غير المقروءة محفوظ لأغراض التدقيق', 'Read/unread audit log is maintained for compliance purposes')}
-                </p>
+              {/* In-App Notifications */}
+              <div className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
+                <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
+                  <Bell className="w-5 h-5 text-[#0C2836]" />
+                  <div className={cn(language === 'ar' && "text-right")}>
+                    <p className="text-gray-900 font-medium">{t('إشعارات داخل التطبيق', 'In-App Notifications')}</p>
+                    <p className="text-gray-600 text-sm">{t('عرض الإشعارات في التطبيق', 'Show notifications within the app')}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setInAppNotifs(!inAppNotifs)}
+                  className={cn(
+                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                    inAppNotifs ? "bg-[#0C2836]" : "bg-gray-200"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      inAppNotifs ? "translate-x-6" : "translate-x-1"
+                    )}
+                  />
+                </button>
               </div>
-            </motion.div>
+
+              {/* Slack Integration */}
+              <div className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
+                <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
+                  <MessageSquare className="w-5 h-5 text-[#0C2836]" />
+                  <div className={cn(language === 'ar' && "text-right")}>
+                    <p className="text-gray-900 font-medium">{t('تكامل Slack', 'Slack Integration')}</p>
+                    <p className="text-gray-600 text-sm">{t('إرسال التنبيهات إلى قناة Slack', 'Send alerts to Slack channel')}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSlackNotifs(!slackNotifs)}
+                  className={cn(
+                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                    slackNotifs ? "bg-[#0C2836]" : "bg-gray-200"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      slackNotifs ? "translate-x-6" : "translate-x-1"
+                    )}
+                  />
+                </button>
+              </div>
+
+              {/* Push Notifications */}
+              <div className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
+                <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
+                  <Smartphone className="w-5 h-5 text-[#0C2836]" />
+                  <div className={cn(language === 'ar' && "text-right")}>
+                    <p className="text-gray-900 font-medium">{t('إشعارات الدفع', 'Push Notifications')}</p>
+                    <p className="text-gray-600 text-sm">{t('تلقي التنبيهات على جهازك المحمول', 'Receive alerts on mobile device')}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setPushNotifs(!pushNotifs)}
+                  className={cn(
+                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                    pushNotifs ? "bg-[#0C2836]" : "bg-gray-200"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      pushNotifs ? "translate-x-6" : "translate-x-1"
+                    )}
+                  />
+                </button>
+              </div>
+            </div>
           </motion.div>
-        </div>
-
-        {/* FAB */}
-        <button className={cn(
-          "fixed bottom-8 w-14 h-14 bg-[#0C2836] rounded-full shadow-lg flex items-center justify-center hover:bg-[#1a4158] transition-colors duration-150",
-          language === 'ar' ? "left-8" : "right-8"
-        )}>
-          <span className="text-white text-2xl">+</span>
-        </button>
+        </motion.div>
       </div>
     </div>
   );
