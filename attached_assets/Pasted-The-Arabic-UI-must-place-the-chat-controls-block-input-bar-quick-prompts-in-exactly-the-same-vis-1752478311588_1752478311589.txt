@@ -1,0 +1,24 @@
+The Arabic UI must place the chat controls block (input bar + quick prompts) in exactly the same visual position as the English UI:
+* Before chat begins: perfectly centred in the middle of the remaining horizontal space (between the right edge of the sidebar—whatever its width—and the browser’s right edge) and vertically centred in the viewport.
+* After chat starts: locked 32 px above the bottom of the viewport, still centred horizontally inside that available span. This behaviour must hold regardless of whether the sidebar is expanded or collapsed.
+
+Requirements
+1. Reuse the same positioning logic you added for English.
+    * The wrapper that holds the chat controls already responds to a variable representing the sidebar’s width. Just ensure the Arabic layout reads that same variable so centring math is identical in both languages.
+    * Keep the two vertical states: pre-chat (centred) and active chat (bottom-offset).
+2. Right-to-left (RTL) does not affect horizontal centring.
+    * Maintain dir="rtl" for Arabic text direction inside the controls, but the wrapper’s absolute/fixed geometry is language-agnostic.
+    * Icons and text flip order inside the wrapper, yet the whole block must stay visually centred.
+3. Sidebar toggle consistency.
+    * When the sidebar changes width, update the shared width variable once and allow the wrapper to re-centre automatically—same as English. No hard-coded Arabic offsets.
+4. Padding / scroll safety.
+    * Ensure the scrollable messages area in Arabic has the same bottom padding (bar height + 32 px) so the last bubble never hides behind the bar.
+5. QA checks before sign-off.
+    * Arabic UI, sidebar open → chat controls centred; sidebar collapsed → still centred.
+    * Send a first message → controls snap to 32 px above bottom; sidebar toggles → controls remain centred.
+    * Test both desktop breakpoints used by the English design.
+
+Deliverables
+* Updated positioning logic applied to the Arabic locale.
+* Confirmation that the wrapper respects the shared sidebar-width variable and behaves identically in LTR and RTL.
+* Bottom-padding adjustment verified in Arabic conversation view.

@@ -5,6 +5,15 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 14, 2025**:
+  - **Arabic UI Chat Controls Positioning**: Fixed chat controls positioning for RTL layout
+    - Updated both empty state and active chat positioning to use dynamic RTL-aware logic
+    - Chat controls now use `right: ${sidebarWidth}px` for Arabic and `left: ${sidebarWidth}px` for English
+    - Maintained two vertical states: pre-chat (vertically centered) and active chat (32px from bottom)
+    - Updated all prompt buttons to use RTL-aware text alignment (text-right for Arabic, text-left for English)
+    - Ensured horizontal centering remains consistent regardless of language direction
+    - Chat controls respond dynamically to sidebar width changes in both languages
+    - Fixed scrollable messages area padding to account for input bar height in both languages
+- **July 14, 2025** (Earlier):
   - **Dashboard Color Update**: Updated entire dashboard to use ContraMind brand colors
     - Replaced ChatGPT-style colors (#343541, #202123, #40414F) with ContraMind navy (#0C2836)
     - Updated input fields and borders to use sky blue (#B7DEE8) with transparent variations

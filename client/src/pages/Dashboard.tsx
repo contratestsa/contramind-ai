@@ -618,8 +618,10 @@ export default function Dashboard() {
             <div 
               className="fixed flex items-center justify-center"
               style={{ 
-                left: `${sidebarWidth}px`,
-                right: 0,
+                ...(isRTL 
+                  ? { right: `${sidebarWidth}px`, left: 0 }
+                  : { left: `${sidebarWidth}px`, right: 0 }
+                ),
                 ...(hasStartedChat 
                   ? { bottom: '32px', height: 'auto' }
                   : { top: 0, bottom: 0 }
@@ -692,8 +694,10 @@ export default function Dashboard() {
             <div 
               className="fixed flex items-center justify-center"
               style={{ 
-                left: `${sidebarWidth}px`,
-                right: 0,
+                ...(isRTL 
+                  ? { right: `${sidebarWidth}px`, left: 0 }
+                  : { left: `${sidebarWidth}px`, right: 0 }
+                ),
                 top: 0,
                 bottom: 0,
                 transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
@@ -779,7 +783,10 @@ export default function Dashboard() {
                             const input = document.querySelector('input[type="text"]') as HTMLInputElement;
                             if (input) input.value = t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks');
                           }}
-                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
                         >
                           <p className="text-sm text-white">{t('تحليل المخاطر', 'Risk Analysis')}</p>
                           <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('حدد المخاطر الرئيسية', 'Identify key risks')}</p>
@@ -789,7 +796,10 @@ export default function Dashboard() {
                             const input = document.querySelector('input[type="text"]') as HTMLInputElement;
                             if (input) input.value = t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract');
                           }}
-                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
                         >
                           <p className="text-sm text-white">{t('ملخص العقد', 'Contract Summary')}</p>
                           <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('البنود الرئيسية', 'Key clauses')}</p>
@@ -799,7 +809,10 @@ export default function Dashboard() {
                             const input = document.querySelector('input[type="text"]') as HTMLInputElement;
                             if (input) input.value = t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?');
                           }}
-                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
                         >
                           <p className="text-sm text-white">{t('شروط الدفع', 'Payment Terms')}</p>
                           <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('تفاصيل الدفع', 'Payment details')}</p>
@@ -809,7 +822,10 @@ export default function Dashboard() {
                             const input = document.querySelector('input[type="text"]') as HTMLInputElement;
                             if (input) input.value = t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses');
                           }}
-                          className="text-left p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300"
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
                         >
                           <p className="text-sm text-white">{t('بنود الإنهاء', 'Termination Clauses')}</p>
                           <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('شروط الإلغاء', 'Cancellation terms')}</p>
