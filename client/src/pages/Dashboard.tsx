@@ -538,7 +538,7 @@ export default function Dashboard() {
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {/* Top Header Bar */}
-        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3">
+        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3 relative z-40">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             
@@ -548,14 +548,16 @@ export default function Dashboard() {
                 const newLang = language === 'ar' ? 'en' : 'ar';
                 setLanguage(newLang);
               }}
-              className="mr-8 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2"
+              className="mr-8 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2 relative z-50 cursor-pointer"
             >
               <Globe className="w-4 h-4" />
               {language === 'ar' ? 'EN' : 'AR'}
             </button>
             
             {/* Profile Dropdown */}
-            <ProfileDropdown user={user} />
+            <div className="relative z-50">
+              <ProfileDropdown user={user} />
+            </div>
           </div>
         </div>
 
