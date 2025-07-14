@@ -715,6 +715,9 @@ export default function Dashboard() {
                   <div className="relative">
                     <input
                     type="text"
+                    ref={inputRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
                       "w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50",
@@ -792,8 +795,10 @@ export default function Dashboard() {
                       <>
                         <button
                           onClick={() => {
-                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-                            if (input) input.value = t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks');
+                            setInputValue(t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -805,8 +810,10 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-                            if (input) input.value = t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract');
+                            setInputValue(t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -818,8 +825,10 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-                            if (input) input.value = t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?');
+                            setInputValue(t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -831,8 +840,10 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-                            if (input) input.value = t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses');
+                            setInputValue(t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
