@@ -253,27 +253,27 @@ export class DatabaseStorage implements IStorage {
 
   async getRecentContracts(userId: number, limit: number = 5): Promise<any[]> {
     try {
-      const result = await db
-        .select()
-        .from(contracts)
-        .where(eq(contracts.userId, userId))
-        .orderBy(desc(contracts.createdAt))
-        .limit(limit);
+      // Use raw SQL to work with actual database column names
+      const result = await db.execute(sql`
+        SELECT 
+          id,
+          user_id as "userId",
+          name as title,
+          parties as "partyName",
+          type,
+          status,
+          start_date as date,
+          risk_level as "riskLevel",
+          file_path as "fileUrl",
+          created_at as "createdAt",
+          updated_at as "updatedAt"
+        FROM contracts
+        WHERE user_id = ${userId}
+        ORDER BY created_at DESC
+        LIMIT ${limit}
+      `);
       
-      // Map database columns to expected interface
-      return result.map(contract => ({
-        id: contract.id,
-        userId: contract.userId,
-        title: contract.title || (contract as any).name || 'Untitled Contract',
-        partyName: contract.partyName || (contract as any).parties || '',
-        type: contract.type,
-        status: contract.status,
-        date: (contract as any).startDate || contract.createdAt,
-        riskLevel: contract.riskLevel,
-        fileUrl: (contract as any).filePath || (contract as any).fileUrl,
-        createdAt: contract.createdAt,
-        updatedAt: contract.updatedAt
-      }));
+      return result.rows || [];
     } catch (error) {
       console.error('Error in getRecentContracts:', error);
       // Return empty array on error to avoid breaking the UI
