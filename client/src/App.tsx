@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
 import ComingSoon from "@/pages/ComingSoon";
 import Dashboard from "@/pages/Dashboard";
+import DashboardLayout from "@/components/DashboardLayout";
 import AnalysisProgress from "@/pages/AnalysisProgress";
 import AnalysisResults from "@/pages/AnalysisResults";
 import Repository from "@/pages/Repository";
@@ -31,7 +32,38 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/coming-soon" component={ComingSoon} />
-      <Route path="/dashboard" component={Dashboard} />
+      
+      {/* Dashboard with nested routes */}
+      <Route path="/dashboard">
+        <DashboardLayout>
+          <Dashboard />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/analytics">
+        <DashboardLayout>
+          <AnalyticsReports />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/parties">
+        <DashboardLayout>
+          <PartiesContacts />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/notifications">
+        <DashboardLayout>
+          <Notifications />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/tags">
+        <DashboardLayout>
+          <TagsCategories />
+        </DashboardLayout>
+      </Route>
+      
       <Route path="/analysis-progress" component={AnalysisProgress} />
       <Route path="/analysis-results" component={AnalysisResults} />
       <Route path="/repository" component={Repository} />
@@ -43,10 +75,6 @@ function Router() {
       <Route path="/help/release-notes" component={ReleaseNotes} />
       <Route path="/help/terms" component={TermsPolicies} />
       <Route path="/tasks" component={Tasks} />
-      <Route path="/analytics" component={AnalyticsReports} />
-      <Route path="/parties" component={PartiesContacts} />
-      <Route path="/notifications" component={Notifications} />
-      <Route path="/tags" component={TagsCategories} />
 
       <Route component={NotFound} />
     </Switch>
