@@ -1,0 +1,62 @@
+Build out the four sidebar pages 
+
+Leave all existing screens intact and create full, first-pass pages for the four sidebar modules:
+1. Analytics & Reports
+2. Parties & Contacts
+3. Notifications
+4. Tags & Categories
+Each new page must inherit the same scrollable-column shell used in the chat view, respect ContraMind colors , the 16-px vertical rhythm, Framer Motion 150 ms fades/slides, and bilingual RTL/LTR behaviour.
+
+1 Pages you must CREATE now
+1. Analytics & Reports - /analytics
+2. Parties & Contacts - /parties
+3. Notifications - /notifications
+4. Tags & Categories - /tags
+No other pages are needed at this stage.
+
+2 Minimum content for each page
+2.1 Analytics & Reports
+Section name	What to show (sample / placeholder data is fine)
+KPI ribbon	5 cards: Cycle-time, % On-time renewals, Active obligations, Average risk score, Savings captured
+Trend charts	3 charts:• Line = cycle-time by contract type• Bar = amendments per quarter• Heat-map = risk level vs counter-party
+Renewal radar	3 tiles: 90 days, 60 days, 30 days until expiry, each with a “Renew / Renegotiate / Terminate” button
+Clause deviation	Table with top-10 negotiated clauses and % deviation from template
+Export & schedule	Buttons: Download PDF, Download Excel, plus a toggle “Email weekly digest”
+2.2 Parties & Contacts
+Section	Content
+Search + filters	By name, FEIN/DUNS, country, vendor type, internal owner
+Counter-party profile	Org info, W-9/W-8BEN status, sanctions result, link to master agreement
+Contacts list	Cards with role, phone, email, LinkedIn, “Primary signatory” switch
+Engagement timeline	Chronological list of all contracts & amendments with this party
+Risk panel	Litigation check status, last OFAC screen date, insurance expiry
+Bulk actions	Buttons: Send NDA, Request COI, Link to CRM
+2.3 Notifications
+Buckets you must show:
+1. Action required – approvals, signatures, drafts ready (sticky, with countdown timer)
+2. Upcoming deadlines – renewals, obligations, audits (sorted by date, auto-escalate at 24 h)
+3. System alerts – integration failures, permission changes (collapsible, “Mute 7 days” option)
+4. Preference centre – toggles for Email, In-app, Slack, Mobile push
+
+2.4 Tags & Categories
+Required tools:
+* Tree-view taxonomy builder (parent → child)
+* Bulk manager (add, merge, retire tags; show “Used N times”)
+* Governance rules (role-based edit rights, mandatory tags per contract type)
+* AI auto-suggest tag button (placeholder)
+* Small table that shows tag counts (feeds Analytics later)
+
+3 Design & behaviour rules (apply to every page)
+
+
+1. Bilingual: verify every item flips correctly between English (LTR) and Arabic (RTL).
+
+
+4 Deliverables
+* Four new page components with the exact sections above, filled with obvious placeholder data or “Coming soon”.
+* Routes and breadcrumbs added.
+* No console errors, and RTL/LTR toggle works on every new element.
+
+
+
+Each phase builds upon the previous one, ensuring a smooth implementation process. We'll use Framer Motion for animations, maintain the existing ContraMind color scheme (#0C2836, #B7DEE8), and ensure all components are bilingual.
+

@@ -121,11 +121,11 @@ export default function TagsCategories() {
   const getEditableIcon = (editable: string) => {
     switch (editable) {
       case 'admin':
-        return <Lock className="w-3 h-3 text-red-400" />;
+        return <Lock className="w-3 h-3 text-red-600" />;
       case 'manager':
-        return <Lock className="w-3 h-3 text-yellow-400" />;
+        return <Lock className="w-3 h-3 text-yellow-600" />;
       default:
-        return <Unlock className="w-3 h-3 text-green-400" />;
+        return <Unlock className="w-3 h-3 text-green-600" />;
     }
   };
 
@@ -139,7 +139,7 @@ export default function TagsCategories() {
   })).filter(category => category.children.length > 0);
 
   return (
-    <div className="min-h-screen bg-[#0C2836] flex">
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
@@ -254,27 +254,27 @@ export default function TagsCategories() {
           <div className="w-9" />
         </div>
 
-        {/* Main Content */}
-        <div className="p-8 max-w-7xl mx-auto">
+        {/* Main Content - Scrollable Column Shell */}
+        <div className="p-4 md:p-6 max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15 }}
-            className="space-y-6"
+            className="space-y-4"
           >
             {/* Header */}
-            <div className={cn("mb-8", language === 'ar' && "text-right")}>
-              <h1 className="text-2xl font-semibold text-white mb-2">
+            <div className={cn("mb-4", language === 'ar' && "text-right")}>
+              <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
                 {t('العلامات والفئات', 'Tags & Categories')}
               </h1>
-              <p className="text-[rgba(255,255,255,0.7)] text-sm">
+              <p className="text-gray-600 text-sm">
                 {t('إدارة التصنيف الهرمي للعقود', 'Manage hierarchical contract taxonomy')}
               </p>
             </div>
 
             {/* Search Bar */}
-            <div className="relative mb-6">
-              <Search className={cn("absolute top-3 w-4 h-4 text-[rgba(255,255,255,0.5)]", 
+            <div className="relative mb-4">
+              <Search className={cn("absolute top-3 w-4 h-4 text-gray-400", 
                 language === 'ar' ? "right-3" : "left-3")} />
               <input
                 type="text"
@@ -282,7 +282,7 @@ export default function TagsCategories() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('البحث عن العلامات...', 'Search tags...')}
                 className={cn(
-                  "w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg px-10 py-2.5 text-white placeholder-[rgba(255,255,255,0.5)] focus:outline-none focus:border-[#B7DEE8] transition-colors",
+                  "w-full bg-white border border-gray-200 rounded-lg px-10 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#B7DEE8] transition-colors shadow-sm",
                   language === 'ar' && "text-right"
                 )}
               />
@@ -295,33 +295,33 @@ export default function TagsCategories() {
                 {filteredTaxonomy.map((category, index) => (
                   <motion.div
                     key={category.id}
-                    initial={{ opacity: 0, x: language === 'ar' ? 20 : -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.15, delay: index * 0.05 }}
-                    className="bg-[rgba(255,255,255,0.05)] rounded-lg border border-[rgba(183,222,232,0.1)] overflow-hidden"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.15, delay: index * 0.02 }}
+                    className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
                   >
                     {/* Category Header */}
                     <button
                       onClick={() => toggleCategory(category.id)}
                       className={cn(
-                        "w-full p-4 flex items-center justify-between hover:bg-[rgba(255,255,255,0.03)] transition-colors",
+                        "w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-150",
                         language === 'ar' && "flex-row-reverse"
                       )}
                     >
                       <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                        <FolderOpen className="w-5 h-5 text-[#B7DEE8]" />
-                        <span className="text-white font-medium">
+                        <FolderOpen className="w-5 h-5 text-[#0C2836]" />
+                        <span className="text-gray-900 font-medium">
                           {language === 'ar' ? category.nameAr : category.name}
                         </span>
                         {category.mandatory && (
-                          <span className="px-2 py-0.5 bg-red-900/20 text-red-400 text-xs rounded">
+                          <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded font-medium">
                             {t('إلزامي', 'Mandatory')}
                           </span>
                         )}
                         {getEditableIcon(category.editable)}
                       </div>
                       <ChevronDown className={cn(
-                        "w-5 h-5 text-[rgba(255,255,255,0.5)] transition-transform",
+                        "w-5 h-5 text-gray-500 transition-transform",
                         expandedCategories.includes(category.id) && "rotate-180"
                       )} />
                     </button>
@@ -332,35 +332,35 @@ export default function TagsCategories() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         transition={{ duration: 0.15 }}
-                        className="border-t border-[rgba(183,222,232,0.1)]"
+                        className="border-t border-gray-200"
                       >
-                        <div className="p-4 space-y-2">
+                        <div className="p-4 space-y-2 bg-gray-50">
                           {category.children.map((tag) => (
                             <div
                               key={tag.id}
                               onClick={() => setSelectedTag({ ...tag, categoryId: category.id, categoryName: category.name, categoryNameAr: category.nameAr })}
                               className={cn(
-                                "flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors",
+                                "flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors duration-150",
                                 selectedTag?.id === tag.id 
-                                  ? "bg-[rgba(183,222,232,0.1)] border border-[#B7DEE8]"
-                                  : "hover:bg-[rgba(255,255,255,0.03)]",
+                                  ? "bg-[#f0f9ff] border border-[#B7DEE8]"
+                                  : "hover:bg-white",
                                 language === 'ar' && "flex-row-reverse"
                               )}
                             >
                               <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                                <Hash className="w-4 h-4 text-[rgba(183,222,232,0.6)]" />
-                                <span className="text-white">
+                                <Hash className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-900">
                                   {language === 'ar' ? tag.nameAr : tag.name}
                                 </span>
                                 {tag.suggested && (
-                                  <div className="flex items-center gap-1 px-2 py-0.5 bg-[rgba(183,222,232,0.1)] rounded">
-                                    <Zap className="w-3 h-3 text-[#B7DEE8]" />
-                                    <span className="text-[#B7DEE8] text-xs">AI</span>
+                                  <div className="flex items-center gap-1 px-2 py-0.5 bg-[#f0f9ff] rounded">
+                                    <Zap className="w-3 h-3 text-[#0C2836]" />
+                                    <span className="text-[#0C2836] text-xs font-medium">AI</span>
                                   </div>
                                 )}
                               </div>
                               <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                                <span className="text-[rgba(255,255,255,0.5)] text-sm">
+                                <span className="text-gray-500 text-sm">
                                   {t('مستخدم', 'used')} {tag.count} {t('مرة', 'times')}
                                 </span>
                                 <button
@@ -368,9 +368,9 @@ export default function TagsCategories() {
                                     e.stopPropagation();
                                     // Handle edit
                                   }}
-                                  className="p-1 hover:bg-[rgba(183,222,232,0.1)] rounded transition-colors"
+                                  className="p-1 hover:bg-gray-200 rounded transition-colors duration-150"
                                 >
-                                  <Edit2 className="w-3 h-3 text-[#B7DEE8]" />
+                                  <Edit2 className="w-3 h-3 text-gray-600" />
                                 </button>
                               </div>
                             </div>
@@ -389,52 +389,52 @@ export default function TagsCategories() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.15 }}
-                    className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)] sticky top-6"
+                    className="bg-white rounded-lg p-6 shadow-sm sticky top-6"
                   >
-                    <h3 className={cn("text-white font-medium mb-4", language === 'ar' && "text-right")}>
+                    <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
                       {t('تفاصيل العلامة', 'Tag Details')}
                     </h3>
 
                     <div className="space-y-4">
                       <div className={cn(language === 'ar' && "text-right")}>
-                        <p className="text-[rgba(255,255,255,0.5)] text-xs mb-1">{t('الاسم', 'Name')}</p>
-                        <p className="text-white">{language === 'ar' ? selectedTag.nameAr : selectedTag.name}</p>
+                        <p className="text-gray-500 text-xs mb-1">{t('الاسم', 'Name')}</p>
+                        <p className="text-gray-900 font-medium">{language === 'ar' ? selectedTag.nameAr : selectedTag.name}</p>
                       </div>
 
                       <div className={cn(language === 'ar' && "text-right")}>
-                        <p className="text-[rgba(255,255,255,0.5)] text-xs mb-1">{t('الفئة', 'Category')}</p>
-                        <p className="text-white">{language === 'ar' ? selectedTag.categoryNameAr : selectedTag.categoryName}</p>
+                        <p className="text-gray-500 text-xs mb-1">{t('الفئة', 'Category')}</p>
+                        <p className="text-gray-900">{language === 'ar' ? selectedTag.categoryNameAr : selectedTag.categoryName}</p>
                       </div>
 
                       <div className={cn(language === 'ar' && "text-right")}>
-                        <p className="text-[rgba(255,255,255,0.5)] text-xs mb-1">{t('عدد الاستخدامات', 'Usage Count')}</p>
-                        <p className="text-white">{selectedTag.count}</p>
+                        <p className="text-gray-500 text-xs mb-1">{t('عدد الاستخدامات', 'Usage Count')}</p>
+                        <p className="text-gray-900">{selectedTag.count}</p>
                       </div>
 
                       {selectedTag.suggested && (
-                        <div className="p-3 bg-[rgba(183,222,232,0.05)] rounded-lg border border-[rgba(183,222,232,0.1)]">
+                        <div className="p-3 bg-[#f0f9ff] rounded-lg border border-[#B7DEE8]">
                           <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                            <Zap className="w-4 h-4 text-[#B7DEE8]" />
-                            <span className="text-[#B7DEE8] text-sm font-medium">
+                            <Zap className="w-4 h-4 text-[#0C2836]" />
+                            <span className="text-[#0C2836] text-sm font-medium">
                               {t('اقتراح الذكاء الاصطناعي', 'AI Suggested')}
                             </span>
                           </div>
-                          <p className={cn("text-[rgba(255,255,255,0.7)] text-xs", language === 'ar' && "text-right")}>
+                          <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
                             {t('تم اقتراح هذه العلامة بواسطة نظام استخراج البنود', 'This tag was suggested by the clause extraction system')}
                           </p>
                         </div>
                       )}
 
-                      <div className="pt-4 border-t border-[rgba(183,222,232,0.1)] space-y-2">
+                      <div className="pt-4 border-t border-gray-200 space-y-2">
                         <button className={cn(
-                          "w-full flex items-center justify-center gap-2 px-4 py-2 bg-[rgba(183,222,232,0.1)] rounded-lg text-[#B7DEE8] hover:bg-[rgba(183,222,232,0.2)] transition-colors",
+                          "w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#0C2836] rounded-lg text-white hover:bg-[#1a4158] transition-colors duration-150",
                           language === 'ar' && "flex-row-reverse"
                         )}>
                           <Edit2 className="w-4 h-4" />
                           <span className="text-sm">{t('تعديل', 'Edit')}</span>
                         </button>
                         <button className={cn(
-                          "w-full flex items-center justify-center gap-2 px-4 py-2 bg-[rgba(255,0,0,0.1)] rounded-lg text-red-400 hover:bg-[rgba(255,0,0,0.2)] transition-colors",
+                          "w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 rounded-lg text-red-600 hover:bg-red-100 transition-colors duration-150",
                           language === 'ar' && "flex-row-reverse"
                         )}>
                           <Trash2 className="w-4 h-4" />
@@ -444,8 +444,8 @@ export default function TagsCategories() {
                     </div>
                   </motion.div>
                 ) : (
-                  <div className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)]">
-                    <p className={cn("text-[rgba(255,255,255,0.5)] text-center", language === 'ar' && "text-right")}>
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <p className={cn("text-gray-500 text-center", language === 'ar' && "text-right")}>
                       {t('اختر علامة لعرض التفاصيل', 'Select a tag to view details')}
                     </p>
                   </div>
@@ -455,42 +455,42 @@ export default function TagsCategories() {
 
             {/* Governance Rules */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)] mt-8"
+              transition={{ duration: 0.15, delay: 0.1 }}
+              className="bg-white rounded-lg p-6 shadow-sm mt-6"
             >
-              <h3 className={cn("text-white font-medium mb-4", language === 'ar' && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
                 {t('قواعد الحوكمة', 'Governance Rules')}
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-[rgba(255,255,255,0.03)] rounded-lg p-4">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                    <Lock className="w-4 h-4 text-red-400" />
-                    <span className="text-white text-sm font-medium">{t('المسؤول فقط', 'Admin Only')}</span>
+                    <Lock className="w-4 h-4 text-red-600" />
+                    <span className="text-gray-900 text-sm font-medium">{t('المسؤول فقط', 'Admin Only')}</span>
                   </div>
-                  <p className={cn("text-[rgba(255,255,255,0.7)] text-xs", language === 'ar' && "text-right")}>
+                  <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
                     {t('يمكن للمسؤولين فقط تعديل علامات نوع العقد والمنطقة', 'Only admins can edit Contract Type and Region tags')}
                   </p>
                 </div>
 
-                <div className="bg-[rgba(255,255,255,0.03)] rounded-lg p-4">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                    <Lock className="w-4 h-4 text-yellow-400" />
-                    <span className="text-white text-sm font-medium">{t('المدير وما فوق', 'Manager & Above')}</span>
+                    <Lock className="w-4 h-4 text-yellow-600" />
+                    <span className="text-gray-900 text-sm font-medium">{t('المدير وما فوق', 'Manager & Above')}</span>
                   </div>
-                  <p className={cn("text-[rgba(255,255,255,0.7)] text-xs", language === 'ar' && "text-right")}>
+                  <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
                     {t('يمكن للمديرين تعديل علامات المخاطر والامتثال', 'Managers can edit Risk Level and Compliance tags')}
                   </p>
                 </div>
 
-                <div className="bg-[rgba(255,255,255,0.03)] rounded-lg p-4">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                    <Unlock className="w-4 h-4 text-green-400" />
-                    <span className="text-white text-sm font-medium">{t('جميع المستخدمين', 'All Users')}</span>
+                    <Unlock className="w-4 h-4 text-green-600" />
+                    <span className="text-gray-900 text-sm font-medium">{t('جميع المستخدمين', 'All Users')}</span>
                   </div>
-                  <p className={cn("text-[rgba(255,255,255,0.7)] text-xs", language === 'ar' && "text-right")}>
+                  <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
                     {t('يمكن لجميع المستخدمين تعديل علامات القسم', 'All users can edit Department tags')}
                   </p>
                 </div>
@@ -503,11 +503,11 @@ export default function TagsCategories() {
         <button 
           onClick={() => setShowAddModal(true)}
           className={cn(
-            "fixed bottom-8 w-14 h-14 bg-[#B7DEE8] rounded-full shadow-lg flex items-center justify-center hover:bg-[rgba(183,222,232,0.9)] transition-colors",
+            "fixed bottom-8 w-14 h-14 bg-[#0C2836] rounded-full shadow-lg flex items-center justify-center hover:bg-[#1a4158] transition-colors duration-150",
             language === 'ar' ? "left-8" : "right-8"
           )}
         >
-          <span className="text-[#0C2836] text-2xl">+</span>
+          <span className="text-white text-2xl">+</span>
         </button>
       </div>
     </div>

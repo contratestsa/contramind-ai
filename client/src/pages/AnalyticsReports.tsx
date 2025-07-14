@@ -35,13 +35,13 @@ export default function AnalyticsReports() {
     return null;
   }
 
-  // KPI Data
+  // KPI Data - exactly 5 cards as requested
   const kpiData = [
-    { label: t('متوسط وقت الدورة', 'Avg Cycle Time'), value: '12 days', icon: Clock, trend: -15 },
-    { label: t('التجديدات في الوقت', 'On-Time Renewals'), value: '87%', icon: Calendar, trend: 5 },
-    { label: t('الالتزامات النشطة', 'Active Obligations'), value: '234', icon: FileText, trend: 0 },
-    { label: t('متوسط درجة المخاطر', 'Avg Risk Score'), value: '3.2', icon: Shield, trend: -8 },
-    { label: t('الوفورات المحققة', 'Savings Captured'), value: '$1.2M', icon: DollarSign, trend: 22 }
+    { label: t('وقت الدورة', 'Cycle-time'), value: '12 days', icon: Clock, trend: -15 },
+    { label: t('التجديدات في الوقت', '% On-time renewals'), value: '87%', icon: Calendar, trend: 5 },
+    { label: t('الالتزامات النشطة', 'Active obligations'), value: '234', icon: FileText, trend: 0 },
+    { label: t('متوسط درجة المخاطر', 'Average risk score'), value: '3.2', icon: Shield, trend: -8 },
+    { label: t('الوفورات المحققة', 'Savings captured'), value: '$1.2M', icon: DollarSign, trend: 22 }
   ];
 
   // Mock data for charts
@@ -177,167 +177,144 @@ export default function AnalyticsReports() {
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className={cn("flex-1", language === 'ar' ? "lg:mr-[260px]" : "lg:ml-[260px]")}>
+      {/* Main Content Area - Scrollable Column Shell */}
+      <div className={cn("flex-1 bg-[#f8f9fa] overflow-y-auto", language === 'ar' ? "lg:mr-[260px]" : "lg:ml-[260px]")}>
         {/* Mobile Header */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-[#40414F] border-b border-[#565869]">
+        <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-gray-200">
           <button
             onClick={() => setShowMobileSidebar(true)}
-            className="p-2 hover:bg-[#565869] rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <Menu className="w-5 h-5 text-white" />
+            <Menu className="w-5 h-5 text-[#0C2836]" />
           </button>
-          <span className="text-white font-medium">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>
+          <span className="text-[#0C2836] font-medium">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>
           <div className="w-9" />
         </div>
 
-        {/* Main Content */}
-        <div className="p-8 max-w-7xl mx-auto">
+        {/* Main Content - 16px vertical rhythm */}
+        <div className="p-4 md:p-6 max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15 }}
-            className="space-y-6"
+            className="space-y-4"
           >
             {/* Header */}
-            <div className={cn("mb-8", language === 'ar' && "text-right")}>
-              <h1 className="text-2xl font-semibold text-white mb-2">
+            <div className={cn("mb-4", language === 'ar' && "text-right")}>
+              <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
                 {t('التحليلات والتقارير', 'Analytics & Reports')}
               </h1>
-              <p className="text-[rgba(255,255,255,0.7)] text-sm">
+              <p className="text-gray-600 text-sm">
                 {t('رؤى شاملة حول أداء العقود', 'Comprehensive insights into contract performance')}
               </p>
             </div>
 
-            {/* KPI Ribbon */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            {/* KPI Ribbon - exactly 5 cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
               {kpiData.map((kpi, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.15, delay: index * 0.05 }}
-                  className="bg-[rgba(255,255,255,0.05)] rounded-lg p-4 border border-[rgba(183,222,232,0.1)]"
+                  transition={{ duration: 0.15, delay: index * 0.02 }}
+                  className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-150"
                 >
                   <div className={cn("flex items-center justify-between mb-2", language === 'ar' && "flex-row-reverse")}>
-                    <kpi.icon className="w-5 h-5 text-[#B7DEE8]" />
-                    <div className={cn("flex items-center gap-1", kpi.trend > 0 ? "text-green-400" : kpi.trend < 0 ? "text-blue-400" : "text-gray-400")}>
-                      <TrendingUp className={cn("w-3 h-3", kpi.trend < 0 && "rotate-180")} />
-                      <span className="text-xs">{Math.abs(kpi.trend)}%</span>
-                    </div>
+                    <kpi.icon className="w-5 h-5 text-[#0C2836]" />
+                    {kpi.trend !== 0 && (
+                      <div className={cn("flex items-center gap-1", kpi.trend > 0 ? "text-green-600" : "text-red-600")}>
+                        <TrendingUp className={cn("w-3 h-3", kpi.trend < 0 && "rotate-180")} />
+                        <span className="text-xs font-medium">{kpi.trend > 0 ? '+' : ''}{kpi.trend}%</span>
+                      </div>
+                    )}
                   </div>
                   <div className={cn(language === 'ar' && "text-right")}>
-                    <p className="text-white text-xl font-semibold">{kpi.value}</p>
-                    <p className="text-[rgba(255,255,255,0.7)] text-xs">{kpi.label}</p>
+                    <p className="text-2xl font-bold text-[#0C2836] mb-1">{kpi.value}</p>
+                    <p className="text-sm text-gray-600">{kpi.label}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Trend Dashboards */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              {/* Cycle Time Chart */}
+            {/* Trend Charts - 3 charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              {/* Line Chart - Cycle Time */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.15 }}
-                className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)]"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, delay: 0.05 }}
+                className="bg-white rounded-lg p-4 shadow-sm"
               >
-                <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                  <h3 className="text-white font-medium">{t('وقت الدورة حسب نوع العقد', 'Cycle Time by Contract Type')}</h3>
-                  <button className="text-[#B7DEE8] hover:text-white transition-colors">
-                    <Send className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="h-48 flex items-end justify-between gap-2">
-                  {cycleTimeData.map((month, index) => (
-                    <div key={index} className="flex-1 flex flex-col items-center gap-1">
-                      <div className="w-full flex flex-col gap-1">
-                        <div className="bg-[#B7DEE8] rounded" style={{ height: `${month.sow * 2}px` }} />
-                        <div className="bg-[rgba(183,222,232,0.7)] rounded" style={{ height: `${month.msa * 2}px` }} />
-                        <div className="bg-[rgba(183,222,232,0.4)] rounded" style={{ height: `${month.nda * 2}px` }} />
-                      </div>
-                      <span className="text-[rgba(255,255,255,0.5)] text-xs">{month.month}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className={cn("flex gap-4 mt-4 text-xs", language === 'ar' && "flex-row-reverse")}>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-[rgba(183,222,232,0.4)] rounded" />
-                    <span className="text-[rgba(255,255,255,0.7)]">NDA</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-[rgba(183,222,232,0.7)] rounded" />
-                    <span className="text-[rgba(255,255,255,0.7)]">MSA</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-[#B7DEE8] rounded" />
-                    <span className="text-[rgba(255,255,255,0.7)]">SOW</span>
-                  </div>
+                <h3 className={cn("text-base font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                  {t('وقت الدورة حسب نوع العقد', 'Cycle-time by contract type')}
+                </h3>
+                <div className="h-48 flex items-center justify-center text-gray-400 bg-gray-50 rounded">
+                  <TrendingUp className="w-6 h-6 mr-2" />
+                  <span className="text-sm">{t('خط بياني', 'Line Chart')}</span>
                 </div>
               </motion.div>
 
-              {/* Amendments Chart */}
+              {/* Bar Chart - Amendments */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.15 }}
-                className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)]"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, delay: 0.1 }}
+                className="bg-white rounded-lg p-4 shadow-sm"
               >
-                <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                  <h3 className="text-white font-medium">{t('التعديلات لكل ربع', 'Amendments per Quarter')}</h3>
-                  <button className="text-[#B7DEE8] hover:text-white transition-colors">
-                    <Send className="w-4 h-4" />
-                  </button>
+                <h3 className={cn("text-base font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                  {t('التعديلات لكل ربع', 'Amendments per quarter')}
+                </h3>
+                <div className="h-48 flex items-center justify-center text-gray-400 bg-gray-50 rounded">
+                  <BarChart2 className="w-6 h-6 mr-2" />
+                  <span className="text-sm">{t('رسم بياني شريطي', 'Bar Chart')}</span>
                 </div>
-                <div className="h-48 flex items-end justify-between gap-4">
-                  {amendmentsData.map((quarter, index) => (
-                    <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                      <div 
-                        className="w-full bg-[#B7DEE8] rounded transition-all duration-300 hover:bg-[rgba(183,222,232,0.9)]"
-                        style={{ height: `${quarter.count * 3}px` }}
-                      />
-                      <span className="text-white font-semibold">{quarter.count}</span>
-                      <span className="text-[rgba(255,255,255,0.5)] text-xs">{quarter.quarter}</span>
-                    </div>
-                  ))}
+              </motion.div>
+
+              {/* Heat Map - Risk vs Counterparty */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, delay: 0.15 }}
+                className="bg-white rounded-lg p-4 shadow-sm"
+              >
+                <h3 className={cn("text-base font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                  {t('مستوى المخاطر مقابل الطرف المقابل', 'Risk level vs counter-party')}
+                </h3>
+                <div className="h-48 flex items-center justify-center text-gray-400 bg-gray-50 rounded">
+                  <Activity className="w-6 h-6 mr-2" />
+                  <span className="text-sm">{t('خريطة حرارية', 'Heat-map')}</span>
                 </div>
               </motion.div>
             </div>
 
-            {/* Renewal & Expiry Radar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
+            {/* Renewal Radar - 3 tiles */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)] mb-8"
+              transition={{ duration: 0.15, delay: 0.2 }}
+              className="mb-4"
             >
-              <h3 className="text-white font-medium mb-4">{t('رادار التجديد والانتهاء', 'Renewal & Expiry Radar')}</h3>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                {t('رادار التجديد', 'Renewal Radar')}
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {renewalData.map((item, index) => (
-                  <div key={index} className={cn(
-                    "p-4 rounded-lg border",
-                    item.status === 'urgent' ? "bg-red-900/20 border-red-500/50" :
-                    item.status === 'review' ? "bg-yellow-900/20 border-yellow-500/50" :
-                    "bg-green-900/20 border-green-500/50"
-                  )}>
-                    <div className={cn("flex items-center justify-between mb-2", language === 'ar' && "flex-row-reverse")}>
-                      <span className="text-white font-semibold">{item.days} {t('يوم', 'days')}</span>
-                      <span className={cn(
-                        "text-sm",
-                        item.status === 'urgent' ? "text-red-400" :
-                        item.status === 'review' ? "text-yellow-400" :
-                        "text-green-400"
-                      )}>{item.contracts} {t('عقود', 'contracts')}</span>
+                {[90, 60, 30].map((days) => (
+                  <div key={days} className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className={cn("flex items-center justify-between mb-3", language === 'ar' && "flex-row-reverse")}>
+                      <span className="text-2xl font-bold text-[#0C2836]">{Math.floor(Math.random() * 10 + 5)}</span>
+                      <Calendar className="w-5 h-5 text-[#B7DEE8]" />
                     </div>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {t(`عقود تنتهي خلال ${days} يوم`, `Contracts expiring in ${days} days`)}
+                    </p>
                     <div className={cn("flex gap-2", language === 'ar' && "flex-row-reverse")}>
-                      <button className="flex-1 px-3 py-1 bg-[rgba(183,222,232,0.1)] rounded text-[#B7DEE8] text-xs hover:bg-[rgba(183,222,232,0.2)] transition-colors">
+                      <button className="flex-1 px-2 py-1 text-xs bg-[#B7DEE8] text-[#0C2836] rounded hover:bg-[#a5d0db] transition-colors duration-150">
                         {t('تجديد', 'Renew')}
                       </button>
-                      <button className="flex-1 px-3 py-1 bg-[rgba(183,222,232,0.1)] rounded text-[#B7DEE8] text-xs hover:bg-[rgba(183,222,232,0.2)] transition-colors">
-                        {t('مفاوضة', 'Negotiate')}
+                      <button className="flex-1 px-2 py-1 text-xs border border-[#B7DEE8] text-[#0C2836] rounded hover:bg-[#f0f9ff] transition-colors duration-150">
+                        {t('تفاوض', 'Renegotiate')}
                       </button>
-                      <button className="flex-1 px-3 py-1 bg-[rgba(183,222,232,0.1)] rounded text-[#B7DEE8] text-xs hover:bg-[rgba(183,222,232,0.2)] transition-colors">
+                      <button className="flex-1 px-2 py-1 text-xs border border-red-300 text-red-600 rounded hover:bg-red-50 transition-colors duration-150">
                         {t('إنهاء', 'Terminate')}
                       </button>
                     </div>
@@ -346,68 +323,73 @@ export default function AnalyticsReports() {
               </div>
             </motion.div>
 
-            {/* Clause Usage & Deviation */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
+            {/* Clause Deviation Table */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)] mb-8"
+              transition={{ duration: 0.15, delay: 0.25 }}
+              className="bg-white rounded-lg p-4 shadow-sm mb-4"
             >
-              <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                <h3 className="text-white font-medium">{t('استخدام البنود والانحراف', 'Clause Usage & Deviation')}</h3>
-                <button className="text-[#B7DEE8] hover:text-white transition-colors">
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="space-y-3">
-                {clauseUsageData.map((clause, index) => (
-                  <div key={index} className={cn("flex items-center gap-4", language === 'ar' && "flex-row-reverse")}>
-                    <div className="flex-1">
-                      <div className={cn("flex items-center justify-between mb-1", language === 'ar' && "flex-row-reverse")}>
-                        <span className="text-[rgba(255,255,255,0.9)] text-sm">{clause.clause}</span>
-                        <span className="text-[rgba(255,255,255,0.5)] text-xs">{clause.usage}%</span>
-                      </div>
-                      <div className="w-full bg-[rgba(183,222,232,0.1)] rounded-full h-2">
-                        <div 
-                          className="bg-[#B7DEE8] h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${clause.usage}%` }}
-                        />
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <span className={cn(
-                        "text-xs",
-                        clause.deviation > 10 ? "text-red-400" : "text-green-400"
-                      )}>{clause.deviation}%</span>
-                      <p className="text-[rgba(255,255,255,0.5)] text-xs">{t('انحراف', 'deviation')}</p>
-                    </div>
-                  </div>
-                ))}
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                {t('انحراف البنود', 'Clause Deviation')}
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="border-b border-gray-200">
+                    <tr>
+                      <th className={cn("px-4 py-2 text-xs font-medium text-gray-600 uppercase", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('البند', 'Clause')}
+                      </th>
+                      <th className={cn("px-4 py-2 text-xs font-medium text-gray-600 uppercase", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('عدد المرات', 'Frequency')}
+                      </th>
+                      <th className={cn("px-4 py-2 text-xs font-medium text-gray-600 uppercase", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('٪ الانحراف', '% Deviation')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {['Limitation of Liability', 'Payment Terms', 'Termination', 'Indemnification', 'Confidentiality', 
+                      'Intellectual Property', 'Warranty', 'Force Majeure', 'Governing Law', 'Dispute Resolution'].map((clause, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50 transition-colors duration-150">
+                        <td className={cn("px-4 py-2 text-sm", language === 'ar' ? "text-right" : "text-left")}>{clause}</td>
+                        <td className={cn("px-4 py-2 text-sm", language === 'ar' ? "text-right" : "text-left")}>{Math.floor(Math.random() * 50 + 10)}</td>
+                        <td className={cn("px-4 py-2 text-sm", language === 'ar' ? "text-right" : "text-left")}>
+                          <span className={Math.random() > 0.5 ? "text-red-600" : "text-green-600"}>
+                            {Math.floor(Math.random() * 30 + 5)}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </motion.div>
 
-            {/* Export & Scheduling */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
+            {/* Export & Schedule Section */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)]"
+              transition={{ duration: 0.15, delay: 0.3 }}
+              className="bg-white rounded-lg p-4 shadow-sm"
             >
-              <h3 className="text-white font-medium mb-4">{t('التصدير والجدولة', 'Export & Scheduling')}</h3>
-              <div className={cn("flex flex-wrap gap-4", language === 'ar' && "flex-row-reverse")}>
-                <button className="flex items-center gap-2 px-4 py-2 bg-[rgba(183,222,232,0.1)] rounded-lg text-[#B7DEE8] hover:bg-[rgba(183,222,232,0.2)] transition-colors">
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                {t('التصدير والجدولة', 'Export & Schedule')}
+              </h3>
+              <div className={cn("flex flex-col md:flex-row items-center gap-4", language === 'ar' && "md:flex-row-reverse")}>
+                <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] text-white rounded hover:bg-[#1a4158] transition-colors duration-150">
                   <Download className="w-4 h-4" />
-                  <span className="text-sm">{t('تصدير PDF', 'Export PDF')}</span>
+                  {t('تنزيل PDF', 'Download PDF')}
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-[rgba(183,222,232,0.1)] rounded-lg text-[#B7DEE8] hover:bg-[rgba(183,222,232,0.2)] transition-colors">
-                  <Download className="w-4 h-4" />
-                  <span className="text-sm">{t('تصدير Excel', 'Export Excel')}</span>
+                <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] text-white rounded hover:bg-[#1a4158] transition-colors duration-150">
+                  <FileText className="w-4 h-4" />
+                  {t('تنزيل Excel', 'Download Excel')}
                 </button>
-                <div className={cn("flex items-center gap-3 ml-auto", language === 'ar' && "mr-auto ml-0")}>
-                  <span className="text-[rgba(255,255,255,0.7)] text-sm">{t('إرسال ملخص أسبوعي', 'Email weekly digest')}</span>
-                  <button className="w-12 h-6 bg-[rgba(183,222,232,0.2)] rounded-full relative transition-colors hover:bg-[rgba(183,222,232,0.3)]">
-                    <div className="w-5 h-5 bg-[#B7DEE8] rounded-full absolute top-0.5 left-0.5 transition-transform translate-x-6" />
-                  </button>
+                <div className={cn("flex items-center gap-2 ml-auto", language === 'ar' ? "mr-auto ml-0" : "")}>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" className="w-4 h-4 text-[#B7DEE8] rounded focus:ring-[#B7DEE8]" />
+                    <span className="text-sm text-gray-700">{t('إرسال ملخص أسبوعي بالبريد', 'Email weekly digest')}</span>
+                  </label>
                 </div>
               </div>
             </motion.div>

@@ -196,7 +196,7 @@ export default function Notifications() {
   const notifications = getNotificationsByTab();
 
   return (
-    <div className="min-h-screen bg-[#0C2836] flex">
+    <div className="min-h-screen bg-[#f8f9fa] flex">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
@@ -311,26 +311,26 @@ export default function Notifications() {
           <div className="w-9" />
         </div>
 
-        {/* Main Content */}
-        <div className="p-8 max-w-7xl mx-auto">
+        {/* Main Content - Scrollable Column Shell */}
+        <div className="p-4 md:p-6 max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15 }}
-            className="space-y-6"
+            className="space-y-4"
           >
             {/* Header */}
-            <div className={cn("mb-8", language === 'ar' && "text-right")}>
-              <h1 className="text-2xl font-semibold text-white mb-2">
+            <div className={cn("mb-4", language === 'ar' && "text-right")}>
+              <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
                 {t('الإشعارات', 'Notifications')}
               </h1>
-              <p className="text-[rgba(255,255,255,0.7)] text-sm">
+              <p className="text-gray-600 text-sm">
                 {t('إدارة الإشعارات والتنبيهات', 'Manage notifications and alerts')}
               </p>
             </div>
 
             {/* Tabs */}
-            <div className="bg-[rgba(255,255,255,0.05)] rounded-lg p-1 border border-[rgba(183,222,232,0.1)] mb-6">
+            <div className="bg-white rounded-lg p-1 shadow-sm mb-4">
               <div className={cn("flex", language === 'ar' && "flex-row-reverse")}>
                 {[
                   { id: 'action', label: t('إجراء مطلوب', 'Action Required'), count: actionRequiredNotifications.filter(n => !n.read).length },
@@ -341,16 +341,16 @@ export default function Notifications() {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={cn(
-                      "flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors relative",
+                      "flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150 relative",
                       activeTab === tab.id
-                        ? "bg-[rgba(183,222,232,0.1)] text-white"
-                        : "text-[rgba(255,255,255,0.7)] hover:text-white"
+                        ? "bg-[#B7DEE8] text-[#0C2836]"
+                        : "text-gray-600 hover:text-gray-900"
                     )}
                   >
                     {tab.label}
                     {tab.count > 0 && (
                       <span className={cn(
-                        "absolute top-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center",
+                        "absolute top-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center",
                         language === 'ar' ? "left-2" : "right-2"
                       )}>
                         {tab.count}
@@ -372,24 +372,24 @@ export default function Notifications() {
                 return (
                   <motion.div
                     key={notification.id}
-                    initial={{ opacity: 0, x: language === 'ar' ? 20 : -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.15, delay: index * 0.05 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.15, delay: index * 0.02 }}
                     className={cn(
-                      "bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border transition-all",
-                      !notification.read ? "border-[#B7DEE8]" : "border-[rgba(183,222,232,0.1)]",
-                      isAction && notification.priority === 'high' && "bg-red-900/10 border-red-500/30",
-                      isDeadline && notification.escalated && "bg-yellow-900/10 border-yellow-500/30"
+                      "bg-white rounded-lg p-4 shadow-sm border transition-all duration-150",
+                      !notification.read ? "border-[#B7DEE8]" : "border-gray-200",
+                      isAction && notification.priority === 'high' && "border-red-300 bg-red-50",
+                      isDeadline && notification.escalated && "border-yellow-300 bg-yellow-50"
                     )}
                   >
                     <div className={cn("flex items-start gap-4", language === 'ar' && "flex-row-reverse")}>
                       <div className={cn(
                         "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
-                        !notification.read ? "bg-[rgba(183,222,232,0.2)]" : "bg-[rgba(255,255,255,0.05)]"
+                        !notification.read ? "bg-[#f0f9ff]" : "bg-gray-100"
                       )}>
                         <Icon className={cn(
                           "w-5 h-5",
-                          !notification.read ? "text-[#B7DEE8]" : "text-[rgba(255,255,255,0.5)]"
+                          !notification.read ? "text-[#0C2836]" : "text-gray-500"
                         )} />
                       </div>
 
@@ -398,11 +398,11 @@ export default function Notifications() {
                           <div className={cn(language === 'ar' && "text-right")}>
                             <h3 className={cn(
                               "font-medium",
-                              !notification.read ? "text-white" : "text-[rgba(255,255,255,0.9)]"
+                              !notification.read ? "text-gray-900" : "text-gray-700"
                             )}>
                               {language === 'ar' ? notification.titleAr : notification.title}
                             </h3>
-                            <p className="text-[rgba(255,255,255,0.7)] text-sm mt-1">
+                            <p className="text-gray-600 text-sm mt-1">
                               {language === 'ar' ? notification.descriptionAr : notification.description}
                             </p>
                           </div>
@@ -410,10 +410,10 @@ export default function Notifications() {
                           <div className={cn("flex items-center gap-2 ml-4", language === 'ar' && "mr-4 ml-0 flex-row-reverse")}>
                             {isAction && (
                               <div className={cn(
-                                "flex items-center gap-1 px-2 py-1 rounded text-xs",
-                                notification.priority === 'high' ? "bg-red-900/20 text-red-400" :
-                                notification.priority === 'medium' ? "bg-yellow-900/20 text-yellow-400" :
-                                "bg-green-900/20 text-green-400"
+                                "flex items-center gap-1 px-2 py-1 rounded text-xs font-medium",
+                                notification.priority === 'high' ? "bg-red-100 text-red-800" :
+                                notification.priority === 'medium' ? "bg-yellow-100 text-yellow-800" :
+                                "bg-green-100 text-green-800"
                               )}>
                                 <Clock className="w-3 h-3" />
                                 <span>{notification.slaTimer}</span>
@@ -421,49 +421,49 @@ export default function Notifications() {
                             )}
                             {isDeadline && (
                               <div className={cn(
-                                "px-2 py-1 rounded text-xs",
-                                notification.daysRemaining <= 1 ? "bg-red-900/20 text-red-400" :
-                                notification.daysRemaining <= 7 ? "bg-yellow-900/20 text-yellow-400" :
-                                "bg-green-900/20 text-green-400"
+                                "px-2 py-1 rounded text-xs font-medium",
+                                notification.daysRemaining <= 1 ? "bg-red-100 text-red-800" :
+                                notification.daysRemaining <= 7 ? "bg-yellow-100 text-yellow-800" :
+                                "bg-green-100 text-green-800"
                               )}>
                                 {notification.daysRemaining}d
                               </div>
                             )}
                             {isSystem && notification.muted && (
-                              <BellOff className="w-4 h-4 text-[rgba(255,255,255,0.5)]" />
+                              <BellOff className="w-4 h-4 text-gray-400" />
                             )}
                           </div>
                         </div>
 
                         <div className={cn("flex items-center justify-between mt-3", language === 'ar' && "flex-row-reverse")}>
-                          <span className="text-[rgba(255,255,255,0.5)] text-xs">{notification.timestamp}</span>
+                          <span className="text-gray-500 text-xs">{notification.timestamp}</span>
                           
                           <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
                             {isAction && (
                               <>
-                                <button className="px-3 py-1 bg-[#B7DEE8] text-[#0C2836] rounded text-xs font-medium hover:bg-[rgba(183,222,232,0.9)] transition-colors">
+                                <button className="px-3 py-1 bg-[#0C2836] text-white rounded text-xs font-medium hover:bg-[#1a4158] transition-colors duration-150">
                                   {notification.type === 'approval' ? t('موافقة', 'Approve') :
                                    notification.type === 'signature' ? t('توقيع', 'Sign') :
                                    t('مراجعة', 'Review')}
                                 </button>
-                                <button className="px-3 py-1 bg-[rgba(183,222,232,0.1)] text-[#B7DEE8] rounded text-xs hover:bg-[rgba(183,222,232,0.2)] transition-colors">
+                                <button className="px-3 py-1 border border-[#B7DEE8] text-[#0C2836] rounded text-xs hover:bg-[#f0f9ff] transition-colors duration-150">
                                   {t('تأجيل', 'Snooze')}
                                 </button>
                               </>
                             )}
                             {isDeadline && (
-                              <button className="px-3 py-1 bg-[rgba(183,222,232,0.1)] text-[#B7DEE8] rounded text-xs hover:bg-[rgba(183,222,232,0.2)] transition-colors">
+                              <button className="px-3 py-1 border border-[#B7DEE8] text-[#0C2836] rounded text-xs hover:bg-[#f0f9ff] transition-colors duration-150">
                                 {t('عرض العقد', 'View Contract')}
                               </button>
                             )}
                             {isSystem && !notification.muted && (
-                              <button className="px-3 py-1 bg-[rgba(183,222,232,0.1)] text-[#B7DEE8] rounded text-xs hover:bg-[rgba(183,222,232,0.2)] transition-colors">
+                              <button className="px-3 py-1 border border-[#B7DEE8] text-[#0C2836] rounded text-xs hover:bg-[#f0f9ff] transition-colors duration-150">
                                 {t('كتم لمدة 7 أيام', 'Mute 7 days')}
                               </button>
                             )}
                             {!notification.read && (
-                              <button className="p-1 hover:bg-[rgba(183,222,232,0.1)] rounded transition-colors">
-                                <Eye className="w-4 h-4 text-[#B7DEE8]" />
+                              <button className="p-1 hover:bg-gray-100 rounded transition-colors duration-150">
+                                <Eye className="w-4 h-4 text-[#0C2836]" />
                               </button>
                             )}
                           </div>
@@ -477,12 +477,12 @@ export default function Notifications() {
 
             {/* Preference Center */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
-              className="bg-[rgba(255,255,255,0.05)] rounded-lg p-6 border border-[rgba(183,222,232,0.1)] mt-8"
+              transition={{ duration: 0.15, delay: 0.1 }}
+              className="bg-white rounded-lg p-6 shadow-sm mt-6"
             >
-              <h3 className={cn("text-white font-medium mb-4", language === 'ar' && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
                 {t('إعدادات الإشعارات', 'Notification Preferences')}
               </h3>
               
@@ -495,18 +495,18 @@ export default function Notifications() {
                 ].map((pref) => (
                   <div key={pref.id} className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
                     <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                      <pref.icon className="w-4 h-4 text-[#B7DEE8]" />
-                      <span className="text-white text-sm">{pref.label}</span>
+                      <pref.icon className="w-4 h-4 text-[#0C2836]" />
+                      <span className="text-gray-700 text-sm">{pref.label}</span>
                     </div>
                     <button
                       onClick={() => pref.setter(!pref.value)}
                       className={cn(
-                        "w-12 h-6 rounded-full relative transition-colors",
-                        pref.value ? "bg-[#B7DEE8]" : "bg-[rgba(183,222,232,0.2)]"
+                        "w-12 h-6 rounded-full relative transition-colors duration-150",
+                        pref.value ? "bg-[#B7DEE8]" : "bg-gray-200"
                       )}
                     >
                       <div className={cn(
-                        "w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform",
+                        "w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform shadow-sm",
                         pref.value ? "translate-x-6" : "translate-x-0.5"
                       )} />
                     </button>
@@ -514,8 +514,8 @@ export default function Notifications() {
                 ))}
               </div>
 
-              <div className="mt-6 pt-6 border-t border-[rgba(183,222,232,0.1)]">
-                <p className={cn("text-[rgba(255,255,255,0.5)] text-xs", language === 'ar' && "text-right")}>
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className={cn("text-gray-500 text-xs", language === 'ar' && "text-right")}>
                   {t('سجل القراءة/غير المقروءة محفوظ لأغراض التدقيق', 'Read/unread audit log is maintained for compliance purposes')}
                 </p>
               </div>
@@ -525,10 +525,10 @@ export default function Notifications() {
 
         {/* FAB */}
         <button className={cn(
-          "fixed bottom-8 w-14 h-14 bg-[#B7DEE8] rounded-full shadow-lg flex items-center justify-center hover:bg-[rgba(183,222,232,0.9)] transition-colors",
+          "fixed bottom-8 w-14 h-14 bg-[#0C2836] rounded-full shadow-lg flex items-center justify-center hover:bg-[#1a4158] transition-colors duration-150",
           language === 'ar' ? "left-8" : "right-8"
         )}>
-          <span className="text-[#0C2836] text-2xl">+</span>
+          <span className="text-white text-2xl">+</span>
         </button>
       </div>
     </div>

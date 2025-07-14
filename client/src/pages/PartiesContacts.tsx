@@ -117,7 +117,7 @@ export default function PartiesContacts() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0C2836] flex">
+    <div className="min-h-screen bg-[#f8f9fa] flex">
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
@@ -232,29 +232,29 @@ export default function PartiesContacts() {
           <div className="w-9" />
         </div>
 
-        {/* Main Content */}
-        <div className="p-8 max-w-7xl mx-auto">
+        {/* Main Content - Scrollable Column Shell */}
+        <div className="p-4 md:p-6 max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15 }}
-            className="space-y-6"
+            className="space-y-4"
           >
             {/* Header */}
-            <div className={cn("mb-8", language === 'ar' && "text-right")}>
-              <h1 className="text-2xl font-semibold text-white mb-2">
+            <div className={cn("mb-4", language === 'ar' && "text-right")}>
+              <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
                 {t('الأطراف وجهات الاتصال', 'Parties & Contacts')}
               </h1>
-              <p className="text-[rgba(255,255,255,0.7)] text-sm">
+              <p className="text-gray-600 text-sm">
                 {t('إدارة الأطراف المقابلة وجهات الاتصال', 'Manage counterparties and contacts')}
               </p>
             </div>
 
             {/* Search and Filters */}
-            <div className="bg-[rgba(255,255,255,0.05)] rounded-lg p-4 border border-[rgba(183,222,232,0.1)] mb-6">
+            <div className="bg-white rounded-lg p-4 shadow-sm mb-4">
               <div className={cn("flex flex-col lg:flex-row gap-4", language === 'ar' && "lg:flex-row-reverse")}>
                 <div className="flex-1 relative">
-                  <Search className={cn("absolute top-3 w-4 h-4 text-[rgba(255,255,255,0.5)]", 
+                  <Search className={cn("absolute top-3 w-4 h-4 text-gray-400", 
                     language === 'ar' ? "right-3" : "left-3")} />
                   <input
                     type="text"
@@ -262,7 +262,7 @@ export default function PartiesContacts() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t('البحث بالاسم أو الرقم الضريبي أو البلد...', 'Search by name, FEIN/DUNS, country...')}
                     className={cn(
-                      "w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg px-10 py-2.5 text-white placeholder-[rgba(255,255,255,0.5)] focus:outline-none focus:border-[#B7DEE8] transition-colors",
+                      "w-full bg-gray-50 border border-gray-200 rounded-lg px-10 py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-1 focus:ring-[#B7DEE8] transition-colors",
                       language === 'ar' && "text-right"
                     )}
                   />
@@ -271,7 +271,7 @@ export default function PartiesContacts() {
                   <button
                     onClick={() => setShowFilters(!showFilters)}
                     className={cn(
-                      "flex items-center gap-2 px-4 py-2.5 bg-[rgba(183,222,232,0.1)] rounded-lg text-[#B7DEE8] hover:bg-[rgba(183,222,232,0.2)] transition-colors",
+                      "flex items-center gap-2 px-4 py-2.5 border border-[#B7DEE8] rounded-lg text-[#0C2836] hover:bg-[#f0f9ff] transition-colors",
                       language === 'ar' && "flex-row-reverse"
                     )}
                   >
@@ -279,7 +279,7 @@ export default function PartiesContacts() {
                     <span className="text-sm">{t('تصفية', 'Filter')}</span>
                     <ChevronDown className={cn("w-4 h-4 transition-transform", showFilters && "rotate-180")} />
                   </button>
-                  <button className="px-4 py-2.5 bg-[rgba(183,222,232,0.1)] rounded-lg text-[#B7DEE8] hover:bg-[rgba(183,222,232,0.2)] transition-colors">
+                  <button className="px-4 py-2.5 border border-[#B7DEE8] rounded-lg text-[#0C2836] hover:bg-[#f0f9ff] transition-colors">
                     <Download className="w-4 h-4" />
                   </button>
                 </div>
@@ -298,10 +298,10 @@ export default function PartiesContacts() {
                       key={filter}
                       onClick={() => setSelectedFilter(filter)}
                       className={cn(
-                        "px-3 py-1.5 rounded-lg text-sm transition-colors",
+                        "px-3 py-1.5 rounded-lg text-sm transition-colors duration-150",
                         selectedFilter === filter
                           ? "bg-[#B7DEE8] text-[#0C2836]"
-                          : "bg-[rgba(183,222,232,0.1)] text-[#B7DEE8] hover:bg-[rgba(183,222,232,0.2)]"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       )}
                     >
                       {filter === 'all' ? t('الكل', 'All') :
@@ -314,175 +314,113 @@ export default function PartiesContacts() {
               )}
             </div>
 
-            {/* Counterparties List */}
-            <div className="space-y-4">
-              {filteredCounterparties.map((party, index) => (
-                <motion.div
-                  key={party.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.15, delay: index * 0.05 }}
-                  className="bg-[rgba(255,255,255,0.05)] rounded-lg border border-[rgba(183,222,232,0.1)] overflow-hidden"
-                >
-                  {/* Party Header */}
-                  <div className="p-6">
-                    <div className={cn("flex items-start justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                      <div className={cn("flex items-start gap-4", language === 'ar' && "flex-row-reverse")}>
-                        <div className="w-12 h-12 bg-[rgba(183,222,232,0.1)] rounded-lg flex items-center justify-center">
-                          <Building className="w-6 h-6 text-[#B7DEE8]" />
-                        </div>
-                        <div className={cn(language === 'ar' && "text-right")}>
-                          <h3 className="text-white font-medium text-lg">
-                            {language === 'ar' ? party.nameAr : party.name}
-                          </h3>
-                          <p className="text-[rgba(255,255,255,0.5)] text-sm">
-                            {party.type === 'vendor' ? t('مورد', 'Vendor') :
-                             party.type === 'customer' ? t('عميل', 'Customer') :
-                             t('شريك', 'Partner')} • {party.country} • FEIN: {party.fein}
-                          </p>
-                        </div>
-                      </div>
-                      <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
-                        <span className={cn(
-                          "px-2 py-1 rounded text-xs",
-                          party.status === 'active' 
-                            ? "bg-green-900/20 text-green-400 border border-green-500/30"
-                            : "bg-gray-900/20 text-gray-400 border border-gray-500/30"
-                        )}>
-                          {party.status === 'active' ? t('نشط', 'Active') : t('غير نشط', 'Inactive')}
-                        </span>
-                        <button className="p-2 hover:bg-[rgba(183,222,232,0.1)] rounded-lg transition-colors">
-                          <Edit className="w-4 h-4 text-[#B7DEE8]" />
-                        </button>
-                        <button className="p-2 hover:bg-[rgba(183,222,232,0.1)] rounded-lg transition-colors">
-                          <Send className="w-4 h-4 text-[#B7DEE8]" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Info Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                      <div className={cn("bg-[rgba(255,255,255,0.03)] rounded-lg p-3", language === 'ar' && "text-right")}>
-                        <p className="text-[rgba(255,255,255,0.5)] text-xs mb-1">{t('العقود', 'Contracts')}</p>
-                        <p className="text-white font-medium">{party.contracts}</p>
-                      </div>
-                      <div className={cn("bg-[rgba(255,255,255,0.03)] rounded-lg p-3", language === 'ar' && "text-right")}>
-                        <p className="text-[rgba(255,255,255,0.5)] text-xs mb-1">{t('مستوى المخاطر', 'Risk Level')}</p>
-                        <p className={cn(
-                          "font-medium",
-                          party.riskScore === 'low' ? "text-green-400" :
-                          party.riskScore === 'medium' ? "text-yellow-400" :
-                          "text-red-400"
-                        )}>
-                          {party.riskScore === 'low' ? t('منخفض', 'Low') :
-                           party.riskScore === 'medium' ? t('متوسط', 'Medium') :
-                           t('مرتفع', 'High')}
-                        </p>
-                      </div>
-                      <div className={cn("bg-[rgba(255,255,255,0.03)] rounded-lg p-3", language === 'ar' && "text-right")}>
-                        <p className="text-[rgba(255,255,255,0.5)] text-xs mb-1">{t('آخر نشاط', 'Last Activity')}</p>
-                        <p className="text-white font-medium">{party.lastActivity}</p>
-                      </div>
-                      <div className={cn("bg-[rgba(255,255,255,0.03)] rounded-lg p-3", language === 'ar' && "text-right")}>
-                        <p className="text-[rgba(255,255,255,0.5)] text-xs mb-1">{t('الاتفاقية الرئيسية', 'Master Agreement')}</p>
-                        <p className="text-white font-medium">{party.masterAgreement || t('لا يوجد', 'None')}</p>
-                      </div>
-                    </div>
-
-                    {/* Compliance Status */}
-                    <div className={cn("flex flex-wrap gap-3 mb-4", language === 'ar' && "flex-row-reverse")}>
-                      {/* W-9/W-8BEN Status */}
-                      <div className={cn(
-                        "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs",
-                        party.w9Status === 'verified' || party.w8benStatus === 'verified'
-                          ? "bg-green-900/20 text-green-400"
-                          : party.w9Status === 'pending' || party.w8benStatus === 'pending'
-                          ? "bg-yellow-900/20 text-yellow-400"
-                          : "bg-red-900/20 text-red-400",
-                        language === 'ar' && "flex-row-reverse"
-                      )}>
-                        <FileText className="w-3 h-3" />
-                        <span>{party.w9Status ? 'W-9' : 'W-8BEN'}: {
-                          party.w9Status === 'verified' || party.w8benStatus === 'verified' ? t('تم التحقق', 'Verified') :
-                          party.w9Status === 'pending' || party.w8benStatus === 'pending' ? t('قيد الانتظار', 'Pending') :
-                          t('منتهي الصلاحية', 'Expired')
-                        }</span>
-                      </div>
-
-                      {/* Sanctions Check */}
-                      <div className={cn(
-                        "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs",
-                        party.sanctions.checked && party.sanctions.result === 'clear'
-                          ? "bg-green-900/20 text-green-400"
-                          : "bg-red-900/20 text-red-400",
-                        language === 'ar' && "flex-row-reverse"
-                      )}>
-                        <Shield className="w-3 h-3" />
-                        <span>{t('فحص العقوبات', 'Sanctions')}: {
-                          party.sanctions.checked ? t('نظيف', 'Clear') : t('مطلوب', 'Required')
-                        }</span>
-                      </div>
-
-                      {/* Insurance */}
-                      <div className={cn(
-                        "flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs",
-                        party.insurance.status === 'valid'
-                          ? "bg-green-900/20 text-green-400"
-                          : party.insurance.status === 'expiring'
-                          ? "bg-yellow-900/20 text-yellow-400"
-                          : "bg-red-900/20 text-red-400",
-                        language === 'ar' && "flex-row-reverse"
-                      )}>
-                        <Shield className="w-3 h-3" />
-                        <span>{t('التأمين', 'Insurance')}: {party.insurance.expiry}</span>
-                      </div>
-
-                      {/* Diversity Flags */}
-                      {party.diversity.map((flag) => (
-                        <div key={flag} className="px-3 py-1.5 bg-purple-900/20 text-purple-400 rounded-lg text-xs">
-                          {flag}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Contacts */}
-                    <div className="border-t border-[rgba(183,222,232,0.1)] pt-4">
-                      <h4 className={cn("text-white font-medium mb-3", language === 'ar' && "text-right")}>
-                        {t('جهات الاتصال', 'Contacts')}
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {party.contacts.map((contact, idx) => (
-                          <div key={idx} className="bg-[rgba(255,255,255,0.03)] rounded-lg p-3">
-                            <div className={cn("flex items-start justify-between mb-2", language === 'ar' && "flex-row-reverse")}>
-                              <div className={cn(language === 'ar' && "text-right")}>
-                                <p className="text-white font-medium">{contact.name}</p>
-                                <p className="text-[rgba(255,255,255,0.5)] text-xs">{contact.role}</p>
-                              </div>
-                              {contact.primary && (
-                                <span className="px-2 py-0.5 bg-[rgba(183,222,232,0.2)] text-[#B7DEE8] rounded text-xs">
-                                  {t('رئيسي', 'Primary')}
-                                </span>
-                              )}
+            {/* Counterparties List - Table Layout */}
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className={cn("px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('الاسم', 'Name')}
+                      </th>
+                      <th className={cn("px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('النوع', 'Type')}
+                      </th>
+                      <th className={cn("px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('البلد/FEIN', 'Country/FEIN')}
+                      </th>
+                      <th className={cn("px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('العقود', 'Contracts')}
+                      </th>
+                      <th className={cn("px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('المخاطر', 'Risk')}
+                      </th>
+                      <th className={cn("px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('الحالة', 'Status')}
+                      </th>
+                      <th className={cn("px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' ? "text-right" : "text-left")}>
+                        {t('الإجراءات', 'Actions')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredCounterparties.map((party, index) => (
+                      <motion.tr
+                        key={party.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.15, delay: index * 0.02 }}
+                        className="hover:bg-gray-50 transition-colors duration-150"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className={cn("flex items-center", language === 'ar' && "flex-row-reverse")}>
+                            <div className="w-10 h-10 bg-[#f0f9ff] rounded-lg flex items-center justify-center">
+                              <Building className="w-5 h-5 text-[#0C2836]" />
                             </div>
-                            <div className={cn("space-y-1", language === 'ar' && "text-right")}>
-                              <div className={cn("flex items-center gap-2 text-[rgba(255,255,255,0.7)] text-xs", 
-                                language === 'ar' && "flex-row-reverse justify-end")}>
-                                <Mail className="w-3 h-3" />
-                                <span>{contact.email}</span>
+                            <div className={cn("ml-4", language === 'ar' ? "mr-4 ml-0 text-right" : "")}>
+                              <div className="text-sm font-medium text-gray-900">
+                                {language === 'ar' ? party.nameAr : party.name}
                               </div>
-                              <div className={cn("flex items-center gap-2 text-[rgba(255,255,255,0.7)] text-xs",
-                                language === 'ar' && "flex-row-reverse justify-end")}>
-                                <Phone className="w-3 h-3" />
-                                <span>{contact.phone}</span>
+                              <div className="text-sm text-gray-500">
+                                {party.contacts[0]?.name}
                               </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                        </td>
+                        <td className={cn("px-6 py-4 whitespace-nowrap text-sm", language === 'ar' ? "text-right" : "text-left")}>
+                          <span className={cn(
+                            "px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full",
+                            party.type === 'vendor' ? "bg-blue-100 text-blue-800" :
+                            party.type === 'customer' ? "bg-green-100 text-green-800" :
+                            "bg-purple-100 text-purple-800"
+                          )}>
+                            {party.type === 'vendor' ? t('مورد', 'Vendor') :
+                             party.type === 'customer' ? t('عميل', 'Customer') :
+                             t('شريك', 'Partner')}
+                          </span>
+                        </td>
+                        <td className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-900", language === 'ar' ? "text-right" : "text-left")}>
+                          <div>{party.country}</div>
+                          <div className="text-gray-500">{party.fein}</div>
+                        </td>
+                        <td className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-900", language === 'ar' ? "text-right" : "text-left")}>
+                          {party.contracts}
+                        </td>
+                        <td className={cn("px-6 py-4 whitespace-nowrap", language === 'ar' ? "text-right" : "text-left")}>
+                          <span className={cn(
+                            "px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full",
+                            party.riskScore === 'low' ? "bg-green-100 text-green-800" :
+                            party.riskScore === 'medium' ? "bg-yellow-100 text-yellow-800" :
+                            "bg-red-100 text-red-800"
+                          )}>
+                            {party.riskScore === 'low' ? t('منخفض', 'Low') :
+                             party.riskScore === 'medium' ? t('متوسط', 'Medium') :
+                             t('مرتفع', 'High')}
+                          </span>
+                        </td>
+                        <td className={cn("px-6 py-4 whitespace-nowrap", language === 'ar' ? "text-right" : "text-left")}>
+                          <span className={cn(
+                            "px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full",
+                            party.status === 'active' 
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          )}>
+                            {party.status === 'active' ? t('نشط', 'Active') : t('غير نشط', 'Inactive')}
+                          </span>
+                        </td>
+                        <td className={cn("px-6 py-4 whitespace-nowrap text-sm font-medium", language === 'ar' ? "text-right" : "text-left")}>
+                          <button className="text-[#B7DEE8] hover:text-[#0C2836] mr-3">
+                            {t('تحرير', 'Edit')}
+                          </button>
+                          <button className="text-[#B7DEE8] hover:text-[#0C2836]">
+                            {t('عرض', 'View')}
+                          </button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </motion.div>
         </div>

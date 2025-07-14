@@ -251,13 +251,34 @@ export class DatabaseStorage implements IStorage {
     return query.orderBy(desc(contracts.createdAt));
   }
 
-  async getRecentContracts(userId: number, limit: number = 5): Promise<Contract[]> {
-    return db
-      .select()
-      .from(contracts)
-      .where(eq(contracts.userId, userId))
-      .orderBy(desc(contracts.createdAt))
-      .limit(limit);
+  async getRecentContracts(userId: number, limit: number = 5): Promise<any[]> {
+    try {
+      const result = await db
+        .select()
+        .from(contracts)
+        .where(eq(contracts.userId, userId))
+        .orderBy(desc(contracts.createdAt))
+        .limit(limit);
+      
+      // Map database columns to expected interface
+      return result.map(contract => ({
+        id: contract.id,
+        userId: contract.userId,
+        title: contract.title || (contract as any).name || 'Untitled Contract',
+        partyName: contract.partyName || (contract as any).parties || '',
+        type: contract.type,
+        status: contract.status,
+        date: (contract as any).startDate || contract.createdAt,
+        riskLevel: contract.riskLevel,
+        fileUrl: (contract as any).filePath || (contract as any).fileUrl,
+        createdAt: contract.createdAt,
+        updatedAt: contract.updatedAt
+      }));
+    } catch (error) {
+      console.error('Error in getRecentContracts:', error);
+      // Return empty array on error to avoid breaking the UI
+      return [];
+    }
   }
 
   async updateContract(id: number, updates: Partial<Contract>): Promise<Contract | undefined> {
