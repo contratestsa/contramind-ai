@@ -16,10 +16,6 @@ import OrganizationSettings from "@/pages/OrganizationSettings";
 import Chat from "@/pages/Chat";
 import Help from "@/pages/Help";
 import Tasks from "@/pages/Tasks";
-import ReleaseNotes from "@/pages/ReleaseNotes";
-import Terms from "@/pages/Terms";
-import DownloadApps from "@/pages/DownloadApps";
-import KeyboardShortcuts from "@/pages/KeyboardShortcuts";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 
@@ -37,10 +33,6 @@ function Router() {
       <Route path="/chat" component={Chat} />
       <Route path="/help" component={Help} />
       <Route path="/tasks" component={Tasks} />
-      <Route path="/release-notes" component={ReleaseNotes} />
-      <Route path="/terms" component={Terms} />
-      <Route path="/download-apps" component={DownloadApps} />
-      <Route path="/keyboard-shortcuts" component={KeyboardShortcuts} />
 
       <Route component={NotFound} />
     </Switch>

@@ -9,12 +9,7 @@ import {
   Palette, 
   HelpCircle, 
   LogOut,
-  Building,
-  Megaphone,
-  FileText,
-  Download,
-  Command,
-  ChevronRight
+  Building
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -34,9 +29,7 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const helpMenuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const isRTL = language === 'ar';
 
@@ -48,40 +41,6 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
     }
     return name.substring(0, 2);
   };
-
-  // Help submenu items
-  const helpMenuItems = [
-    {
-      icon: HelpCircle,
-      label: t('مركز المساعدة', 'Help Center'),
-      path: '/help',
-      ariaLabel: 'Help Center'
-    },
-    {
-      icon: Megaphone,
-      label: t('ملاحظات الإصدار', 'Release Notes'),
-      path: '/release-notes',
-      ariaLabel: 'Release Notes'
-    },
-    {
-      icon: FileText,
-      label: t('الشروط والسياسات', 'Terms & Policies'),
-      path: '/terms',
-      ariaLabel: 'Terms & Policies'
-    },
-    {
-      icon: Download,
-      label: t('تحميل التطبيقات', 'Download Apps'),
-      path: '/download-apps',
-      ariaLabel: 'Download Apps'
-    },
-    {
-      icon: Command,
-      label: t('اختصارات لوحة المفاتيح', 'Keyboard Shortcuts'),
-      path: '/keyboard-shortcuts',
-      ariaLabel: 'Keyboard Shortcuts'
-    }
-  ];
 
   // Logout mutation
   const logoutMutation = useMutation({
@@ -118,20 +77,16 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
       if (
         dropdownRef.current && 
         !dropdownRef.current.contains(event.target as Node) &&
-        helpMenuRef.current &&
-        !helpMenuRef.current.contains(event.target as Node) &&
         buttonRef.current &&
         !buttonRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
-        setIsHelpOpen(false);
       }
     };
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsOpen(false);
-        setIsHelpOpen(false);
         buttonRef.current?.focus();
       }
     };
@@ -201,11 +156,9 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
       type: 'item' as const,
       icon: HelpCircle,
       label: t('المساعدة', 'Help'),
-      hasSubmenu: true,
-      onClick: (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsHelpOpen(!isHelpOpen);
+      onClick: () => {
+        setIsOpen(false);
+        setLocation('/help');
       }
     },
     {
@@ -276,73 +229,18 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
 
               const Icon = item.icon;
               return (
-                <div key={index}>
-                  <button
-                    onClick={item.onClick}
-                    className={cn(
-                      "w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 transition-colors text-left relative",
-                      isRTL && "text-right flex-row-reverse"
-                    )}
-                    role="menuitem"
-                    aria-haspopup={item.hasSubmenu ? "menu" : undefined}
-                    aria-expanded={item.hasSubmenu ? isHelpOpen : undefined}
-                    aria-label={item.hasSubmenu ? t('قائمة المساعدة', 'Help menu') : undefined}
-                  >
-                    <Icon className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm text-gray-900 flex-1">{item.label}</span>
-                    {item.hasSubmenu && (
-                      <ChevronRight 
-                        className={cn(
-                          "w-4 h-4 text-gray-400 transition-transform",
-                          isHelpOpen && "rotate-90",
-                          isRTL && "rotate-180"
-                        )}
-                      />
-                    )}
-                  </button>
-
-                  {/* Help Submenu */}
-                  {item.hasSubmenu && isHelpOpen && (
-                    <motion.div
-                      ref={helpMenuRef}
-                      initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: isRTL ? 10 : -10 }}
-                      transition={{ duration: 0.15 }}
-                      className={cn(
-                        "absolute top-0 w-[240px] bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50",
-                        isRTL ? "right-full mr-2" : "left-full ml-2"
-                      )}
-                      role="menu"
-                    >
-                      <div className="py-2">
-                        {helpMenuItems.map((helpItem, helpIndex) => {
-                          const HelpIcon = helpItem.icon;
-                          return (
-                            <button
-                              key={helpIndex}
-                              onClick={() => {
-                                setIsOpen(false);
-                                setIsHelpOpen(false);
-                                setLocation(helpItem.path);
-                              }}
-                              className={cn(
-                                "w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left",
-                                isRTL && "text-right flex-row-reverse",
-                                helpIndex > 0 && "mt-2"
-                              )}
-                              role="menuitem"
-                              aria-label={helpItem.ariaLabel}
-                            >
-                              <HelpIcon className="w-4 h-4 text-gray-600" />
-                              <span className="text-sm text-gray-900">{helpItem.label}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
+                <button
+                  key={index}
+                  onClick={item.onClick}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 transition-colors text-left",
+                    isRTL && "text-right flex-row-reverse"
                   )}
-                </div>
+                  role="menuitem"
+                >
+                  <Icon className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm text-gray-900">{item.label}</span>
+                </button>
               );
             })}
           </motion.div>
