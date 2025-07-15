@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useRoute } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { 
   Plus,
@@ -35,6 +35,11 @@ import { cn } from "@/lib/utils";
 import UploadModal from "@/components/UploadModal";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { queryClient } from "@/lib/queryClient";
+import { motion } from "framer-motion";
+import AnalyticsReports from "@/pages/AnalyticsReports";
+import PartiesContacts from "@/pages/PartiesContacts";
+import Notifications from "@/pages/Notifications";
+import TagsCategories from "@/pages/TagsCategories";
 
 interface User {
   id: number;

@@ -1,0 +1,61 @@
+Freeze everything you see in the screenshot
+Must stay exactly as-is:
+
+Area	Elements that must NOT change
+Header (top-right)	“SA” user avatar, EN/AR language toggle, spacing, colours
+Left sidebar	Logo, hamburger button, New Contract Analysis button, search field, Recent Contracts list, sidebar menu items
+Central landing view	“Welcome back, Sarah” heading, chat input bar, Suggested / My Prompts tab strip, six prompt cards
+Colours & spacing	Dark blue background #0C2836, teal accents #B7DEE8, existing paddings & fonts
+Framer Motion	Existing 150 ms fade/slide animations
+RTL/LTR support	Current flip behaviour must remain intact
+
+Do not rename, restyle, reposition, or hide any of these pieces.
+
+🛠 2 — Add routes inside the dashboard layout
+Keep using the single wrapper component (often called DashboardLayout).
+
+Add these four child routes so they render inside the central panel:
+
+/analytics ➜ AnalyticsReportsPage
+
+/parties ➜ PartiesContactsPage
+
+/notifications ➜ NotificationsPage
+
+/tags ➜ TagsCategoriesPage
+
+Example (React Router v6; adapt for your framework):
+
+jsx
+Copy
+Edit
+<Route element={<DashboardLayout />}>
+  <Route path="analytics" element={<AnalyticsReportsPage />} />
+  <Route path="parties" element={<PartiesContactsPage />} />
+  <Route path="notifications" element={<NotificationsPage />} />
+  <Route path="tags" element={<TagsCategoriesPage />} />
+</Route>
+🔗 3 — Wire the sidebar items
+Sidebar label	href target
+Analytics & Reports	/analytics
+Parties & Contacts	/parties
+Notifications	/notifications
+Tags & Categories	/tags
+
+Do not touch the New Contract Analysis button or the search box.
+
+🎬 4 — Page-enter animation
+Wrap each new page root in a Framer-Motion 150 ms fade + slide-up.
+Slide direction must flip automatically for RTL.
+
+✅ 5 — Pass these tests before you finish
+Click each sidebar item → URL changes and the new page appears without losing header, sidebar, chat-bar, prompt cards, avatar, or language toggle.
+
+Browser Back/Forward works the same.
+
+No console errors.
+
+Log SIDEBAR PERSISTENCE FIXED once all four pages load correctly.
+
+Do nothing else.
+This task is strictly about routing. Every visual detail shown in the screenshot—including the chat-bar, prompt cards, avatar, and language switch—must remain pixel-perfect.
