@@ -4,6 +4,17 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
+- **July 15, 2025** (Latest):
+  - **Added Electron Desktop App Wrapper**: Created desktop application wrapper for ContraMind
+    - Created /desktop folder with complete Electron setup
+    - Main.js with window management, menu bar, and security configurations
+    - Preload script for secure IPC communication
+    - Package.json with build configurations for macOS, Windows, and Linux
+    - Added entitlements for macOS code signing
+    - Created run-desktop.sh script for easy development startup
+    - Desktop app connects to existing web app on port 5000
+    - Includes proper icon placeholders and build configurations
+    - Added desktop-setup.md with detailed setup and build instructions
 - **July 15, 2025**:
   - **Added Dashboard Navigation to Sidebar**: Successfully implemented nested routing
     - Fixed routing to render all pages (/analytics, /parties, /notifications, /tags) within Dashboard layout
