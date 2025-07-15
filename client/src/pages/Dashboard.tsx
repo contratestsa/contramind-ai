@@ -77,6 +77,12 @@ export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage();
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
+  
+  // Check current route
+  const [matchAnalytics] = useRoute("/analytics");
+  const [matchParties] = useRoute("/parties");
+  const [matchNotifications] = useRoute("/notifications");
+  const [matchTags] = useRoute("/tags");
 
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -580,7 +586,20 @@ export default function Dashboard() {
 
         {/* Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-        {selectedContract ? (
+        {/* Route-based content rendering */}
+        {(matchAnalytics || matchParties || matchNotifications || matchTags) ? (
+          <motion.div
+            initial={{ opacity: 0, y: isRTL ? -20 : 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.15 }}
+            className="flex-1 overflow-hidden"
+          >
+            {matchAnalytics && <AnalyticsReports />}
+            {matchParties && <PartiesContacts />}
+            {matchNotifications && <Notifications />}
+            {matchTags && <TagsCategories />}
+          </motion.div>
+        ) : selectedContract ? (
           <div className="flex flex-col h-full bg-[#0C2836]">
             {/* Contract Header */}
             <div className="flex-shrink-0 bg-[#0C2836] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">

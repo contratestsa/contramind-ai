@@ -1,49 +1,21 @@
 import { useState } from 'react';
-import { useLocation } from 'wouter';
-import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
   Plus, Edit2, Trash2, Lock, Unlock, Zap, Hash,
-  FolderOpen, ChevronDown, Search, Menu, Globe
+  FolderOpen, ChevronDown, Search
 } from 'lucide-react';
-import DashboardSidebar from '@/components/DashboardSidebar';
-import ProfileDropdown from '@/components/ProfileDropdown';
 import { useToast } from '@/hooks/use-toast';
 
 export default function TagsCategories() {
-  const [, setLocation] = useLocation();
-  const { user, isLoading } = useAuth();
-  const { language, t, setLanguage } = useLanguage();
+  const { language, t } = useLanguage();
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['contract-type', 'risk']);
   const [selectedTag, setSelectedTag] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const { toast } = useToast();
   const isRTL = language === 'ar';
-
-  const handleNewContract = () => {
-    toast({
-      title: t('قريباً', 'Coming Soon'),
-      description: t('هذه الميزة قيد التطوير', 'This feature is under development')
-    });
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-gray-600">{t('جاري التحميل...', 'Loading...')}</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    setLocation('/');
-    return null;
-  }
 
   // Mock taxonomy data
   const taxonomy = [
@@ -74,43 +46,45 @@ export default function TagsCategories() {
       ]
     },
     {
+      id: 'status',
+      name: 'Contract Status',
+      nameAr: 'حالة العقد',
+      editable: 'user',
+      mandatory: false,
+      children: [
+        { id: 'draft', name: 'Draft', nameAr: 'مسودة', count: 23, suggested: false },
+        { id: 'review', name: 'Under Review', nameAr: 'قيد المراجعة', count: 8, suggested: false },
+        { id: 'approved', name: 'Approved', nameAr: 'معتمد', count: 45, suggested: false },
+        { id: 'signed', name: 'Signed', nameAr: 'موقع', count: 67, suggested: false },
+        { id: 'active', name: 'Active', nameAr: 'نشط', count: 112, suggested: false },
+        { id: 'expired', name: 'Expired', nameAr: 'منتهي الصلاحية', count: 34, suggested: false }
+      ]
+    },
+    {
       id: 'department',
       name: 'Department',
       nameAr: 'القسم',
-      editable: 'all',
-      mandatory: false,
-      children: [
-        { id: 'legal', name: 'Legal', nameAr: 'القانونية', count: 56, suggested: false },
-        { id: 'finance', name: 'Finance', nameAr: 'المالية', count: 23, suggested: true },
-        { id: 'hr', name: 'Human Resources', nameAr: 'الموارد البشرية', count: 18, suggested: false },
-        { id: 'it', name: 'IT', nameAr: 'تقنية المعلومات', count: 41, suggested: false },
-        { id: 'procurement', name: 'Procurement', nameAr: 'المشتريات', count: 37, suggested: true }
-      ]
-    },
-    {
-      id: 'region',
-      name: 'Region',
-      nameAr: 'المنطقة',
       editable: 'admin',
       mandatory: false,
       children: [
-        { id: 'mena', name: 'MENA', nameAr: 'الشرق الأوسط وأفريقيا', count: 78, suggested: false },
-        { id: 'americas', name: 'Americas', nameAr: 'الأمريكتين', count: 45, suggested: false },
-        { id: 'europe', name: 'Europe', nameAr: 'أوروبا', count: 32, suggested: false },
-        { id: 'apac', name: 'APAC', nameAr: 'آسيا والمحيط الهادئ', count: 29, suggested: true }
+        { id: 'legal', name: 'Legal', nameAr: 'القانونية', count: 156, suggested: false },
+        { id: 'procurement', name: 'Procurement', nameAr: 'المشتريات', count: 89, suggested: false },
+        { id: 'hr', name: 'Human Resources', nameAr: 'الموارد البشرية', count: 45, suggested: true },
+        { id: 'it', name: 'IT', nameAr: 'تقنية المعلومات', count: 67, suggested: false },
+        { id: 'finance', name: 'Finance', nameAr: 'المالية', count: 78, suggested: false }
       ]
     },
     {
-      id: 'compliance',
-      name: 'Compliance',
-      nameAr: 'الامتثال',
+      id: 'vendor-type',
+      name: 'Vendor Type',
+      nameAr: 'نوع المورد',
       editable: 'manager',
       mandatory: false,
       children: [
-        { id: 'gdpr', name: 'GDPR', nameAr: 'GDPR', count: 24, suggested: false },
-        { id: 'hipaa', name: 'HIPAA', nameAr: 'HIPAA', count: 8, suggested: true },
-        { id: 'sox', name: 'SOX', nameAr: 'SOX', count: 15, suggested: false },
-        { id: 'pci', name: 'PCI-DSS', nameAr: 'PCI-DSS', count: 11, suggested: true }
+        { id: 'software', name: 'Software', nameAr: 'برمجيات', count: 45, suggested: false },
+        { id: 'hardware', name: 'Hardware', nameAr: 'أجهزة', count: 23, suggested: false },
+        { id: 'services', name: 'Services', nameAr: 'خدمات', count: 89, suggested: false },
+        { id: 'consulting', name: 'Consulting', nameAr: 'استشارات', count: 34, suggested: true }
       ]
     }
   ];
@@ -123,334 +97,255 @@ export default function TagsCategories() {
     );
   };
 
-  const getEditableIcon = (editable: string) => {
-    switch (editable) {
-      case 'admin':
-        return <Lock className="w-3 h-3 text-red-600" />;
-      case 'manager':
-        return <Lock className="w-3 h-3 text-yellow-600" />;
-      default:
-        return <Unlock className="w-3 h-3 text-green-600" />;
-    }
+  const handleTagClick = (tag: any, category: any) => {
+    setSelectedTag({ ...tag, category });
+  };
+
+  const handleAddTag = () => {
+    toast({
+      title: t('قريباً', 'Coming Soon'),
+      description: t('هذه الميزة قيد التطوير', 'This feature is under development')
+    });
   };
 
   const filteredTaxonomy = taxonomy.map(category => ({
     ...category,
     children: category.children.filter(tag =>
-      searchQuery === '' ||
       tag.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tag.nameAr.includes(searchQuery)
     )
   })).filter(category => category.children.length > 0);
 
   return (
-    <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
-      {/* Sidebar */}
-      <DashboardSidebar
-        isCollapsed={isSidebarCollapsed}
-        setIsCollapsed={setIsSidebarCollapsed}
-        showMobile={showMobileSidebar}
-        setShowMobile={setShowMobileSidebar}
-        activePage="tags"
-        onNewContract={handleNewContract}
-      />
-
-      {/* Mobile Sidebar Toggle */}
-      <button
-        onClick={() => setShowMobileSidebar(!showMobileSidebar)}
-        className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[#0C2836] text-white rounded-md shadow-lg",
-          isRTL ? "right-4" : "left-4",
-          showMobileSidebar && "hidden"
-        )}
-      >
-        <Menu className="w-5 h-5" />
-      </button>
-
-      {/* Main Content Area */}
-      <div className="flex-1 h-screen flex flex-col bg-gray-50">
-        {/* Top Header Bar */}
-        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3 relative z-30">
-          <div className="flex items-center justify-between">
-            <div className="flex-1"></div>
-            
-            {/* Language Toggle */}
-            <button
-              onClick={() => {
-                const newLang = language === 'ar' ? 'en' : 'ar';
-                setLanguage(newLang);
-              }}
-              className="mr-8 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2"
-            >
-              <Globe className="w-4 h-4" />
-              {language === 'ar' ? 'EN' : 'AR'}
-            </button>
-            
-            {/* Profile Dropdown */}
-            <div className="relative z-50">
-              <ProfileDropdown user={user} />
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15 }}
+      className="h-full flex flex-col bg-gray-50"
+    >
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full px-8 py-6 overflow-y-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.15 }}
+            className="space-y-4 max-w-7xl mx-auto"
+          >
+            {/* Header */}
+            <div className={cn("mb-4", language === 'ar' && "text-right")}>
+              <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
+                {t('العلامات والفئات', 'Tags & Categories')}
+              </h1>
+              <p className="text-gray-600 text-sm">
+                {t('إدارة التصنيف الهرمي للعقود', 'Manage hierarchical contract taxonomy')}
+              </p>
             </div>
-          </div>
-        </div>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 md:p-6 max-w-7xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15 }}
-          className="space-y-4"
-        >
-          {/* Header */}
-          <div className={cn("mb-4", language === 'ar' && "text-right")}>
-            <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
-              {t('العلامات والفئات', 'Tags & Categories')}
-            </h1>
-            <p className="text-gray-600 text-sm">
-              {t('إدارة التصنيف الهرمي للعقود', 'Manage hierarchical contract taxonomy')}
-            </p>
-          </div>
+            {/* Search Bar */}
+            <div className="relative mb-4">
+              <Search className={cn("absolute top-3 w-4 h-4 text-gray-400", 
+                language === 'ar' ? "right-3" : "left-3")} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('البحث عن العلامات...', 'Search tags...')}
+                className={cn(
+                  "w-full bg-white border border-gray-200 rounded-lg px-10 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#B7DEE8] transition-colors shadow-sm",
+                  language === 'ar' && "text-right"
+                )}
+              />
+            </div>
 
-          {/* Search Bar */}
-          <div className="relative mb-4">
-            <Search className={cn("absolute top-3 w-4 h-4 text-gray-400", 
-              language === 'ar' ? "right-3" : "left-3")} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('البحث عن العلامات...', 'Search tags...')}
-              className={cn(
-                "w-full bg-white border border-gray-200 rounded-lg px-10 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#B7DEE8] transition-colors shadow-sm",
-                language === 'ar' && "text-right"
-              )}
-            />
-          </div>
-
-          {/* Taxonomy Tree */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Categories List */}
-            <div className="lg:col-span-2 space-y-4">
-              {filteredTaxonomy.map((category, index) => (
-                <motion.div
-                  key={category.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.15, delay: index * 0.02 }}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
-                >
-                  {/* Category Header */}
-                  <button
-                    onClick={() => toggleCategory(category.id)}
-                    className={cn(
-                      "w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-150",
-                      language === 'ar' && "flex-row-reverse"
-                    )}
+            {/* Taxonomy Tree */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Categories List */}
+              <div className="lg:col-span-2 space-y-4">
+                {filteredTaxonomy.map((category, index) => (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.15, delay: index * 0.02 }}
+                    className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
                   >
-                    <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                      <FolderOpen className="w-5 h-5 text-[#0C2836]" />
-                      <span className="text-gray-900 font-medium">
-                        {language === 'ar' ? category.nameAr : category.name}
-                      </span>
-                      {category.mandatory && (
-                        <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded font-medium">
-                          {t('إلزامي', 'Mandatory')}
-                        </span>
-                      )}
-                      {getEditableIcon(category.editable)}
-                    </div>
-                    <ChevronDown className={cn(
-                      "w-5 h-5 text-gray-500 transition-transform",
-                      expandedCategories.includes(category.id) && "rotate-180"
-                    )} />
-                  </button>
-
-                  {/* Tags List */}
-                  {expandedCategories.includes(category.id) && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      transition={{ duration: 0.15 }}
-                      className="border-t border-gray-200"
+                    {/* Category Header */}
+                    <div
+                      onClick={() => toggleCategory(category.id)}
+                      className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                     >
-                      <div className="p-4 space-y-2 bg-gray-50">
-                        {category.children.map((tag) => (
-                          <div
-                            key={tag.id}
-                            onClick={() => setSelectedTag({ ...tag, categoryId: category.id, categoryName: category.name, categoryNameAr: category.nameAr })}
+                      <div className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
+                        <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
+                          <ChevronDown
                             className={cn(
-                              "flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors duration-150",
-                              selectedTag?.id === tag.id 
-                                ? "bg-[#f0f9ff] border border-[#B7DEE8]"
-                                : "hover:bg-white",
-                              language === 'ar' && "flex-row-reverse"
+                              "w-5 h-5 text-gray-600 transition-transform",
+                              expandedCategories.includes(category.id) && "rotate-180"
                             )}
-                          >
-                            <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                              <Hash className="w-4 h-4 text-gray-400" />
-                              <span className="text-gray-900">
-                                {language === 'ar' ? tag.nameAr : tag.name}
-                              </span>
-                              {tag.suggested && (
-                                <div className="flex items-center gap-1 px-2 py-0.5 bg-[#f0f9ff] rounded">
-                                  <Zap className="w-3 h-3 text-[#0C2836]" />
-                                  <span className="text-[#0C2836] text-xs font-medium">AI</span>
-                                </div>
-                              )}
-                            </div>
-                            <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                              <span className="text-gray-500 text-sm">
-                                {t('مستخدم', 'used')} {tag.count} {t('مرة', 'times')}
-                              </span>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  // Handle edit
-                                }}
-                                className="p-1 hover:bg-gray-200 rounded transition-colors duration-150"
-                              >
-                                <Edit2 className="w-3 h-3 text-gray-600" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                          />
+                          <h3 className="font-semibold text-gray-900">
+                            {language === 'ar' ? category.nameAr : category.name}
+                          </h3>
+                          {category.mandatory && (
+                            <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                              {t('إلزامي', 'Required')}
+                            </span>
+                          )}
+                        </div>
+                        <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                          <span className="text-sm text-gray-500">
+                            {category.children.length} {t('علامة', 'tags')}
+                          </span>
+                          {category.editable === 'admin' && (
+                            <Lock className="w-4 h-4 text-gray-400" />
+                          )}
+                        </div>
                       </div>
-                    </motion.div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
+                    </div>
 
-            {/* Tag Details Panel */}
-            <div className="lg:col-span-1">
-              {selectedTag ? (
+                    {/* Tags List */}
+                    {expandedCategories.includes(category.id) && (
+                      <div className="border-t border-gray-200">
+                        <div className="p-4 space-y-2">
+                          {category.children.map((tag) => (
+                            <div
+                              key={tag.id}
+                              onClick={() => handleTagClick(tag, category)}
+                              className={cn(
+                                "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors",
+                                selectedTag?.id === tag.id && "bg-[#B7DEE8] bg-opacity-10 border border-[#B7DEE8]",
+                                language === 'ar' && "flex-row-reverse"
+                              )}
+                            >
+                              <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
+                                <Hash className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-900">
+                                  {language === 'ar' ? tag.nameAr : tag.name}
+                                </span>
+                                {tag.suggested && (
+                                  <span className="flex items-center gap-1 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
+                                    <Zap className="w-3 h-3" />
+                                    {t('مقترح بواسطة AI', 'AI Suggested')}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-sm text-gray-500">{tag.count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Details Panel */}
+              <div className="lg:col-span-1">
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="bg-white rounded-lg p-6 shadow-sm sticky top-6"
+                  transition={{ duration: 0.15, delay: 0.1 }}
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-4"
                 >
-                  <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
-                    {t('تفاصيل العلامة', 'Tag Details')}
-                  </h3>
-
-                  <div className="space-y-4">
-                    <div className={cn(language === 'ar' && "text-right")}>
-                      <p className="text-gray-500 text-xs mb-1">{t('الاسم', 'Name')}</p>
-                      <p className="text-gray-900 font-medium">{language === 'ar' ? selectedTag.nameAr : selectedTag.name}</p>
-                    </div>
-
-                    <div className={cn(language === 'ar' && "text-right")}>
-                      <p className="text-gray-500 text-xs mb-1">{t('الفئة', 'Category')}</p>
-                      <p className="text-gray-900">{language === 'ar' ? selectedTag.categoryNameAr : selectedTag.categoryName}</p>
-                    </div>
-
-                    <div className={cn(language === 'ar' && "text-right")}>
-                      <p className="text-gray-500 text-xs mb-1">{t('عدد الاستخدامات', 'Usage Count')}</p>
-                      <p className="text-gray-900">{selectedTag.count}</p>
-                    </div>
-
-                    {selectedTag.suggested && (
-                      <div className="p-3 bg-[#f0f9ff] rounded-lg border border-[#B7DEE8]">
-                        <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                          <Zap className="w-4 h-4 text-[#0C2836]" />
-                          <span className="text-[#0C2836] text-sm font-medium">
-                            {t('اقتراح الذكاء الاصطناعي', 'AI Suggested')}
-                          </span>
-                        </div>
-                        <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
-                          {t('تم اقتراح هذه العلامة بواسطة نظام استخراج البنود', 'This tag was suggested by the clause extraction system')}
-                        </p>
+                  {selectedTag ? (
+                    <div className="space-y-4">
+                      <div className={cn("flex items-center justify-between", language === 'ar' && "flex-row-reverse")}>
+                        <h3 className="font-semibold text-gray-900">
+                          {t('تفاصيل العلامة', 'Tag Details')}
+                        </h3>
+                        <button
+                          onClick={() => setSelectedTag(null)}
+                          className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        >
+                          <Plus className="w-4 h-4 text-gray-600 rotate-45" />
+                        </button>
                       </div>
-                    )}
 
-                    <div className="pt-4 border-t border-gray-200 space-y-2">
-                      <button className={cn(
-                        "w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#0C2836] rounded-lg text-white hover:bg-[#1a4158] transition-colors duration-150",
-                        language === 'ar' && "flex-row-reverse"
-                      )}>
-                        <Edit2 className="w-4 h-4" />
-                        <span className="text-sm">{t('تعديل', 'Edit')}</span>
-                      </button>
-                      <button className={cn(
-                        "w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 rounded-lg text-red-600 hover:bg-red-100 transition-colors duration-150",
-                        language === 'ar' && "flex-row-reverse"
-                      )}>
-                        <Trash2 className="w-4 h-4" />
-                        <span className="text-sm">{t('حذف', 'Delete')}</span>
-                      </button>
+                      <div className={cn("space-y-3", language === 'ar' && "text-right")}>
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">{t('الاسم', 'Name')}</p>
+                          <p className="font-medium text-gray-900">
+                            {language === 'ar' ? selectedTag.nameAr : selectedTag.name}
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">{t('الفئة', 'Category')}</p>
+                          <p className="font-medium text-gray-900">
+                            {language === 'ar' ? selectedTag.category.nameAr : selectedTag.category.name}
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">{t('عدد الاستخدامات', 'Usage Count')}</p>
+                          <p className="font-medium text-gray-900">{selectedTag.count}</p>
+                        </div>
+
+                        <div>
+                          <p className="text-sm text-gray-600 mb-1">{t('صلاحيات التعديل', 'Edit Permissions')}</p>
+                          <p className="font-medium text-gray-900">
+                            {selectedTag.category.editable === 'admin' && t('المسؤولون فقط', 'Admins Only')}
+                            {selectedTag.category.editable === 'manager' && t('المديرون والمسؤولون', 'Managers & Admins')}
+                            {selectedTag.category.editable === 'user' && t('جميع المستخدمين', 'All Users')}
+                          </p>
+                        </div>
+
+                        {selectedTag.suggested && (
+                          <div className="p-3 bg-yellow-50 rounded-lg">
+                            <div className={cn("flex items-center gap-2 text-yellow-700", language === 'ar' && "flex-row-reverse")}>
+                              <Zap className="w-4 h-4" />
+                              <p className="text-sm font-medium">{t('علامة مقترحة بواسطة AI', 'AI Suggested Tag')}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="pt-4 space-y-2">
+                        <button className={cn(
+                          "w-full px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded-lg hover:bg-[#a5d2de] transition-colors flex items-center justify-center gap-2",
+                          language === 'ar' && "flex-row-reverse"
+                        )}>
+                          <Edit2 className="w-4 h-4" />
+                          <span>{t('تعديل العلامة', 'Edit Tag')}</span>
+                        </button>
+                        
+                        <button className={cn(
+                          "w-full px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center gap-2",
+                          language === 'ar' && "flex-row-reverse"
+                        )}>
+                          <Trash2 className="w-4 h-4" />
+                          <span>{t('حذف العلامة', 'Delete Tag')}</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className={cn("text-center py-8", language === 'ar' && "text-right")}>
+                      <FolderOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                      <p className="text-gray-500 text-sm">
+                        {t('اختر علامة لعرض التفاصيل', 'Select a tag to view details')}
+                      </p>
+                    </div>
+                  )}
                 </motion.div>
-              ) : (
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <p className={cn("text-gray-500 text-center", language === 'ar' && "text-right")}>
-                    {t('اختر علامة لعرض التفاصيل', 'Select a tag to view details')}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
 
-          {/* Governance Rules */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.15, delay: 0.1 }}
-            className="bg-white rounded-lg p-6 shadow-sm mt-6"
-          >
-            <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
-              {t('قواعد الحوكمة', 'Governance Rules')}
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                  <Lock className="w-4 h-4 text-red-600" />
-                  <span className="text-gray-900 text-sm font-medium">{t('المسؤول فقط', 'Admin Only')}</span>
-                </div>
-                <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
-                  {t('يمكن للمسؤولين فقط تعديل علامات نوع العقد والمنطقة', 'Only admins can edit Contract Type and Region tags')}
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                  <Lock className="w-4 h-4 text-yellow-600" />
-                  <span className="text-gray-900 text-sm font-medium">{t('المدير وما فوق', 'Manager & Above')}</span>
-                </div>
-                <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
-                  {t('يمكن للمديرين تعديل علامات المخاطر والامتثال', 'Managers can edit Risk Level and Compliance tags')}
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className={cn("flex items-center gap-2 mb-2", language === 'ar' && "flex-row-reverse")}>
-                  <Unlock className="w-4 h-4 text-green-600" />
-                  <span className="text-gray-900 text-sm font-medium">{t('جميع المستخدمين', 'All Users')}</span>
-                </div>
-                <p className={cn("text-gray-600 text-xs", language === 'ar' && "text-right")}>
-                  {t('يمكن لجميع المستخدمين تعديل علامات القسم', 'All users can edit Department tags')}
-                </p>
+                {/* Add New Tag Button */}
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.15, delay: 0.2 }}
+                  onClick={handleAddTag}
+                  className={cn(
+                    "mt-4 w-full px-4 py-3 bg-[#0C2836] text-white rounded-lg hover:bg-[#1a3a4a] transition-colors flex items-center justify-center gap-2",
+                    language === 'ar' && "flex-row-reverse"
+                  )}
+                >
+                  <Plus className="w-5 h-5" />
+                  <span>{t('إضافة علامة جديدة', 'Add New Tag')}</span>
+                </motion.button>
               </div>
             </div>
           </motion.div>
-        </motion.div>
-          </div>
         </div>
-
-        {/* FAB */}
-        <button 
-          onClick={() => setShowAddModal(true)}
-          className={cn(
-            "fixed bottom-8 w-14 h-14 bg-[#0C2836] rounded-full shadow-lg flex items-center justify-center hover:bg-[#1a4158] transition-colors duration-150",
-            language === 'ar' ? "left-8" : "right-8"
-          )}
-        >
-          <span className="text-white text-2xl">+</span>
-        </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
