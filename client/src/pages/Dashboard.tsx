@@ -486,6 +486,7 @@ export default function Dashboard() {
                 onClick={() => {
                   console.log('Navigating to /analytics');
                   setLocation('/analytics');
+                  setShowMobileSidebar(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
@@ -502,6 +503,7 @@ export default function Dashboard() {
                 onClick={() => {
                   console.log('Navigating to /parties');
                   setLocation('/parties');
+                  setShowMobileSidebar(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
@@ -518,6 +520,7 @@ export default function Dashboard() {
                 onClick={() => {
                   console.log('Navigating to /notifications');
                   setLocation('/notifications');
+                  setShowMobileSidebar(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
@@ -534,6 +537,7 @@ export default function Dashboard() {
                 onClick={() => {
                   console.log('Navigating to /tags');
                   setLocation('/tags');
+                  setShowMobileSidebar(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
@@ -551,6 +555,14 @@ export default function Dashboard() {
 
 
       </div>
+
+      {/* Mobile Sidebar Overlay */}
+      {showMobileSidebar && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
 
       {/* Mobile Sidebar Toggle - Outside sidebar */}
       <button
