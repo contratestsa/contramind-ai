@@ -19,11 +19,12 @@ app.use(session({
   saveUninitialized: false,
   name: 'contramind.sid',
   cookie: {
-    secure: false, // Set to true in production with HTTPS
+    secure: process.env.NODE_ENV === 'production', // Secure in production
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     path: '/'
+    // No domain specified - let browser handle it automatically
   }
 }));
 
