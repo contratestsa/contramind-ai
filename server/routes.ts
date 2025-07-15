@@ -239,17 +239,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Log user in using passport (skip email confirmation)
       req.login(user, (err) => {
         if (err) {
+          console.error("Login error:", err);
           return res.status(500).json({ 
             message: "Failed to establish session" 
           });
         }
         
-        // Remove password from response
-        const { password: _, ...userWithoutPassword } = user;
-        
-        res.json({ 
-          message: "Login successful",
-          user: userWithoutPassword
+        // Save session explicitly
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error("Session save error:", saveErr);
+            return res.status(500).json({ 
+              message: "Failed to save session" 
+            });
+          }
+          
+          console.log("Session saved successfully for user:", user.email);
+          console.log("Session ID:", req.sessionID);
+          
+          // Remove password from response
+          const { password: _, ...userWithoutPassword } = user;
+          
+          res.json({ 
+            message: "Login successful",
+            user: userWithoutPassword
+          });
         });
       });
     } catch (error) {
@@ -268,6 +282,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/api/auth/me", (req, res) => {
+    console.log("Auth check - Session ID:", req.sessionID);
+    console.log("Auth check - User:", req.user);
+    console.log("Auth check - Session:", req.session);
+    
     if (!req.user) {
       return res.status(401).json({ message: "Not authenticated" });
     }

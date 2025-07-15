@@ -7,15 +7,19 @@ import { User } from '../shared/schema';
 
 // Serialize user for session storage
 passport.serializeUser((user: any, done) => {
+  console.log("Serializing user:", user.id, user.email);
   done(null, user.id);
 });
 
 // Deserialize user from session
 passport.deserializeUser(async (id: number, done) => {
+  console.log("Deserializing user with ID:", id);
   try {
     const user = await storage.getUser(id);
+    console.log("Deserialized user:", user ? user.email : "not found");
     done(null, user);
   } catch (error) {
+    console.error("Deserialize error:", error);
     done(error, null);
   }
 });

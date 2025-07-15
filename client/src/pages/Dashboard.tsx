@@ -119,6 +119,16 @@ export default function Dashboard() {
     queryKey: ["/api/auth/me"],
     retry: false,
   });
+  
+  // Debug logging
+  useEffect(() => {
+    if (error) {
+      console.error("Auth error:", error);
+    }
+    if (userData) {
+      console.log("User data loaded:", userData);
+    }
+  }, [error, userData]);
 
   // Fetch recent contracts
   const { data: recentContractsData } = useQuery<{ contracts: any[] }>({
