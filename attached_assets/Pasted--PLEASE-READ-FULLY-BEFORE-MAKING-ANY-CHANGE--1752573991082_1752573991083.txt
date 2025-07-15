@@ -1,0 +1,58 @@
+========================================================
+PLEASE READ FULLY BEFORE MAKING ANY CHANGE
+========================================================
+
+🔒 1. LOCK THE CURRENT DASHBOARD UI
+-----------------------------------
+• DO **NOT** move, restyle, rename, or delete ANY of these:
+  - HEADER: “SA” avatar, EN/AR toggle, spacing, colors
+  - LEFT SIDEBAR: logo, hamburger, “+ New Contract Analysis” button, search box, “RECENT CONTRACTS” list, menu items
+  - CENTRAL LANDING VIEW: “Welcome back, Sarah” heading, white chat-input bar, Suggested/My Prompts tabs, six prompt cards
+  - COLORS / FONTS / 16 px spacing grid / Framer-Motion 150 ms fade-slide
+  - RTL/LTR flip behaviour
+
+This layout lives in **DashboardLayout (or MainShell)** — KEEP it exactly as is.
+
+🛠 2. ROUTING ONLY — Add child routes INSIDE DashboardLayout
+-----------------------------------------------------------
+Path            → Component to render
+----------------------------------------------------------------
+/analytics      → <AnalyticsReportsPage />
+/parties        → <PartiesContactsPage />
+/notifications  → <NotificationsPage />
+/tags           → <TagsCategoriesPage />
+
+(React-Router v6 example — adapt for your stack)
+<Route element={<DashboardLayout />}>
+  <Route path="analytics"      element={<AnalyticsReportsPage />} />
+  <Route path="parties"        element={<PartiesContactsPage />} />
+  <Route path="notifications"  element={<NotificationsPage />} />
+  <Route path="tags"           element={<TagsCategoriesPage />} />
+</Route>
+
+🚗 3. WIRE SIDEBAR LINKS
+------------------------
+Menu label             href target
+----------------------------------
+Analytics & Reports    /analytics
+Parties & Contacts     /parties
+Notifications          /notifications
+Tags & Categories      /tags
+
+Do NOT touch “+ New Contract Analysis” or the landing chat area.
+
+🎬 4. (Optional) Page-enter polish
+---------------------------------
+Wrap each new page root in a 150 ms Framer-Motion fade+slide-up.
+Slide direction must auto-mirror in RTL.
+
+✅ 5. FINISH CHECKLIST  (all must pass)
+--------------------------------------
+1. Click every sidebar item → ONLY the central panel swaps content.
+   Header, sidebar, chat-bar, prompt cards, avatar & language toggle stay visible.
+2. URL updates (e.g. /analytics) and Back/Forward works the same.
+3. No console errors.
+4. After confirming, log exactly: SIDEBAR ROUTING FIXED
+
+DO NOTHING ELSE.  This task is **routing only**; all visible UI must remain pixel-perfect.
+========================================================
