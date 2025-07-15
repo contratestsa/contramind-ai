@@ -1,8 +1,10 @@
 const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
 const path = require('path');
+const AuthManager = require('./auth.js');
 
 let mainWindow;
 let splashWindow;
+let authManager;
 
 // Prevent multiple instances
 const gotTheLock = app.requestSingleInstanceLock();
@@ -78,6 +80,9 @@ function createWindow() {
       mainWindow.focus();
     }, 2000); // Show main window after 2 seconds
   });
+
+  // Initialize authentication manager
+  authManager = new AuthManager(mainWindow);
 
   // Load the existing app from port 5000
   if (process.env.NODE_ENV === 'development' || !app.isPackaged) {

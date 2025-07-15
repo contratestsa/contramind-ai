@@ -5,6 +5,13 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 15, 2025** (Latest):
+  - **Added Authentication Foundation for Electron Desktop App**: Implemented secure authentication system
+    - Created AuthManager class (auth.js) to handle authentication in main process
+    - Updated preload.js to expose auth APIs: check(), login(), logout()
+    - Authentication uses existing Express session cookies (connect.sid)
+    - Login opens web app in browser for authentication flow
+    - Session sharing between desktop and web app on localhost:5000
+    - Created AUTH_GUIDE.md with usage examples and security notes
   - **Enhanced Electron Desktop App with Splash Screen**: Added professional splash screen and improved window management
     - Created splash.html with ContraMind branding and smooth fade-in animation
     - Splash screen displays for 2-3 seconds on app startup with logo and tagline

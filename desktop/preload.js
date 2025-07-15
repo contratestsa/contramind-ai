@@ -30,4 +30,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // App info
   getVersion: () => ipcRenderer.invoke('get-version'),
+  
+  // Authentication
+  auth: {
+    check: () => ipcRenderer.invoke('auth:check'),
+    login: () => ipcRenderer.invoke('auth:login'),
+    logout: () => ipcRenderer.invoke('auth:logout'),
+  }
 });
