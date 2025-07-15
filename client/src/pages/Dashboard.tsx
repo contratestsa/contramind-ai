@@ -489,11 +489,12 @@ export default function Dashboard() {
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
+                  matchAnalytics && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
               >
-                <BarChart3 className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
+                <BarChart3 className={cn("w-4 h-4 flex-shrink-0", matchAnalytics ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
               </button>
               
@@ -504,11 +505,12 @@ export default function Dashboard() {
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
+                  matchParties && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
               >
-                <Users className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
+                <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
               </button>
               
@@ -519,11 +521,12 @@ export default function Dashboard() {
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
+                  matchNotifications && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('الإشعارات', 'Notifications') : undefined}
               >
-                <Bell className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
+                <Bell className={cn("w-4 h-4 flex-shrink-0", matchNotifications ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>}
               </button>
               
@@ -534,11 +537,12 @@ export default function Dashboard() {
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3"
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
+                  matchTags && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('العلامات والفئات', 'Tags & Categories') : undefined}
               >
-                <Tag className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
+                <Tag className={cn("w-4 h-4 flex-shrink-0", matchTags ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
             </div>
