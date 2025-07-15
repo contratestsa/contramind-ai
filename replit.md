@@ -5,17 +5,6 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 15, 2025**:
-  - **Implemented Nested Routing with DashboardLayout Wrapper**: Successfully converted dashboard to SPA architecture
-    - Created DashboardLayout component as the main wrapper for all dashboard pages
-    - Converted from full page reloads to nested routing using Wouter
-    - Dashboard sidebar icons now load pages in central content area without page refresh
-    - Updated App.tsx with nested routes: /analytics, /parties, /notifications, /tags
-    - All four core pages now use motion.div with 150ms fade-and-slide-up animations
-    - Removed duplicate sidebar/header components from individual pages
-    - Pages now rendered inside DashboardLayout wrapper maintaining state across navigation
-    - Fixed RTL support with dir attribute on motion.div for proper animation direction
-    - Maintained active-link highlight logic in sidebar for selected pages
-    - Dashboard now functions as true single-page application with smooth transitions
   - **Added Main Dashboard Sidebar to All Four Core Pages**: Successfully integrated DashboardSidebar component
     - ✓ Analytics & Reports - Dashboard sidebar integrated
     - ✓ Parties & Contacts - Dashboard sidebar integrated  
