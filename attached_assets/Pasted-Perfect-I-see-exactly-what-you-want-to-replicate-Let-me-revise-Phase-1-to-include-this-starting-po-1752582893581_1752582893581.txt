@@ -1,0 +1,73 @@
+Perfect! I see exactly what you want to replicate. Let me revise Phase 1 to include this starting point and be more specific:
+
+## Phase 1: Basic Electron Setup (Revised)
+
+**Prompt 1 to Replit:**
+```markdown
+Create a basic Electron app structure for ContraMind, similar to Canvas Desktop app.
+
+STARTING POINT: We already have a desktop download page (see reference) that shows:
+- Download buttons for macOS and Windows
+- Version numbers (2.1.0)
+- File sizes (89 MB for Mac, 95 MB for Windows)
+- System requirements displayed
+- "Linux support coming soon" message
+
+YOUR TASK:
+1. Create /desktop folder in the existing ContraMind project
+2. Set up desktop/main.js with:
+   ```javascript
+   // Basic window config matching our brand
+   const mainWindow = new BrowserWindow({
+     width: 1400,
+     height: 900,
+     minWidth: 1024,
+     minHeight: 768,
+     backgroundColor: '#0C2836', // ContraMind navy
+     webPreferences: {
+       preload: path.join(__dirname, 'preload.js'),
+       nodeIntegration: false,
+       contextIsolation: true
+     }
+   });
+   ```
+3. For now, load the existing web app:
+   - In dev: http://localhost:3000
+   - In prod: file://index.html
+4. Create empty preload.js file
+5. Update package.json with:
+   ```json
+   "scripts": {
+     "electron:dev": "electron desktop/main.js",
+     "electron:build": "electron-builder"
+   },
+   "devDependencies": {
+     "electron": "^27.0.0",
+     "electron-builder": "^24.0.0"
+   }
+   ```
+6. Prevent multiple instances running
+
+DO NOT add authentication, splash screens, or other features yet. Just get the basic Electron window running with our React app inside.
+
+The goal is to create the desktop app that users will download from our download page.
+```
+
+**Additional Context Image to Share with Replit:**
+Share the Canvas desktop page screenshot and add:
+```
+"This is what our download page looks like. We need to build the actual desktop app that users will download when they click these buttons. Start with basic Electron setup."
+```
+
+This approach:
+- ✅ Gives Replit clear context about what you're building
+- ✅ References the existing UI they can see
+- ✅ Prevents hallucination by being very specific
+- ✅ Focuses only on core Electron setup
+
+After Replit completes this, share:
+1. Screenshot of Electron window running
+2. The file structure created
+3. Any errors encountered
+
+Then we'll move to Phase 2 with confidence that the foundation is solid.
