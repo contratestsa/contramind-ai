@@ -43,10 +43,10 @@ function Router() {
       <Route path="/help/release-notes" component={ReleaseNotes} />
       <Route path="/help/terms" component={TermsPolicies} />
       <Route path="/tasks" component={Tasks} />
-      <Route path="/analytics" component={AnalyticsReports} />
-      <Route path="/parties" component={PartiesContacts} />
-      <Route path="/notifications" component={Notifications} />
-      <Route path="/tags" component={TagsCategories} />
+      <Route path="/analytics" component={Dashboard} />
+      <Route path="/parties" component={Dashboard} />
+      <Route path="/notifications" component={Dashboard} />
+      <Route path="/tags" component={Dashboard} />
 
       <Route component={NotFound} />
     </Switch>
