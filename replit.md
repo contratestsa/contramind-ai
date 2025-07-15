@@ -5,11 +5,19 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 15, 2025** (Latest):
+  - **Enhanced Electron Desktop App with Splash Screen**: Added professional splash screen and improved window management
+    - Created splash.html with ContraMind branding and smooth fade-in animation
+    - Splash screen displays for 2-3 seconds on app startup with logo and tagline
+    - Improved window management with centered positioning and proper state handling
+    - Added IPC handlers for minimize, maximize, and close operations
+    - Implemented graceful shutdown and navigation prevention
+    - Dev tools only open when OPEN_DEVTOOLS=true environment variable is set
+    - Enhanced second instance handling to restore and focus existing window
   - **Fixed Electron Desktop App Integration**: Properly integrated Electron into main project
     - Removed separate npm project from desktop folder
     - Installed Electron (v28.3.3) and concurrently in root project
-    - Desktop folder now contains only: main.js, preload.js, icon.svg, entitlements.mac.plist
-    - Created electron-dev.sh and electron-start.sh scripts for running desktop app
+    - Desktop folder now contains: main.js, preload.js, icon.svg, entitlements.mac.plist, splash.html
+    - Created electron-dev.sh and electron-prod.sh scripts for running desktop app
     - Desktop app connects to existing web app on port 5000
     - To run: `./electron-dev.sh` (requires server running on port 5000)
 - **July 15, 2025**:

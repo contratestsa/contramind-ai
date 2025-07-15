@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0C2836;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .logo-container {
+      text-align: center;
+      animation: fadeIn 0.8s ease-out;
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+    .tagline {
+      color: #B7DEE8;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="icon.svg" class="logo" alt="ContraMind">
+    <div class="tagline">The Future of Law, Powered by AI</div>
+  </div>
+</body>
+</html>
