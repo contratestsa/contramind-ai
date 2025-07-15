@@ -1,5 +1,5 @@
 
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,60 +27,54 @@ import TagsCategories from "@/pages/TagsCategories";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 
-// Nested router component for dashboard routes
-function DashboardRouter() {
-  const [location] = useLocation();
-  
-  // Log for testing
-  console.log("SIDEBAR PERSISTENCE FIXED");
-  
-  return (
-    <DashboardLayout>
-      <Switch>
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/analytics" component={AnalyticsReports} />
-        <Route path="/parties" component={PartiesContacts} />
-        <Route path="/notifications" component={Notifications} />
-        <Route path="/tags" component={TagsCategories} />
-        <Route path="/analysis-progress" component={AnalysisProgress} />
-        <Route path="/analysis-results" component={AnalysisResults} />
-        <Route path="/repository" component={Repository} />
-        <Route path="/settings/personal" component={PersonalSettings} />
-        <Route path="/settings/organization" component={OrganizationSettings} />
-        <Route path="/chat" component={Chat} />
-        <Route path="/help" component={Help} />
-        <Route path="/help/desktop-app" component={DesktopApp} />
-        <Route path="/help/release-notes" component={ReleaseNotes} />
-        <Route path="/help/terms" component={TermsPolicies} />
-        <Route path="/tasks" component={Tasks} />
-      </Switch>
-    </DashboardLayout>
-  );
-}
-
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/coming-soon" component={ComingSoon} />
       
-      {/* All dashboard routes handled by DashboardRouter */}
-      <Route path="/dashboard" component={DashboardRouter} />
-      <Route path="/analytics" component={DashboardRouter} />
-      <Route path="/parties" component={DashboardRouter} />
-      <Route path="/notifications" component={DashboardRouter} />
-      <Route path="/tags" component={DashboardRouter} />
-      <Route path="/analysis-progress" component={DashboardRouter} />
-      <Route path="/analysis-results" component={DashboardRouter} />
-      <Route path="/repository" component={DashboardRouter} />
-      <Route path="/settings/personal" component={DashboardRouter} />
-      <Route path="/settings/organization" component={DashboardRouter} />
-      <Route path="/chat" component={DashboardRouter} />
-      <Route path="/help" component={DashboardRouter} />
-      <Route path="/help/desktop-app" component={DashboardRouter} />
-      <Route path="/help/release-notes" component={DashboardRouter} />
-      <Route path="/help/terms" component={DashboardRouter} />
-      <Route path="/tasks" component={DashboardRouter} />
+      {/* Dashboard with nested routes */}
+      <Route path="/dashboard">
+        <DashboardLayout>
+          <Dashboard />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/analytics">
+        <DashboardLayout>
+          <AnalyticsReports />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/parties">
+        <DashboardLayout>
+          <PartiesContacts />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/notifications">
+        <DashboardLayout>
+          <Notifications />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/tags">
+        <DashboardLayout>
+          <TagsCategories />
+        </DashboardLayout>
+      </Route>
+      
+      <Route path="/analysis-progress" component={AnalysisProgress} />
+      <Route path="/analysis-results" component={AnalysisResults} />
+      <Route path="/repository" component={Repository} />
+      <Route path="/settings/personal" component={PersonalSettings} />
+      <Route path="/settings/organization" component={OrganizationSettings} />
+      <Route path="/chat" component={Chat} />
+      <Route path="/help" component={Help} />
+      <Route path="/help/desktop-app" component={DesktopApp} />
+      <Route path="/help/release-notes" component={ReleaseNotes} />
+      <Route path="/help/terms" component={TermsPolicies} />
+      <Route path="/tasks" component={Tasks} />
 
       <Route component={NotFound} />
     </Switch>
