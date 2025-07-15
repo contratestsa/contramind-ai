@@ -5,16 +5,13 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 15, 2025** (Latest):
-  - **Added Electron Desktop App Wrapper**: Created desktop application wrapper for ContraMind
-    - Created /desktop folder with complete Electron setup
-    - Main.js with window management, menu bar, and security configurations
-    - Preload script for secure IPC communication
-    - Package.json with build configurations for macOS, Windows, and Linux
-    - Added entitlements for macOS code signing
-    - Created run-desktop.sh script for easy development startup
+  - **Fixed Electron Desktop App Integration**: Properly integrated Electron into main project
+    - Removed separate npm project from desktop folder
+    - Installed Electron (v28.3.3) and concurrently in root project
+    - Desktop folder now contains only: main.js, preload.js, icon.svg, entitlements.mac.plist
+    - Created electron-dev.sh and electron-start.sh scripts for running desktop app
     - Desktop app connects to existing web app on port 5000
-    - Includes proper icon placeholders and build configurations
-    - Added desktop-setup.md with detailed setup and build instructions
+    - To run: `./electron-dev.sh` (requires server running on port 5000)
 - **July 15, 2025**:
   - **Added Dashboard Navigation to Sidebar**: Successfully implemented nested routing
     - Fixed routing to render all pages (/analytics, /parties, /notifications, /tags) within Dashboard layout
