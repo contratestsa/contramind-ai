@@ -66,6 +66,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   // Close mobile sidebar when route changes
   useEffect(() => {
     setShowMobileSidebar(false);
+    console.log('SIDEBAR PERSISTENCE FIXED');
   }, [location]);
 
   // Navigation items
