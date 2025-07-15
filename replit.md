@@ -5,6 +5,13 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 15, 2025**:
+  - **Added Dashboard Navigation to Sidebar**: Successfully implemented nested routing
+    - Fixed routing to render all pages (/analytics, /parties, /notifications, /tags) within Dashboard layout
+    - Added Home icon to sidebar for easy navigation back to main dashboard
+    - Dashboard link is highlighted when on the main dashboard view
+    - All navigation items close mobile sidebar automatically when clicked
+    - Added visual separator between Dashboard home and other navigation items
+- **July 15, 2025** (Earlier):
   - **Added Main Dashboard Sidebar to All Four Core Pages**: Successfully integrated DashboardSidebar component
     - ✓ Analytics & Reports - Dashboard sidebar integrated
     - ✓ Parties & Contacts - Dashboard sidebar integrated  

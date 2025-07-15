@@ -25,7 +25,8 @@ import {
   MessageSquare,
   ChevronDown,
   Star,
-  Globe
+  Globe,
+  Home
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import iconImage from '@assets/Profile Picture - ContraMind (V001)-1_1752437530152.png';
@@ -482,6 +483,26 @@ export default function Dashboard() {
           {/* Navigation Menu */}
           <nav className="px-3 pb-3">
             <div className="space-y-1">
+              {/* Dashboard Home */}
+              <button
+                onClick={() => {
+                  console.log('Navigating to /dashboard');
+                  setLocation('/dashboard');
+                  setShowMobileSidebar(false);
+                }}
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
+                  !matchAnalytics && !matchParties && !matchNotifications && !matchTags && "bg-[rgba(183,222,232,0.15)] text-white"
+                )}
+                title={isSidebarCollapsed ? t('لوحة التحكم', 'Dashboard') : undefined}
+              >
+                <Home className={cn("w-4 h-4 flex-shrink-0", !matchAnalytics && !matchParties && !matchNotifications && !matchTags ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
+                {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
+              </button>
+
+              <div className="my-2 border-t border-[rgba(183,222,232,0.1)]"></div>
+
               <button
                 onClick={() => {
                   console.log('Navigating to /analytics');
