@@ -19,12 +19,11 @@ app.use(session({
   saveUninitialized: false,
   name: 'contramind.sid',
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Secure in production
+    secure: true, // Replit uses HTTPS
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'none', // Required for cross-origin cookies in Replit
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     path: '/'
-    // No domain specified - let browser handle it automatically
   }
 }));
 
