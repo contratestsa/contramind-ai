@@ -3,11 +3,9 @@
 
 echo "Starting ContraMind Desktop App..."
 
-# Check if server is running on port 5000
-if ! nc -z localhost 5000 2>/dev/null; then
-    echo "Server not running on port 5000. Please start it first with: npm run dev"
-    exit 1
-fi
+# Wait for server to be ready on port 5000
+echo "Waiting for server on http://localhost:5000..."
+npx wait-on http://localhost:5000
 
 # Start Electron
 echo "Launching Electron..."
