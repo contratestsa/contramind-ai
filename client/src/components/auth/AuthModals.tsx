@@ -223,13 +223,14 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
 
   return (
     <>
-      {/* Login Trigger */}
-      <div onClick={() => setIsLoginOpen(true)}>
+      {/* Login Trigger - Disabled */}
+      <div>
         {triggerLoginButton || (
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:text-white hover:bg-white/10 flex items-center gap-2"
+            disabled={true}
+            className="text-white/50 cursor-not-allowed flex items-center gap-2"
           >
             <LogIn className="w-4 h-4" />
             {t('تسجيل الدخول', 'Login')}
