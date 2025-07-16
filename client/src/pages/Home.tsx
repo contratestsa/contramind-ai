@@ -1,37 +1,8 @@
-
 import { motion } from "framer-motion";
 import { useLanguage } from "../hooks/useLanguage";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 
 export default function Home() {
   const { t, language, isRTL } = useLanguage();
-  const [email, setEmail] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const joinWaitlistMutation = useMutation({
-    mutationFn: async (email: string) => {
-      const response = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      if (!response.ok) throw new Error("Failed to join waitlist");
-      return response.json();
-    },
-    onSuccess: () => {
-      setIsSubmitted(true);
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      joinWaitlistMutation.mutate(email);
-    }
-  };
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 ${isRTL ? "rtl" : "ltr"}`}>
@@ -46,11 +17,7 @@ export default function Home() {
                 className="h-8 w-auto"
               />
             </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
-                {language === "ar" ? "تسجيل الدخول" : "Sign In"}
-              </Button>
-            </div>
+            {/* Removed Sign In button */}
           </div>
         </div>
       </header>
@@ -87,47 +54,7 @@ export default function Home() {
               }
             </motion.p>
 
-            {/* Waitlist Form */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="max-w-md mx-auto"
-            >
-              {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="flex gap-3">
-                  <Input
-                    type="email"
-                    placeholder={language === "ar" ? "أدخل بريدك الإلكتروني" : "Enter your email"}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1"
-                    required
-                  />
-                  <Button 
-                    type="submit" 
-                    disabled={joinWaitlistMutation.isPending}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    {joinWaitlistMutation.isPending 
-                      ? (language === "ar" ? "جاري الإرسال..." : "Sending...")
-                      : (language === "ar" ? "انضم للقائمة" : "Join Waitlist")
-                    }
-                  </Button>
-                </form>
-              ) : (
-                <div className="text-center p-6 bg-green-50 rounded-lg border border-green-200">
-                  <p className={`text-green-800 text-lg font-medium ${
-                    language === "ar" ? "font-arabic" : ""
-                  }`}>
-                    {language === "ar"
-                      ? "شكراً لانضمامك! سنتواصل معك قريباً."
-                      : "Thank you for joining! We'll be in touch soon."
-                    }
-                  </p>
-                </div>
-              )}
-            </motion.div>
+            {/* Removed Waitlist Form */}
 
             {/* Launch Date */}
             <motion.div
