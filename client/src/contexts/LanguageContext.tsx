@@ -1,41 +1,45 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface LanguageContextType {
-  language: 'ar' | 'en';
-  setLanguage: (lang: 'ar' | 'en') => void;
-  t: (ar: string, en: string) => string;
+  language: string;
+  setLanguage: (lang: string) => void;
+  isRTL: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<'ar' | 'en'>('en');
+  const [language, setLanguage] = useState<string>(() => {
+    // Get language from localStorage or browser detection
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      return savedLanguage;
+    }
+    
+    // Detect browser language
+    const browserLanguage = navigator.language || 'en';
+    return browserLanguage.startsWith('ar') ? 'ar' : 'en';
+  });
+
+  const isRTL = language === 'ar';
 
   useEffect(() => {
-    // Check for saved language preference
-    const savedLang = localStorage.getItem('language');
-    if (savedLang === 'ar' || savedLang === 'en') {
-      setLanguage(savedLang);
-    } else {
-      // Detect browser language
-      const browserLang = navigator.language || (navigator as any).userLanguage;
-      if (browserLang && browserLang.startsWith('ar')) {
-        setLanguage('ar');
-      }
-    }
-  }, []);
+    // Save language to localStorage
+    localStorage.setItem('language', language);
+    
+    // Set document direction
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language, isRTL]);
 
-  const updateLanguage = (lang: 'ar' | 'en') => {
-    setLanguage(lang);
-    localStorage.setItem('language', lang);
-  };
-
-  const t = (ar: string, en: string) => {
-    return language === 'ar' ? ar : en;
+  const value: LanguageContextType = {
+    language,
+    setLanguage,
+    isRTL
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: updateLanguage, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );

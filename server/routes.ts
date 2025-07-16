@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
-import { users, waitlist_entries, contact_messages } from "../shared/schema";
+import { users, waitlistEntries, contactMessages } from "../shared/schema";
 import { sendEmail } from "./emailService";
 import bcrypt from "bcryptjs";
 
@@ -75,12 +75,12 @@ router.post("/api/waitlist", async (req, res) => {
       return res.status(400).json({ error: "Email and full name are required" });
     }
 
-    const existingEntry = await db.select().from(waitlist_entries).where(eq(waitlist_entries.email, email));
+    const existingEntry = await db.select().from(waitlistEntries).where(eq(waitlistEntries.email, email));
     if (existingEntry.length > 0) {
       return res.status(400).json({ error: "Email already registered" });
     }
 
-    const [entry] = await db.insert(waitlist_entries).values({
+    const [entry] = await db.insert(waitlistEntries).values({
       email,
       fullName,
     }).returning();
@@ -113,7 +113,7 @@ router.get("/api/waitlist/count", async (req, res) => {
     console.log("Attempting to get waitlist count...");
     console.log("Executing waitlist count query...");
 
-    const result = await db.select().from(waitlist_entries);
+    const result = await db.select().from(waitlistEntries);
     console.log("Query result:", result);
 
     const count = result.length;
@@ -135,7 +135,7 @@ router.post("/api/contact", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const [contact] = await db.insert(contact_messages).values({
+    const [contact] = await db.insert(contactMessages).values({
       name,
       email,
       message,
