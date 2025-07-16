@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
@@ -21,8 +21,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { language, setLanguage } = useLanguage();
-  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
+  const { language, t } = useSimpleLanguage();
   const { toast } = useToast();
 
   // Login form state

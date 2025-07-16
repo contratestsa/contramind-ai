@@ -1,48 +1,41 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface LanguageContextType {
-  language: string;
-  setLanguage: (lang: string) => void;
-  isRTL: boolean;
+  language: 'ar' | 'en';
+  setLanguage: (lang: 'ar' | 'en') => void;
+  t: (ar: string, en: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<string>('en');
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguage] = useState<'ar' | 'en'>('en');
 
   useEffect(() => {
-    // Initialize language from localStorage after mount
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      setLanguageState(savedLanguage);
+    // Check for saved language preference
+    const savedLang = localStorage.getItem('language');
+    if (savedLang === 'ar' || savedLang === 'en') {
+      setLanguage(savedLang);
     } else {
       // Detect browser language
-      const browserLang = navigator.language || 'en';
-      const detectedLang = browserLang.startsWith('ar') ? 'ar' : 'en';
-      setLanguageState(detectedLang);
+      const browserLang = navigator.language || (navigator as any).userLanguage;
+      if (browserLang && browserLang.startsWith('ar')) {
+        setLanguage('ar');
+      }
     }
   }, []);
 
-  useEffect(() => {
-    // Update DOM when language changes
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = language;
-  }, [language]);
-
-  const setLanguage = (lang: string) => {
-    setLanguageState(lang);
+  const updateLanguage = (lang: 'ar' | 'en') => {
+    setLanguage(lang);
     localStorage.setItem('language', lang);
   };
 
-  const value = {
-    language,
-    setLanguage,
-    isRTL: language === 'ar'
+  const t = (ar: string, en: string) => {
+    return language === 'ar' ? ar : en;
   };
 
   return (
-    <LanguageContext.Provider value={value}>
+    <LanguageContext.Provider value={{ language, setLanguage: updateLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

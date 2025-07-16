@@ -1,10 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageManager } from '@/components/SimpleLanguage';
 
 export default function Features() {
-  const { language } = useLanguage();
-  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
+  const t = LanguageManager.t;
 
   const containerVariants = {
     hidden: { opacity: 0 },

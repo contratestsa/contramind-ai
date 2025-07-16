@@ -1,67 +1,89 @@
-import express from "express";
-import { createServer } from "http";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import routes from "./routes";
-import { setupVite } from "./vite";
-import { db } from "./db";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import passport from "./passport";
+import { registerRoutes } from "./routes";
+import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// Trust proxy for secure cookies in production
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Add security headers
+// Session configuration for OAuth
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key-here',
+  resave: false,
+  saveUninitialized: false,
+  name: 'contramind.sid',
+  cookie: {
+    secure: true, // Replit uses HTTPS
+    httpOnly: true,
+    sameSite: 'none', // Required for cross-origin cookies in Replit
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    path: '/'
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
+  const start = Date.now();
+  const path = req.path;
+  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+
+  const originalResJson = res.json;
+  res.json = function (bodyJson, ...args) {
+    capturedJsonResponse = bodyJson;
+    return originalResJson.apply(res, [bodyJson, ...args]);
+  };
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    if (path.startsWith("/api")) {
+      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+      if (capturedJsonResponse) {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      }
+
+      if (logLine.length > 80) {
+        logLine = logLine.slice(0, 79) + "…";
+      }
+
+      log(logLine);
+    }
+  });
+
   next();
 });
 
-// API routes
-app.use(routes);
-
-const server = createServer(app);
-
 (async () => {
-  // Test database connection
-  try {
-    console.log("Initializing Alibaba Cloud ApsaraDB connection...");
-    console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+  const server = await registerRoutes(app);
 
-    console.log("Testing Alibaba Cloud ApsaraDB connection...");
-    await db.execute("SELECT 1 as test");
-    console.log("Connected to Alibaba Cloud ApsaraDB successfully");
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
 
-    const result = await db.execute("SELECT 1 as test");
-    console.log("ApsaraDB connection test successful:", result);
+    res.status(status).json({ message });
+    throw err;
+  });
 
-    const versionResult = await db.execute("SELECT version()");
-    console.log("PostgreSQL version:", versionResult[0]);
-  } catch (error) {
-    console.error("Database connection failed:", error);
+  // importantly only setup vite in development and after
+  // setting up all the other routes so the catch-all route
+  // doesn't interfere with the other routes
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
   }
 
   const port = Number(process.env.PORT) || 5000;
-  const isProduction = process.env.REPLIT_DEPLOYMENT === "1";
-
-  // Set up Vite in development, serve static files in production
-  if (isProduction) {
-    app.use(express.static(join(__dirname, "public")));
-    app.get("*", (req, res) => {
-      res.sendFile(join(__dirname, "public", "index.html"));
-    });
-  } else {
-    await setupVite(app, server);
-  }
-
+  
   server.listen(port, "0.0.0.0", () => {
-    if (isProduction) {
-      console.log(`🚀 Production server running on port ${port}`);
-    } else {
-      console.log(`🚧 Development server running on port ${port}`);
-    }
+    log(`serving on port ${port}`, "express");
   });
 })();
