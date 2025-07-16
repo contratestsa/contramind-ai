@@ -3,7 +3,7 @@ import { z } from "zod";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 import { users, waitlistEntries, contactMessages } from "../shared/schema";
-import { sendWelcomeEmail } from "./emailService";
+import { sendEmail } from "./emailService";
 import bcrypt from "bcryptjs";
 
 const router = Router();
@@ -56,12 +56,71 @@ router.post("/api/auth/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
+    // Store user in session (if session middleware is configured)
+    if (req.session) {
+      req.session.userId = user.id;
+    }
+
     res.json({ 
       message: "Login successful", 
       user: { id: user.id, email: user.email, fullName: user.fullName } 
     });
   } catch (error) {
     console.error("Login error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Get current user
+router.get("/api/auth/me", async (req, res) => {
+  try {
+    // Check if user is logged in via session
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const [user] = await db.select().from(users).where(eq(users.id, req.session.userId));
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ 
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        fullName: user.fullName,
+        username: user.username,
+        emailVerified: user.emailVerified,
+        onboardingCompleted: user.onboardingCompleted,
+        companyNameEn: user.companyNameEn,
+        companyNameAr: user.companyNameAr,
+        country: user.country,
+        contractRole: user.contractRole
+      } 
+    });
+  } catch (error) {
+    console.error("Get user error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Logout
+router.post("/api/auth/logout", async (req, res) => {
+  try {
+    if (req.session) {
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Session destroy error:", err);
+          return res.status(500).json({ error: "Logout failed" });
+        }
+        res.clearCookie('connect.sid');
+        res.json({ message: "Logged out successfully" });
+      });
+    } else {
+      res.json({ message: "No active session" });
+    }
+  } catch (error) {
+    console.error("Logout error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -87,11 +146,15 @@ router.post("/api/waitlist", async (req, res) => {
 
     // Send welcome email
     try {
-      const waitlistPosition = await db.select().from(waitlistEntries).then(entries => entries.length);
-      await sendWelcomeEmail({
-        email,
-        fullName,
-        waitlistPosition,
+      await sendEmail({
+        to: email,
+        subject: "Welcome to ContraMind Waitlist",
+        html: `
+          <h2>Welcome to ContraMind!</h2>
+          <p>Hi ${fullName},</p>
+          <p>Thank you for joining our waitlist. We're excited to have you on board!</p>
+          <p>We'll notify you as soon as ContraMind is ready for launch.</p>
+        `,
       });
     } catch (emailError) {
       console.error("Email sending failed:", emailError);
