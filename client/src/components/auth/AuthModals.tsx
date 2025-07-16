@@ -237,12 +237,13 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
           </Button>
         )}
       </div>
-      {/* Signup Trigger */}
-      <div onClick={() => setIsSignupOpen(true)}>
+      {/* Signup Trigger - Disabled */}
+      <div>
         {triggerSignupButton || (
           <Button
             size="sm"
-            className="bg-white text-[#0c2836] hover:bg-white/90 flex items-center gap-2 font-semibold"
+            disabled={true}
+            className="bg-white/50 text-[#0c2836]/50 cursor-not-allowed flex items-center gap-2 font-semibold"
           >
             <UserPlus className="w-4 h-4" />
             {t('إنشاء حساب', 'Sign Up')}
