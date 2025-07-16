@@ -5,46 +5,32 @@
 @tailwind utilities;
 
 :root {
-  /* ContraMind Theme Variables - Dark Theme (Default) */
-  --cm-bg: #0C2836;
-  --cm-surface: #101920;
-  --cm-text: #FFFFFF;
-  --cm-accent: #B7DEE8;
-  --cm-border: #2B4F62;
-  
-  /* Additional brand colors */
-  --cm-neutral-light: #E6E6E6;
-  --cm-tint-700: #2B4F62;
-  --cm-tint-400: #60859B;
-  --cm-tint-100: #BED5E3;
-  
-  /* Map existing variables to theme variables */
-  --background: var(--cm-bg);
-  --foreground: var(--cm-text);
-  --muted: var(--cm-surface);
-  --muted-foreground: var(--cm-text);
-  --popover: var(--cm-surface);
-  --popover-foreground: var(--cm-text);
-  --card: var(--cm-surface);
-  --card-foreground: var(--cm-text);
-  --border: var(--cm-border);
-  --input: var(--cm-border);
-  --primary: var(--cm-bg);
-  --primary-foreground: var(--cm-text);
-  --secondary: var(--cm-accent);
-  --secondary-foreground: var(--cm-bg);
-  --accent: var(--cm-accent);
-  --accent-foreground: var(--cm-bg);
+  --background: #0C2836;
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(189, 70%, 11%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(189, 70%, 11%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: #0C2836;
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: #B7DEE8;
+  --secondary-foreground: #0C2836;
+  --accent: #B7DEE8;
+  --accent-foreground: #0C2836;
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
-  --ring: var(--cm-accent);
+  --ring: #0C2836;
   --radius: 12px;
   
-  /* Legacy color mappings */
-  --navy: var(--cm-bg);
-  --sky: var(--cm-accent);
-  --white: var(--cm-text);
-  --grey: var(--cm-neutral-light);
+  /* Custom ContraMind.ai brand colors */
+  --navy: #0C2836;
+  --sky: #B7DEE8;
+  --white: hsl(0, 0%, 100%);
+  --grey: #E6E6E6;
   --shadow: 0 4px 12px rgba(0,0,0,.08);
   --shadow-hover: 0 8px 24px rgba(0,0,0,.12);
   --transition: .25s ease;
@@ -107,19 +93,27 @@ form.waitlist-form input[type="tel"] {
   color: #A0AEC0 !important;
 }
 
-.light {
-  /* ContraMind Theme Variables - Light Theme */
-  --cm-bg: #FFFFFF;
-  --cm-surface: #F8F9FA;
-  --cm-text: #0C2836;
-  --cm-accent: #0C2836;
-  --cm-border: #E6E6E6;
-  
-  /* Additional brand colors remain same */
-  --cm-neutral-light: #E6E6E6;
-  --cm-tint-700: #2B4F62;
-  --cm-tint-400: #60859B;
-  --cm-tint-100: #BED5E3;
+.dark {
+  --background: #0C2836;
+  --foreground: hsl(0, 0%, 98%);
+  --muted: #0C2836;
+  --muted-foreground: #B7DEE8;
+  --popover: #0C2836;
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: #0C2836;
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: #E6E6E6;
+  --input: #E6E6E6;
+  --primary: #0C2836;
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: #B7DEE8;
+  --secondary-foreground: #0C2836;
+  --accent: #B7DEE8;
+  --accent-foreground: #0C2836;
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: #B7DEE8;
+  --radius: 12px;
 }
 
 @layer base {

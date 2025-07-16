@@ -330,19 +330,19 @@ export default function Dashboard() {
 
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen bg-[var(--cm-bg)]">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--cm-accent)]"></div>
+    return <div className="flex items-center justify-center h-screen bg-[#0C2836]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B7DEE8]"></div>
     </div>;
   }
 
   if (error || !userData?.user) {
-    return <div className="flex items-center justify-center h-screen bg-[var(--cm-bg)] text-[var(--cm-text)]">
+    return <div className="flex items-center justify-center h-screen bg-[#0C2836] text-white">
       <div className="text-center">
         <h1 className="text-2xl mb-4">{t('جلسة انتهت', 'Session Expired')}</h1>
         <p className="mb-4">{t('يرجى تسجيل الدخول مرة أخرى', 'Please login again')}</p>
         <button
           onClick={() => window.location.href = '/'}
-          className="px-4 py-2 bg-[var(--cm-accent)] text-[var(--cm-bg)] rounded hover:bg-opacity-90"
+          className="px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded hover:bg-opacity-90"
         >
           {t('العودة للصفحة الرئيسية', 'Return to Homepage')}
         </button>
@@ -353,10 +353,10 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className={cn("relative flex h-screen bg-gradient-to-br from-[var(--cm-bg)] to-[var(--cm-bg-secondary)] overflow-hidden", isRTL && "flex-row-reverse")}>
+    <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "bg-[var(--cm-bg)] text-[var(--cm-text)] flex flex-col transition-all duration-300 shadow-xl",
+        "bg-[#0C2836] text-white flex flex-col transition-all duration-300 shadow-xl",
         isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40",
@@ -406,7 +406,7 @@ export default function Dashboard() {
               setIsUploadModalOpen(true);
             }}
             className={cn(
-              "w-full flex items-center gap-2 py-2.5 bg-[var(--cm-accent)] text-[var(--cm-bg)] rounded-md hover:bg-[var(--cm-accent-hover)] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
+              "w-full flex items-center gap-2 py-2.5 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
               isSidebarCollapsed ? "justify-center px-2" : "justify-center px-4"
             )}
           >
@@ -425,7 +425,7 @@ export default function Dashboard() {
                 value={contractSearchQuery}
                 onChange={(e) => setContractSearchQuery(e.target.value)}
                 placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
-                className="w-full pl-10 pr-3 py-2 bg-[var(--cm-input-bg)] text-[var(--cm-text)] placeholder-[var(--cm-text-muted)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--cm-accent)] transition-all duration-200"
+                className="w-full pl-10 pr-3 py-2 bg-[rgba(183,222,232,0.1)] text-white placeholder-[rgba(183,222,232,0.6)] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
               />
             </div>
           </div>
@@ -437,10 +437,10 @@ export default function Dashboard() {
           {!isSidebarCollapsed && (
             <div className="p-3">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-[var(--cm-accent)] uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
-                <button className="text-xs text-[var(--cm-accent)] hover:text-[var(--cm-accent-hover)] transition-colors">
+                <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
                   {t('عرض الكل', 'View All')}
                 </button>
               </div>
@@ -455,8 +455,8 @@ export default function Dashboard() {
                       key={archive.id}
                       onClick={() => loadArchivedChat(archive)}
                       className={cn(
-                        "w-full text-left p-2 rounded hover:bg-[var(--cm-hover-bg)] transition-colors group",
-                        selectedContract?.id === archive.contract.id && "bg-[var(--cm-hover-bg)]"
+                        "w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                        selectedContract?.id === archive.contract.id && "bg-[rgba(183,222,232,0.1)]"
                       )}
                     >
                       <div className="flex items-center justify-between">
@@ -527,13 +527,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--cm-hover-bg)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchParties && "bg-[var(--cm-active-bg)] text-[var(--cm-text)]"
+                  matchParties && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
               >
-                <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-[var(--cm-text)]" : "text-[var(--cm-text-muted)] group-hover:text-[var(--cm-text)]")} />
+                <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
               </button>
               
@@ -544,13 +544,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--cm-hover-bg)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchNotifications && "bg-[var(--cm-active-bg)] text-[var(--cm-text)]"
+                  matchNotifications && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('الإشعارات', 'Notifications') : undefined}
               >
-                <Bell className={cn("w-4 h-4 flex-shrink-0", matchNotifications ? "text-[var(--cm-text)]" : "text-[var(--cm-text-muted)] group-hover:text-[var(--cm-text)]")} />
+                <Bell className={cn("w-4 h-4 flex-shrink-0", matchNotifications ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>}
               </button>
               
@@ -563,11 +563,11 @@ export default function Dashboard() {
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchTags && "bg-[var(--cm-active-bg)] text-[var(--cm-text)]"
+                  matchTags && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('العلامات والفئات', 'Tags & Categories') : undefined}
               >
-                <Tag className={cn("w-4 h-4 flex-shrink-0", matchTags ? "text-[var(--cm-text)]" : "text-[var(--cm-text-muted)] group-hover:text-[var(--cm-text)]")} />
+                <Tag className={cn("w-4 h-4 flex-shrink-0", matchTags ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
             </div>
@@ -580,7 +580,7 @@ export default function Dashboard() {
       {/* Mobile Sidebar Overlay */}
       {showMobileSidebar && (
         <div 
-          className="lg:hidden fixed inset-0 bg-[var(--cm-bg)] bg-opacity-50 z-30"
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={() => setShowMobileSidebar(false)}
         />
       )}
@@ -589,7 +589,7 @@ export default function Dashboard() {
       <button
         onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[var(--cm-bg)] text-[var(--cm-text)] rounded-md shadow-lg",
+          "lg:hidden fixed top-4 z-50 p-2 bg-[#0C2836] text-white rounded-md shadow-lg",
           isRTL ? "right-4" : "left-4",
           showMobileSidebar && "hidden"
         )}
@@ -608,7 +608,7 @@ export default function Dashboard() {
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {/* Top Header Bar */}
-        <div className="flex-shrink-0 bg-[var(--cm-bg)] px-4 py-3 relative z-40">
+        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3 relative z-40">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             
@@ -618,7 +618,7 @@ export default function Dashboard() {
                 const newLang = language === 'ar' ? 'en' : 'ar';
                 setLanguage(newLang);
               }}
-              className="mr-8 px-3 py-1.5 bg-[var(--cm-hover-bg)] hover:bg-[var(--cm-active-bg)] rounded-md transition-all duration-200 text-sm font-medium text-[var(--cm-text)] flex items-center gap-2 relative z-50 cursor-pointer"
+              className="mr-8 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2 relative z-50 cursor-pointer"
             >
               <Globe className="w-4 h-4" />
               {language === 'ar' ? 'EN' : 'AR'}
@@ -647,10 +647,10 @@ export default function Dashboard() {
             {matchTags && <TagsCategories />}
           </motion.div>
         ) : selectedContract ? (
-          <div className="flex flex-col h-full bg-[var(--cm-bg)]">
+          <div className="flex flex-col h-full bg-[#0C2836]">
             {/* Contract Header */}
-            <div className="flex-shrink-0 bg-[var(--cm-bg)] border-b border-[var(--cm-border)] px-4 py-3">
-              <h1 className="text-lg font-medium text-[var(--cm-text)]">{selectedContract.title}</h1>
+            <div className="flex-shrink-0 bg-[#0C2836] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">
+              <h1 className="text-lg font-medium text-white">{selectedContract.title}</h1>
             </div>
 
             {/* Messages Area */}
@@ -672,8 +672,8 @@ export default function Dashboard() {
                       className={cn(
                         "max-w-[80%] rounded-lg px-4 py-2",
                         message.type === 'user' 
-                          ? 'bg-[var(--cm-msg-user)] text-[var(--cm-text)]' 
-                          : 'bg-[var(--cm-hover-bg)] text-[var(--cm-text)] border border-[var(--cm-border)]'
+                          ? 'bg-[#1a4158] text-white' 
+                          : 'bg-[rgba(183,222,232,0.1)] text-gray-100 border border-[rgba(183,222,232,0.2)]'
                       )}
                     >
                       <p className="whitespace-pre-wrap">{message.content}</p>
@@ -716,7 +716,7 @@ export default function Dashboard() {
                 {/* Welcome Text Above Input Bar - Only when no messages */}
                 {!hasStartedChat && (
                   <div className="text-center mb-12">
-                    <h1 className="text-2xl font-medium text-[var(--cm-text)]">
+                    <h1 className="text-2xl font-medium text-white">
                       {isRTL 
                         ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
                         : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
@@ -724,7 +724,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                 )}
-                <div className="bg-[var(--cm-hover-bg)] p-3 rounded-lg">
+                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                 <div className="relative">
                   <input
                     type="text"
@@ -739,7 +739,7 @@ export default function Dashboard() {
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-[var(--cm-input-field-bg)] border border-[var(--cm-border)] rounded-lg py-2.5 text-[var(--cm-input-text)] placeholder-[var(--cm-placeholder)] focus:outline-none focus:border-[var(--cm-accent)] focus:ring-2 focus:ring-[var(--cm-accent)] focus:ring-opacity-50",
+                      "w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     maxLength={500}
@@ -754,8 +754,8 @@ export default function Dashboard() {
                       className={cn(
                         "p-1.5 rounded transition-colors",
                         inputValue.trim() && userTokens >= 5
-                          ? "text-[var(--cm-text)] hover:bg-[var(--cm-hover-bg)]"
-                          : "text-[var(--cm-text-muted)] cursor-not-allowed"
+                          ? "text-white hover:bg-[rgba(183,222,232,0.1)]"
+                          : "text-gray-600 cursor-not-allowed"
                       )}
                     >
                       <Send className="w-4 h-4" />
@@ -768,7 +768,7 @@ export default function Dashboard() {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex flex-col h-full bg-[var(--cm-bg)] relative">
+          <div className="flex flex-col h-full bg-[#0C2836] relative">
             {/* Messages/Content Area */}
             <div className="flex-1 overflow-y-auto flex flex-col">
               <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
@@ -796,7 +796,7 @@ export default function Dashboard() {
               <div className="w-full max-w-3xl px-6">
                 {/* Welcome Text Above Input Bar */}
                 <div className="text-center mb-12">
-                  <h1 className="text-2xl font-medium text-[var(--cm-text)]">
+                  <h1 className="text-2xl font-medium text-white">
                     {isRTL 
                       ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
                       : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
@@ -805,7 +805,7 @@ export default function Dashboard() {
                 </div>
                 
                 {/* Input Bar */}
-                <div className="bg-[var(--cm-hover-bg)] p-3 rounded-lg">
+                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                   <div className="relative">
                     <input
                     type="text"
@@ -814,7 +814,7 @@ export default function Dashboard() {
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-[var(--cm-input-field-bg)] border border-[var(--cm-border)] rounded-lg py-2.5 text-[var(--cm-input-text)] placeholder-[var(--cm-placeholder)] focus:outline-none focus:border-[var(--cm-accent)] focus:ring-2 focus:ring-[var(--cm-accent)] focus:ring-opacity-50",
+                      "w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     onKeyDown={(e) => {
@@ -831,14 +831,14 @@ export default function Dashboard() {
                     isRTL ? "left-2" : "right-2"
                   )}>
                     <button
-                      className="p-1.5 text-[var(--cm-text-muted)] hover:text-[var(--cm-text)] transition-colors"
+                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
                       title={t('إرفاق ملف', 'Attach file')}
                       onClick={() => setIsUploadModalOpen(true)}
                     >
                       <Paperclip className="w-4 h-4" />
                     </button>
                     <button
-                      className="p-1.5 text-[var(--cm-text-muted)] hover:text-[var(--cm-text)] transition-colors"
+                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
                       onClick={() => {
                         if (!selectedContract) {
                           toast({
@@ -856,15 +856,15 @@ export default function Dashboard() {
               
               {/* Prompt Selection System */}
               <div className="mt-4">
-                <div className="bg-[var(--cm-bg)] rounded-lg p-4">
+                <div className="bg-[#0C2836] rounded-lg p-4">
                   {/* Tab Headers */}
-                  <div className="flex space-x-1 mb-4 bg-[var(--cm-hover-bg)] p-1 rounded-lg">
+                  <div className="flex space-x-1 mb-4 bg-[rgba(183,222,232,0.1)] p-1 rounded-lg">
                     <button
                       className={cn(
                         "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300",
                         activePromptTab === 'suggested' 
-                          ? "bg-[var(--cm-accent)] text-[var(--cm-bg)] shadow-sm" 
-                          : "text-[var(--cm-text-muted)] hover:text-[var(--cm-text)]"
+                          ? "bg-[#B7DEE8] text-[#0C2836] shadow-sm" 
+                          : "text-[rgba(183,222,232,0.6)] hover:text-white"
                       )}
                       onClick={() => setActivePromptTab('suggested')}
                     >
@@ -874,8 +874,8 @@ export default function Dashboard() {
                       className={cn(
                         "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300",
                         activePromptTab === 'myPrompts' 
-                          ? "bg-[var(--cm-accent)] text-[var(--cm-bg)] shadow-sm" 
-                          : "text-[var(--cm-text-muted)] hover:text-[var(--cm-text)]"
+                          ? "bg-[#B7DEE8] text-[#0C2836] shadow-sm" 
+                          : "text-[rgba(183,222,232,0.6)] hover:text-white"
                       )}
                       onClick={() => setActivePromptTab('myPrompts')}
                     >
@@ -899,8 +899,8 @@ export default function Dashboard() {
                             isRTL ? "text-right" : "text-left"
                           )}
                         >
-                          <p className="text-sm text-[var(--cm-text)]">{t('تحليل المخاطر', 'Risk Analysis')}</p>
-                          <p className="text-xs text-[var(--cm-text-muted)] mt-1">{t('حدد المخاطر الرئيسية', 'Identify key risks')}</p>
+                          <p className="text-sm text-white">{t('تحليل المخاطر', 'Risk Analysis')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('حدد المخاطر الرئيسية', 'Identify key risks')}</p>
                         </button>
                         <button
                           onClick={() => {
@@ -974,7 +974,7 @@ export default function Dashboard() {
       {/* Sliding Panel */}
       <div 
         className={cn(
-          "fixed inset-y-0 w-[40%] bg-[var(--cm-bg)] shadow-2xl transition-transform duration-300 ease-in-out",
+          "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out",
           !isRTL ? "right-0" : "left-0"
         )}
         style={{ 
@@ -985,16 +985,16 @@ export default function Dashboard() {
         }}>
         <div className="h-full flex flex-col">
           {/* Panel Header */}
-          <div className="flex items-center justify-between p-4 border-b border-[var(--cm-border)]">
-            <h2 className="text-lg font-semibold text-[var(--cm-text)]">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-800">
               {slidingPanelContent === 'prompts' && t('اختر موجه', 'Select a Prompt')}
               {slidingPanelContent === 'contractDetails' && t('تفاصيل العقد', 'Contract Details')}
             </h2>
             <button
               onClick={closeSlidingPanel}
-              className="p-2 hover:bg-[var(--cm-hover-bg)] rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <X className="w-5 h-5 text-[var(--cm-text-muted)]" />
+              <X className="w-5 h-5 text-gray-500" />
             </button>
           </div>
 
@@ -1003,11 +1003,11 @@ export default function Dashboard() {
             {slidingPanelContent === 'prompts' && (
               <div className="p-4">
                 {/* Prompt Tabs */}
-                <div className="flex space-x-1 mb-4 bg-[var(--cm-hover-bg)] p-1 rounded-lg">
+                <div className="flex space-x-1 mb-4 bg-gray-100 p-1 rounded-lg">
                   <button
                     className={cn(
                       "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200",
-                      "bg-[var(--cm-accent)] text-[var(--cm-bg)] shadow-sm"
+                      "bg-white text-gray-900 shadow-sm"
                     )}
                   >
                     {t('موجهات ContraMind', 'ContraMind Prompts')}
@@ -1015,7 +1015,7 @@ export default function Dashboard() {
                   <button
                     className={cn(
                       "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200",
-                      "text-[var(--cm-text-muted)] hover:text-[var(--cm-text)]"
+                      "text-gray-600 hover:text-gray-900"
                     )}
                   >
                     {t('موجهاتي المحفوظة', 'My Saved Prompts')}
@@ -1024,25 +1024,25 @@ export default function Dashboard() {
 
                 {/* ContraMind Prompts List */}
                 <div className="space-y-3">
-                  <div className="p-4 border border-[var(--cm-border)] rounded-lg hover:border-[var(--cm-accent)] hover:bg-[var(--cm-hover-bg)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--cm-text)] mb-1">{t('تحليل شامل للعقد', 'Comprehensive Contract Analysis')}</h3>
-                    <p className="text-sm text-[var(--cm-text-muted)]">{t('تحليل كامل للعقد مع تحديد المخاطر والفرص', 'Complete contract analysis with risk and opportunity identification')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('تحليل شامل للعقد', 'Comprehensive Contract Analysis')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل كامل للعقد مع تحديد المخاطر والفرص', 'Complete contract analysis with risk and opportunity identification')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--cm-border)] rounded-lg hover:border-[var(--cm-accent)] hover:bg-[var(--cm-hover-bg)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--cm-text)] mb-1">{t('مراجعة بنود المسؤولية', 'Liability Clause Review')}</h3>
-                    <p className="text-sm text-[var(--cm-text-muted)]">{t('تحليل مفصل لبنود المسؤولية والتعويضات', 'Detailed analysis of liability and indemnification clauses')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('مراجعة بنود المسؤولية', 'Liability Clause Review')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل مفصل لبنود المسؤولية والتعويضات', 'Detailed analysis of liability and indemnification clauses')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--cm-border)] rounded-lg hover:border-[var(--cm-accent)] hover:bg-[var(--cm-hover-bg)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--cm-text)] mb-1">{t('فحص شروط الدفع', 'Payment Terms Check')}</h3>
-                    <p className="text-sm text-[var(--cm-text-muted)]">{t('مراجعة شروط الدفع والجداول الزمنية', 'Review payment terms and schedules')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('فحص شروط الدفع', 'Payment Terms Check')}</h3>
+                    <p className="text-sm text-gray-600">{t('مراجعة شروط الدفع والجداول الزمنية', 'Review payment terms and schedules')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--cm-border)] rounded-lg hover:border-[var(--cm-accent)] hover:bg-[var(--cm-hover-bg)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--cm-text)] mb-1">{t('تحليل الملكية الفكرية', 'IP Rights Analysis')}</h3>
-                    <p className="text-sm text-[var(--cm-text-muted)]">{t('مراجعة حقوق الملكية الفكرية والترخيص', 'Review intellectual property rights and licensing')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('تحليل الملكية الفكرية', 'IP Rights Analysis')}</h3>
+                    <p className="text-sm text-gray-600">{t('مراجعة حقوق الملكية الفكرية والترخيص', 'Review intellectual property rights and licensing')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--cm-border)] rounded-lg hover:border-[var(--cm-accent)] hover:bg-[var(--cm-hover-bg)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--cm-text)] mb-1">{t('شروط الإنهاء', 'Termination Clauses')}</h3>
-                    <p className="text-sm text-[var(--cm-text-muted)]">{t('تحليل شروط إنهاء العقد والعواقب', 'Analyze contract termination conditions and consequences')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('شروط الإنهاء', 'Termination Clauses')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل شروط إنهاء العقد والعواقب', 'Analyze contract termination conditions and consequences')}</p>
                   </div>
                 </div>
               </div>
@@ -1052,24 +1052,24 @@ export default function Dashboard() {
               <div className="p-4">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--cm-text-muted)] mb-1">{t('اسم العقد', 'Contract Name')}</h3>
-                    <p className="text-[var(--cm-text)]">{selectedContract?.title}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('اسم العقد', 'Contract Name')}</h3>
+                    <p className="text-gray-900">{selectedContract?.title}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--cm-text-muted)] mb-1">{t('التاريخ', 'Date')}</h3>
-                    <p className="text-[var(--cm-text)]">{selectedContract?.date}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('التاريخ', 'Date')}</h3>
+                    <p className="text-gray-900">{selectedContract?.date}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--cm-text-muted)] mb-1">{t('مستوى المخاطر', 'Risk Level')}</h3>
-                    <p className="text-[var(--cm-text)]">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('مستوى المخاطر', 'Risk Level')}</h3>
+                    <p className="text-gray-900">
                       {selectedContract?.riskLevel === 'low' && '🟢 ' + t('منخفض', 'Low')}
                       {selectedContract?.riskLevel === 'medium' && '🟡 ' + t('متوسط', 'Medium')}
                       {selectedContract?.riskLevel === 'high' && '🔴 ' + t('عالي', 'High')}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--cm-text-muted)] mb-1">{t('الحالة', 'Status')}</h3>
-                    <p className="text-[var(--cm-text)]">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('الحالة', 'Status')}</h3>
+                    <p className="text-gray-900">
                       {selectedContract?.status === 'analyzing' ? t('قيد التحليل', 'Analyzing') : t('جاهز', 'Ready')}
                     </p>
                   </div>
