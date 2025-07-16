@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../hooks/useLanguage";
 
 export default function Home() {
-  const { t, language, isRTL } = useLanguage();
+  const { t, language, dir } = useLanguage();
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 ${isRTL ? "rtl" : "ltr"}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 ${dir}`}>
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
