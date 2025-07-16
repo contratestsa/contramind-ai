@@ -88,11 +88,11 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
             <h2 style="color: #0C2836; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">
                 Welcome to the Future of Legal Technology!
             </h2>
-            
+
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 Dear ${fullName},
             </p>
-            
+
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 Thank you for joining the ContraMind waitlist! We're excited to have you on board as we prepare to revolutionize legal contract management in the MENA region.
             </p>
@@ -113,7 +113,7 @@ function getEnglishEmailTemplate(fullName: string, waitlistPosition: number): st
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 <strong>What to expect:</strong>
             </p>
-            
+
             <ul style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 30px 20px;">
                 <li style="margin-bottom: 8px;">Early access to our AI-powered contract analysis platform</li>
                 <li style="margin-bottom: 8px;">Bilingual support in Arabic and English</li>
@@ -203,7 +203,7 @@ export async function sendVerificationEmail({ email, fullName, verificationToken
   const baseUrl = process.env.REPLIT_DEV_DOMAIN 
     ? `https://${process.env.REPLIT_DEV_DOMAIN}` 
     : 'http://localhost:5000';
-  
+
   const verificationUrl = `${baseUrl}/api/auth/verify-email?token=${verificationToken}`;
   const subject = 'Verify Your Email - ContraMind';
   const htmlContent = getVerificationEmailTemplate(fullName, verificationUrl);
@@ -384,11 +384,11 @@ function getVerificationEmailTemplate(fullName: string, verificationUrl: string)
             <h2 style="color: #0C2836; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">
                 Please Verify Your Email Address
             </h2>
-            
+
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 Hello ${fullName},
             </p>
-            
+
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 Welcome to ContraMind! To complete your account setup and start using our AI-powered legal platform, please verify your email address by clicking the button below.
             </p>
@@ -403,7 +403,7 @@ function getVerificationEmailTemplate(fullName: string, verificationUrl: string)
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 If the button doesn't work, you can also copy and paste this link into your browser:
             </p>
-            
+
             <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #e5e7eb;">
                 <code style="color: #374151; font-size: 14px; word-break: break-all;">${verificationUrl}</code>
             </div>
@@ -485,11 +485,11 @@ function getLoginConfirmationEmailTemplate(fullName: string, loginTime: string):
             <h2 style="color: #0C2836; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">
                 Account Login Detected
             </h2>
-            
+
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 Hello ${fullName},
             </p>
-            
+
             <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
                 We noticed a new login to your ContraMind account. If this was you, no action is needed.
             </p>
@@ -562,4 +562,39 @@ Security Tip: Keep your account secure by using a strong, unique password and en
 ContraMind - AI-Powered Legal Technology Platform
 This is an automated security notification. Please do not reply to this email.
   `;
+}
+
+export async function sendEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string;
+  subject: string;
+  html: string;
+}) {
+  const fromAddresses = [
+    'ContraMind Team <noreply@contramind.ai>',
+    'ContraMind Team <onboarding@resend.dev>'
+  ];
+
+  for (const fromAddress of fromAddresses) {
+    try {
+      const data = await resend.emails.send({
+        from: fromAddress,
+        to: [to],
+        subject,
+        html,
+      });
+
+      console.log(`Email sent successfully from ${fromAddress}:`, data);
+      return { success: true, data };
+    } catch (error) {
+      console.log(`Failed to send from ${fromAddress}:`, error);
+      continue;
+    }
+  }
+
+  console.error('All email attempts failed');
+  return { success: false, error: 'Unable to send email from any configured domain' };
 }
