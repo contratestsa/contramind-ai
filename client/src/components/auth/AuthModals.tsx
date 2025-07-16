@@ -334,11 +334,8 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
                 {t('ليس لديك حساب؟', "Don't have an account?")}{' '}
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsLoginOpen(false);
-                    setIsSignupOpen(true);
-                  }}
-                  className="text-blue-600 hover:text-blue-800 font-medium"
+                  disabled={true}
+                  className="text-blue-300 cursor-not-allowed font-medium"
                 >
                   {t('إنشاء حساب', 'Create account')}
                 </button>
