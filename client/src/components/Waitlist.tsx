@@ -118,7 +118,7 @@ export default function Waitlist() {
         >
           <div className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
             <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
-            <span>{t('قريباً', 'Coming Soon')}</span>
+            <span className="text-[40px]">{t('قريباً', 'Coming Soon')}</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-4 sm:mb-6 whitespace-pre-line px-2 sm:px-0 leading-snug">
