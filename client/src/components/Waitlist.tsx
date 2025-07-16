@@ -43,38 +43,6 @@ export default function Waitlist() {
     },
   });
 
-  const [countdown, setCountdown] = useState({
-    days: 30,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  // Countdown timer effect
-  useEffect(() => {
-    // Set a fixed target date for launch (e.g., July 18, 2025)
-    const targetDate = new Date('2025-07-18T00:00:00');
-
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate.getTime() - now;
-
-      if (distance > 0) {
-        setCountdown({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000),
-        });
-      } else {
-        clearInterval(timer);
-        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   const joinWaitlistMutation = useMutation({
     mutationFn: async (data: WaitlistData) => {
       const response = await fetch('/api/waitlist', {
@@ -156,27 +124,6 @@ export default function Waitlist() {
           <h2 className="text-2xl sm:text-3xl lg:text-5xl font-arabic-heading-bold text-white mb-4 sm:mb-6 whitespace-pre-line px-2 sm:px-0 leading-snug">
             {t('للحصول على اشتراك مجاني لمدة ٣أشهر   سجل الآن', 'Get 3 Months Free Subscription   Register Now')}
           </h2>
-
-          {/* Countdown Timer */}
-          <motion.div
-            initial={{ scale: 0.9 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            className="bg-white rounded-2xl p-4 sm:p-6 shadow-custom mb-6 sm:mb-8 max-w-md mx-auto"
-          >
-            <div className="text-xs sm:text-sm text-gray-400 mb-2 font-arabic-body">
-              {t('متبقي على الإطلاق', 'Time until launch')}
-            </div>
-            <div className="text-xl sm:text-2xl font-space font-bold text-gray-800">
-              <span>{countdown.days.toString().padStart(2, '0')}</span>:
-              <span>{countdown.hours.toString().padStart(2, '0')}</span>:
-              <span>{countdown.minutes.toString().padStart(2, '0')}</span>:
-              <span>{countdown.seconds.toString().padStart(2, '0')}</span>
-            </div>
-            <div className="text-xs text-gray-500 mt-1 font-arabic-body">
-              {t('أيام : ساعات : دقائق : ثوان', 'Days : Hours : Minutes : Seconds')}
-            </div>
-          </motion.div>
         </motion.div>
 
         {/* Waitlist Form */}
