@@ -3,7 +3,7 @@ import { z } from "zod";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 import { users, waitlistEntries, contactMessages } from "../shared/schema";
-import { sendEmail } from "./emailService";
+import { sendWelcomeEmail, sendContactEmail } from "./emailService";
 import bcrypt from "bcryptjs";
 
 const router = Router();
@@ -66,6 +66,17 @@ router.post("/api/auth/login", async (req, res) => {
   }
 });
 
+// Add missing /api/auth/me route
+router.get("/api/auth/me", async (req, res) => {
+  try {
+    // For now, return null user since we don't have session management
+    res.json({ user: null });
+  } catch (error) {
+    console.error("Auth check error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Waitlist routes
 router.post("/api/waitlist", async (req, res) => {
   try {
@@ -87,15 +98,13 @@ router.post("/api/waitlist", async (req, res) => {
 
     // Send welcome email
     try {
-      await sendEmail({
-        to: email,
-        subject: "Welcome to ContraMind Waitlist",
-        html: `
-          <h2>Welcome to ContraMind!</h2>
-          <p>Hi ${fullName},</p>
-          <p>Thank you for joining our waitlist. We're excited to have you on board!</p>
-          <p>We'll notify you as soon as ContraMind is ready for launch.</p>
-        `,
+      const totalEntries = await db.select().from(waitlistEntries);
+      const waitlistPosition = totalEntries.length;
+      
+      await sendWelcomeEmail({
+        email,
+        fullName,
+        waitlistPosition
       });
     } catch (emailError) {
       console.error("Email sending failed:", emailError);
