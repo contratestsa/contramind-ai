@@ -138,5 +138,3 @@ export function useAuth() {
 }
 
 export { useAuth, AuthProvider };
-
-export { useAuth, AuthProvider };
