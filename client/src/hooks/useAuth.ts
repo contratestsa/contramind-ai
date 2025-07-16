@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
-import { createContext, useContext, ReactNode, createElement } from "react";
+import { createContext, useContext, ReactNode } from "react";
 
 interface AuthContextType {
   user: any;
@@ -15,7 +15,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const auth = useAuth();
   
-  return createElement(AuthContext.Provider, { value: auth }, children);
+  return (
+    <AuthContext.Provider value={auth}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuthContext() {
