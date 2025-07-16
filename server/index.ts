@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import routes from "./routes";
-import setupVite from "./vite";
+import { setupVite } from "./vite";
 import { db } from "./db";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
