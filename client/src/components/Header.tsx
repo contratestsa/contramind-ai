@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Globe, Flag } from 'lucide-react';
+import { ChevronDown, Globe, Flag, Sun, Moon } from 'lucide-react';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 import AuthModals from '@/components/auth/AuthModals';
 import { LanguageManager } from '@/components/SimpleLanguage';
+import { useTheme } from '@/components/ThemeProvider';
 
 export default function Header() {
   const language = LanguageManager.getLanguage();
@@ -12,6 +13,17 @@ export default function Header() {
   const t = LanguageManager.t;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Try to use theme, but handle case where it might not be available
+  let theme = 'dark';
+  let toggleTheme = () => {};
+  try {
+    const themeContext = useTheme();
+    theme = themeContext.theme;
+    toggleTheme = themeContext.toggleTheme;
+  } catch (error) {
+    // Theme context not available, use defaults
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -59,6 +71,15 @@ export default function Header() {
           <div className="flex items-center space-x-4 ml-auto">
             {/* Contact Us Icon */}
             <ContactUs />
+            
+            {/* Theme Switcher */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 text-white"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
             
             {/* Authentication Modals */}
             <div className="flex items-center space-x-2">
