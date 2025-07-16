@@ -4,12 +4,11 @@ import { ChevronDown, Globe, Flag } from 'lucide-react';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 import AuthModals from '@/components/auth/AuthModals';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Header() {
-  const language = LanguageManager.getLanguage();
-  const setLanguage = LanguageManager.setLanguage;
-  const t = LanguageManager.t;
+  const { language, setLanguage } = useLanguage();
+  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 interface LanguageContextType {
   language: string;
@@ -8,34 +8,37 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<string>(() => {
-    // Get language from localStorage or browser detection
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      return savedLanguage;
-    }
-    
-    // Detect browser language
-    const browserLanguage = navigator.language || 'en';
-    return browserLanguage.startsWith('ar') ? 'ar' : 'en';
-  });
-
-  const isRTL = language === 'ar';
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<string>('en');
 
   useEffect(() => {
-    // Save language to localStorage
-    localStorage.setItem('language', language);
-    
-    // Set document direction
-    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-    document.documentElement.lang = language;
-  }, [language, isRTL]);
+    // Initialize language from localStorage after mount
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      setLanguageState(savedLanguage);
+    } else {
+      // Detect browser language
+      const browserLang = navigator.language || 'en';
+      const detectedLang = browserLang.startsWith('ar') ? 'ar' : 'en';
+      setLanguageState(detectedLang);
+    }
+  }, []);
 
-  const value: LanguageContextType = {
+  useEffect(() => {
+    // Update DOM when language changes
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language]);
+
+  const setLanguage = (lang: string) => {
+    setLanguageState(lang);
+    localStorage.setItem('language', lang);
+  };
+
+  const value = {
     language,
     setLanguage,
-    isRTL
+    isRTL: language === 'ar'
   };
 
   return (

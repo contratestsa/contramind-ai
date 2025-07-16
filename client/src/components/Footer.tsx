@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Footer() {
-  const t = LanguageManager.t;
+  const { language } = useLanguage();
+  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
 
 
 

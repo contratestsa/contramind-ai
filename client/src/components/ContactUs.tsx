@@ -12,7 +12,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { insertContactSchema } from '@shared/schema';
 import { z } from 'zod';
 import { Mail } from 'lucide-react';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { useLanguage } from '@/contexts/LanguageContext';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 
 type ContactFormData = z.infer<typeof insertContactSchema>;
@@ -22,7 +22,8 @@ interface ContactUsProps {
 }
 
 export default function ContactUs({ children }: ContactUsProps) {
-  const t = LanguageManager.t;
+  const { language } = useLanguage();
+  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);

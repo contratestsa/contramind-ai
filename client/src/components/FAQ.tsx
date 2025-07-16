@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FAQItem {
   question: { ar: string; en: string };
@@ -8,8 +8,8 @@ interface FAQItem {
 }
 
 export default function FAQ() {
-  const t = LanguageManager.t;
-  const language = LanguageManager.getLanguage();
+  const { language } = useLanguage();
+  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqItems: FAQItem[] = [

@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Hero() {
-  const t = LanguageManager.t;
-  const language = LanguageManager.getLanguage();
+  const { language } = useLanguage();
+  const t = (ar: string, en: string) => language === 'ar' ? ar : en;
 
   const scrollToWaitlist = () => {
     const element = document.querySelector('#waitlist');
