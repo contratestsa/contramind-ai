@@ -117,7 +117,7 @@ export default function Waitlist() {
           className="text-center mb-8 sm:mb-12"
         >
           <div className="inline-flex items-center bg-sky/20 text-sky px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
-            <i className="fas fa-rocket ml-2 rtl:ml-0 rtl:mr-2" />
+            <i className="fas fa-rocket rtl:ml-0 rtl:mr-2 ml-[9px] mr-[9px] mt-[4px] mb-[4px] pt-[8px] pb-[8px] pl-[6px] pr-[6px]" />
             <span className="text-[40px]">{t('قريباً', 'Coming Soon')}</span>
           </div>
 
