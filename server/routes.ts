@@ -2,8 +2,8 @@ import { Router } from "express";
 import { z } from "zod";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
-import { users, waitlistEntries, contactMessages } from "../shared/schema";
-import { sendWelcomeEmail } from "./emailService";
+import { users, waitlist_entries, contact_messages } from "../shared/schema";
+import { sendEmail } from "./emailService";
 import bcrypt from "bcryptjs";
 
 const router = Router();
@@ -66,28 +66,6 @@ router.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// Authentication check route
-router.get("/api/auth/me", async (req, res) => {
-  try {
-    // For now, return null user since we don't have session management set up
-    res.json({ user: null });
-  } catch (error) {
-    console.error("Auth check error:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// Logout route
-router.post("/api/auth/logout", async (req, res) => {
-  try {
-    // For now, just return success
-    res.json({ message: "Logged out successfully" });
-  } catch (error) {
-    console.error("Logout error:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
 // Waitlist routes
 router.post("/api/waitlist", async (req, res) => {
   try {
@@ -97,25 +75,27 @@ router.post("/api/waitlist", async (req, res) => {
       return res.status(400).json({ error: "Email and full name are required" });
     }
 
-    const existingEntry = await db.select().from(waitlistEntries).where(eq(waitlistEntries.email, email));
+    const existingEntry = await db.select().from(waitlist_entries).where(eq(waitlist_entries.email, email));
     if (existingEntry.length > 0) {
       return res.status(400).json({ error: "Email already registered" });
     }
 
-    const [entry] = await db.insert(waitlistEntries).values({
+    const [entry] = await db.insert(waitlist_entries).values({
       email,
       fullName,
     }).returning();
 
     // Send welcome email
     try {
-      const waitlistCount = await db.select().from(waitlistEntries);
-      const waitlistPosition = waitlistCount.length;
-      
-      await sendWelcomeEmail({
-        email,
-        fullName,
-        waitlistPosition,
+      await sendEmail({
+        to: email,
+        subject: "Welcome to ContraMind Waitlist",
+        html: `
+          <h2>Welcome to ContraMind!</h2>
+          <p>Hi ${fullName},</p>
+          <p>Thank you for joining our waitlist. We're excited to have you on board!</p>
+          <p>We'll notify you as soon as ContraMind is ready for launch.</p>
+        `,
       });
     } catch (emailError) {
       console.error("Email sending failed:", emailError);
@@ -133,7 +113,7 @@ router.get("/api/waitlist/count", async (req, res) => {
     console.log("Attempting to get waitlist count...");
     console.log("Executing waitlist count query...");
 
-    const result = await db.select().from(waitlistEntries);
+    const result = await db.select().from(waitlist_entries);
     console.log("Query result:", result);
 
     const count = result.length;
@@ -155,7 +135,7 @@ router.post("/api/contact", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const [contact] = await db.insert(contactMessages).values({
+    const [contact] = await db.insert(contact_messages).values({
       name,
       email,
       message,

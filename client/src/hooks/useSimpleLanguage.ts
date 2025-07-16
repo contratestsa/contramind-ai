@@ -15,7 +15,6 @@ export function useSimpleLanguage() {
     language: LanguageManager.getLanguage(), 
     setLanguage, 
     t, 
-    dir: LanguageManager.getDir(),
-    isRTL: LanguageManager.getDir() === 'rtl'
+    dir: LanguageManager.getDir() 
   };
 }
