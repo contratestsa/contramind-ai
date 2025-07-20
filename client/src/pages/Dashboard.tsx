@@ -346,7 +346,7 @@ export default function Dashboard() {
         <h1 className="text-2xl mb-4">{t('جلسة انتهت', 'Session Expired')}</h1>
         <p className="mb-4">{t('يرجى تسجيل الدخول مرة أخرى', 'Please login again')}</p>
         <button
-          onClick={() => setLocation('/')}
+          onClick={() => window.location.href = '/'}
           className="px-4 py-2 bg-[var(--accent)] text-[var(--text-primary)] rounded hover:bg-opacity-90"
         >
           {t('العودة للصفحة الرئيسية', 'Return to Homepage')}

@@ -5,11 +5,6 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 20, 2025** (Latest):
-  - **Fixed ThemeProvider Context Error**: Resolved "useTheme must be used within a ThemeProvider" error on login
-    - Changed all window.location.href redirects to use wouter's setLocation to avoid page reloads
-    - Modified useTheme hook to return default values instead of throwing when context unavailable
-    - This prevents crashes during navigation transitions between login and dashboard
-- **July 20, 2025** (Earlier):
   - **Added Light Theme Support**: Implemented comprehensive light/dark theme system
     - Created theme.css with CSS variables for both light and dark themes
     - Added ThemeProvider component to manage theme state across the application

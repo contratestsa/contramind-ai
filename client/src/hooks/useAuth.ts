@@ -1,10 +1,8 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
-import { useLocation } from "wouter";
 
 export function useAuth() {
-  const [, setLocation] = useLocation();
   const { data: userData, isLoading } = useQuery<{ user: any }>({
     queryKey: ["/api/auth/me"],
     retry: false,
@@ -26,7 +24,7 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-      setLocation('/');
+      window.location.href = '/';
     }
   });
 

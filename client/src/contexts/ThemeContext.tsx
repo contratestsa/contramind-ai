@@ -71,14 +71,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    // Return a default value instead of throwing during initial render
-    console.warn('useTheme called outside ThemeProvider, using default values');
-    return {
-      theme: 'dark' as Theme,
-      toggleTheme: () => {
-        console.warn('toggleTheme called outside ThemeProvider');
-      }
-    };
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 }
