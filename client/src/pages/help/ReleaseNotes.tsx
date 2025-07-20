@@ -11,6 +11,7 @@ interface Release {
   version: string;
   date: string;
   type: 'web' | 'desktop' | 'mobile' | 'agreement';
+  tags?: string[];
   highlights: { ar: string; en: string }[];
   isLatest?: boolean;
 }
@@ -28,10 +29,20 @@ export default function ReleaseNotes() {
 
   const releases: Release[] = [
     {
+      version: "v1.0.1",
+      date: "2025-07-20",
+      type: "web",
+      tags: ["Agreement"],
+      isLatest: true,
+      highlights: [
+        { ar: "تحديث الشروط والأحكام لسياسة الاسترداد الجديدة", en: "Updated Terms & Conditions for new refund policy" },
+        { ar: "إضافة قسم حول الامتثال لحفظ البيانات", en: "Added section on data-retention compliance" }
+      ]
+    },
+    {
       version: "2.5.0",
       date: "2025-01-10",
       type: "web",
-      isLatest: true,
       highlights: [
         { ar: "تحسينات كبيرة في سرعة تحليل العقود", en: "Major improvements in contract analysis speed" },
         { ar: "واجهة مستخدم جديدة للوحة التحكم", en: "New dashboard user interface" },
@@ -80,9 +91,15 @@ export default function ReleaseNotes() {
     }
   ];
 
-  const filteredReleases = releases.filter(release => 
-    activeFilter === 'all' || release.type === activeFilter
-  );
+  const filteredReleases = releases.filter(release => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'agreement') {
+      return release.tags?.some(tag => 
+        tag.toLowerCase() === 'agreement' || tag.toLowerCase() === 'policy'
+      ) || false;
+    }
+    return release.type === activeFilter;
+  });
 
   const filterButtons: { value: FilterType; label: { ar: string; en: string } }[] = [
     { value: 'all', label: { ar: 'الكل', en: 'All' } },
@@ -150,12 +167,21 @@ export default function ReleaseNotes() {
             <button
               key={filter.value}
               onClick={() => setActiveFilter(filter.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setActiveFilter(filter.value);
+                }
+              }}
               className={cn(
-                "px-6 py-2 rounded-full font-medium transition-all duration-150",
+                "px-6 py-2 rounded-full font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] focus:ring-offset-2 focus:ring-offset-[#0C2836]",
                 activeFilter === filter.value
                   ? "bg-[#B7DEE8] text-[#0C2836]"
                   : "bg-white/10 text-white hover:bg-white/20"
               )}
+              role="tab"
+              aria-selected={activeFilter === filter.value}
+              tabIndex={0}
             >
               {filter.label[language]}
             </button>
