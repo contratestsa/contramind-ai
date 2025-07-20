@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -6,6 +6,7 @@ import {
   Bell, Clock, AlertCircle, CheckCircle, X, Mail, Smartphone, MessageSquare,
   Calendar, Eye, BellOff, Filter, Check, AlertTriangle
 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Notifications() {
   const { language, t } = useLanguage();
@@ -16,47 +17,85 @@ export default function Notifications() {
   const [pushNotifs, setPushNotifs] = useState(true);
   const isRTL = language === 'ar';
 
-  // Mock notifications data
-  const actionRequiredNotifications = [
+  // Fetch all contracts to generate notifications
+  const { data: contractsData, isLoading } = useQuery({
+    queryKey: ['/api/contracts'],
+    refetchInterval: 30000 // Refresh every 30 seconds
+  });
+
+  const contracts = contractsData?.contracts || [];
+
+  // Generate notifications based on real contract data
+  const generateNotifications = () => {
+    const now = new Date();
+    const actionRequired: any[] = [];
+    const upcomingDeadlines: any[] = [];
+    
+    contracts.forEach((contract: any, index: number) => {
+      // Generate action required notifications for draft and under_review contracts
+      if (contract.status === 'draft' || contract.status === 'under_review') {
+        const createdDate = new Date(contract.createdAt);
+        const hoursSince = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60));
+        const minutesSince = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60));
+        
+        actionRequired.push({
+          id: contract.id,
+          type: contract.status === 'draft' ? 'draft' : 'approval',
+          title: contract.status === 'draft' ? 'Draft Review Needed' : 'Contract Approval Required',
+          titleAr: contract.status === 'draft' ? 'مطلوب مراجعة المسودة' : 'مطلوب الموافقة على العقد',
+          description: `${contract.title} with ${contract.partyName} needs ${contract.status === 'draft' ? 'review' : 'approval'}`,
+          descriptionAr: `${contract.title} مع ${contract.partyName} يحتاج ${contract.status === 'draft' ? 'المراجعة' : 'الموافقة'}`,
+          slaTimer: hoursSince > 24 ? `${Math.floor(hoursSince / 24)}d ${hoursSince % 24}h` : `${hoursSince}h ${minutesSince % 60}m`,
+          priority: contract.riskLevel || 'medium',
+          timestamp: minutesSince < 60 ? `${minutesSince} minutes ago` : hoursSince < 24 ? `${hoursSince} hours ago` : `${Math.floor(hoursSince / 24)} days ago`,
+          read: index > 2 // Mark first 3 as unread
+        });
+      }
+      
+      // Generate upcoming deadline notifications
+      const contractDate = new Date(contract.date);
+      const daysUntil = Math.floor((contractDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysUntil > 0 && daysUntil <= 90) {
+        upcomingDeadlines.push({
+          id: contract.id + 1000, // Different ID to avoid conflicts
+          type: daysUntil <= 30 ? 'obligation' : 'renewal',
+          title: daysUntil <= 30 ? 'Contract Expiring Soon' : 'Contract Renewal Due',
+          titleAr: daysUntil <= 30 ? 'العقد ينتهي قريباً' : 'موعد تجديد العقد',
+          description: `${contract.title} with ${contract.partyName} expires in ${daysUntil} days`,
+          descriptionAr: `${contract.title} مع ${contract.partyName} ينتهي خلال ${daysUntil} يومًا`,
+          daysUntil: daysUntil,
+          timestamp: 'System generated',
+          read: daysUntil > 60 // Mark urgent ones as unread
+        });
+      }
+    });
+    
+    return {
+      actionRequired: actionRequired.slice(0, 5), // Limit to 5 notifications
+      upcomingDeadlines: upcomingDeadlines.slice(0, 5)
+    };
+  };
+
+  const { actionRequired, upcomingDeadlines } = generateNotifications();
+
+  // Real notifications data
+  const actionRequiredNotifications = actionRequired.length > 0 ? actionRequired : [
     {
       id: 1,
-      type: 'approval',
-      title: 'Contract Approval Required',
-      titleAr: 'مطلوب الموافقة على العقد',
-      description: 'MSA-2024-001 with Tech Solutions Inc. needs your approval',
-      descriptionAr: 'MSA-2024-001 مع شركة الحلول التقنية يحتاج موافقتك',
-      slaTimer: '2h 15m',
-      priority: 'high',
-      timestamp: '10 minutes ago',
-      read: false
-    },
-    {
-      id: 2,
-      type: 'signature',
-      title: 'Signature Required',
-      titleAr: 'مطلوب التوقيع',
-      description: 'Amendment #3 for Global Services LLC is ready for signature',
-      descriptionAr: 'التعديل رقم 3 للخدمات العالمية جاهز للتوقيع',
-      slaTimer: '5h 30m',
-      priority: 'medium',
-      timestamp: '1 hour ago',
-      read: false
-    },
-    {
-      id: 3,
-      type: 'draft',
-      title: 'Draft Review Needed',
-      titleAr: 'مطلوب مراجعة المسودة',
-      description: 'New employment contract draft for Sarah Johnson',
-      descriptionAr: 'مسودة عقد عمل جديدة لسارة جونسون',
-      slaTimer: '1d 2h',
+      type: 'info',
+      title: 'No Actions Required',
+      titleAr: 'لا توجد إجراءات مطلوبة',
+      description: 'All contracts are up to date',
+      descriptionAr: 'جميع العقود محدثة',
+      slaTimer: '-',
       priority: 'low',
-      timestamp: '3 hours ago',
+      timestamp: 'Now',
       read: true
     }
   ];
 
-  const upcomingDeadlines = [
+  const upcomingDeadlinesNotifications = upcomingDeadlines.length > 0 ? upcomingDeadlines : [
     {
       id: 4,
       type: 'renewal',
@@ -92,48 +131,68 @@ export default function Notifications() {
     }
   ];
 
-  const systemAlerts = [
-    {
-      id: 7,
-      type: 'integration',
-      title: 'Integration Alert',
-      titleAr: 'تنبيه التكامل',
-      description: 'Salesforce sync failed - authentication error',
-      descriptionAr: 'فشل مزامنة Salesforce - خطأ في المصادقة',
-      timestamp: '5 minutes ago',
-      muted: false,
-      read: false
-    },
-    {
-      id: 8,
+  // Generate system alerts
+  const generateSystemAlerts = () => {
+    const alerts: any[] = [];
+    
+    // Alert for high-risk contracts
+    const highRiskCount = contracts.filter((c: any) => c.riskLevel === 'high').length;
+    if (highRiskCount > 0) {
+      alerts.push({
+        id: 2001,
+        type: 'system',
+        title: 'High Risk Contracts Alert',
+        titleAr: 'تنبيه عقود عالية المخاطر',
+        description: `${highRiskCount} contract(s) flagged as high risk require attention`,
+        descriptionAr: `${highRiskCount} عقد(عقود) مصنفة كعالية المخاطر تحتاج انتباه`,
+        timestamp: '1 hour ago',
+        muted: false,
+        read: false
+      });
+    }
+    
+    // Alert for new contracts added today
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const newContracts = contracts.filter((c: any) => new Date(c.createdAt) >= today).length;
+    if (newContracts > 0) {
+      alerts.push({
+        id: 2002,
+        type: 'integration',
+        title: 'New Contracts Added',
+        titleAr: 'عقود جديدة مضافة',
+        description: `${newContracts} new contract(s) uploaded today`,
+        descriptionAr: `${newContracts} عقد(عقود) جديدة تم رفعها اليوم`,
+        timestamp: '2 hours ago',
+        muted: false,
+        read: true
+      });
+    }
+    
+    // Default system status alert
+    alerts.push({
+      id: 2003,
       type: 'permission',
-      title: 'Permission Change',
-      titleAr: 'تغيير الصلاحيات',
-      description: 'John Smith was granted admin access to Legal Templates',
-      descriptionAr: 'تم منح جون سميث صلاحيات المسؤول لقوالب القانونية',
-      timestamp: '2 hours ago',
-      muted: false,
-      read: true
-    },
-    {
-      id: 9,
-      type: 'system',
-      title: 'System Maintenance',
-      titleAr: 'صيانة النظام',
-      description: 'Scheduled maintenance on Jan 20, 2024 at 2:00 AM',
-      descriptionAr: 'صيانة مجدولة في 20 يناير 2024 الساعة 2:00 صباحًا',
-      timestamp: '1 day ago',
+      title: 'System Status: Normal',
+      titleAr: 'حالة النظام: طبيعية',
+      description: 'All systems operating normally',
+      descriptionAr: 'جميع الأنظمة تعمل بشكل طبيعي',
+      timestamp: '3 hours ago',
       muted: true,
       read: true
-    }
-  ];
+    });
+    
+    return alerts.slice(0, 3); // Limit to 3 alerts
+  };
+  
+  const systemAlerts = generateSystemAlerts();
 
   const getNotificationsByTab = () => {
     switch (activeTab) {
       case 'action':
         return actionRequiredNotifications;
       case 'deadlines':
-        return upcomingDeadlines;
+        return upcomingDeadlinesNotifications;
       case 'system':
         return systemAlerts;
       default:
@@ -164,7 +223,7 @@ export default function Notifications() {
 
   const tabs = [
     { id: 'action', label: t('يتطلب إجراء', 'Action Required'), count: actionRequiredNotifications.filter(n => !n.read).length },
-    { id: 'deadlines', label: t('المواعيد النهائية', 'Upcoming Deadlines'), count: upcomingDeadlines.filter(n => !n.read).length },
+    { id: 'deadlines', label: t('المواعيد النهائية', 'Upcoming Deadlines'), count: upcomingDeadlinesNotifications.filter(n => !n.read).length },
     { id: 'system', label: t('تنبيهات النظام', 'System Alerts'), count: systemAlerts.filter(n => !n.read).length }
   ];
 

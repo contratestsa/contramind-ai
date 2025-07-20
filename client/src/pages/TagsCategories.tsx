@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -7,6 +7,7 @@ import {
   FolderOpen, ChevronDown, Search
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useQuery } from '@tanstack/react-query';
 
 export default function TagsCategories() {
   const { language, t } = useLanguage();
@@ -17,77 +18,120 @@ export default function TagsCategories() {
   const { toast } = useToast();
   const isRTL = language === 'ar';
 
-  // Mock taxonomy data
-  const taxonomy = [
-    {
-      id: 'contract-type',
-      name: 'Contract Type',
-      nameAr: 'نوع العقد',
-      editable: 'admin',
-      mandatory: true,
-      children: [
-        { id: 'nda', name: 'NDA', nameAr: 'اتفاقية عدم الإفصاح', count: 45, suggested: false },
-        { id: 'msa', name: 'MSA', nameAr: 'اتفاقية الخدمات الرئيسية', count: 32, suggested: false },
-        { id: 'sow', name: 'SOW', nameAr: 'بيان العمل', count: 28, suggested: false },
-        { id: 'sla', name: 'SLA', nameAr: 'اتفاقية مستوى الخدمة', count: 15, suggested: true },
-        { id: 'purchase', name: 'Purchase Order', nameAr: 'أمر الشراء', count: 67, suggested: false }
-      ]
-    },
-    {
-      id: 'risk',
-      name: 'Risk Level',
-      nameAr: 'مستوى المخاطر',
-      editable: 'manager',
-      mandatory: true,
-      children: [
-        { id: 'high', name: 'High Risk', nameAr: 'مخاطر عالية', count: 12, suggested: false },
-        { id: 'medium', name: 'Medium Risk', nameAr: 'مخاطر متوسطة', count: 34, suggested: false },
-        { id: 'low', name: 'Low Risk', nameAr: 'مخاطر منخفضة', count: 89, suggested: false }
-      ]
-    },
-    {
-      id: 'status',
-      name: 'Contract Status',
-      nameAr: 'حالة العقد',
-      editable: 'user',
-      mandatory: false,
-      children: [
-        { id: 'draft', name: 'Draft', nameAr: 'مسودة', count: 23, suggested: false },
-        { id: 'review', name: 'Under Review', nameAr: 'قيد المراجعة', count: 8, suggested: false },
-        { id: 'approved', name: 'Approved', nameAr: 'معتمد', count: 45, suggested: false },
-        { id: 'signed', name: 'Signed', nameAr: 'موقع', count: 67, suggested: false },
-        { id: 'active', name: 'Active', nameAr: 'نشط', count: 112, suggested: false },
-        { id: 'expired', name: 'Expired', nameAr: 'منتهي الصلاحية', count: 34, suggested: false }
-      ]
-    },
-    {
-      id: 'department',
-      name: 'Department',
-      nameAr: 'القسم',
-      editable: 'admin',
-      mandatory: false,
-      children: [
-        { id: 'legal', name: 'Legal', nameAr: 'القانونية', count: 156, suggested: false },
-        { id: 'procurement', name: 'Procurement', nameAr: 'المشتريات', count: 89, suggested: false },
-        { id: 'hr', name: 'Human Resources', nameAr: 'الموارد البشرية', count: 45, suggested: true },
-        { id: 'it', name: 'IT', nameAr: 'تقنية المعلومات', count: 67, suggested: false },
-        { id: 'finance', name: 'Finance', nameAr: 'المالية', count: 78, suggested: false }
-      ]
-    },
-    {
-      id: 'vendor-type',
-      name: 'Vendor Type',
-      nameAr: 'نوع المورد',
-      editable: 'manager',
-      mandatory: false,
-      children: [
-        { id: 'software', name: 'Software', nameAr: 'برمجيات', count: 45, suggested: false },
-        { id: 'hardware', name: 'Hardware', nameAr: 'أجهزة', count: 23, suggested: false },
-        { id: 'services', name: 'Services', nameAr: 'خدمات', count: 89, suggested: false },
-        { id: 'consulting', name: 'Consulting', nameAr: 'استشارات', count: 34, suggested: true }
-      ]
-    }
-  ];
+  // Fetch all contracts to build taxonomy
+  const { data: contractsData, isLoading } = useQuery({
+    queryKey: ['/api/contracts'],
+    refetchInterval: 30000 // Refresh every 30 seconds
+  });
+
+  const contracts = contractsData?.contracts || [];
+
+  // Build taxonomy from real contract data
+  const buildTaxonomy = () => {
+    // Count contracts by type
+    const typeCounts: Record<string, number> = {};
+    const statusCounts: Record<string, number> = {};
+    const riskCounts: Record<string, number> = { high: 0, medium: 0, low: 0 };
+    const partyCounts: Record<string, number> = {};
+    const datesByMonth: Record<string, number> = {};
+    
+    contracts.forEach((contract: any) => {
+      // Count types
+      typeCounts[contract.type] = (typeCounts[contract.type] || 0) + 1;
+      
+      // Count statuses
+      statusCounts[contract.status] = (statusCounts[contract.status] || 0) + 1;
+      
+      // Count risk levels
+      if (contract.riskLevel) {
+        riskCounts[contract.riskLevel] = (riskCounts[contract.riskLevel] || 0) + 1;
+      }
+      
+      // Count parties for department-like categorization
+      partyCounts[contract.partyName] = (partyCounts[contract.partyName] || 0) + 1;
+      
+      // Count by month
+      const date = new Date(contract.date);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      datesByMonth[monthKey] = (datesByMonth[monthKey] || 0) + 1;
+    });
+
+    const typeLabels: Record<string, { en: string, ar: string }> = {
+      service: { en: 'Service Agreement', ar: 'اتفاقية خدمة' },
+      nda: { en: 'Non-Disclosure Agreement', ar: 'اتفاقية عدم إفشاء' },
+      employment: { en: 'Employment Contract', ar: 'عقد عمل' },
+      lease: { en: 'Lease Agreement', ar: 'عقد إيجار' },
+      sale: { en: 'Sales Contract', ar: 'عقد بيع' },
+      partnership: { en: 'Partnership Agreement', ar: 'اتفاقية شراكة' }
+    };
+
+    const statusLabels: Record<string, { en: string, ar: string }> = {
+      draft: { en: 'Draft', ar: 'مسودة' },
+      active: { en: 'Active', ar: 'نشط' },
+      under_review: { en: 'Under Review', ar: 'قيد المراجعة' },
+      signed: { en: 'Signed', ar: 'موقع' },
+      expired: { en: 'Expired', ar: 'منتهي' }
+    };
+
+    return [
+      {
+        id: 'contract-type',
+        name: 'Contract Type',
+        nameAr: 'نوع العقد',
+        editable: 'admin',
+        mandatory: true,
+        children: Object.entries(typeCounts).map(([type, count]) => ({
+          id: type,
+          name: typeLabels[type]?.en || type.charAt(0).toUpperCase() + type.slice(1),
+          nameAr: typeLabels[type]?.ar || type,
+          count,
+          suggested: false
+        }))
+      },
+      {
+        id: 'risk',
+        name: 'Risk Level',
+        nameAr: 'مستوى المخاطر',
+        editable: 'manager',
+        mandatory: true,
+        children: [
+          { id: 'high', name: 'High Risk', nameAr: 'مخاطر عالية', count: riskCounts.high, suggested: false },
+          { id: 'medium', name: 'Medium Risk', nameAr: 'مخاطر متوسطة', count: riskCounts.medium, suggested: false },
+          { id: 'low', name: 'Low Risk', nameAr: 'مخاطر منخفضة', count: riskCounts.low, suggested: false }
+        ]
+      },
+      {
+        id: 'status',
+        name: 'Contract Status',
+        nameAr: 'حالة العقد',
+        editable: 'user',
+        mandatory: false,
+        children: Object.entries(statusCounts).map(([status, count]) => ({
+          id: status,
+          name: statusLabels[status]?.en || status.charAt(0).toUpperCase() + status.slice(1),
+          nameAr: statusLabels[status]?.ar || status,
+          count,
+          suggested: false
+        }))
+      },
+      {
+        id: 'party',
+        name: 'Party',
+        nameAr: 'الطرف',
+        editable: 'admin',
+        mandatory: false,
+        children: Object.entries(partyCounts).slice(0, 10).map(([party, count]) => ({
+          id: party.toLowerCase().replace(/\s+/g, '-'),
+          name: party,
+          nameAr: party,
+          count,
+          suggested: false
+        }))
+      }
+    ];
+  };
+
+  const taxonomy = buildTaxonomy();
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev =>

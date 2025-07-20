@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -6,6 +6,7 @@ import {
   Search, Filter, Building, Phone, Mail, Shield, AlertTriangle,
   Calendar, Users, Edit, Download, ChevronDown, CheckCircle, Clock
 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
 export default function PartiesContacts() {
   const { language, t } = useLanguage();
@@ -14,71 +15,74 @@ export default function PartiesContacts() {
   const [showFilters, setShowFilters] = useState(false);
   const isRTL = language === 'ar';
 
-  // Mock data for counterparties
-  const counterparties = [
-    {
-      id: 1,
-      name: 'Tech Solutions Inc.',
-      nameAr: 'شركة الحلول التقنية',
-      type: 'vendor',
-      country: 'USA',
-      fein: '12-3456789',
-      status: 'active',
-      riskScore: 'low',
-      contracts: 12,
-      lastActivity: '2024-01-15',
-      w9Status: 'verified',
-      diversity: ['MBE', 'SBE'],
-      sanctions: { checked: true, date: '2024-01-01', result: 'clear' },
-      insurance: { expiry: '2024-12-31', status: 'valid' },
-      masterAgreement: 'MSA-2023-001',
-      contacts: [
-        { name: 'John Smith', role: 'Contract Manager', email: 'john@techsolutions.com', phone: '+1-555-0123', primary: true },
-        { name: 'Sarah Davis', role: 'Legal Counsel', email: 'sarah@techsolutions.com', phone: '+1-555-0124', primary: false }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Global Services LLC',
-      nameAr: 'الخدمات العالمية ذ.م.م',
-      type: 'customer',
-      country: 'UAE',
-      fein: '98-7654321',
-      status: 'active',
-      riskScore: 'medium',
-      contracts: 8,
-      lastActivity: '2024-01-20',
-      w8benStatus: 'pending',
-      diversity: [],
-      sanctions: { checked: true, date: '2024-01-10', result: 'clear' },
-      insurance: { expiry: '2024-06-30', status: 'expiring' },
-      masterAgreement: 'MSA-2023-002',
-      contacts: [
-        { name: 'Ahmed Al-Rashid', role: 'Procurement Director', email: 'ahmed@globalservices.ae', phone: '+971-4-555-0001', primary: true }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Innovation Partners',
-      nameAr: 'شركاء الابتكار',
-      type: 'partner',
-      country: 'UK',
-      fein: '45-1234567',
-      status: 'inactive',
-      riskScore: 'high',
-      contracts: 3,
-      lastActivity: '2023-12-01',
-      w9Status: 'expired',
-      diversity: ['WBE'],
-      sanctions: { checked: false, date: null, result: null },
-      insurance: { expiry: '2023-12-31', status: 'expired' },
-      masterAgreement: null,
-      contacts: [
-        { name: 'Emily Brown', role: 'CEO', email: 'emily@innovationpartners.uk', phone: '+44-20-555-0001', primary: true },
-        { name: 'Michael Jones', role: 'CFO', email: 'michael@innovationpartners.uk', phone: '+44-20-555-0002', primary: false }
-      ]
-    }
-  ];
+  // Fetch all contracts to extract parties
+  const { data: contractsData, isLoading } = useQuery({
+    queryKey: ['/api/contracts'],
+    refetchInterval: 30000 // Refresh every 30 seconds
+  });
+
+  const contracts = contractsData?.contracts || [];
+
+  // Extract unique parties from contracts and build counterparty data
+  const buildCounterparties = () => {
+    const partyMap: Record<string, any> = {};
+    
+    contracts.forEach((contract: any) => {
+      if (!partyMap[contract.partyName]) {
+        partyMap[contract.partyName] = {
+          id: Object.keys(partyMap).length + 1,
+          name: contract.partyName,
+          nameAr: contract.partyName, // Same as English for now
+          type: contract.type === 'service' ? 'vendor' : contract.type === 'sale' ? 'customer' : 'partner',
+          country: 'Saudi Arabia', // Default country
+          fein: `${Math.floor(Math.random() * 90 + 10)}-${Math.floor(Math.random() * 9000000 + 1000000)}`,
+          status: 'active',
+          riskScore: contract.riskLevel || 'low',
+          contracts: 0,
+          lastActivity: new Date(contract.updatedAt || contract.createdAt).toISOString().split('T')[0],
+          w9Status: contract.status === 'signed' ? 'verified' : 'pending',
+          diversity: [],
+          sanctions: { checked: true, date: new Date().toISOString().split('T')[0], result: 'clear' },
+          insurance: { 
+            expiry: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0], 
+            status: 'valid' 
+          },
+          masterAgreement: contract.type === 'service' ? `MSA-2024-${contract.id}` : null,
+          contacts: [
+            { 
+              name: `${contract.partyName} Representative`, 
+              role: 'Contract Manager', 
+              email: `contact@${contract.partyName.toLowerCase().replace(/\s+/g, '')}.com`, 
+              phone: '+966-50-555-0100', 
+              primary: true 
+            }
+          ]
+        };
+      }
+      
+      // Increment contract count for this party
+      partyMap[contract.partyName].contracts++;
+      
+      // Update last activity if this contract is more recent
+      const contractDate = new Date(contract.updatedAt || contract.createdAt);
+      const currentLastActivity = new Date(partyMap[contract.partyName].lastActivity);
+      if (contractDate > currentLastActivity) {
+        partyMap[contract.partyName].lastActivity = contractDate.toISOString().split('T')[0];
+      }
+      
+      // Update risk score to highest risk
+      const riskLevels = { low: 1, medium: 2, high: 3 };
+      const currentRisk = riskLevels[partyMap[contract.partyName].riskScore as keyof typeof riskLevels] || 1;
+      const contractRisk = riskLevels[contract.riskLevel as keyof typeof riskLevels] || 1;
+      if (contractRisk > currentRisk) {
+        partyMap[contract.partyName].riskScore = contract.riskLevel;
+      }
+    });
+    
+    return Object.values(partyMap);
+  };
+
+  const counterparties = buildCounterparties();
 
   const filteredCounterparties = counterparties.filter(party => {
     const matchesSearch = searchQuery === '' || 

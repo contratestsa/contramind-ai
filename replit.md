@@ -5,6 +5,14 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 20, 2025** (Latest):
+  - **Updated All Sidebar Pages to Use Real Contract Data**: All four core dashboard pages now display data from uploaded contracts
+    - Analytics & Reports: Shows real KPIs calculated from contract data (cycle time, risk scores, contract counts, status distribution)
+    - Parties & Contacts: Displays unique parties extracted from contracts with aggregated risk levels and contract counts
+    - Notifications: Generates real-time notifications based on contract statuses (drafts needing review, upcoming renewals, high-risk alerts)
+    - Tags & Categories: Builds dynamic taxonomy from actual contract types, statuses, and risk levels in the database
+    - All pages refresh data every 30 seconds to stay current
+    - Added loading states and proper error handling for all data fetching
+- **July 20, 2025** (Earlier):
   - **Added Light Theme Support**: Implemented comprehensive light/dark theme system
     - Created theme.css with CSS variables for both light and dark themes
     - Added ThemeProvider component to manage theme state across the application

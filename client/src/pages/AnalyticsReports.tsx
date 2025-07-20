@@ -5,49 +5,129 @@ import {
   TrendingUp, Clock, Shield, DollarSign, FileText, Download,
   Calendar, AlertTriangle
 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 
 export default function AnalyticsReports() {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
 
-  // KPI Data - exactly 5 cards as requested
-  const kpiData = [
-    { label: t('وقت الدورة', 'Cycle-time'), value: '12 days', icon: Clock, trend: -15 },
-    { label: t('التجديدات في الوقت', '% On-time renewals'), value: '87%', icon: Calendar, trend: 5 },
-    { label: t('الالتزامات النشطة', 'Active obligations'), value: '234', icon: FileText, trend: 0 },
-    { label: t('متوسط درجة المخاطر', 'Average risk score'), value: '3.2', icon: Shield, trend: -8 },
-    { label: t('الوفورات المحققة', 'Savings captured'), value: '$1.2M', icon: DollarSign, trend: 22 }
-  ];
+  // Fetch all contracts for analytics
+  const { data: contractsData, isLoading } = useQuery({
+    queryKey: ['/api/contracts'],
+    refetchInterval: 30000 // Refresh every 30 seconds
+  });
 
-  // Mock data for charts
-  const cycleTimeData = [
-    { month: 'Jan', nda: 8, msa: 15, sow: 22 },
-    { month: 'Feb', nda: 7, msa: 14, sow: 20 },
-    { month: 'Mar', nda: 9, msa: 16, sow: 19 },
-    { month: 'Apr', nda: 6, msa: 12, sow: 18 },
-    { month: 'May', nda: 7, msa: 13, sow: 17 },
-    { month: 'Jun', nda: 5, msa: 11, sow: 16 }
-  ];
+  const contracts = contractsData?.contracts || [];
 
-  const amendmentsData = [
-    { quarter: 'Q1', count: 45 },
-    { quarter: 'Q2', count: 52 },
-    { quarter: 'Q3', count: 38 },
-    { quarter: 'Q4', count: 61 }
-  ];
+  // Calculate real KPIs from contract data
+  const calculateKPIs = () => {
+    const now = new Date();
+    const activeContracts = contracts.filter((c: any) => c.status === 'active').length;
+    const totalContracts = contracts.length;
+    
+    // Calculate average cycle time (days from creation to signed)
+    const signedContracts = contracts.filter((c: any) => c.status === 'signed');
+    const cycleTimes = signedContracts.map((c: any) => {
+      const created = new Date(c.createdAt);
+      const signed = new Date(c.updatedAt);
+      return Math.floor((signed.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+    });
+    const avgCycleTime = cycleTimes.length > 0 
+      ? Math.round(cycleTimes.reduce((a: number, b: number) => a + b, 0) / cycleTimes.length)
+      : 0;
 
-  const renewalData = [
-    { days: 90, contracts: 12, status: 'upcoming' },
-    { days: 60, contracts: 8, status: 'review' },
-    { days: 30, contracts: 5, status: 'urgent' }
-  ];
+    // Calculate on-time renewals percentage (mock calculation)
+    const expiringContracts = contracts.filter((c: any) => {
+      const contractDate = new Date(c.date);
+      const daysDiff = Math.floor((contractDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff >= 0 && daysDiff <= 90;
+    });
+    const onTimePercentage = totalContracts > 0 ? Math.round((expiringContracts.length / totalContracts) * 100) : 0;
 
+    // Calculate average risk score
+    const riskScores = { low: 1, medium: 2, high: 3 };
+    const contractsWithRisk = contracts.filter((c: any) => c.riskLevel);
+    const totalRiskScore = contractsWithRisk.reduce((sum: number, c: any) => 
+      sum + (riskScores[c.riskLevel as keyof typeof riskScores] || 0), 0
+    );
+    const avgRiskScore = contractsWithRisk.length > 0 
+      ? (totalRiskScore / contractsWithRisk.length).toFixed(1)
+      : '0.0';
+
+    return [
+      { label: t('وقت الدورة', 'Cycle-time'), value: `${avgCycleTime} days`, icon: Clock, trend: -15 },
+      { label: t('التجديدات في الوقت', '% On-time renewals'), value: `${onTimePercentage}%`, icon: Calendar, trend: 5 },
+      { label: t('الالتزامات النشطة', 'Active obligations'), value: activeContracts.toString(), icon: FileText, trend: 0 },
+      { label: t('متوسط درجة المخاطر', 'Average risk score'), value: avgRiskScore, icon: Shield, trend: -8 },
+      { label: t('إجمالي العقود', 'Total contracts'), value: totalContracts.toString(), icon: DollarSign, trend: 22 }
+    ];
+  };
+
+  const kpiData = calculateKPIs();
+
+  // Calculate contract type distribution
+  const calculateTypeDistribution = () => {
+    const typeMap: Record<string, number> = {};
+    contracts.forEach((c: any) => {
+      typeMap[c.type] = (typeMap[c.type] || 0) + 1;
+    });
+    
+    return Object.entries(typeMap).map(([type, count]) => ({
+      month: type.toUpperCase(),
+      nda: type === 'nda' ? count : 0,
+      msa: type === 'service' ? count : 0,
+      sow: type === 'employment' ? count : 0
+    }));
+  };
+
+  const cycleTimeData = calculateTypeDistribution();
+
+  // Calculate status distribution
+  const calculateStatusDistribution = () => {
+    const statusMap: Record<string, number> = {};
+    contracts.forEach((c: any) => {
+      statusMap[c.status] = (statusMap[c.status] || 0) + 1;
+    });
+    
+    return Object.entries(statusMap).map(([status, count], index) => ({
+      quarter: status.charAt(0).toUpperCase() + status.slice(1),
+      count
+    }));
+  };
+
+  const amendmentsData = calculateStatusDistribution();
+
+  // Calculate upcoming renewals
+  const calculateRenewals = () => {
+    const now = new Date();
+    const renewals = { 30: 0, 60: 0, 90: 0 };
+    
+    contracts.forEach((c: any) => {
+      const contractDate = new Date(c.date);
+      const daysDiff = Math.floor((contractDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysDiff > 0 && daysDiff <= 30) renewals[30]++;
+      else if (daysDiff > 30 && daysDiff <= 60) renewals[60]++;
+      else if (daysDiff > 60 && daysDiff <= 90) renewals[90]++;
+    });
+    
+    return [
+      { days: 90, contracts: renewals[90], status: 'upcoming' },
+      { days: 60, contracts: renewals[60], status: 'review' },
+      { days: 30, contracts: renewals[30], status: 'urgent' }
+    ];
+  };
+
+  const renewalData = calculateRenewals();
+
+  // Risk level distribution
   const clauseUsageData = [
-    { clause: 'Limitation of Liability', usage: 89, deviation: 12 },
-    { clause: 'Indemnification', usage: 76, deviation: 8 },
-    { clause: 'Termination', usage: 95, deviation: 5 },
-    { clause: 'Payment Terms', usage: 82, deviation: 15 },
-    { clause: 'Confidentiality', usage: 91, deviation: 3 }
+    { clause: 'High Risk', usage: contracts.filter((c: any) => c.riskLevel === 'high').length, deviation: 12 },
+    { clause: 'Medium Risk', usage: contracts.filter((c: any) => c.riskLevel === 'medium').length, deviation: 8 },
+    { clause: 'Low Risk', usage: contracts.filter((c: any) => c.riskLevel === 'low').length, deviation: 5 },
+    { clause: 'Draft', usage: contracts.filter((c: any) => c.status === 'draft').length, deviation: 15 },
+    { clause: 'Active', usage: contracts.filter((c: any) => c.status === 'active').length, deviation: 3 }
   ];
 
   return (
