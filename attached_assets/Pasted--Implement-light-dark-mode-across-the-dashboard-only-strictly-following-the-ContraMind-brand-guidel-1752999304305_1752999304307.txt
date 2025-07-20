@@ -1,0 +1,48 @@
+(Implement light/dark mode across the dashboard only, strictly following the ContraMind brand guideline colors)
+
+🎯 Objective
+Add full light-and-dark theme support to every element in the dashboard (header, sidebar, central panels, chat bar, prompt cards, Help pages, etc.), without touching the homepage and using only the brand guideline colors.
+
+📦 Scope
+* Files: Only the dashboard layout and its child screens/components.
+* Colors:
+    * Primary brand: #0C2836
+    * Accent: #B7DEE8
+    * Light mode palette:
+        * Background: #FFFFFF (main), #F2F4F5 (secondary surfaces)
+        * Text: #0C2836 (primary), #333333 (secondary)
+        * Accent: #B7DEE8
+    * Dark mode palette:
+        * Background: #0C2836 (main), #1A2428 (secondary surfaces)
+        * Text: #FFFFFF (primary), #E0E0E0 (secondary)
+        * Accent: #B7DEE8
+
+🛠 Implementation Requirements
+1. Theme Variables
+    * Define CSS custom properties (or Tailwind theme extensions) for all key tokens: css CopyEdit   --color-bg, --color-bg-secondary,
+    * --color-text-primary, --color-text-secondary,
+    * --color-accent
+    *   
+    * Provide light/dark fallbacks for each variable.
+2. Automatic & Manual Switching
+    * Default to the user’s OS color-scheme (prefers-color-scheme).
+    * Add a theme-toggle switch in the header, next to the EN/AR toggle, to override default. Remember to persist the choice (e.g. localStorage).
+3. Component Styling
+    * Update every dashboard component (sidebar, header, chat pane, prompt cards, Help pages, modals, form inputs, buttons) to consume the new CSS variables or Tailwind classes (bg-[color-var], text-[color-var], border-[color-var]).
+    * Ensure hover, focus, and active states use the accent color on both themes.
+4. Dark-mode Adjustments
+    * In dark mode, lighten shadows, soften borders, and ensure enough contrast (WCAG AA) for text against dark backgrounds.
+    * For surfaces (cards, lists), use the secondary background variable.
+5. No Homepage Impact
+    * Confine all theme imports and style changes to the dashboard components. Do not alter homepage styles or global layout.
+6. Testing & Accessibility
+    * Verify every screen under /dashboard in both themes for visual consistency and text-legibility.
+    * Keyboard-navigable theme toggle with proper aria-label.
+    * Automated dark/light visual regression snapshots for core views.
+
+✅ Deliverables
+1. A ThemeProvider setup (or equivalent) that injects CSS variables based on prefers-color-scheme and toggle.
+2. Updated styles (CSS/Tailwind config) for all dashboard components to use the new tokens.
+3. A Header theme-toggle button beside the language switch.
+4. Confirmation that only dashboard files changed; homepage remains untouched.
+Success = seamless, brand-aligned light/dark experience across the entire dashboard.
