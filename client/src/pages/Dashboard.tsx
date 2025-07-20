@@ -43,6 +43,7 @@ import AnalyticsReports from "@/pages/AnalyticsReports";
 import PartiesContacts from "@/pages/PartiesContacts";
 import Notifications from "@/pages/Notifications";
 import TagsCategories from "@/pages/TagsCategories";
+import DashboardSidebar from "@/components/DashboardSidebar";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface User {
@@ -509,8 +510,8 @@ export default function Dashboard() {
 
               <button
                 onClick={() => {
-                  console.log('Navigating to /analytics');
-                  setLocation('/analytics');
+                  console.log('Navigating to /dashboard/analytics');
+                  setLocation('/dashboard/analytics');
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
@@ -526,8 +527,8 @@ export default function Dashboard() {
               
               <button
                 onClick={() => {
-                  console.log('Navigating to /parties');
-                  setLocation('/parties');
+                  console.log('Navigating to /dashboard/parties');
+                  setLocation('/dashboard/parties');
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
@@ -543,8 +544,8 @@ export default function Dashboard() {
               
               <button
                 onClick={() => {
-                  console.log('Navigating to /notifications');
-                  setLocation('/notifications');
+                  console.log('Navigating to /dashboard/notifications');
+                  setLocation('/dashboard/notifications');
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
@@ -560,8 +561,8 @@ export default function Dashboard() {
               
               <button
                 onClick={() => {
-                  console.log('Navigating to /tags');
-                  setLocation('/tags');
+                  console.log('Navigating to /dashboard/tags');
+                  setLocation('/dashboard/tags');
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
