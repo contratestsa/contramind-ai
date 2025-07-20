@@ -54,10 +54,10 @@ function Router() {
       <Route path="/help/release-notes">{() => <DashboardWrapper component={ReleaseNotes} />}</Route>
       <Route path="/help/terms">{() => <DashboardWrapper component={TermsPolicies} />}</Route>
       <Route path="/tasks">{() => <DashboardWrapper component={Tasks} />}</Route>
-      <Route path="/analytics">{() => <DashboardWrapper component={Dashboard} />}</Route>
-      <Route path="/parties">{() => <DashboardWrapper component={Dashboard} />}</Route>
-      <Route path="/notifications">{() => <DashboardWrapper component={Dashboard} />}</Route>
-      <Route path="/tags">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/analytics">{() => <DashboardWrapper component={AnalyticsReports} />}</Route>
+      <Route path="/parties">{() => <DashboardWrapper component={PartiesContacts} />}</Route>
+      <Route path="/notifications">{() => <DashboardWrapper component={Notifications} />}</Route>
+      <Route path="/tags">{() => <DashboardWrapper component={TagsCategories} />}</Route>
 
       <Route component={NotFound} />
     </Switch>
