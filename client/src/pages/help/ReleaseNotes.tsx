@@ -5,12 +5,12 @@ import { Calendar, Tag, ChevronRight, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 
-type FilterType = 'all' | 'web' | 'desktop' | 'mobile';
+type FilterType = 'all' | 'web' | 'desktop' | 'mobile' | 'agreement';
 
 interface Release {
   version: string;
   date: string;
-  type: 'web' | 'desktop' | 'mobile';
+  type: 'web' | 'desktop' | 'mobile' | 'agreement';
   highlights: { ar: string; en: string }[];
   isLatest?: boolean;
 }
@@ -88,7 +88,8 @@ export default function ReleaseNotes() {
     { value: 'all', label: { ar: 'الكل', en: 'All' } },
     { value: 'web', label: { ar: 'الويب', en: 'Web' } },
     { value: 'desktop', label: { ar: 'سطح المكتب', en: 'Desktop' } },
-    { value: 'mobile', label: { ar: 'الهاتف المحمول', en: 'Mobile' } }
+    { value: 'mobile', label: { ar: 'الهاتف المحمول', en: 'Mobile' } },
+    { value: 'agreement', label: { ar: 'الاتفاقية', en: 'Agreement' } }
   ];
 
   const scrollToLatest = () => {
