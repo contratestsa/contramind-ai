@@ -11,15 +11,24 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Check localStorage first
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light' || savedTheme === 'dark') {
-      return savedTheme;
+    // Safely check localStorage (handle SSR or initial load)
+    try {
+      const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        return savedTheme;
+      }
+    } catch (error) {
+      // localStorage might be blocked or unavailable
+      console.warn('Unable to access localStorage:', error);
     }
     
     // Check system preference
-    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-      return 'light';
+    try {
+      if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+      }
+    } catch (error) {
+      console.warn('Unable to check system preference:', error);
     }
     
     // Default to dark theme to match current implementation
@@ -33,8 +42,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Update data-theme attribute
     document.documentElement.setAttribute('data-theme', theme);
     
-    // Save to localStorage
-    localStorage.setItem('theme', theme);
+    // Save to localStorage (safely)
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('theme', theme);
+      }
+    } catch (error) {
+      console.warn('Unable to save theme to localStorage:', error);
+    }
     
     // Remove transitioning class after a frame
     requestAnimationFrame(() => {
