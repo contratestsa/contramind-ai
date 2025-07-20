@@ -5,12 +5,12 @@ import { Calendar, Tag, ChevronRight, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 
-type FilterType = 'all' | 'web' | 'desktop' | 'mobile';
+type FilterType = 'all' | 'web' | 'desktop' | 'mobile' | 'agreement';
 
 interface Release {
   version: string;
   date: string;
-  type: 'web' | 'desktop' | 'mobile';
+  type: 'web' | 'desktop' | 'mobile' | 'agreement';
   highlights: { ar: string; en: string }[];
   isLatest?: boolean;
 }
@@ -28,10 +28,20 @@ export default function ReleaseNotes() {
 
   const releases: Release[] = [
     {
+      version: "2.6.0",
+      date: "2025-01-15",
+      type: "agreement",
+      isLatest: true,
+      highlights: [
+        { ar: "تحديث سياسة الخصوصية لتعزيز حماية البيانات", en: "Privacy Policy update to enhance data protection" },
+        { ar: "شروط جديدة لاستخدام الذكاء الاصطناعي في تحليل العقود", en: "New terms for AI usage in contract analysis" },
+        { ar: "توضيحات حول ملكية البيانات وحقوق المستخدمين", en: "Clarifications on data ownership and user rights" }
+      ]
+    },
+    {
       version: "2.5.0",
       date: "2025-01-10",
       type: "web",
-      isLatest: true,
       highlights: [
         { ar: "تحسينات كبيرة في سرعة تحليل العقود", en: "Major improvements in contract analysis speed" },
         { ar: "واجهة مستخدم جديدة للوحة التحكم", en: "New dashboard user interface" },
@@ -77,6 +87,16 @@ export default function ReleaseNotes() {
         { ar: "سجل المراجعات وتتبع التغييرات", en: "Audit log and change tracking" },
         { ar: "تكامل مع أدوات الإنتاجية الشائعة", en: "Integration with popular productivity tools" }
       ]
+    },
+    {
+      version: "2.0.1",
+      date: "2024-08-01",
+      type: "agreement",
+      highlights: [
+        { ar: "تحديث شروط الخدمة لتشمل التحكيم الإلزامي", en: "Terms of Service update to include mandatory arbitration" },
+        { ar: "سياسة جديدة لحفظ البيانات والنسخ الاحتياطي", en: "New data retention and backup policy" },
+        { ar: "توضيح حول استخدام بيانات العملاء لتحسين الخدمة", en: "Clarification on customer data usage for service improvement" }
+      ]
     }
   ];
 
@@ -88,7 +108,8 @@ export default function ReleaseNotes() {
     { value: 'all', label: { ar: 'الكل', en: 'All' } },
     { value: 'web', label: { ar: 'الويب', en: 'Web' } },
     { value: 'desktop', label: { ar: 'سطح المكتب', en: 'Desktop' } },
-    { value: 'mobile', label: { ar: 'الهاتف المحمول', en: 'Mobile' } }
+    { value: 'mobile', label: { ar: 'الهاتف المحمول', en: 'Mobile' } },
+    { value: 'agreement', label: { ar: 'تحديثات الاتفاقيات', en: 'Agreement Updates' } }
   ];
 
   const scrollToLatest = () => {
@@ -234,6 +255,7 @@ export default function ReleaseNotes() {
                             {release.type === 'web' && t('ويب', 'Web')}
                             {release.type === 'desktop' && t('سطح المكتب', 'Desktop')}
                             {release.type === 'mobile' && t('الهاتف المحمول', 'Mobile')}
+                            {release.type === 'agreement' && t('تحديث الاتفاقيات', 'Agreement Update')}
                           </span>
                         </div>
                       </div>
