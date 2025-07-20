@@ -71,7 +71,7 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
       
       // Add small delay to ensure session is established before redirect
       setTimeout(() => {
-        window.location.href = '/dashboard';
+        setLocation('/dashboard');
       }, 500);
     },
     onError: (error: Error) => {
