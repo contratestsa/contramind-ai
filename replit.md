@@ -4,15 +4,7 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
-- **July 20, 2025** (Latest):
-  - **Updated Dark Mode Dashboard Color**: Changed dark mode to use single consistent dark teal color (#1a3a3a)
-    - Replaced multi-tone backgrounds (#202123, #343541, #40414F) with unified color
-    - Updated all CSS variables: --dashboard-bg, --dashboard-bg-secondary, --dashboard-panel-bg
-    - Changed all hardcoded colors in Dashboard.tsx to use CSS variables
-    - Applied changes to both Arabic and English versions
-    - Removed white divider lines from sidebar and navigation menu
-    - Theme toggle button is fully functional with light/dark mode switching
-- **July 15, 2025**:
+- **July 15, 2025** (Latest):
   - **Added Authentication Foundation for Electron Desktop App**: Implemented secure authentication system
     - Created AuthManager class (auth.js) to handle authentication in main process
     - Updated preload.js to expose auth APIs: check(), login(), logout()

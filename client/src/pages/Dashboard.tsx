@@ -332,19 +332,19 @@ export default function Dashboard() {
 
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen bg-[var(--dashboard-bg)]">
+    return <div className="flex items-center justify-center h-screen bg-[#0C2836]">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B7DEE8]"></div>
     </div>;
   }
 
   if (error || !userData?.user) {
-    return <div className="flex items-center justify-center h-screen bg-[var(--dashboard-bg)] text-white">
+    return <div className="flex items-center justify-center h-screen bg-[#0C2836] text-white">
       <div className="text-center">
         <h1 className="text-2xl mb-4">{t('جلسة انتهت', 'Session Expired')}</h1>
         <p className="mb-4">{t('يرجى تسجيل الدخول مرة أخرى', 'Please login again')}</p>
         <button
           onClick={() => window.location.href = '/'}
-          className="px-4 py-2 bg-[#B7DEE8] text-[var(--dashboard-bg)] rounded hover:bg-opacity-90"
+          className="px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded hover:bg-opacity-90"
         >
           {t('العودة للصفحة الرئيسية', 'Return to Homepage')}
         </button>
@@ -504,7 +504,7 @@ export default function Dashboard() {
                 {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
               </button>
 
-              {/* <div className="my-2 border-t border-[var(--dashboard-border)]"></div> */}
+              <div className="my-2 border-t border-[var(--dashboard-border)]"></div>
 
               <button
                 onClick={() => {
@@ -655,9 +655,9 @@ export default function Dashboard() {
             {matchTags && <TagsCategories />}
           </motion.div>
         ) : selectedContract ? (
-          <div className="flex flex-col h-full bg-[var(--dashboard-bg)]">
+          <div className="flex flex-col h-full bg-[#0C2836]">
             {/* Contract Header */}
-            <div className="flex-shrink-0 bg-[var(--dashboard-bg)] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">
+            <div className="flex-shrink-0 bg-[#0C2836] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">
               <h1 className="text-lg font-medium text-white">{selectedContract.title}</h1>
             </div>
 

@@ -245,8 +245,8 @@ export default function DashboardSidebar({
               </button>
             </div>
 
-            {/* Divider - Removed */}
-            {/* <div className="my-3 border-t border-[var(--dashboard-divider)]" /> */}
+            {/* Divider */}
+            <div className="my-3 border-t border-[var(--dashboard-divider)]" />
 
             {/* Settings & Help */}
             <div className="space-y-1">

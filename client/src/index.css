@@ -52,8 +52,8 @@
 /* Dark mode theme variables */
 [data-theme="dark"] {
   /* Dashboard Theme Variables - Dark Mode */
-  --dashboard-bg: #1a3a3a;
-  --dashboard-bg-secondary: #1a3a3a;
+  --dashboard-bg: #0C2836;
+  --dashboard-bg-secondary: #1A2428;
   --dashboard-text-primary: #FFFFFF;
   --dashboard-text-secondary: #E0E0E0;
   --dashboard-accent: #B7DEE8;
@@ -61,7 +61,7 @@
   --dashboard-hover: rgba(183, 222, 232, 0.15);
   --dashboard-shadow: 0 4px 12px rgba(0,0,0,.2);
   --dashboard-shadow-hover: 0 8px 24px rgba(0,0,0,.3);
-  --dashboard-panel-bg: #1a3a3a;
+  --dashboard-panel-bg: #1A2428;
   --dashboard-panel-text: #FFFFFF;
 }
 
