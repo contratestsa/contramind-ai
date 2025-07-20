@@ -193,7 +193,7 @@ export default function DashboardSidebar({
           <nav className="px-3 pb-3">
             <div className="space-y-1">
               <button
-                onClick={() => setLocation('/analytics')}
+                onClick={() => setLocation('/dashboard/analytics')}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   activePage === 'analytics' && "bg-[rgba(183,222,232,0.1)]",
@@ -206,7 +206,7 @@ export default function DashboardSidebar({
               </button>
               
               <button
-                onClick={() => setLocation('/parties')}
+                onClick={() => setLocation('/dashboard/parties')}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   activePage === 'parties' && "bg-[rgba(183,222,232,0.1)]",
@@ -219,7 +219,7 @@ export default function DashboardSidebar({
               </button>
               
               <button
-                onClick={() => setLocation('/notifications')}
+                onClick={() => setLocation('/dashboard/notifications')}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   activePage === 'notifications' && "bg-[rgba(183,222,232,0.1)]",
@@ -232,7 +232,7 @@ export default function DashboardSidebar({
               </button>
               
               <button
-                onClick={() => setLocation('/tags')}
+                onClick={() => setLocation('/dashboard/tags')}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   activePage === 'tags' && "bg-[rgba(183,222,232,0.1)]",

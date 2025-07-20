@@ -20,10 +20,7 @@ import Tasks from "@/pages/Tasks";
 import DesktopApp from "@/pages/help/DesktopApp";
 import ReleaseNotes from "@/pages/help/ReleaseNotes";
 import TermsPolicies from "@/pages/help/TermsPolicies";
-import AnalyticsReports from "@/pages/AnalyticsReports";
-import PartiesContacts from "@/pages/PartiesContacts";
-import Notifications from "@/pages/Notifications";
-import TagsCategories from "@/pages/TagsCategories";
+
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 import "@/styles/theme.css";
@@ -54,10 +51,10 @@ function Router() {
       <Route path="/help/release-notes">{() => <DashboardWrapper component={ReleaseNotes} />}</Route>
       <Route path="/help/terms">{() => <DashboardWrapper component={TermsPolicies} />}</Route>
       <Route path="/tasks">{() => <DashboardWrapper component={Tasks} />}</Route>
-      <Route path="/analytics">{() => <DashboardWrapper component={AnalyticsReports} />}</Route>
-      <Route path="/parties">{() => <DashboardWrapper component={PartiesContacts} />}</Route>
-      <Route path="/notifications">{() => <DashboardWrapper component={Notifications} />}</Route>
-      <Route path="/tags">{() => <DashboardWrapper component={TagsCategories} />}</Route>
+      <Route path="/dashboard/analytics">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/dashboard/parties">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/dashboard/notifications">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/dashboard/tags">{() => <DashboardWrapper component={Dashboard} />}</Route>
 
       <Route component={NotFound} />
     </Switch>

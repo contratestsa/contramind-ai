@@ -84,10 +84,10 @@ export default function Dashboard() {
   const { theme, toggleTheme } = useTheme();
   
   // Check current route
-  const [matchAnalytics] = useRoute("/analytics");
-  const [matchParties] = useRoute("/parties");
-  const [matchNotifications] = useRoute("/notifications");
-  const [matchTags] = useRoute("/tags");
+  const [matchAnalytics] = useRoute("/dashboard/analytics");
+  const [matchParties] = useRoute("/dashboard/parties");
+  const [matchNotifications] = useRoute("/dashboard/notifications");
+  const [matchTags] = useRoute("/dashboard/tags");
 
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
