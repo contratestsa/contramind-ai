@@ -36,28 +36,6 @@
   --transition: .25s ease;
 }
 
-/* Dashboard Theme Variables - Light Mode */
-:root[data-theme="light"] {
-  --bg-main: #FFFFFF;
-  --bg-secondary: #F2F4F5;
-  --text-primary: #0C2836;
-  --text-secondary: #333333;
-  --accent: #B7DEE8;
-  --border-color: rgba(0, 0, 0, 0.1);
-  --shadow-theme: 0 4px 12px rgba(0,0,0,.08);
-}
-
-/* Dashboard Theme Variables - Dark Mode */
-:root[data-theme="dark"] {
-  --bg-main: #0C2836;
-  --bg-secondary: #101920;
-  --text-primary: #FFFFFF;
-  --text-secondary: #E0E0E0;
-  --accent: #B7DEE8;
-  --border-color: transparent;
-  --shadow-theme: 0 4px 12px rgba(0,0,0,.4);
-}
-
 /* Force input text to be black with maximum specificity */
 .waitlist-form input,
 .waitlist-form input[type="text"],
