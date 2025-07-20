@@ -286,8 +286,8 @@ We may update this Cookie Policy from time to time to reflect changes in our pra
                       </div>
                     </div>
                     
-                    {/* Terms of Service Update Notice */}
-                    {section.id === 'terms' && (
+                    {/* Policy Update Notices */}
+                    {(section.id === 'terms' || section.id === 'privacy' || section.id === 'cookie') && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -295,10 +295,21 @@ We may update this Cookie Policy from time to time to reflect changes in our pra
                         className={cn("mt-6 text-[#B7DEE8]/80 text-sm", isRTL && "text-right")}
                       >
                         <p>
-                          {language === 'ar' 
-                            ? 'بإنشاء حسابك واستخدام منصة ContraMind، فإنك تقر وتوافق على الالتزام بهذه الشروط. إذا كان لديك أي أسئلة، يرجى الاتصال بنا على Info@contramind.com'
-                            : 'By creating your account and using the ContraMind platform, you acknowledged and agreed to be bound by these terms. If you have any questions, please contact us at Info@contramind.com'
-                          }
+                          {section.id === 'terms' && (
+                            language === 'ar' 
+                              ? 'بإنشاء حسابك واستخدام منصة ContraMind، فإنك تقر وتوافق على الالتزام بهذه الشروط. إذا كان لديك أي أسئلة، يرجى الاتصال بنا على Info@contramind.com'
+                              : 'By creating your account and using the ContraMind platform, you acknowledged and agreed to be bound by these terms. If you have any questions, please contact us at Info@contramind.com'
+                          )}
+                          {section.id === 'privacy' && (
+                            language === 'ar' 
+                              ? 'بإنشاء حسابك واستخدام منصة ContraMind، فإنك تقر وتوافق على الالتزام بسياسة الخصوصية هذه. إذا كان لديك أي أسئلة، يرجى الاتصال بنا على Info@contramind.com'
+                              : 'By creating your account and using the ContraMind platform, you acknowledged and agreed to be bound by these Privacy Policy. If you have any questions, please contact us at Info@contramind.com'
+                          )}
+                          {section.id === 'cookie' && (
+                            language === 'ar' 
+                              ? 'بإنشاء حسابك واستخدام منصة ContraMind، فإنك تقر وتوافق على الالتزام بسياسة ملفات تعريف الارتباط هذه. إذا كان لديك أي أسئلة، يرجى الاتصال بنا على Info@contramind.com'
+                              : 'By creating your account and using the ContraMind platform, you acknowledged and agreed to be bound by this Cookie Policy. If you have any questions, please contact us at Info@contramind.com'
+                          )}
                         </p>
                       </motion.div>
                     )}
