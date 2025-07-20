@@ -1,0 +1,82 @@
+========================================================
+🎯  GOAL
+--------------------------------------------------------
+• Give the **dashboard** (header, sidebar, chat pane, analytics, etc.)
+  a brand-accurate LIGHT and DARK theme.
+• DARK theme must look exactly like the screenshot: a single solid
+  navy background with **no light/grey divider lines**.
+• Do **NOT** touch the public homepage or marketing pages.
+• Leave every existing layout, spacing, font, and animation unchanged.
+
+========================================================
+🎨  BRAND COLOUR TOKENS  (from guidelines, p.23)
+--------------------------------------------------------
+Dark Navy Blue   #0C2836  :contentReference[oaicite:0]{index=0}
+Rich Black       #101920  :contentReference[oaicite:1]{index=1}
+Sky Light Blue   #B7DEE8  :contentReference[oaicite:2]{index=2}
+Light Grey       #E6E6E6  :contentReference[oaicite:3]{index=3}
+
+LIGHT THEME (dashboard)  
+--bg-main        : #FFFFFF  
+--bg-secondary   : #F2F4F5  
+--text-primary   : #0C2836  
+--text-secondary : #333333  
+--accent         : #B7DEE8  
+
+DARK THEME (dashboard)  
+--bg-main        : #0C2836   ← one-tone canvas  
+--bg-secondary   : #101920  
+--text-primary   : #FFFFFF  
+--text-secondary : #E0E0E0  
+--accent         : #B7DEE8  
+
+========================================================
+🛠  IMPLEMENTATION – DASHBOARD FOLDER ONLY
+--------------------------------------------------------
+1. **CSS variables**  
+   Add the light & dark palettes to  
+   `:root[data-theme="light"]` and `:root[data-theme="dark"]`.
+
+2. **ThemeProvider** (wrap `<DashboardLayout>`)  
+   • Detect `prefers-color-scheme` on first load.  
+   • Persist user override in `localStorage.theme`.  
+   • Toggle `data-theme="light" | "dark"` on `<html>`.
+
+3. **Header toggle**  
+   • Insert a sun/moon icon **just left of the EN/AR switch**.  
+   • `aria-label="Toggle dark / light mode"`.  
+   • Space / Enter toggles; focus styles must follow brand.
+
+4. **Refactor component colours**  
+   • Replace hard-coded colours with CSS variables for bg, text, borders.  
+   • For DARK mode, set ALL main surfaces to `var(--bg-main)`.  
+   • Cards / pop-ups may use `--bg-secondary`.  
+   • Accent for buttons, links, hovers = `var(--accent)`.
+
+5. **Remove light dividers in dark mode**  
+   • Delete or recolour any `border`, `divide-*`, or `ring-*` class that
+     produces a pale line.  
+   • No border between sidebar and main panel—use padding instead.
+
+6. **Contrast & shadows**  
+   • Ensure WCAG-AA contrast for text on both themes.  
+   • Dark-mode shadows: `rgba(0,0,0,0.4)` maximum.
+
+7. **Safety rails**  
+   • Light mode must render EXACTLY as now.  
+   • Homepage CSS must remain untouched.  
+   • RTL/LTR flip must still work.  
+   • No console errors.
+
+========================================================
+✅  DONE CHECKLIST
+--------------------------------------------------------
+☐ Theme toggle appears in header and persists choice.  
+☐ Dark mode = solid #0C2836 backdrop, zero pale dividers.  
+☐ Light mode unchanged.  
+☐ Homepage unchanged.  
+☐ All dashboard pages (Analytics, Parties, Notifications, Tags,
+  Help, etc.) use brand variables.  
+☐ After verification, log **THEME MODES READY** to console.
+
+========================================================
