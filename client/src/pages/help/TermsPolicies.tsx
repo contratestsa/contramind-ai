@@ -285,6 +285,23 @@ We may update this Cookie Policy from time to time to reflect changes in our pra
                         </p>
                       </div>
                     </div>
+                    
+                    {/* Terms of Service Update Notice */}
+                    {section.id === 'terms' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4, duration: 0.15 }}
+                        className={cn("mt-6 text-[#B7DEE8]/80 text-sm", isRTL && "text-right")}
+                      >
+                        <p>
+                          {language === 'ar' 
+                            ? 'تم آخر تحديث لشروط الخدمة هذه وهي سارية اعتبارًا من 20 يوليو 2025. بإنشاء حسابك واستخدام منصة ContraMind، فإنك تقر وتوافق على الالتزام بهذه الشروط. إذا كان لديك أي أسئلة، يرجى الاتصال بنا على Info@contramind.com'
+                            : 'These Terms of Service were last updated and are effective as of July 20, 2025. By creating your account and using the ContraMind platform, you acknowledged and agreed to be bound by these terms. If you have any questions, please contact us at Info@contramind.com'
+                          }
+                        </p>
+                      </motion.div>
+                    )}
                   </motion.section>
                 );
               })}
