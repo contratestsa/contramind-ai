@@ -756,7 +756,7 @@ export default function Dashboard() {
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
+                      "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     maxLength={500}
@@ -831,7 +831,7 @@ export default function Dashboard() {
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
+                      "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     onKeyDown={(e) => {

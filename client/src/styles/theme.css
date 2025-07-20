@@ -22,6 +22,9 @@
   --hover-bg: rgba(183, 222, 232, 0.05);
   --active-bg: rgba(183, 222, 232, 0.15);
   --input-bg: #FFFFFF;
+  --input-text: #0C2836; /* Dark text for inputs */
+  --input-field-bg: #FFFFFF; /* Input field background */
+  --input-placeholder: rgba(12, 40, 54, 0.5); /* Muted placeholder text */
   --card-bg: #F2F4F5;
   --sidebar-bg: #F2F4F5;
   
@@ -37,10 +40,10 @@
 }
 
 :root[data-theme="dark"] {
-  /* Main colors - EXACT FROM SCREENSHOT */
-  --bg-main: #343541; /* Main content area background */
-  --bg-secondary: #202123; /* Darker sections */
-  --bg-tertiary: #40414F; /* Input areas */
+  /* Main colors - ContraMind Navy Theme */
+  --bg-main: #0C2836; /* Main content area background */
+  --bg-secondary: #0C2836; /* Darker sections */
+  --bg-tertiary: #FFFFFF; /* Input areas - white */
   
   /* Text colors */
   --text-primary: #FFFFFF;
@@ -58,9 +61,12 @@
   --border-color: rgba(183, 222, 232, 0.2);
   --hover-bg: rgba(183, 222, 232, 0.1);
   --active-bg: rgba(183, 222, 232, 0.15);
-  --input-bg: #40414F;
+  --input-bg: #FFFFFF; /* White input background */
+  --input-text: #0C2836; /* Dark text for white inputs */
+  --input-field-bg: #FFFFFF; /* Actual input field background */
+  --input-placeholder: rgba(12, 40, 54, 0.5); /* Muted placeholder text */
   --card-bg: rgba(255, 255, 255, 0.05);
-  --sidebar-bg: #202123;
+  --sidebar-bg: #0C2836; /* ContraMind navy sidebar */
   
   /* Message colors */
   --msg-user-bg: #1a4158;
