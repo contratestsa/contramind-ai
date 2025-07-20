@@ -1,0 +1,77 @@
+========================================================
+🎯  GOAL
+--------------------------------------------------------
+Add a **brand-correct LIGHT theme** to the dashboard while
+keeping the current DARK theme exactly as-is.
+• Header, sidebar, chat bar, cards, analytics pages, etc.
+  must all pick up the new light palette.
+• Public homepage / marketing pages must stay untouched.
+
+========================================================
+🎨  BRAND COLOUR TOKENS  
+--------------------------------------------------------
+Dark Navy Blue   #0C2836   ← current dark bg  
+Rich Black       #101920   ← dark secondary surface  
+Sky Light Blue   #B7DEE8   ← accent / CTA  
+Light Grey       #F2F4F5   ← light secondary surface  
+
+LIGHT THEME (dashboard only)  
+  --bg-main        : #FFFFFF  
+  --bg-secondary   : #F2F4F5  
+  --text-primary   : #0C2836  
+  --text-secondary : #333333  
+  --accent         : #B7DEE8  
+
+DARK THEME (already live – leave as-is)  
+  --bg-main        : #0C2836  
+  --bg-secondary   : #101920  
+  --text-primary   : #FFFFFF  
+  --text-secondary : #E0E0E0  
+  --accent         : #B7DEE8  
+
+========================================================
+🛠  IMPLEMENTATION  (dashboard code only)
+--------------------------------------------------------
+1. **CSS variables**  
+   Add the two palettes under  
+   `:root[data-theme="light"]` and `:root[data-theme="dark"]`.
+
+2. **ThemeProvider** (wrap `<DashboardLayout>`)  
+   • On first load, read `prefers-color-scheme`; default = dark.  
+   • Persist user override in `localStorage.theme`.  
+   • Toggle `data-theme` attribute on `<html>`.
+
+3. **Header toggle**  
+   • Insert a sun / moon icon **to the left of the EN/AR switch**.  
+   • `aria-label="Toggle light / dark mode"`.  
+   • Space / Enter toggles theme; choice persists.
+
+4. **Component refactor**  
+   • Replace hard-coded colours with CSS variables  
+     (`bg`, `text`, `border`, `hover`, `focus`).  
+   • In light mode:  
+       – Main surfaces = `--bg-main`  
+       – Cards / sidebar / chat bar = `--bg-secondary`  
+       – Accent colour for buttons & links = `--accent`  
+   • Do **not** adjust layout, spacing, fonts, or animations.
+
+5. **No homepage impact**  
+   • Scope all new styles to dashboard bundle; do *not* import
+     them into the root / marketing CSS.
+
+6. **Accessibility**  
+   • Verify WCAG-AA contrast in light mode.  
+   • Keep focus outlines visible in both themes.
+
+========================================================
+✅  DONE CHECKLIST
+--------------------------------------------------------
+☐ Header toggle flips instantly between light & dark.  
+☐ Dark theme looks **identical** to the current build.  
+☐ Light theme uses brand colours; no layout shift.  
+☐ Homepage and marketing pages unchanged.  
+☐ RTL flip, routing, animations still work.  
+☐ No console errors.  
+☐ Log **LIGHT MODE ADDED** in console when finished.
+
+========================================================

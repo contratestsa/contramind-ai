@@ -26,7 +26,9 @@ import {
   ChevronDown,
   Star,
   Globe,
-  Home
+  Home,
+  Sun,
+  Moon
 } from "lucide-react";
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png';
 import iconImage from '@assets/Profile Picture - ContraMind (V001)-1_1752437530152.png';
@@ -41,6 +43,7 @@ import AnalyticsReports from "@/pages/AnalyticsReports";
 import PartiesContacts from "@/pages/PartiesContacts";
 import Notifications from "@/pages/Notifications";
 import TagsCategories from "@/pages/TagsCategories";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface User {
   id: number;
@@ -78,6 +81,7 @@ export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage();
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
+  const { theme, toggleTheme } = useTheme();
   
   // Check current route
   const [matchAnalytics] = useRoute("/analytics");
@@ -330,19 +334,19 @@ export default function Dashboard() {
 
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-screen bg-[#0C2836]">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B7DEE8]"></div>
+    return <div className="flex items-center justify-center h-screen bg-[var(--bg-main)]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent)]"></div>
     </div>;
   }
 
   if (error || !userData?.user) {
-    return <div className="flex items-center justify-center h-screen bg-[#0C2836] text-white">
+    return <div className="flex items-center justify-center h-screen bg-[var(--bg-main)] text-[var(--text-primary)]">
       <div className="text-center">
         <h1 className="text-2xl mb-4">{t('جلسة انتهت', 'Session Expired')}</h1>
         <p className="mb-4">{t('يرجى تسجيل الدخول مرة أخرى', 'Please login again')}</p>
         <button
           onClick={() => window.location.href = '/'}
-          className="px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded hover:bg-opacity-90"
+          className="px-4 py-2 bg-[var(--accent)] text-[var(--text-primary)] rounded hover:bg-opacity-90"
         >
           {t('العودة للصفحة الرئيسية', 'Return to Homepage')}
         </button>
@@ -353,17 +357,17 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
+    <div className={cn("relative flex h-screen bg-[var(--bg-main)] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "bg-[#0C2836] text-white flex flex-col transition-all duration-300 shadow-xl",
+        "bg-[var(--sidebar-bg)] text-[var(--text-primary)] flex flex-col transition-all duration-300 shadow-xl",
         isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40",
         isRTL && "lg:order-2"
       )}>
         {/* Logo and Hamburger */}
-        <div className="flex items-center justify-between p-3 border-b border-[rgba(183,222,232,0.2)]">
+        <div className="flex items-center justify-between p-3 border-b border-[var(--border-color)]">
           <img 
             src={logoImage} 
             alt="ContraMind" 
@@ -374,7 +378,7 @@ export default function Dashboard() {
           />
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="p-2 hover:bg-[rgba(183,222,232,0.1)] rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
+            className="p-2 hover:bg-[var(--hover-bg)] rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
           >
             {/* Hamburger Menu */}
             <div className={cn(
@@ -399,14 +403,14 @@ export default function Dashboard() {
         </div>
 
         {/* New Contract Analysis Button */}
-        <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
+        <div className="p-3 border-b border-[var(--border-color)]">
           <button
             onClick={() => {
               archiveCurrentChat();
               setIsUploadModalOpen(true);
             }}
             className={cn(
-              "w-full flex items-center gap-2 py-2.5 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
+              "w-full flex items-center gap-2 py-2.5 bg-[var(--accent)] text-[var(--text-on-accent)] rounded-md hover:bg-[var(--accent-hover)] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
               isSidebarCollapsed ? "justify-center px-2" : "justify-center px-4"
             )}
           >
@@ -417,15 +421,15 @@ export default function Dashboard() {
 
         {/* Contract Search Box */}
         {!isSidebarCollapsed && (
-          <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
+          <div className="p-3 border-b border-[var(--border-color)]">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[rgba(183,222,232,0.6)]" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />
               <input
                 type="text"
                 value={contractSearchQuery}
                 onChange={(e) => setContractSearchQuery(e.target.value)}
                 placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
-                className="w-full pl-10 pr-3 py-2 bg-[rgba(183,222,232,0.1)] text-white placeholder-[rgba(183,222,232,0.6)] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
+                className="w-full pl-10 pr-3 py-2 bg-[var(--input-bg)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all duration-200"
               />
             </div>
           </div>
@@ -491,17 +495,17 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  !matchAnalytics && !matchParties && !matchNotifications && !matchTags && "bg-[rgba(183,222,232,0.15)] text-white"
+                  !matchAnalytics && !matchParties && !matchNotifications && !matchTags && "bg-[var(--active-bg)] text-[var(--text-primary)]"
                 )}
                 title={isSidebarCollapsed ? t('لوحة التحكم', 'Dashboard') : undefined}
               >
-                <Home className={cn("w-4 h-4 flex-shrink-0", !matchAnalytics && !matchParties && !matchNotifications && !matchTags ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
+                <Home className={cn("w-4 h-4 flex-shrink-0", !matchAnalytics && !matchParties && !matchNotifications && !matchTags ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
               </button>
 
-              <div className="my-2 border-t border-[rgba(183,222,232,0.1)]"></div>
+              <div className="my-2 border-t border-[var(--border-color)]"></div>
 
               <button
                 onClick={() => {
@@ -510,13 +514,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchAnalytics && "bg-[rgba(183,222,232,0.15)] text-white"
+                  matchAnalytics && "bg-[var(--active-bg)] text-[var(--text-primary)]"
                 )}
                 title={isSidebarCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
               >
-                <BarChart3 className={cn("w-4 h-4 flex-shrink-0", matchAnalytics ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
+                <BarChart3 className={cn("w-4 h-4 flex-shrink-0", matchAnalytics ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
               </button>
               
@@ -527,13 +531,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchParties && "bg-[rgba(183,222,232,0.15)] text-white"
+                  matchParties && "bg-[var(--active-bg)] text-[var(--text-primary)]"
                 )}
                 title={isSidebarCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
               >
-                <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
+                <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
               </button>
               
@@ -544,13 +548,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchNotifications && "bg-[rgba(183,222,232,0.15)] text-white"
+                  matchNotifications && "bg-[var(--active-bg)] text-[var(--text-primary)]"
                 )}
                 title={isSidebarCollapsed ? t('الإشعارات', 'Notifications') : undefined}
               >
-                <Bell className={cn("w-4 h-4 flex-shrink-0", matchNotifications ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
+                <Bell className={cn("w-4 h-4 flex-shrink-0", matchNotifications ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>}
               </button>
               
@@ -561,13 +565,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchTags && "bg-[rgba(183,222,232,0.15)] text-white"
+                  matchTags && "bg-[var(--active-bg)] text-[var(--text-primary)]"
                 )}
                 title={isSidebarCollapsed ? t('العلامات والفئات', 'Tags & Categories') : undefined}
               >
-                <Tag className={cn("w-4 h-4 flex-shrink-0", matchTags ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
+                <Tag className={cn("w-4 h-4 flex-shrink-0", matchTags ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
             </div>
@@ -589,7 +593,7 @@ export default function Dashboard() {
       <button
         onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[#0C2836] text-white rounded-md shadow-lg",
+          "lg:hidden fixed top-4 z-50 p-2 bg-[var(--sidebar-bg)] text-[var(--text-primary)] rounded-md shadow-lg",
           isRTL ? "right-4" : "left-4",
           showMobileSidebar && "hidden"
         )}
@@ -608,17 +612,30 @@ export default function Dashboard() {
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {/* Top Header Bar */}
-        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3 relative z-40">
+        <div className="flex-shrink-0 bg-[var(--header-bg)] px-4 py-3 relative z-40">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle light / dark mode"
+              className="mr-4 p-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-[var(--text-primary)] relative z-50 cursor-pointer"
+            >
+              {theme === 'light' ? (
+                <Moon className="w-4 h-4" />
+              ) : (
+                <Sun className="w-4 h-4" />
+              )}
+            </button>
+
             {/* Language Toggle */}
             <button
               onClick={() => {
                 const newLang = language === 'ar' ? 'en' : 'ar';
                 setLanguage(newLang);
               }}
-              className="mr-8 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2 relative z-50 cursor-pointer"
+              className="mr-8 px-3 py-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-sm font-medium text-[var(--text-primary)] flex items-center gap-2 relative z-50 cursor-pointer"
             >
               <Globe className="w-4 h-4" />
               {language === 'ar' ? 'EN' : 'AR'}
@@ -647,10 +664,10 @@ export default function Dashboard() {
             {matchTags && <TagsCategories />}
           </motion.div>
         ) : selectedContract ? (
-          <div className="flex flex-col h-full bg-[#0C2836]">
+          <div className="flex flex-col h-full bg-[var(--bg-main)]">
             {/* Contract Header */}
-            <div className="flex-shrink-0 bg-[#0C2836] border-b border-[rgba(183,222,232,0.2)] px-4 py-3">
-              <h1 className="text-lg font-medium text-white">{selectedContract.title}</h1>
+            <div className="flex-shrink-0 bg-[var(--bg-main)] border-b border-[var(--border-color)] px-4 py-3">
+              <h1 className="text-lg font-medium text-[var(--text-primary)]">{selectedContract.title}</h1>
             </div>
 
             {/* Messages Area */}
@@ -672,8 +689,8 @@ export default function Dashboard() {
                       className={cn(
                         "max-w-[80%] rounded-lg px-4 py-2",
                         message.type === 'user' 
-                          ? 'bg-[#1a4158] text-white' 
-                          : 'bg-[rgba(183,222,232,0.1)] text-gray-100 border border-[rgba(183,222,232,0.2)]'
+                          ? 'bg-[var(--message-user-bg)] text-[var(--text-primary)]' 
+                          : 'bg-[var(--message-system-bg)] text-[var(--text-primary)] border border-[var(--border-color)]'
                       )}
                     >
                       <p className="whitespace-pre-wrap">{message.content}</p>
@@ -716,7 +733,7 @@ export default function Dashboard() {
                 {/* Welcome Text Above Input Bar - Only when no messages */}
                 {!hasStartedChat && (
                   <div className="text-center mb-12">
-                    <h1 className="text-2xl font-medium text-white">
+                    <h1 className="text-2xl font-medium text-[var(--text-primary)]">
                       {isRTL 
                         ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
                         : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
@@ -724,7 +741,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                 )}
-                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
+                <div className="bg-[var(--input-bg)] p-3 rounded-lg">
                 <div className="relative">
                   <input
                     type="text"
@@ -739,7 +756,7 @@ export default function Dashboard() {
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50",
+                      "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     maxLength={500}
@@ -754,8 +771,8 @@ export default function Dashboard() {
                       className={cn(
                         "p-1.5 rounded transition-colors",
                         inputValue.trim() && userTokens >= 5
-                          ? "text-white hover:bg-[rgba(183,222,232,0.1)]"
-                          : "text-gray-600 cursor-not-allowed"
+                          ? "text-[var(--text-primary)] hover:bg-[var(--hover-bg)]"
+                          : "text-[var(--text-muted)] cursor-not-allowed"
                       )}
                     >
                       <Send className="w-4 h-4" />
@@ -768,7 +785,7 @@ export default function Dashboard() {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex flex-col h-full bg-[#0C2836] relative">
+          <div className="flex flex-col h-full bg-[var(--bg-main)] relative">
             {/* Messages/Content Area */}
             <div className="flex-1 overflow-y-auto flex flex-col">
               <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
@@ -796,7 +813,7 @@ export default function Dashboard() {
               <div className="w-full max-w-3xl px-6">
                 {/* Welcome Text Above Input Bar */}
                 <div className="text-center mb-12">
-                  <h1 className="text-2xl font-medium text-white">
+                  <h1 className="text-2xl font-medium text-[var(--text-primary)]">
                     {isRTL 
                       ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
                       : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
@@ -805,7 +822,7 @@ export default function Dashboard() {
                 </div>
                 
                 {/* Input Bar */}
-                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
+                <div className="bg-[var(--input-bg)] p-3 rounded-lg">
                   <div className="relative">
                     <input
                     type="text"
@@ -814,7 +831,7 @@ export default function Dashboard() {
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50",
+                      "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     onKeyDown={(e) => {
@@ -831,14 +848,14 @@ export default function Dashboard() {
                     isRTL ? "left-2" : "right-2"
                   )}>
                     <button
-                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                      className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                       title={t('إرفاق ملف', 'Attach file')}
                       onClick={() => setIsUploadModalOpen(true)}
                     >
                       <Paperclip className="w-4 h-4" />
                     </button>
                     <button
-                      className="p-1.5 text-gray-400 hover:text-white transition-colors"
+                      className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                       onClick={() => {
                         if (!selectedContract) {
                           toast({

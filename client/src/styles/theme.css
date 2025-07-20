@@ -1,0 +1,84 @@
+/* Dashboard Theme Variables */
+:root[data-theme="light"] {
+  /* Main colors */
+  --bg-main: #FFFFFF;
+  --bg-secondary: #F2F4F5;
+  --bg-tertiary: #E8F0F4;
+  
+  /* Text colors */
+  --text-primary: #0C2836;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --text-inverse: #FFFFFF;
+  
+  /* Brand colors */
+  --accent: #B7DEE8;
+  --accent-hover: #9FCBD8;
+  --accent-muted: rgba(183, 222, 232, 0.1);
+  --accent-border: rgba(183, 222, 232, 0.2);
+  
+  /* UI elements */
+  --border-color: #E6E6E6;
+  --hover-bg: rgba(183, 222, 232, 0.05);
+  --active-bg: rgba(183, 222, 232, 0.15);
+  --input-bg: #FFFFFF;
+  --card-bg: #F2F4F5;
+  --sidebar-bg: #F2F4F5;
+  
+  /* Message colors */
+  --msg-user-bg: #0C2836;
+  --msg-system-bg: rgba(183, 222, 232, 0.1);
+  
+  /* Status colors */
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --error: #F44336;
+  --info: #2196F3;
+}
+
+:root[data-theme="dark"] {
+  /* Main colors */
+  --bg-main: #0C2836;
+  --bg-secondary: #101920;
+  --bg-tertiary: #1a2633;
+  
+  /* Text colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #E0E0E0;
+  --text-muted: rgba(183, 222, 232, 0.6);
+  --text-inverse: #0C2836;
+  
+  /* Brand colors */
+  --accent: #B7DEE8;
+  --accent-hover: #9FCBD8;
+  --accent-muted: rgba(183, 222, 232, 0.1);
+  --accent-border: rgba(183, 222, 232, 0.2);
+  
+  /* UI elements */
+  --border-color: rgba(183, 222, 232, 0.2);
+  --hover-bg: rgba(183, 222, 232, 0.05);
+  --active-bg: rgba(183, 222, 232, 0.15);
+  --input-bg: #FFFFFF;
+  --card-bg: rgba(183, 222, 232, 0.05);
+  --sidebar-bg: #202123;
+  
+  /* Message colors */
+  --msg-user-bg: #1a4158;
+  --msg-system-bg: rgba(183, 222, 232, 0.1);
+  
+  /* Status colors */
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --error: #F44336;
+  --info: #2196F3;
+}
+
+/* Ensure smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Disable transitions during theme switch */
+html.theme-transitioning * {
+  transition: none !important;
+}

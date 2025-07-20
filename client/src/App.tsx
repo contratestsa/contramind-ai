@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SimpleLanguageProvider } from "@/components/SimpleLanguage";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import Home from "@/pages/Home";
 import ComingSoon from "@/pages/ComingSoon";
 import Dashboard from "@/pages/Dashboard";
@@ -25,28 +26,38 @@ import Notifications from "@/pages/Notifications";
 import TagsCategories from "@/pages/TagsCategories";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
+import "@/styles/theme.css";
+
+// Wrapper component for dashboard routes
+function DashboardWrapper({ component: Component }: { component: React.ComponentType }) {
+  return (
+    <ThemeProvider>
+      <Component />
+    </ThemeProvider>
+  );
+}
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/coming-soon" component={ComingSoon} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/analysis-progress" component={AnalysisProgress} />
-      <Route path="/analysis-results" component={AnalysisResults} />
-      <Route path="/repository" component={Repository} />
-      <Route path="/settings/personal" component={PersonalSettings} />
-      <Route path="/settings/organization" component={OrganizationSettings} />
-      <Route path="/chat" component={Chat} />
-      <Route path="/help" component={Help} />
-      <Route path="/help/desktop-app" component={DesktopApp} />
-      <Route path="/help/release-notes" component={ReleaseNotes} />
-      <Route path="/help/terms" component={TermsPolicies} />
-      <Route path="/tasks" component={Tasks} />
-      <Route path="/analytics" component={Dashboard} />
-      <Route path="/parties" component={Dashboard} />
-      <Route path="/notifications" component={Dashboard} />
-      <Route path="/tags" component={Dashboard} />
+      <Route path="/dashboard">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/analysis-progress">{() => <DashboardWrapper component={AnalysisProgress} />}</Route>
+      <Route path="/analysis-results">{() => <DashboardWrapper component={AnalysisResults} />}</Route>
+      <Route path="/repository">{() => <DashboardWrapper component={Repository} />}</Route>
+      <Route path="/settings/personal">{() => <DashboardWrapper component={PersonalSettings} />}</Route>
+      <Route path="/settings/organization">{() => <DashboardWrapper component={OrganizationSettings} />}</Route>
+      <Route path="/chat">{() => <DashboardWrapper component={Chat} />}</Route>
+      <Route path="/help">{() => <DashboardWrapper component={Help} />}</Route>
+      <Route path="/help/desktop-app">{() => <DashboardWrapper component={DesktopApp} />}</Route>
+      <Route path="/help/release-notes">{() => <DashboardWrapper component={ReleaseNotes} />}</Route>
+      <Route path="/help/terms">{() => <DashboardWrapper component={TermsPolicies} />}</Route>
+      <Route path="/tasks">{() => <DashboardWrapper component={Tasks} />}</Route>
+      <Route path="/analytics">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/parties">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/notifications">{() => <DashboardWrapper component={Dashboard} />}</Route>
+      <Route path="/tags">{() => <DashboardWrapper component={Dashboard} />}</Route>
 
       <Route component={NotFound} />
     </Switch>

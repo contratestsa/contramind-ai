@@ -4,7 +4,18 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
-- **July 15, 2025** (Latest):
+- **July 20, 2025** (Latest):
+  - **Added Light Theme Support**: Implemented comprehensive light/dark theme system
+    - Created theme.css with CSS variables for both light and dark themes
+    - Added ThemeProvider component to manage theme state across the application
+    - Theme toggle button placed to the left of language switch in dashboard header
+    - Used CSS variables throughout Dashboard component for dynamic theme switching
+    - Dark theme preserved exactly as before with ContraMind navy (#0C2836)
+    - Light theme uses professional whites/grays for readability
+    - Theme preference saved in localStorage for persistence
+    - All dashboard pages support theme switching (Analytics, Parties, Notifications, Tags)
+    - Updated all hardcoded colors to CSS variables for consistent theming
+- **July 15, 2025**:
   - **Added Authentication Foundation for Electron Desktop App**: Implemented secure authentication system
     - Created AuthManager class (auth.js) to handle authentication in main process
     - Updated preload.js to expose auth APIs: check(), login(), logout()
