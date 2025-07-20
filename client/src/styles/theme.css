@@ -37,15 +37,15 @@
 }
 
 :root[data-theme="dark"] {
-  /* Main colors */
-  --bg-main: #0C2836;
-  --bg-secondary: #101920;
-  --bg-tertiary: #1a2633;
+  /* Main colors - EXACT FROM SCREENSHOT */
+  --bg-main: #343541; /* Main content area background */
+  --bg-secondary: #202123; /* Darker sections */
+  --bg-tertiary: #40414F; /* Input areas */
   
   /* Text colors */
   --text-primary: #FFFFFF;
-  --text-secondary: #E0E0E0;
-  --text-muted: rgba(183, 222, 232, 0.6);
+  --text-secondary: rgba(183, 222, 232, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.5);
   --text-inverse: #0C2836;
   
   /* Brand colors */
@@ -56,10 +56,10 @@
   
   /* UI elements */
   --border-color: rgba(183, 222, 232, 0.2);
-  --hover-bg: rgba(183, 222, 232, 0.05);
+  --hover-bg: rgba(183, 222, 232, 0.1);
   --active-bg: rgba(183, 222, 232, 0.15);
-  --input-bg: #FFFFFF;
-  --card-bg: rgba(183, 222, 232, 0.05);
+  --input-bg: #40414F;
+  --card-bg: rgba(255, 255, 255, 0.05);
   --sidebar-bg: #202123;
   
   /* Message colors */
