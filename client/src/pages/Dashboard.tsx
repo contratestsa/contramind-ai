@@ -771,8 +771,8 @@ export default function Dashboard() {
                       className={cn(
                         "p-1.5 rounded transition-colors",
                         inputValue.trim() && userTokens >= 5
-                          ? "text-[var(--text-primary)] hover:bg-[var(--hover-bg)]"
-                          : "text-[var(--text-muted)] cursor-not-allowed"
+                          ? "text-[var(--accent)] hover:bg-[var(--hover-bg)] hover:text-[var(--accent-hover)]"
+                          : "text-gray-400 cursor-not-allowed"
                       )}
                     >
                       <Send className="w-4 h-4" />
@@ -848,14 +848,14 @@ export default function Dashboard() {
                     isRTL ? "left-2" : "right-2"
                   )}>
                     <button
-                      className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                      className="p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
                       title={t('إرفاق ملف', 'Attach file')}
                       onClick={() => setIsUploadModalOpen(true)}
                     >
                       <Paperclip className="w-4 h-4" />
                     </button>
                     <button
-                      className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                      className="p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
                       onClick={() => {
                         if (!selectedContract) {
                           toast({
