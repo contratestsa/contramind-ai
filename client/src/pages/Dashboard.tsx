@@ -504,7 +504,7 @@ export default function Dashboard() {
                 {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
               </button>
 
-              <div className="my-2 border-t border-[var(--dashboard-border)]"></div>
+              {/* <div className="my-2 border-t border-[var(--dashboard-border)]"></div> */}
 
               <button
                 onClick={() => {
