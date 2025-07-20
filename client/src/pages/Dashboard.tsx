@@ -620,7 +620,7 @@ export default function Dashboard() {
             <button
               onClick={toggleTheme}
               aria-label="Toggle light / dark mode"
-              className="mr-4 p-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-[var(--text-primary)] relative z-50 cursor-pointer"
+              className="mr-4 p-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-[var(--accent)] hover:text-[var(--accent-hover)] relative z-50 cursor-pointer"
             >
               {theme === 'light' ? (
                 <Moon className="w-4 h-4" />
@@ -635,7 +635,7 @@ export default function Dashboard() {
                 const newLang = language === 'ar' ? 'en' : 'ar';
                 setLanguage(newLang);
               }}
-              className="mr-8 px-3 py-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-sm font-medium text-[var(--text-primary)] flex items-center gap-2 relative z-50 cursor-pointer"
+              className="mr-8 px-3 py-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] flex items-center gap-2 relative z-50 cursor-pointer"
             >
               <Globe className="w-4 h-4" />
               {language === 'ar' ? 'EN' : 'AR'}
