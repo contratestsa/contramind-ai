@@ -71,14 +71,14 @@ export default function DashboardSidebar({
 
       {/* Sidebar */}
       <div className={cn(
-        "bg-[var(--dashboard-sidebar-bg)] text-[var(--dashboard-text-primary)] flex flex-col transition-all duration-300 shadow-xl",
+        "bg-[#0C2836] text-white flex flex-col transition-all duration-300 shadow-xl",
         isCollapsed ? "w-[60px]" : "w-[260px]",
         showMobile ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40",
         isRTL && "lg:order-2"
       )}>
         {/* Logo and Hamburger */}
-        <div className="flex items-center justify-between p-3 border-b border-[var(--dashboard-border)]">
+        <div className="flex items-center justify-between p-3 border-b border-[rgba(183,222,232,0.2)]">
           <img 
             src={logoImage} 
             alt="ContraMind" 
@@ -89,16 +89,16 @@ export default function DashboardSidebar({
           />
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 hover:bg-[var(--dashboard-hover)] rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
+            className="p-2 hover:bg-[rgba(183,222,232,0.1)] rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
           >
             {/* Hamburger Menu */}
             <div className={cn(
               "w-5 h-5 absolute transition-all duration-300",
               isCollapsed ? "opacity-0 scale-75" : "opacity-100 scale-100"
             )}>
-              <span className="absolute block h-0.5 w-5 bg-[var(--dashboard-text-primary)] transform transition-all duration-300 ease-in-out origin-center translate-y-0" />
-              <span className="absolute block h-0.5 w-5 bg-[var(--dashboard-text-primary)] transform transition-all duration-300 ease-in-out top-2" />
-              <span className="absolute block h-0.5 w-5 bg-[var(--dashboard-text-primary)] transform transition-all duration-300 ease-in-out origin-center top-4 translate-y-0" />
+              <span className="absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center translate-y-0" />
+              <span className="absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out top-2" />
+              <span className="absolute block h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out origin-center top-4 translate-y-0" />
             </div>
             
             {/* ContraMind Icon */}
@@ -114,11 +114,11 @@ export default function DashboardSidebar({
         </div>
 
         {/* New Contract Analysis Button */}
-        <div className="p-3 border-b border-[var(--dashboard-border)]">
+        <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
           <button
             onClick={onNewContract}
             className={cn(
-              "w-full flex items-center gap-2 py-2.5 bg-[var(--dashboard-accent)] text-[var(--dashboard-bg)] rounded-md hover:opacity-90 transition-all duration-200 font-medium shadow-sm hover:shadow-md",
+              "w-full flex items-center gap-2 py-2.5 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
               isCollapsed ? "justify-center px-2" : "justify-center px-4"
             )}
           >
@@ -129,15 +129,15 @@ export default function DashboardSidebar({
 
         {/* Contract Search Box */}
         {!isCollapsed && (
-          <div className="p-3 border-b border-[var(--dashboard-border)]">
+          <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--dashboard-text-secondary)]" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[rgba(183,222,232,0.6)]" />
               <input
                 type="text"
                 value={contractSearchQuery}
                 onChange={(e) => setContractSearchQuery(e.target.value)}
                 placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
-                className="w-full pl-10 pr-3 py-2 bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)] placeholder-[var(--dashboard-text-secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--dashboard-accent)] transition-all duration-200"
+                className="w-full pl-10 pr-3 py-2 bg-[rgba(183,222,232,0.1)] text-white placeholder-[rgba(183,222,232,0.6)] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
               />
             </div>
           </div>
@@ -149,16 +149,16 @@ export default function DashboardSidebar({
           {!isCollapsed && (
             <div className="p-3">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-[var(--dashboard-accent)] uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
-                <button className="text-xs text-[var(--dashboard-accent)] hover:opacity-80 transition-opacity">
+                <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
                   {t('عرض الكل', 'View All')}
                 </button>
               </div>
               <div className="space-y-1">
                 {recentContracts.length === 0 ? (
-                  <p className="text-xs text-[var(--dashboard-text-secondary)] italic p-2">
+                  <p className="text-xs text-[rgba(183,222,232,0.6)] italic p-2">
                     {t('لا توجد عقود حديثة', 'No recent contracts')}
                   </p>
                 ) : (
@@ -166,13 +166,13 @@ export default function DashboardSidebar({
                     <button
                       key={contract.id}
                       onClick={() => setLocation(`/dashboard?contract=${contract.id}`)}
-                      className="w-full text-left p-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group"
+                      className="w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-sm truncate">{contract.name}</span>
-                        <ChevronRight className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ChevronRight className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-[var(--dashboard-text-secondary)] mt-0.5">
+                      <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">
                         <span>{contract.partyName}</span>
                         <span>•</span>
                         <span>{new Date(contract.createdAt).toLocaleDateString()}</span>
@@ -195,82 +195,82 @@ export default function DashboardSidebar({
               <button
                 onClick={() => setLocation('/analytics')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
-                  activePage === 'analytics' && "bg-[var(--dashboard-hover)]",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  activePage === 'analytics' && "bg-[rgba(183,222,232,0.1)]",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
               >
-                <BarChart3 className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] flex-shrink-0" />
+                <BarChart3 className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/parties')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
-                  activePage === 'parties' && "bg-[var(--dashboard-hover)]",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  activePage === 'parties' && "bg-[rgba(183,222,232,0.1)]",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
               >
-                <Users className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] flex-shrink-0" />
+                <Users className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/notifications')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
-                  activePage === 'notifications' && "bg-[var(--dashboard-hover)]",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  activePage === 'notifications' && "bg-[rgba(183,222,232,0.1)]",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isCollapsed ? t('الإشعارات', 'Notifications') : undefined}
               >
-                <Bell className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] flex-shrink-0" />
+                <Bell className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isCollapsed && <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>}
               </button>
               
               <button
                 onClick={() => setLocation('/tags')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
-                  activePage === 'tags' && "bg-[var(--dashboard-hover)]",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  activePage === 'tags' && "bg-[rgba(183,222,232,0.1)]",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isCollapsed ? t('العلامات والفئات', 'Tags & Categories') : undefined}
               >
-                <Tag className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] flex-shrink-0" />
+                <Tag className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
             </div>
 
             {/* Divider */}
-            <div className="my-3 border-t border-[var(--dashboard-divider)]" />
+            <div className="my-3 border-t border-[rgba(183,222,232,0.1)]" />
 
             {/* Settings & Help */}
             <div className="space-y-1">
               <button
                 onClick={() => setLocation('/settings/personal')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isCollapsed ? t('الإعدادات', 'Settings') : undefined}
               >
-                <Settings className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] flex-shrink-0" />
+                <Settings className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isCollapsed && <span className="text-sm">{t('الإعدادات', 'Settings')}</span>}
               </button>
 
               <button
                 onClick={() => setLocation('/help')}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isCollapsed ? t('مركز المساعدة', 'Help Center') : undefined}
               >
-                <HelpCircle className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] flex-shrink-0" />
+                <HelpCircle className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
                 {!isCollapsed && <span className="text-sm">{t('مركز المساعدة', 'Help Center')}</span>}
               </button>
             </div>
@@ -278,16 +278,16 @@ export default function DashboardSidebar({
         </div>
 
         {/* Bottom Profile Section */}
-        <div className="border-t border-[var(--dashboard-divider)] p-3">
+        <div className="border-t border-[rgba(183,222,232,0.1)] p-3">
           <button
             onClick={handleLogout}
             className={cn(
-              "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+              "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
               isCollapsed ? "justify-center px-2" : "px-3"
             )}
             title={isCollapsed ? t('تسجيل الخروج', 'Log Out') : undefined}
           >
-            <LogOut className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] flex-shrink-0" />
+            <LogOut className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
             {!isCollapsed && <span className="text-sm">{t('تسجيل الخروج', 'Log Out')}</span>}
           </button>
         </div>
@@ -295,7 +295,7 @@ export default function DashboardSidebar({
         {/* Mobile Close Button */}
         <button
           onClick={() => setShowMobile(false)}
-          className="lg:hidden absolute top-3 right-3 p-2 hover:bg-[var(--dashboard-hover)] rounded-md transition-colors"
+          className="lg:hidden absolute top-3 right-3 p-2 hover:bg-[rgba(183,222,232,0.1)] rounded-md transition-colors"
         >
           <X className="w-5 h-5" />
         </button>

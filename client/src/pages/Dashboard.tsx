@@ -41,8 +41,6 @@ import AnalyticsReports from "@/pages/AnalyticsReports";
 import PartiesContacts from "@/pages/PartiesContacts";
 import Notifications from "@/pages/Notifications";
 import TagsCategories from "@/pages/TagsCategories";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface User {
   id: number;
@@ -355,18 +353,17 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <ThemeProvider>
-    <div className={cn("relative flex h-screen bg-[var(--dashboard-bg)] overflow-hidden", isRTL && "flex-row-reverse")}>
+    <div className={cn("relative flex h-screen bg-gradient-to-br from-[#0C2836] to-[#1a3a4a] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "bg-[var(--dashboard-bg-secondary)] text-[var(--dashboard-text-primary)] flex flex-col transition-all duration-300 shadow-[var(--dashboard-shadow)]",
+        "bg-[#0C2836] text-white flex flex-col transition-all duration-300 shadow-xl",
         isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
         showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40",
         isRTL && "lg:order-2"
       )}>
         {/* Logo and Hamburger */}
-        <div className="flex items-center justify-between p-3 border-b border-[var(--dashboard-border)]">
+        <div className="flex items-center justify-between p-3 border-b border-[rgba(183,222,232,0.2)]">
           <img 
             src={logoImage} 
             alt="ContraMind" 
@@ -377,7 +374,7 @@ export default function Dashboard() {
           />
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="p-2 hover:bg-[var(--dashboard-hover)] rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
+            className="p-2 hover:bg-[rgba(183,222,232,0.1)] rounded-md transition-colors flex-shrink-0 relative w-9 h-9 flex items-center justify-center"
           >
             {/* Hamburger Menu */}
             <div className={cn(
@@ -402,14 +399,14 @@ export default function Dashboard() {
         </div>
 
         {/* New Contract Analysis Button */}
-        <div className="p-3 border-b border-[var(--dashboard-border)]">
+        <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
           <button
             onClick={() => {
               archiveCurrentChat();
               setIsUploadModalOpen(true);
             }}
             className={cn(
-              "w-full flex items-center gap-2 py-2.5 bg-[var(--dashboard-accent)] text-[var(--dashboard-bg-secondary)] rounded-md hover:opacity-90 transition-all duration-200 font-medium shadow-sm hover:shadow-md",
+              "w-full flex items-center gap-2 py-2.5 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#a5d0db] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
               isSidebarCollapsed ? "justify-center px-2" : "justify-center px-4"
             )}
           >
@@ -420,15 +417,15 @@ export default function Dashboard() {
 
         {/* Contract Search Box */}
         {!isSidebarCollapsed && (
-          <div className="p-3 border-b border-[var(--dashboard-border)]">
+          <div className="p-3 border-b border-[rgba(183,222,232,0.2)]">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--dashboard-text-secondary)]" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[rgba(183,222,232,0.6)]" />
               <input
                 type="text"
                 value={contractSearchQuery}
                 onChange={(e) => setContractSearchQuery(e.target.value)}
                 placeholder={t('البحث في محادثات العقود...', 'Search contract chats...')}
-                className="w-full pl-10 pr-3 py-2 bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)] placeholder-[var(--dashboard-text-secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--dashboard-accent)] transition-all duration-200"
+                className="w-full pl-10 pr-3 py-2 bg-[rgba(183,222,232,0.1)] text-white placeholder-[rgba(183,222,232,0.6)] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B7DEE8] transition-all duration-200"
               />
             </div>
           </div>
@@ -440,16 +437,16 @@ export default function Dashboard() {
           {!isSidebarCollapsed && (
             <div className="p-3">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-[var(--dashboard-accent)] uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
-                <button className="text-xs text-[var(--dashboard-accent)] hover:opacity-80 transition-opacity">
+                <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
                   {t('عرض الكل', 'View All')}
                 </button>
               </div>
               <div className="space-y-1">
                 {archivedChats.length === 0 ? (
-                  <p className="text-xs text-[var(--dashboard-text-secondary)] italic p-2">
+                  <p className="text-xs text-[rgba(183,222,232,0.6)] italic p-2">
                     {t('لا توجد محادثات مؤرشفة', 'No archived chats')}
                   </p>
                 ) : (
@@ -458,15 +455,15 @@ export default function Dashboard() {
                       key={archive.id}
                       onClick={() => loadArchivedChat(archive)}
                       className={cn(
-                        "w-full text-left p-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
-                        selectedContract?.id === archive.contract.id && "bg-[var(--dashboard-hover)]"
+                        "w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                        selectedContract?.id === archive.contract.id && "bg-[rgba(183,222,232,0.1)]"
                       )}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-sm truncate">{archive.filename}</span>
-                        <ChevronRight className="w-4 h-4 text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ChevronRight className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-[var(--dashboard-text-secondary)] mt-0.5">
+                      <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">
                         <span>{archive.contract.partyName}</span>
                         <span>•</span>
                         <span>{new Date(archive.timestamp).toLocaleDateString()}</span>
@@ -494,17 +491,17 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  !matchAnalytics && !matchParties && !matchNotifications && !matchTags && "bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)]"
+                  !matchAnalytics && !matchParties && !matchNotifications && !matchTags && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('لوحة التحكم', 'Dashboard') : undefined}
               >
-                <Home className={cn("w-4 h-4 flex-shrink-0", !matchAnalytics && !matchParties && !matchNotifications && !matchTags ? "text-[var(--dashboard-text-primary)]" : "text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)]")} />
+                <Home className={cn("w-4 h-4 flex-shrink-0", !matchAnalytics && !matchParties && !matchNotifications && !matchTags ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
               </button>
 
-              <div className="my-2 border-t border-[var(--dashboard-border)]"></div>
+              <div className="my-2 border-t border-[rgba(183,222,232,0.1)]"></div>
 
               <button
                 onClick={() => {
@@ -513,13 +510,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchAnalytics && "bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)]"
+                  matchAnalytics && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
               >
-                <BarChart3 className={cn("w-4 h-4 flex-shrink-0", matchAnalytics ? "text-[var(--dashboard-text-primary)]" : "text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)]")} />
+                <BarChart3 className={cn("w-4 h-4 flex-shrink-0", matchAnalytics ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
               </button>
               
@@ -530,13 +527,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchParties && "bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)]"
+                  matchParties && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
               >
-                <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-[var(--dashboard-text-primary)]" : "text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)]")} />
+                <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
               </button>
               
@@ -547,13 +544,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchNotifications && "bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)]"
+                  matchNotifications && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('الإشعارات', 'Notifications') : undefined}
               >
-                <Bell className={cn("w-4 h-4 flex-shrink-0", matchNotifications ? "text-[var(--dashboard-text-primary)]" : "text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)]")} />
+                <Bell className={cn("w-4 h-4 flex-shrink-0", matchNotifications ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('الإشعارات', 'Notifications')}</span>}
               </button>
               
@@ -564,13 +561,13 @@ export default function Dashboard() {
                   setShowMobileSidebar(false);
                 }}
                 className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--dashboard-hover)] transition-colors group",
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchTags && "bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)]"
+                  matchTags && "bg-[rgba(183,222,232,0.15)] text-white"
                 )}
                 title={isSidebarCollapsed ? t('العلامات والفئات', 'Tags & Categories') : undefined}
               >
-                <Tag className={cn("w-4 h-4 flex-shrink-0", matchTags ? "text-[var(--dashboard-text-primary)]" : "text-[var(--dashboard-text-secondary)] group-hover:text-[var(--dashboard-text-primary)]")} />
+                <Tag className={cn("w-4 h-4 flex-shrink-0", matchTags ? "text-white" : "text-[rgba(183,222,232,0.6)] group-hover:text-white")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('العلامات والفئات', 'Tags & Categories')}</span>}
               </button>
             </div>
@@ -592,7 +589,7 @@ export default function Dashboard() {
       <button
         onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[var(--dashboard-bg-secondary)] text-[var(--dashboard-text-primary)] rounded-md shadow-lg",
+          "lg:hidden fixed top-4 z-50 p-2 bg-[#0C2836] text-white rounded-md shadow-lg",
           isRTL ? "right-4" : "left-4",
           showMobileSidebar && "hidden"
         )}
@@ -611,14 +608,9 @@ export default function Dashboard() {
         isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {/* Top Header Bar */}
-        <div className="flex-shrink-0 bg-[var(--dashboard-bg-secondary)] px-4 py-3 relative z-40 border-b border-[var(--dashboard-border)]">
+        <div className="flex-shrink-0 bg-[#0C2836] px-4 py-3 relative z-40">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
-            
-            {/* Theme Toggle */}
-            <div className="mr-4">
-              <ThemeToggle />
-            </div>
             
             {/* Language Toggle */}
             <button
@@ -626,7 +618,7 @@ export default function Dashboard() {
                 const newLang = language === 'ar' ? 'en' : 'ar';
                 setLanguage(newLang);
               }}
-              className="mr-8 px-3 py-1.5 bg-[var(--dashboard-hover)] hover:bg-[var(--dashboard-hover)] rounded-md transition-all duration-200 text-sm font-medium text-[var(--dashboard-text-primary)] flex items-center gap-2 relative z-50 cursor-pointer border border-[var(--dashboard-border)]"
+              className="mr-8 px-3 py-1.5 bg-[rgba(183,222,232,0.1)] hover:bg-[rgba(183,222,232,0.2)] rounded-md transition-all duration-200 text-sm font-medium text-white flex items-center gap-2 relative z-50 cursor-pointer"
             >
               <Globe className="w-4 h-4" />
               {language === 'ar' ? 'EN' : 'AR'}
@@ -680,8 +672,8 @@ export default function Dashboard() {
                       className={cn(
                         "max-w-[80%] rounded-lg px-4 py-2",
                         message.type === 'user' 
-                          ? 'bg-[var(--dashboard-message-user)] text-[var(--dashboard-text-primary)]' 
-                          : 'bg-[var(--dashboard-hover)] text-[var(--dashboard-text-primary)] border border-[var(--dashboard-border)]'
+                          ? 'bg-[#1a4158] text-white' 
+                          : 'bg-[rgba(183,222,232,0.1)] text-gray-100 border border-[rgba(183,222,232,0.2)]'
                       )}
                     >
                       <p className="whitespace-pre-wrap">{message.content}</p>
@@ -724,7 +716,7 @@ export default function Dashboard() {
                 {/* Welcome Text Above Input Bar - Only when no messages */}
                 {!hasStartedChat && (
                   <div className="text-center mb-12">
-                    <h1 className="text-2xl font-medium text-[var(--dashboard-text-primary)]">
+                    <h1 className="text-2xl font-medium text-white">
                       {isRTL 
                         ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
                         : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
@@ -732,7 +724,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                 )}
-                <div className="bg-[var(--dashboard-hover)] p-3 rounded-lg">
+                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                 <div className="relative">
                   <input
                     type="text"
@@ -747,7 +739,7 @@ export default function Dashboard() {
                     }}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-white border border-[var(--dashboard-border)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[var(--dashboard-accent)] focus:ring-2 focus:ring-[var(--dashboard-accent)] focus:ring-opacity-50",
+                      "w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     maxLength={500}
@@ -762,7 +754,7 @@ export default function Dashboard() {
                       className={cn(
                         "p-1.5 rounded transition-colors",
                         inputValue.trim() && userTokens >= 5
-                          ? "text-[var(--dashboard-text-primary)] hover:bg-[var(--dashboard-hover)]"
+                          ? "text-white hover:bg-[rgba(183,222,232,0.1)]"
                           : "text-gray-600 cursor-not-allowed"
                       )}
                     >
@@ -776,7 +768,7 @@ export default function Dashboard() {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex flex-col h-full bg-[var(--dashboard-bg)] relative">
+          <div className="flex flex-col h-full bg-[#0C2836] relative">
             {/* Messages/Content Area */}
             <div className="flex-1 overflow-y-auto flex flex-col">
               <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
@@ -804,7 +796,7 @@ export default function Dashboard() {
               <div className="w-full max-w-3xl px-6">
                 {/* Welcome Text Above Input Bar */}
                 <div className="text-center mb-12">
-                  <h1 className="text-2xl font-medium text-[var(--dashboard-text-primary)]">
+                  <h1 className="text-2xl font-medium text-white">
                     {isRTL 
                       ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
                       : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
@@ -813,7 +805,7 @@ export default function Dashboard() {
                 </div>
                 
                 {/* Input Bar */}
-                <div className="bg-[var(--dashboard-hover)] p-3 rounded-lg">
+                <div className="bg-[rgba(183,222,232,0.1)] p-3 rounded-lg">
                   <div className="relative">
                     <input
                     type="text"
@@ -822,7 +814,7 @@ export default function Dashboard() {
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
                     className={cn(
-                      "w-full bg-white border border-[var(--dashboard-border)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[var(--dashboard-accent)] focus:ring-2 focus:ring-[var(--dashboard-accent)] focus:ring-opacity-50",
+                      "w-full bg-white border border-[rgba(183,222,232,0.2)] rounded-lg py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#B7DEE8] focus:ring-2 focus:ring-[#B7DEE8] focus:ring-opacity-50",
                       isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
                     )}
                     onKeyDown={(e) => {
@@ -903,12 +895,12 @@ export default function Dashboard() {
                             }
                           }}
                           className={cn(
-                            "p-3 bg-[var(--dashboard-hover)] border border-[var(--dashboard-border)] rounded-lg hover:bg-[var(--dashboard-hover)] hover:border-[var(--dashboard-accent)] transition-all duration-300",
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
                             isRTL ? "text-right" : "text-left"
                           )}
                         >
-                          <p className="text-sm text-[var(--dashboard-text-primary)]">{t('تحليل المخاطر', 'Risk Analysis')}</p>
-                          <p className="text-xs text-[var(--dashboard-text-secondary)] mt-1">{t('حدد المخاطر الرئيسية', 'Identify key risks')}</p>
+                          <p className="text-sm text-white">{t('تحليل المخاطر', 'Risk Analysis')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('حدد المخاطر الرئيسية', 'Identify key risks')}</p>
                         </button>
                         <button
                           onClick={() => {
@@ -918,12 +910,12 @@ export default function Dashboard() {
                             }
                           }}
                           className={cn(
-                            "p-3 bg-[var(--dashboard-hover)] border border-[var(--dashboard-border)] rounded-lg hover:bg-[var(--dashboard-hover)] hover:border-[var(--dashboard-accent)] transition-all duration-300",
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
                             isRTL ? "text-right" : "text-left"
                           )}
                         >
-                          <p className="text-sm text-[var(--dashboard-text-primary)]">{t('ملخص العقد', 'Contract Summary')}</p>
-                          <p className="text-xs text-[var(--dashboard-text-secondary)] mt-1">{t('البنود الرئيسية', 'Key clauses')}</p>
+                          <p className="text-sm text-white">{t('ملخص العقد', 'Contract Summary')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('البنود الرئيسية', 'Key clauses')}</p>
                         </button>
                         <button
                           onClick={() => {
@@ -933,12 +925,12 @@ export default function Dashboard() {
                             }
                           }}
                           className={cn(
-                            "p-3 bg-[var(--dashboard-hover)] border border-[var(--dashboard-border)] rounded-lg hover:bg-[var(--dashboard-hover)] hover:border-[var(--dashboard-accent)] transition-all duration-300",
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
                             isRTL ? "text-right" : "text-left"
                           )}
                         >
-                          <p className="text-sm text-[var(--dashboard-text-primary)]">{t('شروط الدفع', 'Payment Terms')}</p>
-                          <p className="text-xs text-[var(--dashboard-text-secondary)] mt-1">{t('تفاصيل الدفع', 'Payment details')}</p>
+                          <p className="text-sm text-white">{t('شروط الدفع', 'Payment Terms')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('تفاصيل الدفع', 'Payment details')}</p>
                         </button>
                         <button
                           onClick={() => {
@@ -948,17 +940,17 @@ export default function Dashboard() {
                             }
                           }}
                           className={cn(
-                            "p-3 bg-[var(--dashboard-hover)] border border-[var(--dashboard-border)] rounded-lg hover:bg-[var(--dashboard-hover)] hover:border-[var(--dashboard-accent)] transition-all duration-300",
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
                             isRTL ? "text-right" : "text-left"
                           )}
                         >
-                          <p className="text-sm text-[var(--dashboard-text-primary)]">{t('بنود الإنهاء', 'Termination Clauses')}</p>
-                          <p className="text-xs text-[var(--dashboard-text-secondary)] mt-1">{t('شروط الإلغاء', 'Cancellation terms')}</p>
+                          <p className="text-sm text-white">{t('بنود الإنهاء', 'Termination Clauses')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('شروط الإلغاء', 'Cancellation terms')}</p>
                         </button>
                       </>
                     ) : (
                       <div className="col-span-2 text-center py-8">
-                        <p className="text-[var(--dashboard-text-secondary)] text-sm">{t('لا توجد موجهات محفوظة', 'No saved prompts')}</p>
+                        <p className="text-[rgba(183,222,232,0.6)] text-sm">{t('لا توجد موجهات محفوظة', 'No saved prompts')}</p>
                       </div>
                     )}
                   </div>
@@ -982,7 +974,7 @@ export default function Dashboard() {
       {/* Sliding Panel */}
       <div 
         className={cn(
-          "fixed inset-y-0 w-[40%] bg-[var(--dashboard-panel-bg)] shadow-2xl transition-transform duration-300 ease-in-out",
+          "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out",
           !isRTL ? "right-0" : "left-0"
         )}
         style={{ 
@@ -993,16 +985,16 @@ export default function Dashboard() {
         }}>
         <div className="h-full flex flex-col">
           {/* Panel Header */}
-          <div className="flex items-center justify-between p-4 border-b border-[var(--dashboard-border)]">
-            <h2 className="text-lg font-semibold text-[var(--dashboard-panel-text)]">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-800">
               {slidingPanelContent === 'prompts' && t('اختر موجه', 'Select a Prompt')}
               {slidingPanelContent === 'contractDetails' && t('تفاصيل العقد', 'Contract Details')}
             </h2>
             <button
               onClick={closeSlidingPanel}
-              className="p-2 hover:bg-[var(--dashboard-hover)] rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <X className="w-5 h-5 text-[var(--dashboard-text-secondary)]" />
+              <X className="w-5 h-5 text-gray-500" />
             </button>
           </div>
 
@@ -1011,11 +1003,11 @@ export default function Dashboard() {
             {slidingPanelContent === 'prompts' && (
               <div className="p-4">
                 {/* Prompt Tabs */}
-                <div className="flex space-x-1 mb-4 bg-[var(--dashboard-hover)] p-1 rounded-lg">
+                <div className="flex space-x-1 mb-4 bg-gray-100 p-1 rounded-lg">
                   <button
                     className={cn(
                       "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200",
-                      "bg-[var(--dashboard-panel-bg)] text-[var(--dashboard-panel-text)] shadow-sm"
+                      "bg-white text-gray-900 shadow-sm"
                     )}
                   >
                     {t('موجهات ContraMind', 'ContraMind Prompts')}
@@ -1023,7 +1015,7 @@ export default function Dashboard() {
                   <button
                     className={cn(
                       "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200",
-                      "text-[var(--dashboard-text-secondary)] hover:text-[var(--dashboard-panel-text)]"
+                      "text-gray-600 hover:text-gray-900"
                     )}
                   >
                     {t('موجهاتي المحفوظة', 'My Saved Prompts')}
@@ -1032,25 +1024,25 @@ export default function Dashboard() {
 
                 {/* ContraMind Prompts List */}
                 <div className="space-y-3">
-                  <div className="p-4 border border-[var(--dashboard-border)] rounded-lg hover:border-[var(--dashboard-accent)] hover:bg-[var(--dashboard-hover)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--dashboard-panel-text)] mb-1">{t('تحليل شامل للعقد', 'Comprehensive Contract Analysis')}</h3>
-                    <p className="text-sm text-[var(--dashboard-text-secondary)]">{t('تحليل كامل للعقد مع تحديد المخاطر والفرص', 'Complete contract analysis with risk and opportunity identification')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('تحليل شامل للعقد', 'Comprehensive Contract Analysis')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل كامل للعقد مع تحديد المخاطر والفرص', 'Complete contract analysis with risk and opportunity identification')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--dashboard-border)] rounded-lg hover:border-[var(--dashboard-accent)] hover:bg-[var(--dashboard-hover)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--dashboard-panel-text)] mb-1">{t('مراجعة بنود المسؤولية', 'Liability Clause Review')}</h3>
-                    <p className="text-sm text-[var(--dashboard-text-secondary)]">{t('تحليل مفصل لبنود المسؤولية والتعويضات', 'Detailed analysis of liability and indemnification clauses')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('مراجعة بنود المسؤولية', 'Liability Clause Review')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل مفصل لبنود المسؤولية والتعويضات', 'Detailed analysis of liability and indemnification clauses')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--dashboard-border)] rounded-lg hover:border-[var(--dashboard-accent)] hover:bg-[var(--dashboard-hover)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--dashboard-panel-text)] mb-1">{t('فحص شروط الدفع', 'Payment Terms Check')}</h3>
-                    <p className="text-sm text-[var(--dashboard-text-secondary)]">{t('مراجعة شروط الدفع والجداول الزمنية', 'Review payment terms and schedules')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('فحص شروط الدفع', 'Payment Terms Check')}</h3>
+                    <p className="text-sm text-gray-600">{t('مراجعة شروط الدفع والجداول الزمنية', 'Review payment terms and schedules')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--dashboard-border)] rounded-lg hover:border-[var(--dashboard-accent)] hover:bg-[var(--dashboard-hover)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--dashboard-panel-text)] mb-1">{t('تحليل الملكية الفكرية', 'IP Rights Analysis')}</h3>
-                    <p className="text-sm text-[var(--dashboard-text-secondary)]">{t('مراجعة حقوق الملكية الفكرية والترخيص', 'Review intellectual property rights and licensing')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('تحليل الملكية الفكرية', 'IP Rights Analysis')}</h3>
+                    <p className="text-sm text-gray-600">{t('مراجعة حقوق الملكية الفكرية والترخيص', 'Review intellectual property rights and licensing')}</p>
                   </div>
-                  <div className="p-4 border border-[var(--dashboard-border)] rounded-lg hover:border-[var(--dashboard-accent)] hover:bg-[var(--dashboard-hover)] cursor-pointer transition-all duration-200">
-                    <h3 className="font-medium text-[var(--dashboard-panel-text)] mb-1">{t('شروط الإنهاء', 'Termination Clauses')}</h3>
-                    <p className="text-sm text-[var(--dashboard-text-secondary)]">{t('تحليل شروط إنهاء العقد والعواقب', 'Analyze contract termination conditions and consequences')}</p>
+                  <div className="p-4 border border-gray-200 rounded-lg hover:border-[#B7DEE8] hover:bg-gray-50 cursor-pointer transition-all duration-200">
+                    <h3 className="font-medium text-gray-900 mb-1">{t('شروط الإنهاء', 'Termination Clauses')}</h3>
+                    <p className="text-sm text-gray-600">{t('تحليل شروط إنهاء العقد والعواقب', 'Analyze contract termination conditions and consequences')}</p>
                   </div>
                 </div>
               </div>
@@ -1060,24 +1052,24 @@ export default function Dashboard() {
               <div className="p-4">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--dashboard-text-secondary)] mb-1">{t('اسم العقد', 'Contract Name')}</h3>
-                    <p className="text-[var(--dashboard-panel-text)]">{selectedContract?.title}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('اسم العقد', 'Contract Name')}</h3>
+                    <p className="text-gray-900">{selectedContract?.title}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--dashboard-text-secondary)] mb-1">{t('التاريخ', 'Date')}</h3>
-                    <p className="text-[var(--dashboard-panel-text)]">{selectedContract?.date}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('التاريخ', 'Date')}</h3>
+                    <p className="text-gray-900">{selectedContract?.date}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--dashboard-text-secondary)] mb-1">{t('مستوى المخاطر', 'Risk Level')}</h3>
-                    <p className="text-[var(--dashboard-panel-text)]">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('مستوى المخاطر', 'Risk Level')}</h3>
+                    <p className="text-gray-900">
                       {selectedContract?.riskLevel === 'low' && '🟢 ' + t('منخفض', 'Low')}
                       {selectedContract?.riskLevel === 'medium' && '🟡 ' + t('متوسط', 'Medium')}
                       {selectedContract?.riskLevel === 'high' && '🔴 ' + t('عالي', 'High')}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-[var(--dashboard-text-secondary)] mb-1">{t('الحالة', 'Status')}</h3>
-                    <p className="text-[var(--dashboard-panel-text)]">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">{t('الحالة', 'Status')}</h3>
+                    <p className="text-gray-900">
                       {selectedContract?.status === 'analyzing' ? t('قيد التحليل', 'Analyzing') : t('جاهز', 'Ready')}
                     </p>
                   </div>
@@ -1097,6 +1089,5 @@ export default function Dashboard() {
         />
       )}
     </div>
-    </ThemeProvider>
   );
 }
