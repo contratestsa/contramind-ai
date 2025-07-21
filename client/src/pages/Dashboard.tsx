@@ -112,7 +112,8 @@ export default function Dashboard() {
   const hasStartedChat = messages.length > 0;
 
   // Use persistent recent contracts from API
-  const { recent: recentContracts, isLoading: isLoadingRecent, touch: touchContract } = useRecentContracts(5);
+  const { recent: recentContracts, isLoading: isLoadingRecent, touch: touchContract } = useRecentContracts(10);
+  const [showAllContracts, setShowAllContracts] = useState(false);
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -507,11 +508,13 @@ export default function Dashboard() {
                 <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
-                <button 
-                  onClick={() => setLocation('/dashboard/contracts')}
-                  className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
-                  {t('عرض الكل', 'View All')}
-                </button>
+                {recentContracts.length > 3 && (
+                  <button 
+                    onClick={() => setShowAllContracts(!showAllContracts)}
+                    className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
+                    {showAllContracts ? t('عرض أقل', 'Show Less') : t('عرض الكل', 'View All')}
+                  </button>
+                )}
               </div>
               <div className="space-y-1">
                 {isLoadingRecent ? (
@@ -523,35 +526,37 @@ export default function Dashboard() {
                     {t('لا توجد عقود حديثة', 'No recent contracts')}
                   </p>
                 ) : (
-                  recentContracts.slice(0, 5).map((contract) => (
-                    <button
-                      key={contract.id}
-                      onClick={() => {
-                        touchContract(contract.id);
-                        setSelectedContract(contract);
-                        loadContractMessages(contract);
-                      }}
-                      className={cn(
-                        "w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
-                        selectedContract?.id === contract.id && "bg-[rgba(183,222,232,0.1)]"
-                      )}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm truncate">{contract.title}</span>
-                        <ChevronRight className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">
-                        <span>{contract.partyName}</span>
-                        <span>•</span>
-                        <span>{new Date(contract.date).toLocaleDateString()}</span>
-                        <span className="ml-auto">
-                          {contract.riskLevel === 'low' && '🟢'}
-                          {contract.riskLevel === 'medium' && '🟡'}
-                          {contract.riskLevel === 'high' && '🔴'}
-                      </span>
-                    </div>
-                  </button>
-                  ))
+                  <>
+                    {(showAllContracts ? recentContracts : recentContracts.slice(0, 3)).map((contract) => (
+                      <button
+                        key={contract.id}
+                        onClick={() => {
+                          touchContract(contract.id);
+                          setSelectedContract(contract);
+                          loadContractMessages(contract);
+                        }}
+                        className={cn(
+                          "w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                          selectedContract?.id === contract.id && "bg-[rgba(183,222,232,0.1)]"
+                        )}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm truncate">{contract.title}</span>
+                          <ChevronRight className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">
+                          <span>{contract.partyName}</span>
+                          <span>•</span>
+                          <span>{new Date(contract.date).toLocaleDateString()}</span>
+                          <span className="ml-auto">
+                            {contract.riskLevel === 'low' && '🟢'}
+                            {contract.riskLevel === 'medium' && '🟡'}
+                            {contract.riskLevel === 'high' && '🔴'}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </>
                 )}
               </div>
             </div>

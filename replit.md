@@ -5,6 +5,12 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
+  - **Improved Recent Contracts Display**: Enhanced the sidebar recent contracts functionality
+    - Shows only 3 contracts initially with expandable "View All" button
+    - Button toggles between "View All" and "Show Less" within the sidebar
+    - Fixed Dashboard page to use persistent recent contracts from API
+    - Replaced local archivedChats state with useRecentContracts hook
+    - Recent contracts now properly persist across logout/login sessions
   - **Implemented Persistent Recent Contracts**: Recent contracts now persist across sessions and devices
     - Added `last_viewed_at` column to contracts table in database
     - Created `/api/contracts/touch` endpoint to update last viewed timestamp
