@@ -186,7 +186,7 @@ export default function Dashboard() {
     const randomRisk = riskLevels[Math.floor(Math.random() * riskLevels.length)];
     
     // Extract contract type from filename or use default
-    const contractTypes = ['service', 'nda', 'employment', 'lease', 'sale', 'partnership'];
+    const contractTypes = ['service', 'nda', 'employment', 'sales', 'other'];
     const randomType = contractTypes[Math.floor(Math.random() * contractTypes.length)];
     
     try {

@@ -5,6 +5,12 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
+  - **Fixed Contract Upload Database Constraint Error**: Resolved contract type validation issue
+    - Updated allowed contract types to match database constraints: 'service', 'nda', 'employment', 'sales', 'other'
+    - Removed invalid types 'partnership' and 'lease' that were causing database constraint violations
+    - Fixed both Dashboard.tsx (frontend) and analytics route (backend) to use correct contract types
+    - Database check constraint allows only: service, sales, employment, nda, other
+- **July 21, 2025** (Earlier):
   - **Redesigned Analytics & Reports Page with Light Theme**: Complete redesign from dark to light theme
     - Updated to ContraMind's light theme brand palette (#F6F6F6 background, #0C2836 text, white cards with #E6E6E6 borders)
     - Implemented KPI header showing unique documents count from real data

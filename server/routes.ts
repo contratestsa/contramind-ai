@@ -771,9 +771,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'service': 'Service Agreement',
         'nda': 'NDA',
         'employment': 'Employment Contract',
-        'lease': 'Lease Agreement',
-        'sale': 'Sale Agreement',
-        'partnership': 'Partnership Agreement'
+        'sales': 'Sales Agreement',
+        'other': 'Other'
       };
       
       userContracts.forEach(contract => {
