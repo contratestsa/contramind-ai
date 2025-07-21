@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import {
-  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  PieChart, Pie, Cell,
   Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { type DashboardData } from '@/mocks/analyticsData';
@@ -89,30 +89,7 @@ const DonutChart = ({ data, colors, centerText, showMore = false }: {
   );
 };
 
-// Horizontal bar chart component
-const HorizontalBarChart = ({ data, color }: { data: any[], color: string }) => {
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart 
-        data={data} 
-        layout="horizontal"
-        margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
-        <XAxis type="number" stroke="#0C2836" />
-        <YAxis 
-          dataKey="name" 
-          type="category" 
-          stroke="#0C2836"
-          tick={{ fontSize: 12 }}
-          width={90}
-        />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="value" fill={color} radius={[0, 4, 4, 0]} />
-      </BarChart>
-    </ResponsiveContainer>
-  );
-};
+
 
 export default function AnalyticsReports() {
   const { language, t } = useLanguage();
@@ -211,6 +188,9 @@ export default function AnalyticsReports() {
   const contractTypeColors = ['#B7DEE8', '#92CED9', '#6DBECA', '#48AEBB', '#239EAC', '#0C8E9D', '#0C7E8E', '#0C6E7F', '#0C5E70', '#0C4E61'];
   const executedColors = ['#B7DEE8', '#F87171'];
   const languageColors = ['#B7DEE8', '#0C8E9D', '#0C2836'];
+  const internalPartiesColors = ['#B7DEE8', '#92CED9', '#6DBECA', '#48AEBB', '#239EAC', '#0C8E9D', '#0C7E8E', '#0C6E7F', '#0C5E70', '#0C4E61'];
+  const counterpartiesColors = ['#B7DEE8', '#92CED9', '#6DBECA', '#48AEBB', '#239EAC', '#0C8E9D', '#0C7E8E', '#0C6E7F', '#0C5E70', '#0C4E61'];
+  const governingLawColors = ['#B7DEE8', '#92CED9', '#6DBECA', '#48AEBB', '#239EAC', '#0C8E9D', '#0C7E8E', '#0C6E7F', '#0C5E70', '#0C4E61'];
 
   return (
     <div className="bg-[#F6F6F6]">
@@ -302,7 +282,7 @@ export default function AnalyticsReports() {
               />
             </motion.div>
 
-            {/* Internal Parties Bar */}
+            {/* Internal Parties Donut */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -312,10 +292,15 @@ export default function AnalyticsReports() {
               <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('الأطراف الداخلية', 'Internal Parties')}
               </h3>
-              <HorizontalBarChart data={internalPartiesData} color="#B7DEE8" />
+              <DonutChart 
+                data={internalPartiesData} 
+                colors={internalPartiesColors} 
+                centerText={`${internalPartiesData.length} Depts`}
+                showMore={true}
+              />
             </motion.div>
 
-            {/* Counterparties Bar */}
+            {/* Counterparties Donut */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -325,10 +310,15 @@ export default function AnalyticsReports() {
               <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('الأطراف المقابلة', 'Counterparties')}
               </h3>
-              <HorizontalBarChart data={counterpartiesData} color="#B7DEE8" />
+              <DonutChart 
+                data={counterpartiesData} 
+                colors={counterpartiesColors} 
+                centerText={`${counterpartiesData.length} Parties`}
+                showMore={true}
+              />
             </motion.div>
 
-            {/* Governing Law Bar */}
+            {/* Governing Law Donut */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -338,7 +328,12 @@ export default function AnalyticsReports() {
               <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('القانون الحاكم', 'Governing Law')}
               </h3>
-              <HorizontalBarChart data={governingLawData} color="#B7DEE8" />
+              <DonutChart 
+                data={governingLawData} 
+                colors={governingLawColors} 
+                centerText={`${governingLawData.length} Laws`}
+                showMore={true}
+              />
             </motion.div>
           </div>
         </motion.div>
