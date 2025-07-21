@@ -131,22 +131,60 @@ export default function AnalyticsReports() {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-gray-50">
-      <div className="p-4 md:p-6 max-w-7xl mx-auto">
+    <div className="flex-1 overflow-y-auto bg-[#0C2836]">
+      <div className="p-6 max-w-[1400px] mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15 }}
-          className="space-y-4"
+          className="space-y-6"
         >
           {/* Header */}
-          <div className={cn("mb-4", language === 'ar' && "text-right")}>
-            <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
+          <div className={cn("mb-6", language === 'ar' && "text-right")}>
+            <h1 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
               {t('التحليلات والتقارير', 'Analytics & Reports')}
             </h1>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-400 text-base">
               {t('رؤى شاملة حول أداء العقود', 'Comprehensive insights into contract performance')}
             </p>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="bg-[#1a4158] rounded-lg p-4 mb-6">
+            <div className={cn(
+              "flex flex-wrap gap-3 items-center",
+              isRTL && "flex-row-reverse"
+            )}>
+              {/* Date Picker */}
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
+                <Calendar className="w-4 h-4 text-[#B7DEE8]" />
+                <span>{t('تاريخ الرفع: أي وقت', 'Upload Date: Any time')}</span>
+                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
+              </button>
+
+              {/* Contract Type Dropdown */}
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
+                <span>{t('نوع العقد: أي قيمة', 'Contract Type: is any value')}</span>
+                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
+              </button>
+
+              {/* Internal Parties Dropdown */}
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
+                <span>{t('الأطراف الداخلية: أي قيمة', 'Internal Parties: is any value')}</span>
+                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
+              </button>
+
+              {/* Counterparties Dropdown */}
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
+                <span>{t('الأطراف المقابلة: أي قيمة', 'Counterparties: is any value')}</span>
+                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
+              </button>
+
+              {/* More Filters Button */}
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#B7DEE8]/90 transition-colors font-medium">
+                <span>{t('المزيد +3', 'More +3')}</span>
+              </button>
+            </div>
           </div>
 
           {/* KPI Cards - 5 cards as requested */}
@@ -157,24 +195,24 @@ export default function AnalyticsReports() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.15, delay: index * 0.02 }}
-                className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+                className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
               >
                 <div className={cn("flex items-center justify-between mb-2", language === 'ar' && "flex-row-reverse")}>
-                  <kpi.icon className="w-5 h-5 text-[#0C2836]" />
+                  <kpi.icon className="w-5 h-5 text-[#B7DEE8]" />
                   {kpi.trend !== 0 && (
                     <span className={cn(
                       "text-xs flex items-center gap-1",
-                      kpi.trend > 0 ? "text-green-600" : "text-red-600"
+                      kpi.trend > 0 ? "text-green-400" : "text-red-400"
                     )}>
                       <TrendingUp className={cn("w-3 h-3", kpi.trend < 0 && "rotate-180")} />
                       {Math.abs(kpi.trend)}%
                     </span>
                   )}
                 </div>
-                <p className={cn("text-2xl font-bold text-[#0C2836] mb-1", language === 'ar' && "text-right")}>
+                <p className={cn("text-2xl font-bold text-white mb-1", language === 'ar' && "text-right")}>
                   {kpi.value}
                 </p>
-                <p className={cn("text-sm text-gray-600", language === 'ar' && "text-right")}>
+                <p className={cn("text-sm text-gray-400", language === 'ar' && "text-right")}>
                   {kpi.label}
                 </p>
               </motion.div>
@@ -188,13 +226,13 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.1 }}
-              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
             >
               <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                <h3 className="text-lg font-semibold text-[#0C2836]">
+                <h3 className="text-lg font-semibold text-white">
                   {t('اتجاهات وقت الدورة', 'Cycle Time Trends')}
                 </h3>
-                <button className="text-[#B7DEE8] hover:text-[#0C2836] transition-colors">
+                <button className="text-[#B7DEE8] hover:text-white transition-colors">
                   <Download className="w-5 h-5" />
                 </button>
               </div>
@@ -203,11 +241,11 @@ export default function AnalyticsReports() {
               <div className="space-y-3">
                 {cycleTimeData.map((data, index) => (
                   <div key={index} className={cn("flex items-center gap-4", language === 'ar' && "flex-row-reverse")}>
-                    <span className="text-sm text-gray-600 w-12">{data.month}</span>
+                    <span className="text-sm text-gray-400 w-12">{data.month}</span>
                     <div className="flex-1 flex gap-1">
-                      <div className="h-6 bg-[#0C2836] rounded" style={{ width: `${data.nda * 3}px` }} />
-                      <div className="h-6 bg-[#1a4158] rounded" style={{ width: `${data.msa * 3}px` }} />
-                      <div className="h-6 bg-[#B7DEE8] rounded" style={{ width: `${data.sow * 3}px` }} />
+                      <div className="h-6 bg-[#B7DEE8] rounded" style={{ width: `${data.nda * 3}px` }} />
+                      <div className="h-6 bg-[#7ABCCC] rounded" style={{ width: `${data.msa * 3}px` }} />
+                      <div className="h-6 bg-[#4D8FA1] rounded" style={{ width: `${data.sow * 3}px` }} />
                     </div>
                   </div>
                 ))}
@@ -215,16 +253,16 @@ export default function AnalyticsReports() {
               
               <div className={cn("flex gap-6 mt-4 text-xs", language === 'ar' && "flex-row-reverse")}>
                 <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
-                  <div className="w-3 h-3 bg-[#0C2836] rounded" />
-                  <span className="text-gray-600">NDA</span>
-                </div>
-                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
-                  <div className="w-3 h-3 bg-[#1a4158] rounded" />
-                  <span className="text-gray-600">MSA</span>
-                </div>
-                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
                   <div className="w-3 h-3 bg-[#B7DEE8] rounded" />
-                  <span className="text-gray-600">SOW</span>
+                  <span className="text-gray-400">NDA</span>
+                </div>
+                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                  <div className="w-3 h-3 bg-[#7ABCCC] rounded" />
+                  <span className="text-gray-400">MSA</span>
+                </div>
+                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                  <div className="w-3 h-3 bg-[#4D8FA1] rounded" />
+                  <span className="text-gray-400">SOW</span>
                 </div>
               </div>
             </motion.div>
@@ -234,13 +272,13 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.15 }}
-              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
             >
               <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                <h3 className="text-lg font-semibold text-[#0C2836]">
+                <h3 className="text-lg font-semibold text-white">
                   {t('تعديلات العقود', 'Contract Amendments')}
                 </h3>
-                <button className="text-[#B7DEE8] hover:text-[#0C2836] transition-colors">
+                <button className="text-[#B7DEE8] hover:text-white transition-colors">
                   <Download className="w-5 h-5" />
                 </button>
               </div>
@@ -248,14 +286,14 @@ export default function AnalyticsReports() {
               <div className="grid grid-cols-4 gap-4">
                 {amendmentsData.map((data, index) => (
                   <div key={index} className="text-center">
-                    <div className="h-32 bg-gradient-to-t from-[#0C2836] to-[#B7DEE8] rounded-lg mb-2 relative">
+                    <div className="h-32 bg-gradient-to-t from-[#4D8FA1] to-[#B7DEE8] rounded-lg mb-2 relative">
                       <div 
-                        className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg"
+                        className="absolute bottom-0 left-0 right-0 bg-[#0C2836] rounded-t-lg"
                         style={{ height: `${100 - (data.count / 61) * 100}%` }}
                       />
                     </div>
-                    <p className="text-sm text-gray-600">{data.quarter}</p>
-                    <p className="text-lg font-semibold text-[#0C2836]">{data.count}</p>
+                    <p className="text-sm text-gray-400">{data.quarter}</p>
+                    <p className="text-lg font-semibold text-white">{data.count}</p>
                   </div>
                 ))}
               </div>
@@ -269,9 +307,9 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.2 }}
-              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
             >
-              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-white mb-4", language === 'ar' && "text-right")}>
                 {t('التجديدات القادمة', 'Upcoming Renewals')}
               </h3>
 
@@ -280,21 +318,25 @@ export default function AnalyticsReports() {
                   <div 
                     key={index}
                     className={cn(
-                      "flex items-center justify-between p-3 rounded-lg",
-                      renewal.status === 'urgent' ? 'bg-red-50' : renewal.status === 'review' ? 'bg-yellow-50' : 'bg-green-50',
+                      "flex items-center justify-between p-3 rounded-lg border",
+                      renewal.status === 'urgent' ? 'bg-red-900/20 border-red-400/30' : 
+                      renewal.status === 'review' ? 'bg-yellow-900/20 border-yellow-400/30' : 
+                      'bg-green-900/20 border-green-400/30',
                       language === 'ar' && "flex-row-reverse"
                     )}
                   >
                     <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
                       <AlertTriangle className={cn(
                         "w-4 h-4",
-                        renewal.status === 'urgent' ? 'text-red-600' : renewal.status === 'review' ? 'text-yellow-600' : 'text-green-600'
+                        renewal.status === 'urgent' ? 'text-red-400' : 
+                        renewal.status === 'review' ? 'text-yellow-400' : 
+                        'text-green-400'
                       )} />
                       <div className={cn(language === 'ar' && "text-right")}>
-                        <p className="text-gray-900 font-medium">
+                        <p className="text-white font-medium">
                           {renewal.contracts} {t('عقود', 'contracts')}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-400">
                           {t('خلال', 'Within')} {renewal.days} {t('يوم', 'days')}
                         </p>
                       </div>
@@ -309,9 +351,9 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.25 }}
-              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
             >
-              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-white mb-4", language === 'ar' && "text-right")}>
                 {t('تحليل استخدام البنود', 'Clause Usage Analysis')}
               </h3>
 
@@ -319,16 +361,16 @@ export default function AnalyticsReports() {
                 {clauseUsageData.map((clause, index) => (
                   <div key={index} className={cn(language === 'ar' && "text-right")}>
                     <div className={cn("flex items-center justify-between mb-1", language === 'ar' && "flex-row-reverse")}>
-                      <p className="text-sm text-gray-900">{clause.clause}</p>
-                      <p className="text-sm text-gray-600">{clause.usage}%</p>
+                      <p className="text-sm text-white">{clause.clause}</p>
+                      <p className="text-sm text-gray-400">{clause.usage}%</p>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-[#0C2836] rounded-full h-2">
                       <div 
-                        className="bg-[#0C2836] h-2 rounded-full relative"
+                        className="bg-[#B7DEE8] h-2 rounded-full relative"
                         style={{ width: `${clause.usage}%` }}
                       >
                         {clause.deviation > 10 && (
-                          <div className="absolute -right-1 -top-1 w-4 h-4 bg-red-500 rounded-full" />
+                          <div className="absolute -right-1 -top-1 w-4 h-4 bg-red-400 rounded-full" />
                         )}
                       </div>
                     </div>
