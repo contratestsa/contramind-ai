@@ -18,7 +18,7 @@ import {
   type SavedPrompt,
   type InsertSavedPrompt
 } from "@shared/schema";
-import { db, pool } from "./db";
+import { db } from "./db";
 import { eq, and, desc, asc, or, like, sql } from "drizzle-orm";
 
 export interface IStorage {
@@ -56,10 +56,6 @@ export interface IStorage {
   getSystemPrompts(): Promise<SavedPrompt[]>;
   updatePromptUsage(id: number): Promise<void>;
   deleteSavedPrompt(id: number, userId: number): Promise<boolean>;
-  
-  // Chat analytics methods
-  trackChatInteraction(contractId: number, userId: number, question: string, topic: string): Promise<void>;
-  getChatAnalytics(userId: number): Promise<{ topTopics: any[], contractActivity: any[] }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -211,136 +207,48 @@ export class DatabaseStorage implements IStorage {
 
   // Contract methods implementation
   async createContract(insertContract: InsertContract): Promise<Contract> {
-    // Map schema fields to actual database columns
-    const contractData = {
-      userId: insertContract.userId,
-      name: insertContract.title, // 'name' in DB, 'title' in schema
-      parties: insertContract.partyName, // 'parties' in DB, 'partyName' in schema  
-      type: insertContract.type,
-      status: insertContract.status,
-      start_date: new Date(insertContract.date), // 'start_date' in DB, 'date' in schema
-      risk_level: insertContract.riskLevel,
-      file_path: insertContract.fileUrl, // 'file_path' in DB, 'fileUrl' in schema
-    };
-
-    const result = await db.execute(sql`
-      INSERT INTO contracts (user_id, name, parties, type, status, start_date, risk_level, file_path, created_at, updated_at)
-      VALUES (${contractData.userId}, ${contractData.name}, ${contractData.parties}, ${contractData.type}, ${contractData.status}, ${contractData.start_date}, ${contractData.risk_level}, ${contractData.file_path}, NOW(), NOW())
-      RETURNING *
-    `);
-    
-    // Map DB columns back to schema fields
-    const dbContract = result.rows[0] as any;
-    return {
-      id: dbContract.id as number,
-      userId: dbContract.user_id as number,
-      title: dbContract.name as string,
-      partyName: dbContract.parties as string,
-      type: dbContract.type as string,
-      status: dbContract.status as string,
-      date: new Date(dbContract.start_date),
-      riskLevel: dbContract.risk_level as string | null,
-      fileUrl: dbContract.file_path as string | null,
-      createdAt: new Date(dbContract.created_at),
-      updatedAt: new Date(dbContract.updated_at),
-    };
+    const [contract] = await db
+      .insert(contracts)
+      .values({
+        ...insertContract,
+        date: new Date(insertContract.date),
+      })
+      .returning();
+    return contract;
   }
 
   async getContract(id: number): Promise<Contract | undefined> {
-    const result = await db.execute(sql`
-      SELECT 
-        id,
-        user_id,
-        name,
-        parties,
-        type,
-        status,
-        start_date,
-        risk_level,
-        file_path,
-        created_at,
-        updated_at
-      FROM contracts
-      WHERE id = ${id}
-    `);
-    
-    if (result.rows.length === 0) return undefined;
-    
-    const dbContract = result.rows[0] as any;
-    return {
-      id: dbContract.id as number,
-      userId: dbContract.user_id as number,
-      title: dbContract.name as string,
-      partyName: dbContract.parties as string,
-      type: dbContract.type as string,
-      status: dbContract.status as string,
-      date: new Date(dbContract.start_date),
-      riskLevel: dbContract.risk_level as string | null,
-      fileUrl: dbContract.file_path as string | null,
-      createdAt: new Date(dbContract.created_at),
-      updatedAt: new Date(dbContract.updated_at),
-    };
+    const [contract] = await db.select().from(contracts).where(eq(contracts.id, id));
+    return contract || undefined;
   }
 
   async getUserContracts(userId: number, filters?: { status?: string; type?: string; search?: string }): Promise<Contract[]> {
-    let queryText = `
-      SELECT 
-        id,
-        user_id,
-        name,
-        parties,
-        type,
-        status,
-        start_date,
-        risk_level,
-        file_path,
-        created_at,
-        updated_at
-      FROM contracts
-      WHERE user_id = $1
-    `;
-    
-    const params: any[] = [userId];
-    let paramIndex = 2;
+    let query = db.select().from(contracts).where(eq(contracts.userId, userId));
     
     if (filters) {
+      const conditions = [eq(contracts.userId, userId)];
+      
       if (filters.status && filters.status !== 'all') {
-        queryText += ` AND status = $${paramIndex}`;
-        params.push(filters.status);
-        paramIndex++;
+        conditions.push(eq(contracts.status, filters.status));
       }
       
       if (filters.type && filters.type !== 'all') {
-        queryText += ` AND type = $${paramIndex}`;
-        params.push(filters.type);
-        paramIndex++;
+        conditions.push(eq(contracts.type, filters.type));
       }
       
       if (filters.search) {
-        queryText += ` AND (name ILIKE $${paramIndex} OR parties ILIKE $${paramIndex})`;
-        params.push(`%${filters.search}%`);
-        paramIndex++;
+        conditions.push(
+          or(
+            like(contracts.title, `%${filters.search}%`),
+            like(contracts.partyName, `%${filters.search}%`)
+          )!
+        );
       }
+      
+      query = db.select().from(contracts).where(and(...conditions)!);
     }
     
-    queryText += ` ORDER BY created_at DESC`;
-    
-    // Use pool directly for parameterized query
-    const result = await pool.query(queryText, params);
-    
-    return result.rows.map((dbContract: any) => ({
-      id: dbContract.id as number,
-      userId: dbContract.user_id as number,
-      title: dbContract.name as string,
-      partyName: dbContract.parties as string,
-      type: dbContract.type as string,
-      status: dbContract.status as string,
-      date: new Date(dbContract.start_date),
-      riskLevel: dbContract.risk_level as string | null,
-      fileUrl: dbContract.file_path as string | null,
-      createdAt: new Date(dbContract.created_at),
-      updatedAt: new Date(dbContract.updated_at),
-    }));
+    return query.orderBy(desc(contracts.createdAt));
   }
 
   async getRecentContracts(userId: number, limit: number = 5): Promise<any[]> {
@@ -481,86 +389,6 @@ export class DatabaseStorage implements IStorage {
         )!
       );
     return result.rowCount > 0;
-  }
-
-  // Chat analytics implementation
-  async trackChatInteraction(contractId: number, userId: number, question: string, topic: string): Promise<void> {
-    // Store the interaction with topic categorization
-    await this.createContractChat({
-      contractId,
-      userId,
-      message: JSON.stringify({ question, topic, timestamp: new Date() }),
-      role: 'user',
-      tokenCount: Math.ceil(question.length / 4), // Rough token estimate
-    });
-  }
-
-  async getChatAnalytics(userId: number): Promise<{ topTopics: any[], contractActivity: any[] }> {
-    // Get all chat interactions for the user's contracts
-    const userContracts = await this.getUserContracts(userId);
-    const contractIds = userContracts.map(c => c.id);
-    
-    if (contractIds.length === 0) {
-      return { topTopics: [], contractActivity: [] };
-    }
-
-    // Get all chats for user's contracts
-    const queryText = `
-      SELECT 
-        cc.id,
-        cc.contract_id,
-        cc.message,
-        cc.created_at,
-        c.name as contract_name,
-        c.type as contract_type
-      FROM contract_chats cc
-      JOIN contracts c ON cc.contract_id = c.id
-      WHERE cc.contract_id = ANY($1) AND cc.role = 'user'
-      ORDER BY cc.created_at DESC
-    `;
-    
-    const result = await pool.query(queryText, [contractIds]);
-    
-    // Parse chat messages to extract topics
-    const topicCounts = new Map<string, number>();
-    const contractActivity = new Map<number, { name: string, count: number, lastActive: Date }>();
-    
-    result.rows.forEach((row: any) => {
-      try {
-        const messageData = JSON.parse(row.message);
-        if (messageData.topic) {
-          topicCounts.set(messageData.topic, (topicCounts.get(messageData.topic) || 0) + 1);
-        }
-        
-        // Track contract activity
-        if (!contractActivity.has(row.contract_id)) {
-          contractActivity.set(row.contract_id, {
-            name: row.contract_name,
-            count: 0,
-            lastActive: new Date(row.created_at)
-          });
-        }
-        const activity = contractActivity.get(row.contract_id)!;
-        activity.count++;
-        if (new Date(row.created_at) > activity.lastActive) {
-          activity.lastActive = new Date(row.created_at);
-        }
-      } catch (e) {
-        // Handle non-JSON messages
-      }
-    });
-    
-    // Convert to arrays and sort
-    const topTopics = Array.from(topicCounts.entries())
-      .map(([topic, count]) => ({ topic, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-    
-    const contractActivityArray = Array.from(contractActivity.values())
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
-    
-    return { topTopics, contractActivity: contractActivityArray };
   }
 }
 

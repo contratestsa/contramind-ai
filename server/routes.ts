@@ -569,21 +569,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Chat analytics endpoint
-  app.get("/api/chat-analytics", async (req, res) => {
-    try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
-      const analytics = await storage.getChatAnalytics(req.user.id);
-      res.json(analytics);
-    } catch (error) {
-      console.error('Error fetching chat analytics:', error);
-      res.status(500).json({ message: "Failed to fetch chat analytics" });
-    }
-  });
-
   // Contract chat endpoints
   app.get("/api/contracts/:id/chats", async (req, res) => {
     try {
