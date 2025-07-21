@@ -209,7 +209,9 @@ export default function Dashboard() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create contract');
+        const errorData = await response.json();
+        console.error('Contract creation error:', errorData);
+        throw new Error(errorData.message || 'Failed to create contract');
       }
 
       const { contract } = await response.json();

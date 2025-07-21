@@ -112,6 +112,7 @@ export const insertContactSchema = createInsertSchema(contactMessages).pick({
 
 export const insertContractSchema = createInsertSchema(contracts).omit({
   id: true,
+  userId: true, // Server will add this from authenticated user
   createdAt: true,
   updatedAt: true,
 }).extend({
