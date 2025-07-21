@@ -178,28 +178,20 @@ export class ContractExtractor {
     const internalParties: string[] = [];
     const counterparties: string[] = [];
     
-    // Enhanced Pattern 1: Multiple "between X and Y" formats
-    const betweenPatterns = [
-      /between\s+([^,\(]+?)(?:\s*\([^)]+\))?\s*(?:,.*?)?\s+and\s+([^,\(]+?)(?:\s*\([^)]+\))?(?:\s*,|\s*\(|$)/gi,
-      /between\s+([^,]+)\s*(?:,|and)\s+([^,]+)/gi,
-      /parties:\s*([^,]+)\s+and\s+([^,]+)/gi,
-      /agreement\s+between\s+([^,]+)\s+and\s+([^,]+)/gi
-    ];
-    
-    for (const pattern of betweenPatterns) {
-      let matches = text.matchAll(pattern);
-      for (const match of matches) {
-        if (match[1]) {
-          const party1 = match[1].trim().replace(/\s+/g, ' ');
-          if (party1.length > 2 && party1.length < 100 && !party1.toLowerCase().includes('the following')) {
-            internalParties.push(party1);
-          }
+    // Pattern 1: "between X and Y" format
+    const betweenPattern = /between\s+([^,\(]+?)(?:\s*\([^)]+\))?\s*(?:,.*?)?\s+and\s+([^,\(]+?)(?:\s*\([^)]+\))?(?:\s*,|\s*\(|$)/gi;
+    let matches = text.matchAll(betweenPattern);
+    for (const match of matches) {
+      if (match[1]) {
+        const party1 = match[1].trim().replace(/\s+/g, ' ');
+        if (party1.length > 2 && party1.length < 100) {
+          internalParties.push(party1);
         }
-        if (match[2]) {
-          const party2 = match[2].trim().replace(/\s+/g, ' ');
-          if (party2.length > 2 && party2.length < 100 && !party2.toLowerCase().includes('the following')) {
-            counterparties.push(party2);
-          }
+      }
+      if (match[2]) {
+        const party2 = match[2].trim().replace(/\s+/g, ' ');
+        if (party2.length > 2 && party2.length < 100) {
+          counterparties.push(party2);
         }
       }
     }
@@ -311,15 +303,11 @@ export class ContractExtractor {
     
     // Enhanced patterns with context extraction
     const paymentPatterns = [
-      // Net terms patterns (Net 30, Net 60, etc.)
-      /net\s*(\d+)(?:\s*days?)?\s*(?:from|after|of)?[^.\n]{0,50}/gi,
-      /payment.*?net\s*(\d+)/gi,
       // Standard payment terms patterns
       /payment\s*(?:terms?|shall be made|is due|must be made)[:\s]+([^.\n]{10,150})/gi,
       /(?:invoice|payment).*?(?:due|payable)\s*(?:within|in|on)?\s*(\d+\s*(?:days?|months?|weeks?))[^.\n]{0,50}/gi,
+      /net\s*(\d+)(?:\s*days?)?\s*(?:from|after|of)?[^.\n]{0,50}/gi,
       /payment.*?(?:shall|will|must)\s*be\s*(?:made|paid|remitted)\s*([^.\n]{10,150})/gi,
-      // Days payment patterns
-      /(?:within|in)\s*(\d+)\s*(?:calendar\s*)?days?\s*(?:of|from|after)\s*(?:invoice|receipt|delivery)/gi,
       // Monthly/periodic payment patterns
       /(?:monthly|quarterly|annual|yearly)\s*(?:payment|fee|amount)\s*(?:of|is)?\s*(?:\$|USD|EUR|GBP)?\s*[\d,]+(?:\.\d{2})?[^.\n]{0,50}/gi,
       // Milestone payment patterns
@@ -327,9 +315,7 @@ export class ContractExtractor {
       // Due date patterns
       /(?:payment|invoice|amount)\s*(?:is\s*)?due\s*(?:on|by)\s*(?:the\s*)?\d{1,2}(?:st|nd|rd|th)?\s*(?:day\s*)?(?:of\s*(?:each|every)\s*month)?[^.\n]{0,50}/gi,
       // Percentage patterns
-      /\d{1,3}%\s*(?:of|upon)\s*(?:contract|total|amount)[^.\n]{10,100}/gi,
-      // Upon receipt patterns
-      /(?:payment|amount)\s*(?:is\s*)?due\s*upon\s*receipt/gi
+      /\d{1,3}%\s*(?:of|upon)\s*(?:contract|total|amount)[^.\n]{10,100}/gi
     ];
     
     // Extract payment-related sentences
