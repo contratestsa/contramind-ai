@@ -65,9 +65,9 @@ interface Contract {
   id: number;
   title: string;
   partyName: string;
-  uploadedAt: Date;
+  uploadedAt?: Date;
   status: string;
-  riskLevel?: 'low' | 'medium' | 'high';
+  riskLevel?: string;
   date: string;
   type?: string;
 }
@@ -185,28 +185,27 @@ export default function Dashboard() {
     const randomType = contractTypes[Math.floor(Math.random() * contractTypes.length)];
     
     try {
-      // Create contract in database
-      const response = await fetch('/api/contracts', {
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', file.name.replace(/\.[^/.]+$/, "")); // Remove file extension
+      formData.append('partyName', partyType === 'buyer' ? 'Buyer Corporation' : 'Vendor LLC');
+      formData.append('type', randomType);
+      formData.append('status', 'draft');
+      formData.append('date', new Date().toISOString());
+      formData.append('riskLevel', randomRisk);
+      
+      // Upload contract with file
+      const response = await fetch('/api/contracts/upload', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: file.name.replace(/\.[^/.]+$/, ""), // Remove file extension
-          partyName: partyType === 'buyer' ? 'Buyer Corporation' : 'Vendor LLC',
-          type: randomType,
-          status: 'draft',
-          date: new Date().toISOString(), // Server expects ISO string
-          riskLevel: randomRisk,
-          fileUrl: `/uploads/${file.name}` // Mock file path
-        }),
+        body: formData,
         credentials: 'include' // Include cookies for authentication
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Contract creation error:', errorData);
-        throw new Error(errorData.message || 'Failed to create contract');
+        console.error('Contract upload error:', errorData);
+        throw new Error(errorData.message || 'Failed to upload contract');
       }
 
       const { contract } = await response.json();
@@ -363,16 +362,7 @@ export default function Dashboard() {
   const archiveCurrentChat = () => {
     if (selectedContract && messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
-      const archivedChat = {
-        id: Date.now().toString(),
-        filename: selectedContract.title,
-        timestamp: new Date(),
-        lastMessageSnippet: lastMessage.content.substring(0, 50) + '...',
-        messages: [...messages],
-        contract: { ...selectedContract }
-      };
-      
-      setArchivedChats([archivedChat, ...archivedChats]);
+      // Archive chat functionality removed - contracts are automatically saved in the database
     }
     
     // Clear current chat

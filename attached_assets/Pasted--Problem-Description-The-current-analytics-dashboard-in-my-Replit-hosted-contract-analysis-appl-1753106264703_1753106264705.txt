@@ -1,0 +1,51 @@
+**Problem Description:**
+
+The current analytics dashboard in my Replit-hosted contract analysis application displays static or manually updated information. I need to enhance this dashboard to automatically diagnose and display relevant information extracted directly from uploaded contracts. The goal is to make the dashboard dynamic, insightful, and automatically updated upon new contract uploads.
+
+**Objective for Replit Agent:**
+
+Implement a robust data extraction pipeline and integrate it with the existing analytics dashboard to ensure that all components (Contract Type, Executed, Language, Top Internal Parties, Top Counterparties, Governing Law, Payment Term, Breach Notice, Termination for Convenience Notice) are automatically populated with data derived from uploaded contracts. The solution should be scalable and efficient within the Replit environment.
+
+**Specific Tasks:**
+
+1.  **Data Extraction Pipeline Implementation:**
+    *   **Document Ingestion:** Set up a mechanism to process newly uploaded contract documents (e.g., PDF, DOCX). This might involve reading files from a specific directory or handling file uploads via an API endpoint.
+    *   **OCR Integration (if applicable):** If contracts can be image-based PDFs or scanned documents, integrate an OCR solution (e.g., `pytesseract` or a cloud-based OCR service) to convert them into machine-readable text.
+    *   **Information Extraction (NLP/ML/Rule-Based):** Implement logic to extract the following key data points from the contract text for each uploaded document:
+        *   `contract_type` (e.g., Services Agreement, NDA)
+        *   `executed_status` (Yes/No)
+        *   `language`
+        *   `internal_parties` (list of names)
+        *   `counterparties` (list of names)
+        *   `governing_law`
+        *   `payment_term`
+        *   `breach_notice`
+        *   `termination_for_convenience_notice`
+        *   Ensure robust error handling for cases where information cannot be extracted.
+    *   **Data Structuring:** Format the extracted data for each contract into a consistent JSON object (as described in the `analysis.md` document).
+
+2.  **Data Storage and Management:**
+    *   **Replit Database Integration:** Store the structured JSON data for each contract in the Replit Database. Use a unique `contract_id` as the key for each contract record.
+    *   **Data Aggregation:** Implement backend logic (e.g., in a Flask API) to query the Replit Database, retrieve all relevant contract data, and aggregate it to generate the summary statistics required for each dashboard component (e.g., counts of each contract type, top parties, etc.). This aggregation should dynamically respond to any filters applied on the dashboard (e.g., by upload date, contract type).
+
+3.  **Frontend Integration and Visualization:**
+    *   **API Endpoints:** Create API endpoints in your backend (e.g., `/api/dashboard/data`) that the frontend can call to retrieve the aggregated dashboard data.
+    *   **Dashboard Component Updates:** Modify the existing frontend dashboard components to fetch data from these new API endpoints. Replace any static or manually populated data with dynamic data from the backend.
+    *   **Charting Library Integration:** Ensure that the charting libraries (e.g., Chart.js, D3.js) are correctly configured to consume the aggregated data and render the visualizations (donut charts, bar charts) as seen in the provided screenshots.
+
+4.  **Testing:**
+    *   Upload various types of contracts to verify that the data extraction pipeline correctly processes them.
+    *   Confirm that all dashboard components automatically update and display accurate information based on the uploaded contracts.
+    *   Test the dashboard filters to ensure they correctly narrow down the displayed data.
+
+5.  **Documentation:**
+    *   Provide a clear explanation of the implemented data extraction logic, how data is stored in Replit Database, and how the frontend components are updated.
+    *   Include any necessary code snippets or configuration changes.
+
+**Assumptions:**
+
+*   You have access to modify both frontend (e.g., HTML, CSS, JavaScript) and backend (e.g., Python, Node.js) code within the Replit project.
+*   The existing dashboard UI structure (HTML/CSS) is largely in place, and the task focuses on populating it with dynamic data.
+*   The `+ Upload` button functionality exists and can be extended to trigger the data extraction process.
+
+"""

@@ -50,6 +50,7 @@ export const contracts = pgTable("contracts", {
   fileUrl: text("file_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  last_viewed_at: timestamp("last_viewed_at"),
 });
 
 export const contractChats = pgTable("contract_chats", {
@@ -71,6 +72,23 @@ export const savedPrompts = pgTable("saved_prompts", {
   isSystem: boolean("is_system").default(false).notNull(), // true for ContraMind built-in prompts
   usageCount: integer("usage_count").default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const contractDetails = pgTable("contract_details", {
+  id: serial("id").primaryKey(),
+  contractId: integer("contract_id").notNull().references(() => contracts.id),
+  executedStatus: boolean("executed_status").default(false),
+  language: text("language"),
+  internalParties: text("internal_parties").array(),
+  counterparties: text("counterparties").array(),
+  governingLaw: text("governing_law"),
+  paymentTerm: text("payment_term"),
+  breachNotice: text("breach_notice"),
+  terminationNotice: text("termination_notice"),
+  extractedText: text("extracted_text"), // Full extracted text from the contract
+  extractionMetadata: text("extraction_metadata"), // JSON string for additional metadata
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -155,3 +173,12 @@ export type InsertContractChat = z.infer<typeof insertContractChatSchema>;
 export type ContractChat = typeof contractChats.$inferSelect;
 export type InsertSavedPrompt = z.infer<typeof insertSavedPromptSchema>;
 export type SavedPrompt = typeof savedPrompts.$inferSelect;
+
+export const insertContractDetailsSchema = createInsertSchema(contractDetails).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertContractDetails = z.infer<typeof insertContractDetailsSchema>;
+export type ContractDetails = typeof contractDetails.$inferSelect;

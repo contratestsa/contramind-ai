@@ -5,6 +5,16 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
+  - **Implemented Contract Data Extraction Pipeline**: Created comprehensive system for extracting and analyzing contract information
+    - Created contract_details database table to store extracted contract information
+    - Built contractExtractor.ts service to manage the extraction process
+    - Implemented Python scripts for PDF text extraction (server/python/extract_text.py)
+    - Updated /api/analytics endpoint to use real extracted data instead of mock data
+    - Added new /api/contracts/upload endpoint that handles file upload and triggers extraction
+    - Updated Dashboard frontend to use proper file upload with FormData
+    - Installed necessary Python packages (PyPDF2, python-docx, pytesseract)
+    - Analytics now displays real data: executed status, language, parties, governing law from extracted contracts
+    - System processes contracts asynchronously after upload for better performance
   - **Improved Recent Contracts Display**: Enhanced the sidebar recent contracts functionality
     - Shows only 3 contracts initially with expandable "View All" button
     - Button toggles between "View All" and "Show Less" within the sidebar

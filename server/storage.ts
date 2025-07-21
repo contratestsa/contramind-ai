@@ -5,6 +5,7 @@ import {
   contracts,
   contractChats,
   savedPrompts,
+  contractDetails,
   type User, 
   type InsertUser, 
   type WaitlistEntry, 
@@ -16,7 +17,9 @@ import {
   type ContractChat,
   type InsertContractChat,
   type SavedPrompt,
-  type InsertSavedPrompt
+  type InsertSavedPrompt,
+  type ContractDetails,
+  type InsertContractDetails
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, asc, or, like, sql } from "drizzle-orm";
@@ -58,6 +61,12 @@ export interface IStorage {
   getSystemPrompts(): Promise<SavedPrompt[]>;
   updatePromptUsage(id: number): Promise<void>;
   deleteSavedPrompt(id: number, userId: number): Promise<boolean>;
+  
+  // Contract details methods
+  createContractDetails(details: InsertContractDetails): Promise<ContractDetails>;
+  getContractDetails(contractId: number): Promise<ContractDetails | undefined>;
+  updateContractDetails(contractId: number, updates: Partial<ContractDetails>): Promise<ContractDetails | undefined>;
+  getAllContractDetails(userId: number): Promise<ContractDetails[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -546,6 +555,48 @@ export class DatabaseStorage implements IStorage {
         )!
       );
     return result.rowCount > 0;
+  }
+
+  // Contract details methods implementation
+  async createContractDetails(details: InsertContractDetails): Promise<ContractDetails> {
+    const [contractDetail] = await db
+      .insert(contractDetails)
+      .values(details)
+      .returning();
+    return contractDetail;
+  }
+
+  async getContractDetails(contractId: number): Promise<ContractDetails | undefined> {
+    const [detail] = await db
+      .select()
+      .from(contractDetails)
+      .where(eq(contractDetails.contractId, contractId));
+    return detail || undefined;
+  }
+
+  async updateContractDetails(contractId: number, updates: Partial<ContractDetails>): Promise<ContractDetails | undefined> {
+    const [updated] = await db
+      .update(contractDetails)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(contractDetails.contractId, contractId))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getAllContractDetails(userId: number): Promise<ContractDetails[]> {
+    const userContracts = await db
+      .select()
+      .from(contracts)
+      .where(eq(contracts.userId, userId));
+    
+    const contractIds = userContracts.map(c => c.id);
+    
+    if (contractIds.length === 0) return [];
+    
+    return db
+      .select()
+      .from(contractDetails)
+      .where(sql`${contractDetails.contractId} = ANY(${contractIds})`);
   }
 }
 

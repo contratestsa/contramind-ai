@@ -21,6 +21,7 @@ import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
 // <<< PDF ANALYSIS END
+import { contractExtractor } from "./contractExtractor";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // >>> PDF ANALYSIS START
@@ -612,6 +613,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Upload contract with file and extract details
+  app.post("/api/contracts/upload", upload.single("file"), async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: "PDF file is required" });
+      }
+
+      // Parse contract metadata from form data
+      const contractData = {
+        title: req.body.title || `Contract_${Date.now()}`,
+        partyName: req.body.partyName || "Unknown Party",
+        type: req.body.type || "other",
+        status: req.body.status || "draft",
+        date: req.body.date ? new Date(req.body.date) : new Date(),
+        riskLevel: req.body.riskLevel || "medium",
+        fileUrl: `/uploads/${req.file.filename}`
+      };
+
+      // Create contract record
+      const contract = await storage.createContract({
+        ...contractData,
+        userId: req.user.id
+      });
+
+      // Process the PDF asynchronously
+      contractExtractor.processContract(contract.id, req.file.path)
+        .then(() => {
+          console.log(`Contract ${contract.id} processed successfully`);
+        })
+        .catch((error) => {
+          console.error(`Error processing contract ${contract.id}:`, error);
+        });
+
+      res.status(201).json({ 
+        message: "Contract uploaded successfully. Processing will complete shortly.",
+        contract 
+      });
+    } catch (error) {
+      // Clean up uploaded file on error
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
+      
+      console.error('Error uploading contract:', error);
+      res.status(500).json({ message: "Failed to upload contract" });
+    }
+  });
+
   // Contract chat endpoints
   app.get("/api/contracts/:id/chats", async (req, res) => {
     try {
@@ -799,6 +852,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get all user contracts from database
       const userContracts = await storage.getUserContracts(userId);
       
+      // Get all contract details for analytics
+      const contractDetails = await storage.getAllContractDetails(userId);
+      
       // Calculate analytics from real data
       const uniqueDocs = userContracts.length;
       
@@ -817,84 +873,142 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contractTypeMap[displayType] = (contractTypeMap[displayType] || 0) + 1;
       });
 
-      // Executed aggregation (based on status)
+      // Executed aggregation from extracted data
       const executed = {
-        yes: userContracts.filter(c => c.status === 'signed' || c.status === 'active').length,
-        no: userContracts.filter(c => c.status !== 'signed' && c.status !== 'active').length
+        yes: 0,
+        no: 0
       };
-
-      // Language aggregation - more realistic distribution
+      
+      // Language aggregation from extracted data
       const languageMap: Record<string, number> = {};
-      userContracts.forEach((contract, index) => {
-        // Assign contracts to languages with realistic distribution
-        const rand = Math.random();
-        let lang;
-        if (rand < 0.50) lang = "English"; // 50% English
-        else if (rand < 0.85) lang = "Arabic"; // 35% Arabic
-        else lang = "English & Arabic"; // 15% Bilingual
+      
+      contractDetails.forEach(detail => {
+        // Count executed status
+        if (detail.executedStatus) {
+          executed.yes++;
+        } else {
+          executed.no++;
+        }
         
-        languageMap[lang] = (languageMap[lang] || 0) + 1;
+        // Count languages
+        if (detail.language) {
+          languageMap[detail.language] = (languageMap[detail.language] || 0) + 1;
+        }
       });
       
-      // Convert to the expected format
+      // If no extracted details yet, fall back to contract status
+      if (contractDetails.length === 0) {
+        executed.yes = userContracts.filter(c => c.status === 'signed' || c.status === 'active').length;
+        executed.no = userContracts.filter(c => c.status !== 'signed' && c.status !== 'active').length;
+        
+        // Default language distribution
+        userContracts.forEach((contract, index) => {
+          const rand = Math.random();
+          let lang;
+          if (rand < 0.50) lang = "English";
+          else if (rand < 0.85) lang = "Arabic";
+          else lang = "English & Arabic";
+          
+          languageMap[lang] = (languageMap[lang] || 0) + 1;
+        });
+      }
+      
       const language = Object.keys(languageMap).length > 0 ? languageMap : {
         "English": 0,
         "Arabic": 0,
         "English & Arabic": 0
       };
 
-      // Internal Parties aggregation - more realistic distribution
-      const departments = [
-        "Legal Department",
-        "Sales Team", 
-        "HR Department",
-        "Operations",
-        "Finance",
-        "IT Department",
-        "Marketing",
-        "Procurement",
-        "R&D",
-        "Customer Success"
-      ];
-      
-      // Create a more realistic distribution based on contract count
+      // Internal Parties aggregation from extracted data
       const internalPartiesMap: Record<string, number> = {};
-      userContracts.forEach((contract, index) => {
-        // Assign contracts to departments in a realistic pattern
-        // Legal gets the most, then Sales, HR, etc.
-        let deptIndex;
-        const rand = Math.random();
-        if (rand < 0.25) deptIndex = 0; // 25% Legal
-        else if (rand < 0.45) deptIndex = 1; // 20% Sales
-        else if (rand < 0.60) deptIndex = 2; // 15% HR
-        else if (rand < 0.72) deptIndex = 3; // 12% Operations
-        else if (rand < 0.82) deptIndex = 4; // 10% Finance
-        else if (rand < 0.89) deptIndex = 5; // 7% IT
-        else if (rand < 0.94) deptIndex = 6; // 5% Marketing
-        else if (rand < 0.97) deptIndex = 7; // 3% Procurement
-        else if (rand < 0.99) deptIndex = 8; // 2% R&D
-        else deptIndex = 9; // 1% Customer Success
+      
+      // Counterparties aggregation from extracted data
+      const counterpartiesMap: Record<string, number> = {};
+      
+      // Governing Law aggregation from extracted data
+      const governingLawMap: Record<string, number> = {};
+      
+      // Additional extracted data maps
+      const paymentTermsMap: Record<string, number> = {};
+      const breachNoticeMap: Record<string, number> = {};
+      const terminationNoticeMap: Record<string, number> = {};
+      
+      // Process extracted data
+      contractDetails.forEach(detail => {
+        // Internal parties
+        if (detail.internalParties && Array.isArray(detail.internalParties)) {
+          detail.internalParties.forEach(party => {
+            if (party && party.trim()) {
+              internalPartiesMap[party] = (internalPartiesMap[party] || 0) + 1;
+            }
+          });
+        }
         
-        const dept = departments[deptIndex];
-        internalPartiesMap[dept] = (internalPartiesMap[dept] || 0) + 1;
+        // Counterparties
+        if (detail.counterparties && Array.isArray(detail.counterparties)) {
+          detail.counterparties.forEach(party => {
+            if (party && party.trim()) {
+              counterpartiesMap[party] = (counterpartiesMap[party] || 0) + 1;
+            }
+          });
+        }
+        
+        // Governing law
+        if (detail.governingLaw) {
+          governingLawMap[detail.governingLaw] = (governingLawMap[detail.governingLaw] || 0) + 1;
+        }
+        
+        // Payment terms
+        if (detail.paymentTerm) {
+          paymentTermsMap[detail.paymentTerm] = (paymentTermsMap[detail.paymentTerm] || 0) + 1;
+        }
+        
+        // Breach notice
+        if (detail.breachNotice) {
+          breachNoticeMap[detail.breachNotice] = (breachNoticeMap[detail.breachNotice] || 0) + 1;
+        }
+        
+        // Termination notice
+        if (detail.terminationNotice) {
+          terminationNoticeMap[detail.terminationNotice] = (terminationNoticeMap[detail.terminationNotice] || 0) + 1;
+        }
       });
       
-      // Convert to the expected format, only include departments with contracts
+      // If no extracted data, fall back to contract partyName for counterparties
+      if (Object.keys(counterpartiesMap).length === 0) {
+        userContracts.forEach(contract => {
+          const party = contract.partyName || 'Unknown';
+          counterpartiesMap[party] = (counterpartiesMap[party] || 0) + 1;
+        });
+      }
+      
+      // If no extracted data for internal parties, use default departments
+      if (Object.keys(internalPartiesMap).length === 0) {
+        const departments = ["Legal Department", "Sales Team", "HR Department", "Operations", "Finance"];
+        userContracts.forEach((contract, index) => {
+          const dept = departments[index % departments.length];
+          internalPartiesMap[dept] = (internalPartiesMap[dept] || 0) + 1;
+        });
+      }
+      
+      // If no extracted data for governing law, use default
+      if (Object.keys(governingLawMap).length === 0) {
+        const laws = ["Saudi Arabia", "UAE", "United States", "United Kingdom", "Singapore"];
+        userContracts.forEach((contract, index) => {
+          const law = laws[index % laws.length];
+          governingLawMap[law] = (governingLawMap[law] || 0) + 1;
+        });
+      }
+      
+      // Sort and format data
       const internalPartiesData = Object.entries(internalPartiesMap)
         .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
         .reduce((acc, [key, value]) => {
           acc[key] = value;
           return acc;
         }, {} as Record<string, number>);
 
-      // Counterparties aggregation from real data
-      const counterpartiesMap: Record<string, number> = {};
-      userContracts.forEach(contract => {
-        const party = contract.partyName || 'Unknown';
-        counterpartiesMap[party] = (counterpartiesMap[party] || 0) + 1;
-      });
-
-      // Sort and take top 10 counterparties
       const sortedCounterparties = Object.entries(counterpartiesMap)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
@@ -903,44 +1017,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return acc;
         }, {} as Record<string, number>);
 
-      // Governing Law aggregation - more realistic distribution for MENA region
-      const governingLaws = [
-        "Saudi Arabia",
-        "UAE", 
-        "United States",
-        "United Kingdom",
-        "Singapore",
-        "Qatar",
-        "Kuwait",
-        "Bahrain",
-        "Egypt",
-        "Jordan"
-      ];
-      
-      // Create a more realistic distribution based on contract count
-      const governingLawMap: Record<string, number> = {};
-      userContracts.forEach((contract, index) => {
-        // Assign contracts to governing laws with MENA focus
-        let lawIndex;
-        const rand = Math.random();
-        if (rand < 0.35) lawIndex = 0; // 35% Saudi Arabia
-        else if (rand < 0.57) lawIndex = 1; // 22% UAE
-        else if (rand < 0.67) lawIndex = 2; // 10% United States
-        else if (rand < 0.75) lawIndex = 3; // 8% United Kingdom
-        else if (rand < 0.81) lawIndex = 4; // 6% Singapore
-        else if (rand < 0.86) lawIndex = 5; // 5% Qatar
-        else if (rand < 0.91) lawIndex = 6; // 5% Kuwait
-        else if (rand < 0.95) lawIndex = 7; // 4% Bahrain
-        else if (rand < 0.98) lawIndex = 8; // 3% Egypt
-        else lawIndex = 9; // 2% Jordan
-        
-        const law = governingLaws[lawIndex];
-        governingLawMap[law] = (governingLawMap[law] || 0) + 1;
-      });
-      
-      // Convert to the expected format, only include countries with contracts
       const governingLawData = Object.entries(governingLawMap)
         .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
         .reduce((acc, [key, value]) => {
           acc[key] = value;
           return acc;
