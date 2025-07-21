@@ -744,6 +744,18 @@ print('\\n'.join(text))
         })
       };
       
+      // Log the extracted data
+      console.log(`[${new Date().toISOString()}] Extracted data for contract ${contractId}:`, {
+        executedStatus: extractedData.executedStatus,
+        language: extractedData.language,
+        parties: extractedData.parties?.length || 0,
+        governingLaw: extractedData.governingLaw,
+        paymentTerm: extractedData.paymentTerm,
+        breachNotice: extractedData.breachNotice,
+        terminationNotice: extractedData.terminationNotice,
+        contractType: extractedData.contractType
+      });
+      
       // Check if details already exist
       const existingDetails = await storage.getContractDetails(contractId);
       
