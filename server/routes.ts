@@ -20,8 +20,13 @@ import multer from "multer";
 import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
+import { fileURLToPath } from "url";
 // <<< PDF ANALYSIS END
 import { contractExtractor } from "./contractExtractor";
+
+// Define __dirname for ESM modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // >>> PDF ANALYSIS START
