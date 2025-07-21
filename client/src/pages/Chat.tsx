@@ -169,7 +169,31 @@ export default function Chat() {
     }
   };
 
-  const handleSendMessage = () => {
+  // Function to categorize question topics
+  const categorizeQuestion = (question: string): string => {
+    const lowerQuestion = question.toLowerCase();
+    if (lowerQuestion.includes('limitation of liability') || lowerQuestion.includes('حد المسؤولية')) {
+      return 'Liability';
+    } else if (lowerQuestion.includes('payment') || lowerQuestion.includes('دفع')) {
+      return 'Payment Terms';
+    } else if (lowerQuestion.includes('ip') || lowerQuestion.includes('intellectual property') || lowerQuestion.includes('الملكية الفكرية')) {
+      return 'Intellectual Property';
+    } else if (lowerQuestion.includes('termination') || lowerQuestion.includes('إنهاء')) {
+      return 'Termination';
+    } else if (lowerQuestion.includes('confidential') || lowerQuestion.includes('سرية')) {
+      return 'Confidentiality';
+    } else if (lowerQuestion.includes('warranty') || lowerQuestion.includes('ضمان')) {
+      return 'Warranties';
+    } else if (lowerQuestion.includes('data') || lowerQuestion.includes('privacy') || lowerQuestion.includes('بيانات')) {
+      return 'Data Privacy';
+    } else if (lowerQuestion.includes('dispute') || lowerQuestion.includes('نزاع')) {
+      return 'Dispute Resolution';
+    } else {
+      return 'General Contract';
+    }
+  };
+
+  const handleSendMessage = async () => {
     if (!inputValue.trim() || tokenCount < 5) return;
 
     const userMessage: Message = {
@@ -183,6 +207,16 @@ export default function Chat() {
     setInputValue('');
     setIsLoading(true);
     setTokenCount(prev => prev - 5);
+
+    // Track the chat interaction with topic categorization
+    try {
+      const topic = categorizeQuestion(inputValue);
+      // Note: In a real implementation, this would send to the server
+      // For now, we'll just categorize locally
+      console.log('Tracking chat topic:', topic, 'for question:', inputValue);
+    } catch (error) {
+      console.error('Error tracking chat interaction:', error);
+    }
 
     // Simulate AI response
     setTimeout(() => {

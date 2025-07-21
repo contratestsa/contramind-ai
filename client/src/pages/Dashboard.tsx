@@ -494,6 +494,7 @@ export default function Dashboard() {
                   console.log('Navigating to /dashboard');
                   setLocation('/dashboard');
                   setShowMobileSidebar(false);
+                  setSelectedContract(null);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
@@ -504,6 +505,24 @@ export default function Dashboard() {
               >
                 <Home className={cn("w-4 h-4 flex-shrink-0", !matchAnalytics && !matchParties && !matchNotifications && !matchTags ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
                 {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
+              </button>
+
+              {/* New Contract - Opens Chat */}
+              <button
+                onClick={() => {
+                  console.log('Opening new contract chat');
+                  setSelectedContract({ id: 0, title: t('عقد جديد', 'New Contract'), partyName: '', uploadedAt: new Date(), status: 'draft', date: new Date().toISOString() });
+                  setShowMobileSidebar(false);
+                }}
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
+                  selectedContract?.id === 0 && "bg-[var(--active-bg)] text-[var(--text-primary)]"
+                )}
+                title={isSidebarCollapsed ? t('عقد جديد', 'New Contract') : undefined}
+              >
+                <Plus className={cn("w-4 h-4 flex-shrink-0", selectedContract?.id === 0 ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
+                {!isSidebarCollapsed && <span className="text-sm">{t('عقد جديد', 'New Contract')}</span>}
               </button>
 
               <div className="my-2 border-t border-[var(--border-color)]"></div>

@@ -24,8 +24,16 @@ export default function AnalyticsReports() {
     refetchInterval: 30000
   });
 
+  // Fetch chat analytics (topics and activity)
+  const { data: chatAnalytics } = useQuery({
+    queryKey: ['/api/chat-analytics'],
+    refetchInterval: 30000
+  });
+
   const contracts = contractsData?.contracts || [];
   const chats = chatsData?.chats || [];
+  const topTopics = chatAnalytics?.topTopics || [];
+  const contractActivity = chatAnalytics?.contractActivity || [];
 
   // Calculate real metrics from contract data
   const calculateMetrics = () => {
@@ -510,6 +518,41 @@ export default function AnalyticsReports() {
                         <div 
                           className="bg-[#0C2836] h-2 rounded-full"
                           style={{ width: `${category.percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+
+            {/* Most Discussed Topics - NEW SECTION */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.3 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+            >
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                {t('المواضيع الأكثر نقاشاً', 'Most Discussed Topics')}
+              </h3>
+
+              {topTopics.length === 0 ? (
+                <div className="h-48 flex items-center justify-center text-gray-500">
+                  {t('لا توجد محادثات بعد', 'No chat discussions yet')}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {topTopics.map((topic: any, index: number) => (
+                    <div key={index} className={cn(language === 'ar' && "text-right")}>
+                      <div className={cn("flex items-center justify-between mb-1", language === 'ar' && "flex-row-reverse")}>
+                        <p className="text-sm text-gray-900 capitalize">{topic.topic}</p>
+                        <p className="text-sm text-gray-600">{topic.count} {t('مناقشة', 'discussions')}</p>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-[#B7DEE8] h-2 rounded-full"
+                          style={{ width: `${(topic.count / Math.max(...topTopics.map((t: any) => t.count))) * 100}%` }}
                         />
                       </div>
                     </div>

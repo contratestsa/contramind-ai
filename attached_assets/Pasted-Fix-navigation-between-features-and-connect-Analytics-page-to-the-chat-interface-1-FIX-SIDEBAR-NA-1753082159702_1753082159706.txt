@@ -1,0 +1,131 @@
+Fix navigation between features and connect Analytics page to the chat interface:
+
+1. FIX SIDEBAR NAVIGATION:
+Update the sidebar to properly navigate between all features:
+
+Sidebar items should be:
+- Dashboard (home icon) → Goes to welcome screen
+- New Contract (+ icon) → Opens chat for new upload
+- Analytics (chart icon) → Goes to analytics page
+- Contracts (folder icon) → Shows contract list
+- Settings (gear icon) → Goes to settings
+- Help (? icon) → Goes to help page
+
+Fix navigation by ensuring each item has proper routing:
+- Remove any conflicting navigation code
+- Each menu item should have unique route
+- Active state should highlight current page
+- Clicking should not break layout
+
+2. CONNECT ANALYTICS TO CHAT DATA:
+
+A. Track Chat Interactions:
+When user asks questions in chat:
+- Store question type (liability, payment, termination, etc.)
+- Link to contract being discussed
+- Count frequency of topics
+
+B. Update Analytics Based on Chat:
+Add new section "Most Discussed Topics":
+- Pull from chat history
+- Show bar chart of question categories
+- Update in real-time
+
+C. Contract-Specific Analytics:
+When viewing a contract in chat:
+- Track view count
+- Record time spent
+- Note which sections discussed most
+
+3. CREATE UNIFIED DATA FLOW:
+
+Data flow should be:
+Upload Contract → Chat Analysis → Store Results → Update Analytics
+
+Store this data structure:
+{
+  contractId: "xxx",
+  fileName: "contract.pdf",
+  uploadDate: timestamp,
+  riskScore: 45,
+  findings: [...],
+  chatHistory: [
+    {
+      question: "What about liability?",
+      timestamp: date,
+      topic: "liability"
+    }
+  ],
+  viewCount: 5,
+  lastViewed: timestamp
+}
+
+4. FIX NAVIGATION FLOW:
+
+Dashboard → Click "New Contract" → Chat opens
+Chat → Upload contract → Analysis runs → Results in chat
+Sidebar → Click "Analytics" → See aggregated data
+Sidebar → Click contract name → Resume that chat
+
+5. PROPER STATE MANAGEMENT:
+- Current page state
+- Selected contract
+- Chat history
+- User session
+
+Ensure clicking between pages maintains state.
+
+6. FIX COMMON NAVIGATION ISSUES:
+
+- Sidebar should stay consistent
+- Don't reload entire page on navigation
+- Maintain user context
+- Show loading states during transitions
+- Handle back button properly
+
+7. TEST NAVIGATION FLOW:
+Verify these paths work:
+1. Upload contract → See in analytics
+2. Chat about contract → Topics appear in analytics
+3. Click contract in sidebar → Resume chat
+4. Navigate to analytics → See real data
+5. Go to settings → Return to previous page
+
+Example navigation fix:
+```javascript
+// Sidebar navigation handler
+const handleNavigation = (page) => {
+  // Don't reload sidebar
+  setActivePage(page);
+  
+  // Route to correct component
+  switch(page) {
+    case 'dashboard':
+      showDashboard();
+      break;
+    case 'analytics':
+      showAnalytics();
+      loadUserContractData();
+      break;
+    case 'chat':
+      showChat();
+      break;
+  }
+  
+  // Update URL without reload
+  history.pushState({}, '', `/${page}`);
+};
+
+// Connect chat to analytics
+const trackChatInteraction = (question, contractId, topic) => {
+  // Save to database
+  await saveChatMetrics({
+    contractId,
+    question,
+    topic,
+    timestamp: new Date()
+  });
+  
+  // Update analytics in real-time
+  updateAnalyticsData();
+};

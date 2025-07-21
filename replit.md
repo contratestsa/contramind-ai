@@ -5,6 +5,15 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
+  - **Connected Analytics Page to Chat Interface**: Integrated chat analytics with Analytics & Reports page
+    - Added "Most Discussed Topics" section showing top 5 topics from chat conversations
+    - Implemented topic categorization in Chat component (Liability, Payment Terms, IP, Termination, etc.)
+    - Created chat analytics tracking system with new database methods (getChatAnalytics, trackChatInteraction)
+    - Added API endpoint /api/chat-analytics to expose chat interaction data
+    - Topics are automatically categorized based on keywords in both English and Arabic
+    - Progress bars visualize topic popularity using ContraMind accent color (#B7DEE8)
+    - Chat analytics refresh every 30 seconds alongside contract data
+    - Empty state shows "No chat discussions yet" when no conversations exist
   - **Enhanced Analytics Page with Comprehensive Real Data Integration**: Completely revamped Analytics & Reports page per user requirements
     - Replaced all fake data with real calculations from user's contracts
     - Key Metrics Cards: Total Contracts, Average Risk Score (0-100 scale), High Risk Contracts (>70), Contracts This Month
