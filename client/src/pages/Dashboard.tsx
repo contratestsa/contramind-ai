@@ -657,7 +657,7 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15 }}
-            className="flex-1 overflow-hidden"
+            className="flex-1 overflow-y-auto"
           >
             {matchAnalytics && <AnalyticsReports />}
             {matchParties && <PartiesContacts />}

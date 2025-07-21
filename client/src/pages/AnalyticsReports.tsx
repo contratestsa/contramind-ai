@@ -210,7 +210,7 @@ export default function AnalyticsReports() {
   const languageColors = ['#B7DEE8', '#0C8E9D', '#0C2836'];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#F6F6F6]">
+    <div className="bg-[#F6F6F6]">
       <div className="p-6 max-w-[1400px] mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
