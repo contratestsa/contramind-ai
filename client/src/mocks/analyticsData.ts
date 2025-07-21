@@ -6,6 +6,10 @@ export type DashboardData = {
   internalParties: Record<string, number>;
   counterparties: Record<string, number>;
   governingLaw: Record<string, number>;
+  paymentTerms?: Record<string, number>;
+  breachNotice?: Record<string, number>;
+  terminationNotice?: Record<string, number>;
+  hasExtractedData?: boolean;
 };
 
 export const mockAnalyticsData: DashboardData = {

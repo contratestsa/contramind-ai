@@ -1,0 +1,51 @@
+**Problem Description:**
+
+The Analytics & Reports dashboard is currently displaying an "old version" or incomplete data, not reflecting the full scope of uploaded contracts. Specifically, the categories and data points shown (e.g., Contract Type, Language, Internal Parties, Counterparties, Governing Law) are limited and differ from the expected comprehensive view. Additionally, charts for Payment Term, Breach Notice, and Termination for Convenience Notice are missing.
+
+**Objective for Replit Agent:**
+
+Diagnose and resolve the root cause of the outdated/incomplete data on the Analytics & Reports dashboard. The goal is to ensure the dashboard accurately displays the most current and complete data from *all* uploaded contracts, including all expected categories and charts.
+
+**Specific Tasks & Troubleshooting Steps:**
+
+1.  **Verify Data in Database:**
+    *   **Task:** Access the database where contract data is stored (e.g., Replit Database, PostgreSQL, etc.).
+    *   **Action:** Directly inspect the stored contract records. Confirm that all uploaded contracts are present and that their extracted fields (e.g., `contract_type`, `executed_status`, `language`, `internal_parties`, `counterparties`, `governing_law`, `payment_term`, `breach_notice`, `termination_for_convenience_notice`) are correctly populated and complete for *all* contracts.
+    *   **Method:** If using Replit Database, use the `replit-db` client or direct HTTP calls to list keys and retrieve values for a representative sample of contracts. If using another database, use its respective client/shell.
+
+2.  **Inspect Backend Aggregation Logic:**
+    *   **Task:** Review the backend code responsible for aggregating data for the dashboard (e.g., the API endpoint that serves data to the Analytics page, and its associated functions).
+    *   **Action:** Look for any hardcoded limits, filters, or logic that might inadvertently exclude certain data, categories, or older contracts from the aggregation process. Ensure the logic correctly processes all available data to generate comprehensive summaries for all dashboard components.
+    *   **Method:** Examine relevant backend files (e.g., Python Flask, Node.js Express) that handle data retrieval and aggregation. Pay close attention to database queries, loops, and conditional statements that process contract data.
+
+3.  **Test Backend API Aggregation Directly:**
+    *   **Task:** Use `curl` from the Replit shell to directly call the dashboard API endpoint (e.g., `http://localhost:5000/api/dashboard/data`).
+    *   **Action:** Analyze the `curl` output (the raw JSON response). Compare this JSON with the expected comprehensive data. Does it contain all the categories (including Payment Term, Breach Notice, Termination for Convenience Notice) and accurate counts/percentages based on *all* your contracts? This will help isolate if the problem is in the backend aggregation or frontend rendering.
+
+4.  **Check for Caching Issues:**
+    *   **Task:** If the backend API response from step 3 is correct and comprehensive, but the frontend still shows old/incomplete data, investigate caching mechanisms.
+    *   **Action:** Verify if any application-level caching (e.g., Redis, in-memory caches) is implemented on the backend or frontend. Ensure that these caches are being properly invalidated or refreshed when new data is added or updated. If not, implement cache invalidation logic.
+    *   **Action:** Advise the user to perform a hard refresh of their browser (Ctrl+Shift+R or Cmd+Shift+R) or clear their browser cache, as a quick check for browser-side caching.
+
+5.  **Verify Deployment and Running Processes:**
+    *   **Task:** Ensure that the latest version of the application code (especially any changes made to data extraction or aggregation logic) is actually running on Replit.
+    *   **Action:** Perform a full restart of the Replit project (e.g., using `kill 1` in the shell, or Replit’s stop/run buttons). Confirm that all services are up and running correctly.
+    *   **Action:** Check `git status` or Replit’s version control to confirm that the deployed code matches the latest commits.
+
+6.  **Re-examine Data Extraction Process (if necessary):**
+    *   **Task:** If, after all previous steps, the data is still incomplete or incorrect, re-examine the initial data extraction pipeline. It’s possible that some contracts are not being fully processed, or that new contract types/clauses are not being recognized by the OCR/NLP/rule-based extraction logic.
+    *   **Action:** Review the OCR and NLP/rule-based extraction code. Test with a sample of contracts that are not being fully reflected on the dashboard to identify any parsing or extraction failures.
+
+**Expected Outcome:**
+
+*   The Replit agent should identify the specific reason why the dashboard is displaying outdated or incomplete data.
+*   The agent should implement a fix to ensure the dashboard accurately reflects all contract data.
+*   The Analytics & Reports page should load successfully and display comprehensive data across all expected charts (including Payment Term, Breach Notice, and Termination for Convenience Notice).
+
+**Documentation:**
+
+*   Provide a clear summary of the diagnostic steps taken and the findings.
+*   Explain the root cause of the issue.
+*   Detail the implemented solution and any code changes made.
+
+"""

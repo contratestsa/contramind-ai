@@ -840,6 +840,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Process all contracts endpoint - extracts data from existing contracts
+  app.post("/api/contracts/process-all", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const userId = req.user.id;
+      const userContracts = await storage.getUserContracts(userId);
+      
+      let processed = 0;
+      let failed = 0;
+      
+      for (const contract of userContracts) {
+        if (contract.fileUrl) {
+          try {
+            const filePath = path.join(__dirname, '..', contract.fileUrl);
+            
+            // Check if file exists
+            if (fs.existsSync(filePath)) {
+              await contractExtractor.processContract(contract.id, filePath);
+              processed++;
+            } else {
+              console.log(`File not found for contract ${contract.id}: ${filePath}`);
+              failed++;
+            }
+          } catch (error) {
+            console.error(`Failed to process contract ${contract.id}:`, error);
+            failed++;
+          }
+        }
+      }
+      
+      res.json({ 
+        message: "Contract processing complete", 
+        total: userContracts.length,
+        processed,
+        failed 
+      });
+    } catch (error) {
+      console.error('Error processing contracts:', error);
+      res.status(500).json({ message: "Failed to process contracts" });
+    }
+  });
+
   // Analytics endpoint
   app.get("/api/analytics", async (req, res) => {
     try {
@@ -1025,6 +1070,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return acc;
         }, {} as Record<string, number>);
 
+      // Format payment terms, breach notice, and termination notice data
+      const paymentTermsData = Object.entries(paymentTermsMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {} as Record<string, number>);
+
+      const breachNoticeData = Object.entries(breachNoticeMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {} as Record<string, number>);
+
+      const terminationNoticeData = Object.entries(terminationNoticeMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {} as Record<string, number>);
+
       const analyticsData = {
         uniqueDocs,
         contractType: contractTypeMap,
@@ -1032,7 +1102,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         language,
         internalParties: internalPartiesData,
         counterparties: Object.keys(sortedCounterparties).length > 0 ? sortedCounterparties : { "No contracts yet": 0 },
-        governingLaw: governingLawData
+        governingLaw: governingLawData,
+        paymentTerms: paymentTermsData,
+        breachNotice: breachNoticeData,
+        terminationNotice: terminationNoticeData,
+        hasExtractedData: contractDetails.length > 0
       };
 
       res.json(analyticsData);

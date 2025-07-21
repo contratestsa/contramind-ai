@@ -7,8 +7,11 @@ import {
   Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { type DashboardData } from '@/mocks/analyticsData';
-import { FileText, ChevronDown } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { FileText, ChevronDown, AlertCircle } from 'lucide-react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { apiRequest, queryClient } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
 // Custom tooltip for dark theme
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -94,6 +97,7 @@ const DonutChart = ({ data, colors, centerText, showMore = false }: {
 export default function AnalyticsReports() {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
+  const { toast } = useToast();
 
   // Fetch analytics data from API with automatic refresh
   const { data: analyticsData, isLoading, dataUpdatedAt } = useQuery<DashboardData>({
@@ -101,6 +105,28 @@ export default function AnalyticsReports() {
     refetchInterval: 30000, // Refresh every 30 seconds
     refetchIntervalInBackground: true, // Continue refreshing even when tab is not active
     staleTime: 0 // Always fetch fresh data
+  });
+
+  // Process contracts mutation
+  const processContractsMutation = useMutation({
+    mutationFn: () => apiRequest<{message: string, total: number, processed: number, failed: number}>('/api/contracts/process-all', {
+      method: 'POST'
+    }),
+    onSuccess: (data) => {
+      toast({
+        title: t('نجحت معالجة العقود', 'Contracts processed successfully'),
+        description: t(`تمت معالجة ${data.processed} من ${data.total} عقد`, `Processed ${data.processed} out of ${data.total} contracts`),
+      });
+      // Refresh analytics data
+      queryClient.invalidateQueries({ queryKey: ['/api/analytics'] });
+    },
+    onError: (error) => {
+      toast({
+        title: t('فشلت معالجة العقود', 'Failed to process contracts'),
+        description: error.message,
+        variant: "destructive"
+      });
+    }
   });
 
   // Process data for charts
@@ -153,13 +179,46 @@ export default function AnalyticsReports() {
       .map(([name, value]) => ({ name, value }))
       .reverse();
 
+    // Payment Terms Donut
+    const paymentTermsTotal = Object.values(data.paymentTerms || {}).reduce((a, b) => a + b, 0);
+    const paymentTermsData = paymentTermsTotal > 0 ? Object.entries(data.paymentTerms || {})
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value]) => ({
+        name,
+        value,
+        pct: Math.round((value / paymentTermsTotal) * 100)
+      })) : [];
+
+    // Breach Notice Donut
+    const breachNoticeTotal = Object.values(data.breachNotice || {}).reduce((a, b) => a + b, 0);
+    const breachNoticeData = breachNoticeTotal > 0 ? Object.entries(data.breachNotice || {})
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value]) => ({
+        name,
+        value,
+        pct: Math.round((value / breachNoticeTotal) * 100)
+      })) : [];
+
+    // Termination Notice Donut
+    const terminationNoticeTotal = Object.values(data.terminationNotice || {}).reduce((a, b) => a + b, 0);
+    const terminationNoticeData = terminationNoticeTotal > 0 ? Object.entries(data.terminationNotice || {})
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value]) => ({
+        name,
+        value,
+        pct: Math.round((value / terminationNoticeTotal) * 100)
+      })) : [];
+
     return {
       contractTypeData,
       executedData,
       languageData,
       internalPartiesData,
       counterpartiesData,
-      governingLawData
+      governingLawData,
+      paymentTermsData,
+      breachNoticeData,
+      terminationNoticeData
     };
   };
 
@@ -181,7 +240,10 @@ export default function AnalyticsReports() {
     languageData,
     internalPartiesData,
     counterpartiesData,
-    governingLawData
+    governingLawData,
+    paymentTermsData,
+    breachNoticeData,
+    terminationNoticeData
   } = processData(analyticsData);
 
   // Color palettes - using ContraMind brand colors
@@ -227,6 +289,43 @@ export default function AnalyticsReports() {
               {t('مستندات فريدة', 'Unique Documents')}
             </p>
           </div>
+
+          {/* Notice for missing extraction data */}
+          {!analyticsData.hasExtractedData && analyticsData.uniqueDocs > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.15 }}
+              className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 flex items-start gap-3"
+            >
+              <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-amber-900 mb-1">
+                  {t('بيانات التحليل غير مكتملة', 'Analytics Data Incomplete')}
+                </h4>
+                <p className="text-sm text-amber-800 mb-3">
+                  {t(
+                    'لم يتم استخراج البيانات التفصيلية من العقود المحملة بعد. انقر فوق الزر أدناه لمعالجة جميع العقود واستخراج المعلومات للحصول على تحليلات كاملة.',
+                    'Detailed data has not been extracted from uploaded contracts yet. Click the button below to process all contracts and extract information for complete analytics.'
+                  )}
+                </p>
+                <Button
+                  onClick={() => processContractsMutation.mutate()}
+                  disabled={processContractsMutation.isPending}
+                  className="bg-[#B7DEE8] hover:bg-[#92CED9] text-[#0C2836]"
+                >
+                  {processContractsMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0C2836] mr-2"></div>
+                      {t('جاري المعالجة...', 'Processing...')}
+                    </>
+                  ) : (
+                    t('معالجة جميع العقود', 'Process All Contracts')
+                  )}
+                </Button>
+              </div>
+            </motion.div>
+          )}
 
           {/* Grid 3x2 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -334,6 +433,78 @@ export default function AnalyticsReports() {
                 centerText={`${governingLawData.length} Laws`}
                 showMore={true}
               />
+            </motion.div>
+
+            {/* Payment Terms Donut */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.4 }}
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
+            >
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
+                {t('شروط الدفع', 'Payment Terms')}
+              </h3>
+              {paymentTermsData.length > 0 ? (
+                <DonutChart 
+                  data={paymentTermsData} 
+                  colors={contractTypeColors} 
+                  centerText={`${paymentTermsData.length} Terms`}
+                  showMore={true}
+                />
+              ) : (
+                <div className="h-[250px] flex items-center justify-center text-gray-400">
+                  <p className="text-center">{t('لا توجد بيانات متاحة', 'No data available')}</p>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Breach Notice Donut */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.45 }}
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
+            >
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
+                {t('إشعار الإخلال', 'Breach Notice')}
+              </h3>
+              {breachNoticeData.length > 0 ? (
+                <DonutChart 
+                  data={breachNoticeData} 
+                  colors={languageColors} 
+                  centerText={`${breachNoticeData.length} Types`}
+                  showMore={true}
+                />
+              ) : (
+                <div className="h-[250px] flex items-center justify-center text-gray-400">
+                  <p className="text-center">{t('لا توجد بيانات متاحة', 'No data available')}</p>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Termination Notice Donut */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.5 }}
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
+            >
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
+                {t('إشعار الإنهاء', 'Termination Notice')}
+              </h3>
+              {terminationNoticeData.length > 0 ? (
+                <DonutChart 
+                  data={terminationNoticeData} 
+                  colors={executedColors} 
+                  centerText={`${terminationNoticeData.length} Types`}
+                  showMore={true}
+                />
+              ) : (
+                <div className="h-[250px] flex items-center justify-center text-gray-400">
+                  <p className="text-center">{t('لا توجد بيانات متاحة', 'No data available')}</p>
+                </div>
+              )}
             </motion.div>
           </div>
         </motion.div>
