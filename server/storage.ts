@@ -327,16 +327,83 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateContract(id: number, updates: Partial<Contract>): Promise<Contract | undefined> {
-    const { id: _, createdAt, ...updateData } = updates;
-    const [contract] = await db
-      .update(contracts)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(contracts.id, id))
-      .returning();
-    return contract || undefined;
+    try {
+      console.log('Updating contract:', id, updates);
+      
+      // Map schema fields to database columns
+      const updateFields: string[] = [];
+      const values: any[] = [];
+      let paramIndex = 1;
+      
+      if (updates.title !== undefined) {
+        updateFields.push(`name = $${paramIndex++}`);
+        values.push(updates.title);
+      }
+      if (updates.partyName !== undefined) {
+        updateFields.push(`parties = $${paramIndex++}`);
+        updateFields.push(`party_name = $${paramIndex++}`);
+        values.push(updates.partyName);
+        values.push(updates.partyName);
+      }
+      if (updates.date !== undefined) {
+        updateFields.push(`start_date = $${paramIndex++}`);
+        values.push(new Date(updates.date));
+      }
+      if (updates.type !== undefined) {
+        updateFields.push(`type = $${paramIndex++}`);
+        values.push(updates.type);
+      }
+      if (updates.status !== undefined) {
+        updateFields.push(`status = $${paramIndex++}`);
+        values.push(updates.status);
+      }
+      if (updates.riskLevel !== undefined) {
+        updateFields.push(`risk_level = $${paramIndex++}`);
+        values.push(updates.riskLevel);
+      }
+      if (updates.fileUrl !== undefined) {
+        updateFields.push(`file_path = $${paramIndex++}`);
+        values.push(updates.fileUrl);
+      }
+      
+      // Always update updated_at
+      updateFields.push(`updated_at = $${paramIndex++}`);
+      values.push(new Date());
+      
+      // Add id to values
+      values.push(id);
+      
+      if (updateFields.length === 1) {
+        // Only updated_at, no actual updates
+        const [contract] = await db.select().from(contracts).where(eq(contracts.id, id));
+        return contract || undefined;
+      }
+      
+      const query = sql.raw(`
+        UPDATE contracts
+        SET ${updateFields.join(', ')}
+        WHERE id = $${paramIndex}
+        RETURNING 
+          id,
+          user_id as "userId",
+          name as title,
+          parties as "partyName",
+          type,
+          status,
+          start_date as date,
+          risk_level as "riskLevel",
+          file_path as "fileUrl",
+          created_at as "createdAt",
+          updated_at as "updatedAt"
+      `, values);
+      
+      const result = await db.execute(query);
+      
+      return result.rows[0] || undefined;
+    } catch (error) {
+      console.error('Error updating contract:', error);
+      throw error;
+    }
   }
 
   async deleteContract(id: number): Promise<boolean> {
