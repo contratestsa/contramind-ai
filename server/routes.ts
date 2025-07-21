@@ -862,12 +862,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
             if (fs.existsSync(filePath)) {
               await contractExtractor.processContract(contract.id, filePath);
               processed++;
+              console.log(`[${new Date().toISOString()}] Processed contract ${contract.id}: ${contract.title}`);
             } else {
-              console.log(`File not found for contract ${contract.id}: ${filePath}`);
+              console.log(`[${new Date().toISOString()}] File not found for contract ${contract.id}: ${filePath}`);
               failed++;
             }
           } catch (error) {
-            console.error(`Failed to process contract ${contract.id}:`, error);
+            console.error(`[${new Date().toISOString()}] Failed to process contract ${contract.id}:`, error);
             failed++;
           }
         }
@@ -882,6 +883,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error processing contracts:', error);
       res.status(500).json({ message: "Failed to process contracts" });
+    }
+  });
+  
+  // Process existing contracts endpoint - re-processes contracts with empty party data
+  app.post("/api/process-existing-contracts", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const userId = req.user.id;
+      console.log(`[${new Date().toISOString()}] Starting re-processing of contracts for user ${userId}`);
+      
+      // Get all contracts with missing party data
+      const contractsToProcess = await storage.getContractsWithMissingPartyData(userId);
+      
+      let processed = 0;
+      let failed = 0;
+      const results = [];
+      
+      for (const contract of contractsToProcess) {
+        if (contract.fileUrl) {
+          try {
+            const filePath = path.join(__dirname, '..', contract.fileUrl);
+            
+            // Check if file exists
+            if (fs.existsSync(filePath)) {
+              console.log(`[${new Date().toISOString()}] Re-processing contract ${contract.id}: ${contract.title}`);
+              await contractExtractor.processContract(contract.id, filePath);
+              processed++;
+              results.push({
+                contractId: contract.id,
+                title: contract.title,
+                status: 'processed'
+              });
+            } else {
+              console.log(`[${new Date().toISOString()}] File not found for contract ${contract.id}: ${filePath}`);
+              failed++;
+              results.push({
+                contractId: contract.id,
+                title: contract.title,
+                status: 'file_not_found'
+              });
+            }
+          } catch (error) {
+            console.error(`[${new Date().toISOString()}] Failed to re-process contract ${contract.id}:`, error);
+            failed++;
+            results.push({
+              contractId: contract.id,
+              title: contract.title,
+              status: 'error',
+              error: error instanceof Error ? error.message : 'Unknown error'
+            });
+          }
+        }
+      }
+      
+      console.log(`[${new Date().toISOString()}] Re-processing complete: ${processed} processed, ${failed} failed`);
+      
+      res.json({ 
+        message: "Contract re-processing complete", 
+        total: contractsToProcess.length,
+        processed,
+        failed,
+        results
+      });
+    } catch (error) {
+      console.error(`[${new Date().toISOString()}] Error re-processing contracts:`, error);
+      res.status(500).json({ message: "Failed to re-process contracts" });
     }
   });
 

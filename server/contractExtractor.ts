@@ -164,28 +164,104 @@ print('\\n'.join(text))
   }
 
   private extractParties(text: string): { internalParties: string[]; counterparties: string[] } {
-    const partyPatterns = [
-      /between\s+([^,]+),?\s*(?:\([^)]+\))?\s*and\s+([^,]+),?\s*(?:\([^)]+\))?/gi,
-      /party\s*of\s*the\s*first\s*part[:\s]+([^,\n]+)/gi,
-      /party\s*of\s*the\s*second\s*part[:\s]+([^,\n]+)/gi,
-      /"([^"]+)"\s*(?:a|an)\s*[^,]+\s*company/gi
-    ];
-    
     const internalParties: string[] = [];
     const counterparties: string[] = [];
     
-    for (const pattern of partyPatterns) {
-      const matches = text.matchAll(pattern);
-      for (const match of matches) {
-        if (match[1]) internalParties.push(match[1].trim());
-        if (match[2]) counterparties.push(match[2].trim());
+    // Pattern 1: "between X and Y" format
+    const betweenPattern = /between\s+([^,\(]+?)(?:\s*\([^)]+\))?\s*(?:,.*?)?\s+and\s+([^,\(]+?)(?:\s*\([^)]+\))?(?:\s*,|\s*\(|$)/gi;
+    let matches = text.matchAll(betweenPattern);
+    for (const match of matches) {
+      if (match[1]) {
+        const party1 = match[1].trim().replace(/\s+/g, ' ');
+        if (party1.length > 2 && party1.length < 100) {
+          internalParties.push(party1);
+        }
+      }
+      if (match[2]) {
+        const party2 = match[2].trim().replace(/\s+/g, ' ');
+        if (party2.length > 2 && party2.length < 100) {
+          counterparties.push(party2);
+        }
       }
     }
     
-    // Remove duplicates
+    // Pattern 2: "Party" definitions
+    const partyDefPattern = /(?:the\s+)?"([^"]+)"\s*(?:\([^)]+\))?\s*(?:,\s*)?(?:a|an|the)\s+(?:[^,]+\s+)?(?:company|corporation|llc|inc|ltd|limited|partnership|party)/gi;
+    matches = text.matchAll(partyDefPattern);
+    for (const match of matches) {
+      if (match[1]) {
+        const party = match[1].trim();
+        if (party.length > 2 && party.length < 100) {
+          // First occurrence goes to internal, subsequent to counter
+          if (internalParties.length === 0) {
+            internalParties.push(party);
+          } else {
+            counterparties.push(party);
+          }
+        }
+      }
+    }
+    
+    // Pattern 3: Common contract party indicators
+    const partyIndicators = [
+      /(?:Client|Customer|Buyer):\s*([^\n,]+)/gi,
+      /(?:Vendor|Supplier|Seller|Service Provider):\s*([^\n,]+)/gi,
+      /(?:First Party|Party A|Disclosing Party):\s*([^\n,]+)/gi,
+      /(?:Second Party|Party B|Receiving Party):\s*([^\n,]+)/gi
+    ];
+    
+    partyIndicators.forEach((pattern, index) => {
+      const indicatorMatches = text.matchAll(pattern);
+      for (const match of indicatorMatches) {
+        if (match[1]) {
+          const party = match[1].trim();
+          if (party.length > 2 && party.length < 100) {
+            // Even indices (0,2) are internal, odd (1,3) are counter
+            if (index % 2 === 0) {
+              internalParties.push(party);
+            } else {
+              counterparties.push(party);
+            }
+          }
+        }
+      }
+    });
+    
+    // Pattern 4: Agreement header format
+    const headerPattern = /(?:agreement|contract)\s+(?:between|by and between)\s+([^,\n]+?)(?:\s*\([^)]+\))?\s+(?:and|&)\s+([^,\n]+?)(?:\s*\([^)]+\))?/gi;
+    matches = text.matchAll(headerPattern);
+    for (const match of matches) {
+      if (match[1]) {
+        const party1 = match[1].trim();
+        if (party1.length > 2 && party1.length < 100) {
+          internalParties.push(party1);
+        }
+      }
+      if (match[2]) {
+        const party2 = match[2].trim();
+        if (party2.length > 2 && party2.length < 100) {
+          counterparties.push(party2);
+        }
+      }
+    }
+    
+    // Clean up extracted parties
+    const cleanParty = (party: string): string => {
+      return party
+        .replace(/^\s*(?:and|the|by)\s+/i, '')
+        .replace(/\s*(?:hereinafter|hereafter|referred to as|called).*$/i, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
+    
+    // Remove duplicates and clean
+    const cleanedInternal = [...new Set(internalParties.map(cleanParty))].filter(p => p.length > 2);
+    const cleanedCounter = [...new Set(counterparties.map(cleanParty))].filter(p => p.length > 2);
+    
+    // If no parties found, return empty arrays (not fallback data)
     return {
-      internalParties: [...new Set(internalParties)],
-      counterparties: [...new Set(counterparties)]
+      internalParties: cleanedInternal,
+      counterparties: cleanedCounter
     };
   }
 

@@ -599,6 +599,43 @@ export class DatabaseStorage implements IStorage {
       .from(contractDetails)
       .where(inArray(contractDetails.contractId, contractIds));
   }
+  
+  async getContractsWithMissingPartyData(userId: number): Promise<Contract[]> {
+    try {
+      // Get all user contracts
+      const userContracts = await this.getUserContracts(userId);
+      
+      // Get contract details for these contracts
+      const contractIds = userContracts.map(c => c.id);
+      if (contractIds.length === 0) return [];
+      
+      const details = await db
+        .select()
+        .from(contractDetails)
+        .where(inArray(contractDetails.contractId, contractIds));
+      
+      // Find contracts with missing or empty party data
+      const contractsWithMissingData = userContracts.filter(contract => {
+        const detail = details.find(d => d.contractId === contract.id);
+        
+        // If no details exist, needs processing
+        if (!detail) return true;
+        
+        // If party arrays are empty or null, needs processing
+        if (!detail.internalParties || detail.internalParties.length === 0 ||
+            !detail.counterparties || detail.counterparties.length === 0) {
+          return true;
+        }
+        
+        return false;
+      });
+      
+      return contractsWithMissingData;
+    } catch (error) {
+      console.error('Error getting contracts with missing party data:', error);
+      return [];
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();
