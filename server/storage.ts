@@ -228,7 +228,7 @@ export class DatabaseStorage implements IStorage {
       type: insertContract.type,
       status: insertContract.status || 'draft',
       risk_level: insertContract.riskLevel || null,
-      start_date: new Date(insertContract.date), // database uses 'start_date' column
+      start_date: new Date(insertContract.startDate), // database uses 'start_date' column
       file_path: insertContract.fileUrl || null
     };
 
@@ -247,7 +247,8 @@ export class DatabaseStorage implements IStorage {
       userId: createdContract.user_id,
       title: createdContract.title || createdContract.name,
       partyName: createdContract.party_name || createdContract.parties,
-      date: createdContract.start_date,
+      startDate: createdContract.start_date,
+      endDate: createdContract.end_date,
       type: createdContract.type,
       status: createdContract.status,
       riskLevel: createdContract.risk_level,

@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, date } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -45,7 +45,8 @@ export const contracts = pgTable("contracts", {
   partyName: text("party_name").notNull(),
   type: text("type").notNull(), // 'service', 'nda', 'employment', 'lease', 'sale', 'partnership'
   status: text("status").notNull().default("draft"), // 'draft', 'active', 'under_review', 'signed', 'expired'
-  date: timestamp("date").notNull(),
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date"),
   riskLevel: text("risk_level"), // 'low', 'medium', 'high'
   fileUrl: text("file_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -139,7 +140,8 @@ export const insertContractSchema = createInsertSchema(contracts).omit({
   type: z.enum(["service", "nda", "employment", "lease", "sale", "partnership"]),
   status: z.enum(["draft", "active", "under_review", "signed", "expired"]).optional(),
   riskLevel: z.enum(["low", "medium", "high"]).optional(),
-  date: z.date(),
+  startDate: z.date(),
+  endDate: z.date().optional(),
 });
 
 export const insertContractChatSchema = createInsertSchema(contractChats).omit({

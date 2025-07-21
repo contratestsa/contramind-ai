@@ -528,7 +528,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Convert date string to Date object before validation
       const dataWithDate = {
         ...req.body,
-        date: req.body.date ? new Date(req.body.date) : undefined
+        startDate: req.body.startDate ? new Date(req.body.startDate) : undefined
       };
 
       const validatedData = insertContractSchema.parse(dataWithDate);
@@ -630,7 +630,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         partyName: req.body.partyName || "Unknown Party",
         type: req.body.type || "other",
         status: req.body.status || "draft",
-        date: req.body.date ? new Date(req.body.date) : new Date(),
+        startDate: req.body.startDate ? new Date(req.body.startDate) : new Date(),
         riskLevel: req.body.riskLevel || "medium",
         fileUrl: `/uploads/${req.file.filename}`
       };
