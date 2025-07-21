@@ -166,7 +166,7 @@ export default function AnalyticsReports() {
   // Show loading state
   if (isLoading || !analyticsData) {
     return (
-      <div className="flex-1 overflow-y-auto bg-[#F6F6F6] flex items-center justify-center">
+      <div className="flex-1 overflow-y-auto bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B7DEE8] mx-auto mb-4"></div>
           <p className="text-gray-600">{t('جاري تحميل التحليلات...', 'Loading analytics...')}</p>
@@ -193,7 +193,7 @@ export default function AnalyticsReports() {
   const governingLawColors = ['#B7DEE8', '#92CED9', '#6DBECA', '#48AEBB', '#239EAC', '#0C8E9D', '#0C7E8E', '#0C6E7F', '#0C5E70', '#0C4E61'];
 
   return (
-    <div className="bg-[#F6F6F6]">
+    <div className="bg-white">
       <div className="p-6 max-w-[1400px] mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
