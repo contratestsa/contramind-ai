@@ -234,6 +234,9 @@ export default function Dashboard() {
       // Refetch recent contracts to update sidebar
       queryClient.invalidateQueries({ queryKey: ['/api/contracts/recent'] });
       
+      // Also refresh analytics immediately
+      queryClient.invalidateQueries({ queryKey: ['/api/analytics'] });
+      
       // Add initial messages
       const initialMessages: Message[] = [
         {

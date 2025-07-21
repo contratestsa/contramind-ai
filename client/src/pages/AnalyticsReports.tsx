@@ -119,10 +119,11 @@ export default function AnalyticsReports() {
   const isRTL = language === 'ar';
 
   // Fetch analytics data from API with automatic refresh
-  const { data: analyticsData, isLoading } = useQuery<DashboardData>({
+  const { data: analyticsData, isLoading, dataUpdatedAt } = useQuery<DashboardData>({
     queryKey: ['/api/analytics'],
     refetchInterval: 30000, // Refresh every 30 seconds
-    refetchIntervalInBackground: true // Continue refreshing even when tab is not active
+    refetchIntervalInBackground: true, // Continue refreshing even when tab is not active
+    staleTime: 0 // Always fetch fresh data
   });
 
   // Process data for charts
@@ -226,6 +227,12 @@ export default function AnalyticsReports() {
               {t('التحليلات والتقارير', 'Analytics & Reports')}
             </h1>
             <p className="text-gray-600">{t('رؤى عالية المستوى لعقودك', 'High-level insights into your contracts')}</p>
+            {dataUpdatedAt && (
+              <p className="text-sm text-gray-500 mt-2">
+                {t('آخر تحديث: ', 'Last updated: ')} 
+                {new Date(dataUpdatedAt).toLocaleTimeString(language === 'ar' ? 'ar-SA' : 'en-US')}
+              </p>
+            )}
           </div>
 
           {/* KPI Header */}
