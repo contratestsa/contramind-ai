@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
   TrendingUp, Clock, Shield, DollarSign, FileText, Download,
-  Calendar, AlertTriangle
+  Calendar, AlertTriangle, ChevronDown
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
