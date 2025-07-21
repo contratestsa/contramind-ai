@@ -180,76 +180,132 @@ export default function Dashboard() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleContractUpload = (file: File, partyType: string) => {
+  const handleContractUpload = async (file: File, partyType: string) => {
     // Generate random risk level for demo
     const riskLevels: Array<'low' | 'medium' | 'high'> = ['low', 'medium', 'high'];
     const randomRisk = riskLevels[Math.floor(Math.random() * riskLevels.length)];
     
-    const newContract: Contract = {
-      id: Date.now(),
-      title: file.name,
-      partyName: partyType === 'buyer' ? 'Buyer' : 'Vendor',
-      uploadedAt: new Date(),
-      status: 'analyzing',
-      riskLevel: randomRisk,
-      date: new Date().toISOString(),
-      type: 'purchase'
-    };
+    // Extract contract type from filename or use default
+    const contractTypes = ['service', 'nda', 'employment', 'lease', 'sale', 'partnership'];
+    const randomType = contractTypes[Math.floor(Math.random() * contractTypes.length)];
     
-    setContracts([newContract, ...contracts]);
-    setSelectedContract(newContract);
-    
-    // Add initial messages
-    const initialMessages: Message[] = [
-      {
-        id: '1',
-        type: 'system',
-        content: t(
-          `تم رفع العقد: ${file.name}`,
-          `Contract uploaded: ${file.name}`
-        ),
-        timestamp: new Date()
-      },
-      {
-        id: '2',
-        type: 'system',
-        content: t(
-          `تحليل كـ: ${partyType === 'buyer' ? 'مشتري' : 'بائع'}`,
-          `Analyzing as: ${partyType}`
-        ),
-        timestamp: new Date()
-      },
-      {
-        id: '3',
-        type: 'system',
-        content: t(
-          'جاري تحليل العقد... سيستغرق هذا بضع ثوانٍ.',
-          'Analyzing contract... This will take a few seconds.'
-        ),
-        timestamp: new Date()
+    try {
+      // Create contract in database
+      const response = await fetch('/api/contracts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: file.name.replace(/\.[^/.]+$/, ""), // Remove file extension
+          partyName: partyType === 'buyer' ? 'Buyer Corporation' : 'Vendor LLC',
+          type: randomType,
+          status: 'draft',
+          date: new Date().toISOString(),
+          riskLevel: randomRisk,
+          fileUrl: `/uploads/${file.name}` // Mock file path
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create contract');
       }
-    ];
-    
-    setMessages(initialMessages);
-    
-    // Simulate analysis completion
-    setTimeout(() => {
-      const analysisMessage: Message = {
-        id: '4',
-        type: 'system',
-        content: t(
-          'تم اكتمال التحليل! وجدت 3 مخاطر عالية و5 متوسطة. يمكنك طرح أي أسئلة حول العقد.',
-          'Analysis complete! Found 3 high risks and 5 medium risks. You can ask any questions about the contract.'
-        ),
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, analysisMessage]);
+
+      const { contract } = await response.json();
       
-      // Update contract status
-      setContracts(prev => prev.map(c => 
-        c.id === newContract.id ? { ...c, status: 'ready' } : c
-      ));
-    }, 3000);
+      // Update local state with database contract
+      const newContract: Contract = {
+        id: contract.id,
+        title: contract.title,
+        partyName: contract.partyName,
+        uploadedAt: new Date(contract.createdAt),
+        status: 'analyzing',
+        riskLevel: contract.riskLevel as 'low' | 'medium' | 'high',
+        date: contract.date,
+        type: contract.type
+      };
+      
+      setContracts([newContract, ...contracts]);
+      setSelectedContract(newContract);
+      
+      // Refetch recent contracts to update sidebar
+      queryClient.invalidateQueries({ queryKey: ['/api/contracts/recent'] });
+      
+      // Add initial messages
+      const initialMessages: Message[] = [
+        {
+          id: '1',
+          type: 'system',
+          content: t(
+            `تم رفع العقد: ${file.name}`,
+            `Contract uploaded: ${file.name}`
+          ),
+          timestamp: new Date()
+        },
+        {
+          id: '2',
+          type: 'system',
+          content: t(
+            `تحليل كـ: ${partyType === 'buyer' ? 'مشتري' : 'بائع'}`,
+            `Analyzing as: ${partyType}`
+          ),
+          timestamp: new Date()
+        },
+        {
+          id: '3',
+          type: 'system',
+          content: t(
+            'جاري تحليل العقد... سيستغرق هذا بضع ثوانٍ.',
+            'Analyzing contract... This will take a few seconds.'
+          ),
+          timestamp: new Date()
+        }
+      ];
+      
+      setMessages(initialMessages);
+      
+      // Simulate analysis completion and update status in database
+      setTimeout(async () => {
+        const analysisMessage: Message = {
+          id: '4',
+          type: 'system',
+          content: t(
+            'تم اكتمال التحليل! وجدت 3 مخاطر عالية و5 متوسطة. يمكنك طرح أي أسئلة حول العقد.',
+            'Analysis complete! Found 3 high risks and 5 medium risks. You can ask any questions about the contract.'
+          ),
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, analysisMessage]);
+        
+        // Update contract status in database
+        await fetch(`/api/contracts/${contract.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: 'active'
+          }),
+        });
+        
+        // Update local contract status
+        setContracts(prev => prev.map(c => 
+          c.id === newContract.id ? { ...c, status: 'ready' } : c
+        ));
+        
+        // Refetch to update analytics and contracts
+        queryClient.invalidateQueries({ queryKey: ['/api/contracts/recent'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/analytics'] });
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Error creating contract:', error);
+      toast({
+        title: t('خطأ في رفع العقد', 'Error uploading contract'),
+        description: t('حدث خطأ أثناء رفع العقد. يرجى المحاولة مرة أخرى.', 'An error occurred while uploading the contract. Please try again.'),
+        variant: 'destructive'
+      });
+    }
   };
 
   const handleSendMessage = () => {

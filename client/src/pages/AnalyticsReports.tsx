@@ -118,9 +118,11 @@ export default function AnalyticsReports() {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
 
-  // Fetch analytics data from API
+  // Fetch analytics data from API with automatic refresh
   const { data: analyticsData, isLoading } = useQuery<DashboardData>({
-    queryKey: ['/api/analytics']
+    queryKey: ['/api/analytics'],
+    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchIntervalInBackground: true // Continue refreshing even when tab is not active
   });
 
   // Process data for charts
