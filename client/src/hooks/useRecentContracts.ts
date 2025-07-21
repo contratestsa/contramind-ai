@@ -14,7 +14,7 @@ interface RecentContract {
 }
 
 export function useRecentContracts(limit = 5) {
-  const { data: contracts = [], isLoading } = useQuery<{ contracts: RecentContract[] }>({
+  const { data, isLoading } = useQuery<{ contracts: RecentContract[] }>({
     queryKey: ['/api/contracts/recent', limit],
     queryFn: async () => {
       const response = await fetch(`/api/contracts/recent?limit=${limit}`, {
@@ -45,7 +45,7 @@ export function useRecentContracts(limit = 5) {
   });
 
   return {
-    recent: contracts.contracts || [],
+    recent: data?.contracts || [],
     isLoading,
     touch: touchMutation.mutate
   };

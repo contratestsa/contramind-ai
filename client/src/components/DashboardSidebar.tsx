@@ -11,11 +11,12 @@ import iconImage from "@assets/Profile Picture - ContraMind (V001)-1_17524375301
 import { useRecentContracts } from '@/hooks/useRecentContracts';
 
 interface Contract {
-  id: string;
+  id: number;
   title: string;
   partyName: string;
   createdAt: string;
-  riskLevel: 'low' | 'medium' | 'high';
+  date: string;
+  riskLevel?: string;
 }
 
 interface DashboardSidebarProps {
@@ -177,7 +178,7 @@ export default function DashboardSidebar({
                       <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">
                         <span>{contract.partyName}</span>
                         <span>•</span>
-                        <span>{new Date(contract.createdAt).toLocaleDateString()}</span>
+                        <span>{new Date(contract.date).toLocaleDateString()}</span>
                         <span className="ml-auto">
                           {contract.riskLevel === 'low' && '🟢'}
                           {contract.riskLevel === 'medium' && '🟡'}

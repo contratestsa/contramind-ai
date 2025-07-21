@@ -46,6 +46,7 @@ function Router() {
       <Route path="/dashboard/parties" component={Dashboard} />
       <Route path="/dashboard/notifications" component={Dashboard} />
       <Route path="/dashboard/tags" component={Dashboard} />
+      <Route path="/dashboard/contracts" component={AllContracts} />
 
       <Route component={NotFound} />
     </Switch>
