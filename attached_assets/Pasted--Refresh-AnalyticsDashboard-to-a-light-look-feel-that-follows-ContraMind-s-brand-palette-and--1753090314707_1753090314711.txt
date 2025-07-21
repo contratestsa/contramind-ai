@@ -1,0 +1,51 @@
+
+Refresh <AnalyticsDashboard> to a light look & feel that follows ContraMind’s brand
+palette **and** ensure every card renders live numbers from any contracts
+the user uploads (chat-bar → /uploads).
+
+TASKS  (please work in order)
+────────────────────────────────────────
+1.  THEME → LIGHT MODE BY DEFAULT
+────────────────────────────────────────
+• Page background   `bg-[#F6F6F6] text-[#0C2836]`
+  – #F6F6F6 = Neutral Grey 100 :contentReference[oaicite:0]{index=0}  
+  – #0C2836 = Dark Navy Blue (primary text) :contentReference[oaicite:1]{index=1}
+
+• Card container  
+  `class="rounded-2xl bg-white border border-[#E6E6E6] shadow-sm p-4"`  
+   – #E6E6E6 = Light Grey (border) :contentReference[oaicite:2]{index=2}
+
+• Primary accent   `[#B7DEE8]` (Light Sky Blue) :contentReference[oaicite:3]{index=3}  
+  – use for icons, chart slices, buttons, progress bars.
+
+• Example KPI header:  
+```tsx
+<DocumentIcon className="h-8 w-8 text-[#B7DEE8]" />
+<span className="text-4xl font-semibold text-[#0C2836]">
+  {uniqueDocs}
+</span>
+• Remove dark-mode overrides in index.css; rely on Tailwind light palette. • KEEP dark-mode option behind the sun/moon switcher:
+html.dark {
+  background-color:#0C2836;
+  color:#F1F5F9;
+}
+──────────────────────────────────────── 2. COMPLETE “INTERNAL PARTIES” & “GOVERNING LAW” ──────────────────────────────────────── • Add <PartiesBarChart.tsx> & <GoverningLawBarChart.tsx> props: data, title – render Recharts , barSize 14, top 10 entries.
+• Tooltip style: bg-white text-[#0C2836] border border-[#E6E6E6] shadow.
+• If data.length < 3 ➜ <EmptyCard msg="No data yet – upload more contracts." />
+──────────────────────────────────────── 3. LIVE DATA FROM CHAT UPLOADS (critical) ──────────────────────────────────────── 📥 UPLOAD FLOW (already exists) chat-bar file ➜ POST /api/uploads (returns fileId)
+✅ New endpoint GET /api/analytics?userId={id}
+1. read JSON rows in /storage/{userId}/contracts
+2. aggregate: • uniqueDocs • contractType • executed • language • internalParties • counterparties • governingLaw
+3. return DashboardData.
+⚙️ FRONT-END useDashboardData() must refetch whenever uploads.lastCompleted changes.
+──────────────────────────────────────── 4. PROP / PARSE FIXES ──────────────────────────────────────── • Ensure each passes correct props, normalise strings, map state abbreviations (CA → California etc.).
+──────────────────────────────────────── 5. QA CHECKLIST ──────────────────────────────────────── ☑ brand light palette everywhere ☑ upload 3–4 demo DOCX ➜ charts refresh < 2 s ☑ “See More” toggle shows full legend when > 10 slices ☑ mobile-friendly (cards stack 1-col)
+DELIVERABLES ─────────────
+* src/pages/AnalyticsDashboard.tsx (updated)
+* src/components/PartiesBarChart.tsx
+* src/components/GoverningLawBarChart.tsx
+* src/hooks/useDashboardData.ts (refresh logic)
+* server/routes/analytics.ts (new API)
+COMMENT “all set” when deployed locally with the new light UI.
+**/
+This swaps Tailwind’s default greys/cyans for **Neutral Grey 100 (`#F6F6F6`)**, **Dark Navy Blue (`#0C2836`)**, and **Light Sky Blue (`#B7DEE8`)**, exactly as specified in the brand guidelines.

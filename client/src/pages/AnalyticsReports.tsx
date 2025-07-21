@@ -14,9 +14,9 @@ import { useQuery } from '@tanstack/react-query';
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-900 p-2 rounded shadow-lg border border-slate-700">
-        <p className="text-white text-sm font-semibold">{label}</p>
-        <p className="text-cyan-200 text-sm">
+      <div className="bg-white text-[#0C2836] border border-[#E6E6E6] shadow p-2 rounded">
+        <p className="text-[#0C2836] text-sm font-semibold">{label}</p>
+        <p className="text-[#B7DEE8] text-sm">
           {`${payload[0].name}: ${payload[0].value}`}
         </p>
       </div>
@@ -56,7 +56,7 @@ const DonutChart = ({ data, colors, centerText, showMore = false }: {
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xl font-bold text-cyan-200">{centerText}</span>
+        <span className="text-xl font-bold text-[#0C2836]">{centerText}</span>
       </div>
       
       {/* Legend */}
@@ -68,9 +68,9 @@ const DonutChart = ({ data, colors, centerText, showMore = false }: {
                 className="w-3 h-3 rounded" 
                 style={{ backgroundColor: colors[index % colors.length] }} 
               />
-              <span className="text-gray-300">{item.name}</span>
+              <span className="text-gray-600">{item.name}</span>
             </div>
-            <span className="text-cyan-200">{item.pct}%</span>
+            <span className="text-[#B7DEE8]">{item.pct}%</span>
           </div>
         ))}
       </div>
@@ -79,7 +79,7 @@ const DonutChart = ({ data, colors, centerText, showMore = false }: {
       {showMore && data.length > 10 && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="mt-3 text-cyan-200 text-xs hover:text-cyan-100 flex items-center gap-1"
+          className="mt-3 text-[#B7DEE8] text-xs hover:text-[#0C2836] flex items-center gap-1"
         >
           See {expanded ? 'Less' : 'More'} 
           <ChevronDown className={cn("w-3 h-3 transition-transform", expanded && "rotate-180")} />
@@ -98,12 +98,12 @@ const HorizontalBarChart = ({ data, color }: { data: any[], color: string }) => 
         layout="horizontal"
         margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-        <XAxis type="number" stroke="#9CA3AF" />
+        <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
+        <XAxis type="number" stroke="#0C2836" />
         <YAxis 
           dataKey="name" 
           type="category" 
-          stroke="#9CA3AF"
+          stroke="#0C2836"
           tick={{ fontSize: 12 }}
           width={90}
         />
@@ -186,10 +186,10 @@ export default function AnalyticsReports() {
   // Show loading state
   if (isLoading || !analyticsData) {
     return (
-      <div className="flex-1 overflow-y-auto bg-[#0C2836] flex items-center justify-center">
+      <div className="flex-1 overflow-y-auto bg-[#F6F6F6] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-200 mx-auto mb-4"></div>
-          <p className="text-gray-400">{t('جاري تحميل التحليلات...', 'Loading analytics...')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B7DEE8] mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('جاري تحميل التحليلات...', 'Loading analytics...')}</p>
         </div>
       </div>
     );
@@ -204,13 +204,13 @@ export default function AnalyticsReports() {
     governingLawData
   } = processData(analyticsData);
 
-  // Color palettes
-  const contractTypeColors = ['#22d3ee', '#06b6d4', '#0891b2', '#0e7490', '#155e75', '#164e63', '#134e4a', '#115e59', '#14532d', '#166534'];
-  const executedColors = ['#34d399', '#ef4444'];
-  const languageColors = ['#3b82f6', '#8b5cf6', '#ec4899'];
+  // Color palettes - using ContraMind brand colors
+  const contractTypeColors = ['#B7DEE8', '#92CED9', '#6DBECA', '#48AEBB', '#239EAC', '#0C8E9D', '#0C7E8E', '#0C6E7F', '#0C5E70', '#0C4E61'];
+  const executedColors = ['#B7DEE8', '#F87171'];
+  const languageColors = ['#B7DEE8', '#0C8E9D', '#0C2836'];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0C2836]">
+    <div className="flex-1 overflow-y-auto bg-[#F6F6F6]">
       <div className="p-6 max-w-[1400px] mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -218,15 +218,23 @@ export default function AnalyticsReports() {
           transition={{ duration: 0.15 }}
           className="space-y-6"
         >
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-semibold font-space-grotesk text-[#0C2836] mb-2">
+              {t('التحليلات والتقارير', 'Analytics & Reports')}
+            </h1>
+            <p className="text-gray-600">{t('رؤى عالية المستوى لعقودك', 'High-level insights into your contracts')}</p>
+          </div>
+
           {/* KPI Header */}
           <div className="text-center py-8">
             <div className="flex items-center justify-center gap-3 mb-2">
-              <FileText className="w-8 h-8 text-cyan-200" />
-              <h1 className="text-5xl font-bold text-cyan-200">
+              <FileText className="w-8 h-8 text-[#B7DEE8]" />
+              <h1 className="text-5xl font-bold text-[#0C2836]">
                 {analyticsData.uniqueDocs}
               </h1>
             </div>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-gray-600">
               {t('مستندات فريدة', 'Unique Documents')}
             </p>
           </div>
@@ -238,9 +246,9 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.1 }}
-              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('نوع العقد', 'Contract Type')}
               </h3>
               <DonutChart 
@@ -256,9 +264,9 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.15 }}
-              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('منفذ', 'Executed')}
               </h3>
               <DonutChart 
@@ -273,9 +281,9 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.2 }}
-              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('اللغة', 'Language')}
               </h3>
               <DonutChart 
@@ -290,12 +298,12 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.25 }}
-              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('الأطراف الداخلية', 'Internal Parties')}
               </h3>
-              <HorizontalBarChart data={internalPartiesData} color="#22d3ee" />
+              <HorizontalBarChart data={internalPartiesData} color="#B7DEE8" />
             </motion.div>
 
             {/* Counterparties Bar */}
@@ -303,12 +311,12 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.3 }}
-              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('الأطراف المقابلة', 'Counterparties')}
               </h3>
-              <HorizontalBarChart data={counterpartiesData} color="#8b5cf6" />
+              <HorizontalBarChart data={counterpartiesData} color="#B7DEE8" />
             </motion.div>
 
             {/* Governing Law Bar */}
@@ -316,12 +324,12 @@ export default function AnalyticsReports() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.35 }}
-              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+              className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
                 {t('القانون الحاكم', 'Governing Law')}
               </h3>
-              <HorizontalBarChart data={governingLawData} color="#3b82f6" />
+              <HorizontalBarChart data={governingLawData} color="#B7DEE8" />
             </motion.div>
           </div>
         </motion.div>

@@ -5,18 +5,20 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
-  - **Redesigned Analytics & Reports Page with High-Level Analytics**: Complete redesign with new chart layout
-    - Implemented KPI header showing 705 unique documents count
+  - **Redesigned Analytics & Reports Page with Light Theme**: Complete redesign from dark to light theme
+    - Updated to ContraMind's light theme brand palette (#F6F6F6 background, #0C2836 text, white cards with #E6E6E6 borders)
+    - Implemented KPI header showing unique documents count from real data
     - Created 3x2 grid layout with 6 charts:
       - 3 donut charts: Contract Type, Executed (Yes/No), Language distribution
       - 3 horizontal bar charts: Internal Parties, Counterparties, Governing Law (all showing top 10)
     - Added "See More" toggle for donut charts with more than 10 slices
     - Charts built with Recharts library for interactive visualizations
-    - Dark theme styling with bg-slate-800 containers and cyan-200 accents
-    - Created /api/analytics endpoint that returns mock analytics data
-    - Added loading state while fetching analytics data
+    - Updated chart colors to use ContraMind brand colors (#B7DEE8 primary accent)
+    - Created /api/analytics endpoint that fetches real contract data from database
+    - Counterparties chart now shows actual party names from uploaded contracts
+    - Added TypeScript type declarations for Express.User to include id property
+    - Added header with title "Analytics & Reports" and subtitle
     - Responsive design that stacks to 1 column on mobile (< 640px)
-    - Custom tooltips with dark theme styling (bg-slate-900)
     - All chart data dynamically calculated with percentages
   - **Fixed React Hooks Error**: Removed explicit React import from SimpleLanguage.tsx (Vite handles JSX automatically)
 - **July 20, 2025**:

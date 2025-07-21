@@ -92,13 +92,7 @@ interface SimpleLanguageProviderProps {
 }
 
 export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    // Initialize state with a function to avoid SSR issues
-    if (typeof window === 'undefined') return 'ar';
-    const saved = localStorage.getItem('language');
-    if (saved === 'ar' || saved === 'en') return saved as Language;
-    return detectBrowserLanguage();
-  });
+  const [language, setLanguageState] = useState<Language>(detectBrowserLanguage());
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
