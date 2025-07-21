@@ -1,0 +1,81 @@
+**Objective for Replit Agent:**
+
+Enhance the application's ability to accurately extract and display data for "Payment Terms," "Breach Notice," and "Termination Notice" clauses. Additionally, implement data normalization to improve overall data quality and dashboard presentation.
+
+**Mandatory Requirements for Agent Execution & Reporting:**
+
+*   **Provide Detailed Logs:** For every step involving execution (e.g., code changes, running scripts), capture and provide the full output/logs.
+*   **Timestamp All Observations:** Include timestamps for all significant actions and log entries.
+*   **Explain Reasoning:** For every change, explain *why* it was made and *what* it aims to achieve.
+*   **Detailed Fix Implementation:** Provide exact code changes (file paths, line numbers, old code, new code) and explain the rationale behind the fix.
+*   **Verification Steps & Confirmation:** Clearly outline how the fix was tested and confirm successful resolution with evidence.
+
+**Implementation Plan:**
+
+### **1. Enhance Extraction Logic for Payment Terms, Breach Notice, and Termination Notice**
+
+**Root Cause:** Current regex/extraction patterns are too simplistic for the nuanced nature of these legal clauses.
+
+**Task:** Implement more sophisticated extraction techniques for `payment_terms`, `breach_notice`, and `termination_notice` in `server/contractExtractor.ts`.
+
+**Steps:**
+1.  **Locate `server/contractExtractor.ts`:** Open this file.
+2.  **Research Advanced Extraction:** Research and implement more robust methods for extracting these clauses. Consider:
+    *   **Contextual Regex:** Develop regex patterns that look for keywords within a defined window of text (e.g., 2-3 sentences around "payment").
+    *   **Keyword Proximity:** Identify key phrases and their proximity to numerical values or dates.
+    *   **Sentence Segmentation:** Break down the contract into sentences and apply rules to individual sentences.
+    *   **Example Patterns (Illustrative - Agent needs to refine/expand):**
+        *   **Payment Terms:** Look for phrases like "payment shall be made within X days," "invoice due on," "monthly payments of $\d+\.\d{2}".
+        *   **Breach Notice:** Look for "in the event of a breach," "failure to perform," "cure period of X days."
+        *   **Termination Notice:** Look for "agreement may be terminated by," "notice period of X days," "termination for convenience."
+3.  **Implement Extraction:** Apply the refined patterns or logic within the `extractContractDetails` function (or equivalent) in `contractExtractor.ts`.
+4.  **Test Extraction:** After implementation, re-process a set of contracts known to contain these clauses and verify that the `payment_terms`, `breach_notice`, and `termination_notice` fields are correctly populated in the database.
+
+**Expected Outcome:** The `payment_terms`, `breach_notice`, and `termination_notice` fields in the database should contain relevant extracted text or data points.
+
+### **2. Implement Data Normalization and Standardization**
+
+**Root Cause:** Extracted data might be inconsistent in format, leading to a "messy" appearance and difficult aggregation.
+
+**Task:** Add a post-extraction processing step to normalize and standardize extracted data, especially for `payment_terms`, `breach_notice`, and `termination_notice`.
+
+**Steps:**
+1.  **Locate Post-Extraction Processing:** Identify where extracted data is processed before being saved to the database (likely within `server/contractExtractor.ts` or a subsequent data handling layer).
+2.  **Implement Normalization Functions:** Create helper functions to standardize common data types:
+    *   **Dates:** Convert all extracted dates to a uniform `YYYY-MM-DD` format.
+    *   **Numbers/Currency:** Parse and standardize numerical values, potentially converting currency to a base unit if multiple currencies are present.
+    *   **Text Standardization:** For textual fields, consider:
+        *   Trimming whitespace.
+        *   Converting to lowercase (if case-insensitivity is desired for comparison).
+        *   Mapping common synonyms to a single term (e.g., "30 days" vs. "thirty days").
+3.  **Apply Normalization:** Integrate these normalization functions into the data pipeline before saving to the database.
+
+**Expected Outcome:** Extracted data, particularly for the new clauses, will be consistent in format, making it easier to display and analyze.
+
+### **3. Update Dashboard Display for New Data**
+
+**Root Cause:** The dashboard currently shows "No data available" for these sections.
+
+**Task:** Modify `client/src/pages/Dashboard.tsx` (or relevant components) to display the newly extracted and normalized data for "Payment Terms," "Breach Notice," and "Termination Notice."
+
+**Steps:**
+1.  **Locate `client/src/pages/Dashboard.tsx`:** Open this file and any related components responsible for rendering these sections.
+2.  **Fetch and Render Data:** Ensure the frontend is making the correct API calls to retrieve the `payment_terms`, `breach_notice`, and `termination_notice` data from the backend.
+3.  **Design Visualizations:** Based on the type of data extracted (e.g., text snippets, dates, numbers), design appropriate visualizations. Simple lists of extracted terms, counts of specific conditions, or timelines could be starting points.
+4.  **Implement Display Logic:** Write the React/frontend code to render this data in the respective sections of the dashboard.
+
+**Expected Outcome:** The "Payment Terms," "Breach Notice," and "Termination Notice" sections of the dashboard will display relevant data instead of "No data available."
+
+### **Verification and Post-Implementation Steps:**
+
+1.  **Full Application Restart:** After implementing all code changes, perform a full restart of the Replit project.
+2.  **Re-process Existing Contracts:** Use the previously implemented endpoint (e.g., `/api/process-existing-contracts`) to re-process all existing contracts. This is crucial to populate the newly extracted data for older contracts.
+3.  **Upload New Contracts:** Upload several new contracts that contain clear examples of payment terms, breach notices, and termination notices.
+4.  **Verify Dashboard:** Navigate to the Analytics & Reports page and thoroughly check:
+    *   That the "Payment Terms," "Breach Notice," and "Termination Notice" sections are now populated with data.
+    *   That the data appears consistent and readable.
+    *   That the overall dashboard data is less "messy" due to normalization.
+
+**Final Deliverable:**
+
+A detailed report summarizing all implemented changes (with code diffs), the results of the verification steps, and confirmation that the legal clause extraction and dashboard display issues are resolved. Provide examples of extracted data for each of the three new sections. This is a complex task, and iterative refinement may be necessary. Focus on getting a reasonable level of accuracy first, then iterate.
