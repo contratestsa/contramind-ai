@@ -38,7 +38,7 @@ export interface IStorage {
   updateUserOnboarding(id: number, data: { companyNameEn: string; companyNameAr?: string; country: string; contractRole: string }): Promise<User | undefined>;
   
   // Contract methods
-  createContract(contract: InsertContract): Promise<Contract>;
+  createContract(contract: InsertContract & { userId: number }): Promise<Contract>;
   getContract(id: number): Promise<Contract | undefined>;
   getUserContracts(userId: number, filters?: { status?: string; type?: string; search?: string }): Promise<Contract[]>;
   getRecentContracts(userId: number, limit?: number): Promise<Contract[]>;
@@ -206,15 +206,44 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Contract methods implementation
-  async createContract(insertContract: InsertContract): Promise<Contract> {
-    const [contract] = await db
-      .insert(contracts)
-      .values({
-        ...insertContract,
-        date: new Date(insertContract.date),
-      })
-      .returning();
-    return contract;
+  async createContract(insertContract: InsertContract & { userId: number }): Promise<Contract> {
+    // Map schema fields to actual database columns
+    const dbValues = {
+      user_id: insertContract.userId,
+      name: insertContract.title, // database uses 'name' column
+      title: insertContract.title,
+      parties: insertContract.partyName, // database uses 'parties' column
+      party_name: insertContract.partyName,
+      type: insertContract.type,
+      status: insertContract.status || 'draft',
+      risk_level: insertContract.riskLevel || null,
+      start_date: new Date(insertContract.date), // database uses 'start_date' column
+      file_path: insertContract.fileUrl || null
+    };
+
+    const result = await db.execute(sql`
+      INSERT INTO contracts (user_id, name, title, parties, party_name, type, status, risk_level, start_date, file_path)
+      VALUES (${dbValues.user_id}, ${dbValues.name}, ${dbValues.title}, ${dbValues.parties}, ${dbValues.party_name}, 
+              ${dbValues.type}, ${dbValues.status}, ${dbValues.risk_level}, ${dbValues.start_date}, ${dbValues.file_path})
+      RETURNING *
+    `);
+
+    const createdContract = result.rows[0] as any;
+    
+    // Map database columns back to schema fields
+    return {
+      id: createdContract.id,
+      userId: createdContract.user_id,
+      title: createdContract.title || createdContract.name,
+      partyName: createdContract.party_name || createdContract.parties,
+      date: createdContract.start_date,
+      type: createdContract.type,
+      status: createdContract.status,
+      riskLevel: createdContract.risk_level,
+      fileUrl: createdContract.file_path,
+      createdAt: createdContract.created_at,
+      updatedAt: createdContract.updated_at
+    } as Contract;
   }
 
   async getContract(id: number): Promise<Contract | undefined> {
