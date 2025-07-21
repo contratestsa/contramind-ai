@@ -265,16 +265,38 @@ export default function AnalyticsReports() {
         >
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-semibold font-space-grotesk text-[#0C2836] mb-2">
-              {t('التحليلات والتقارير', 'Analytics & Reports')}
-            </h1>
-            <p className="text-gray-600">{t('رؤى عالية المستوى لعقودك', 'High-level insights into your contracts')}</p>
-            {dataUpdatedAt && (
-              <p className="text-sm text-gray-500 mt-2">
-                {t('آخر تحديث: ', 'Last updated: ')} 
-                {new Date(dataUpdatedAt).toLocaleTimeString(language === 'ar' ? 'ar-SA' : 'en-US')}
-              </p>
-            )}
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-3xl font-semibold font-space-grotesk text-[#0C2836] mb-2">
+                  {t('التحليلات والتقارير', 'Analytics & Reports')}
+                </h1>
+                <p className="text-gray-600">{t('رؤى عالية المستوى لعقودك', 'High-level insights into your contracts')}</p>
+                {dataUpdatedAt && (
+                  <p className="text-sm text-gray-500 mt-2">
+                    {t('آخر تحديث: ', 'Last updated: ')} 
+                    {new Date(dataUpdatedAt).toLocaleTimeString(language === 'ar' ? 'ar-SA' : 'en-US')}
+                  </p>
+                )}
+              </div>
+              {/* Re-process button always visible if there are contracts */}
+              {analyticsData.uniqueDocs > 0 && (
+                <Button
+                  onClick={() => processContractsMutation.mutate()}
+                  disabled={processContractsMutation.isPending}
+                  className="bg-[#B7DEE8] hover:bg-[#92CED9] text-[#0C2836]"
+                  size="sm"
+                >
+                  {processContractsMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0C2836] mr-2"></div>
+                      {t('جاري المعالجة...', 'Processing...')}
+                    </>
+                  ) : (
+                    t('إعادة معالجة العقود', 'Re-process Contracts')
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* KPI Header */}
