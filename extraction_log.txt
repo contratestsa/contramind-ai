@@ -1,0 +1,23 @@
+Initializing Alibaba Cloud ApsaraDB connection...
+DATABASE_URL exists: true
+Testing Alibaba Cloud ApsaraDB connection...
+[2025-07-21T15:55:30.449Z] Starting batch contract processing...
+[2025-07-21T15:55:30.450Z] Fatal error in batch processing: TypeError: db.query is not a function
+    at processAllContracts (/home/runner/workspace/server/processExistingContracts.ts:21:32)
+    at <anonymous> (/home/runner/workspace/server/processExistingContracts.ts:67:1)
+    at ModuleJob.run (node:internal/modules/esm/module_job:234:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:473:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:122:5)
+/home/runner/workspace/server/processExistingContracts.ts:62
+    await db.end();
+             ^
+
+
+TypeError: db.end is not a function
+    at processAllContracts (/home/runner/workspace/server/processExistingContracts.ts:62:14)
+    at <anonymous> (/home/runner/workspace/server/processExistingContracts.ts:67:1)
+    at ModuleJob.run (node:internal/modules/esm/module_job:234:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:473:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:122:5)
+
+Node.js v20.18.1

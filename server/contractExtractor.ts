@@ -1,8 +1,11 @@
 import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { storage } from './storage';
 import { InsertContractDetails } from '@shared/schema';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 interface ExtractedData {
   contractType: string | null;
@@ -38,6 +41,40 @@ export class ContractExtractor {
       py.on('close', (code) => {
         if (code !== 0) {
           reject(new Error(`Python script failed: ${error}`));
+        } else {
+          resolve(output);
+        }
+      });
+    });
+  }
+
+  // Extract text from DOCX files using Python
+  private async extractDocxText(docxPath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const py = spawn('python3', ['-c', `
+from docx import Document
+doc = Document('${docxPath}')
+text = []
+for paragraph in doc.paragraphs:
+    if paragraph.text.strip():
+        text.append(paragraph.text)
+print('\\n'.join(text))
+`]);
+      
+      let output = '';
+      let error = '';
+      
+      py.stdout.on('data', (chunk) => {
+        output += chunk.toString();
+      });
+      
+      py.stderr.on('data', (chunk) => {
+        error += chunk.toString();
+      });
+      
+      py.on('close', (code) => {
+        if (code !== 0) {
+          reject(new Error(`DOCX extraction failed: ${error}`));
         } else {
           resolve(output);
         }
@@ -128,9 +165,9 @@ export class ContractExtractor {
 
   private extractParties(text: string): { internalParties: string[]; counterparties: string[] } {
     const partyPatterns = [
-      /between\s+([^,]+),?\s*(?:\([^)]+\))?\s*and\s+([^,]+),?\s*(?:\([^)]+\))?/i,
-      /party\s*of\s*the\s*first\s*part[:\s]+([^,\n]+)/i,
-      /party\s*of\s*the\s*second\s*part[:\s]+([^,\n]+)/i,
+      /between\s+([^,]+),?\s*(?:\([^)]+\))?\s*and\s+([^,]+),?\s*(?:\([^)]+\))?/gi,
+      /party\s*of\s*the\s*first\s*part[:\s]+([^,\n]+)/gi,
+      /party\s*of\s*the\s*second\s*part[:\s]+([^,\n]+)/gi,
       /"([^"]+)"\s*(?:a|an)\s*[^,]+\s*company/gi
     ];
     
@@ -227,8 +264,38 @@ export class ContractExtractor {
   // Main method to process a contract file
   async processContract(contractId: number, filePath: string): Promise<void> {
     try {
-      // Extract text from PDF
-      const text = await this.extractPdfText(filePath);
+      // Detect file type and extract text
+      let text = '';
+      
+      // Check if file has extension
+      let fileExtension = path.extname(filePath).toLowerCase();
+      
+      if (!fileExtension) {
+        // Detect file type by checking file signature
+        const buffer = await fs.promises.readFile(filePath, { length: 4 });
+        const header = buffer.toString('hex', 0, 4);
+        
+        if (header === '504b0304') {
+          // PK.. signature for ZIP/DOCX files
+          text = await this.extractDocxText(filePath);
+        } else if (header === '25504446') {
+          // %PDF signature
+          text = await this.extractPdfText(filePath);
+        } else {
+          // Try both methods as fallback
+          try {
+            text = await this.extractDocxText(filePath);
+          } catch {
+            text = await this.extractPdfText(filePath);
+          }
+        }
+      } else if (fileExtension === '.pdf') {
+        text = await this.extractPdfText(filePath);
+      } else if (fileExtension === '.docx') {
+        text = await this.extractDocxText(filePath);
+      } else {
+        throw new Error(`Unsupported file type: ${fileExtension}`);
+      }
       
       // Extract information
       const extractedData = this.extractInformation(text);

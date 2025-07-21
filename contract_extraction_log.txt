@@ -1,0 +1,15 @@
+Initializing Alibaba Cloud ApsaraDB connection...
+DATABASE_URL exists: true
+Testing Alibaba Cloud ApsaraDB connection...
+/home/runner/workspace/server/processExistingContracts.ts:67
+if (require.main === module) {
+^
+
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+    at <anonymous> (/home/runner/workspace/server/processExistingContracts.ts:67:1)
+    at ModuleJob.run (node:internal/modules/esm/module_job:234:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:473:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:122:5)
+
+Node.js v20.18.1

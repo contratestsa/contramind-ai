@@ -4,7 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["google-cloud-sdk", "concurrently", "python311Packages.pypdf2", "python311Packages.python-docx", "python311Packages.pytesseract", "tesseract"]
+packages = ["concurrently", "google-cloud-sdk", "python311Packages.pypdf2", "python311Packages.pytesseract", "python311Packages.python-docx", "python312Packages.python-docx", "tesseract"]
 
 [deployment]
 deploymentTarget = "autoscale"
