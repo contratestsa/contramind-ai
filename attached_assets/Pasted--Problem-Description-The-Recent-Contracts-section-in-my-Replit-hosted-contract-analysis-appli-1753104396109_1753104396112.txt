@@ -1,0 +1,27 @@
+**Problem Description:**
+
+The 'Recent Contracts' section in my Replit-hosted contract analysis application is not persisting data across user sessions. When a user logs out and then logs back in, the 'Recent Contracts' list becomes empty, showing 'No archived chats', even though it displayed previous contract history before logging out. This indicates a data persistence failure.
+
+**Objective for Replit Agent:**
+
+Analyze the existing application code and identify the root cause of the non-persistent 'Recent Contracts' data. Implement a solution to ensure that the 'Recent Contracts' list is properly stored and retrieved, persisting across user logout/login cycles. Prioritize solutions that are robust and scalable within the Replit environment.
+
+**Specific Tasks:**
+
+1.  **Code Review & Diagnosis:** Examine the frontend and backend code (if applicable) to understand how 'Recent Contracts' data is currently handled. Identify where the data is being stored (e.g., `sessionStorage`, in-memory variables, or if it's simply not being saved). Determine why it's not persisting.
+2.  **Solution Implementation:**
+    *   **Option A (Recommended):** Implement a server-side persistence solution using **Replit Database** to store the 'Recent Contracts' associated with the user's account. This will ensure data is available across devices and sessions. You will need to:
+        *   Modify the backend to save contract history to Replit Database when a contract is accessed.
+        *   Modify the backend to retrieve contract history from Replit Database when a user logs in or the dashboard loads.
+        *   Update the frontend to make API calls to this new backend functionality.
+    *   **Option B (Alternative - Client-Side):** If a server-side solution is not immediately feasible or desired, implement client-side persistence using `localStorage`. This will store data in the user's browser. You will need to:
+        *   Modify the frontend to save contract history to `localStorage` when a contract is accessed.
+        *   Modify the frontend to retrieve contract history from `localStorage` when the dashboard loads.
+        *   *Note: This option does not support cross-device synchronization.*
+3.  **Testing:** Verify that the 'Recent Contracts' list correctly persists after logging out and logging back in.
+4.  **Documentation:** Provide a brief explanation of the implemented solution and any changes made to the codebase.
+
+**Assumptions:**
+
+*   The application has a user authentication system in place, allowing for user-specific data storage.
+*   You have access to modify both frontend (e.g., HTML, CSS, JavaScript) and backend (e.g., Python, Node.js) code within the Replit project.

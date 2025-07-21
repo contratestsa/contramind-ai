@@ -45,6 +45,7 @@ import Notifications from "@/pages/Notifications";
 import TagsCategories from "@/pages/TagsCategories";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useRecentContracts } from "@/hooks/useRecentContracts";
 
 interface User {
   id: number;
@@ -110,15 +111,8 @@ export default function Dashboard() {
   const sidebarWidth = isSidebarCollapsed ? 60 : 260;
   const hasStartedChat = messages.length > 0;
 
-  // Archive state
-  const [archivedChats, setArchivedChats] = useState<{
-    id: string;
-    filename: string;
-    timestamp: Date;
-    lastMessageSnippet: string;
-    messages: Message[];
-    contract: Contract;
-  }[]>([]);
+  // Use persistent recent contracts from API
+  const { recent: recentContracts, isLoading: isLoadingRecent, touch: touchContract } = useRecentContracts(5);
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -387,9 +381,15 @@ export default function Dashboard() {
   };
 
   // Load archived chat
-  const loadArchivedChat = (archivedChat: typeof archivedChats[0]) => {
-    setSelectedContract(archivedChat.contract);
-    setMessages(archivedChat.messages);
+  const loadContractMessages = (contract: Contract) => {
+    setSelectedContract(contract);
+    // Initialize with a welcome message for the contract
+    setMessages([{
+      id: `welcome-${contract.id}`,
+      type: 'system',
+      content: `Loading contract: ${contract.title}`,
+      timestamp: new Date()
+    }]);
     // Close sliding panel if open
     setShowSlidingPanel(false);
   };
@@ -507,37 +507,47 @@ export default function Dashboard() {
                 <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
-                <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
+                <button 
+                  onClick={() => setLocation('/dashboard/contracts')}
+                  className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
                   {t('عرض الكل', 'View All')}
                 </button>
               </div>
               <div className="space-y-1">
-                {archivedChats.length === 0 ? (
+                {isLoadingRecent ? (
                   <p className="text-xs text-[rgba(183,222,232,0.6)] italic p-2">
-                    {t('لا توجد محادثات مؤرشفة', 'No archived chats')}
+                    {t('جاري التحميل...', 'Loading...')}
+                  </p>
+                ) : recentContracts.length === 0 ? (
+                  <p className="text-xs text-[rgba(183,222,232,0.6)] italic p-2">
+                    {t('لا توجد عقود حديثة', 'No recent contracts')}
                   </p>
                 ) : (
-                  archivedChats.slice(0, 5).map((archive) => (
+                  recentContracts.slice(0, 5).map((contract) => (
                     <button
-                      key={archive.id}
-                      onClick={() => loadArchivedChat(archive)}
+                      key={contract.id}
+                      onClick={() => {
+                        touchContract(contract.id);
+                        setSelectedContract(contract);
+                        loadContractMessages(contract);
+                      }}
                       className={cn(
                         "w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
-                        selectedContract?.id === archive.contract.id && "bg-[rgba(183,222,232,0.1)]"
+                        selectedContract?.id === contract.id && "bg-[rgba(183,222,232,0.1)]"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-sm truncate">{archive.filename}</span>
+                        <span className="text-sm truncate">{contract.title}</span>
                         <ChevronRight className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">
-                        <span>{archive.contract.partyName}</span>
+                        <span>{contract.partyName}</span>
                         <span>•</span>
-                        <span>{new Date(archive.timestamp).toLocaleDateString()}</span>
+                        <span>{new Date(contract.date).toLocaleDateString()}</span>
                         <span className="ml-auto">
-                          {archive.contract.riskLevel === 'low' && '🟢'}
-                          {archive.contract.riskLevel === 'medium' && '🟡'}
-                          {archive.contract.riskLevel === 'high' && '🔴'}
+                          {contract.riskLevel === 'low' && '🟢'}
+                          {contract.riskLevel === 'medium' && '🟡'}
+                          {contract.riskLevel === 'high' && '🔴'}
                       </span>
                     </div>
                   </button>
