@@ -50,6 +50,8 @@ export default function UploadModal({ isOpen, onClose, onUpload }: UploadModalPr
   };
 
   const validateAndSetFile = (file: File) => {
+    console.log('1. Contract file selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+    
     const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const maxSize = 50 * 1024 * 1024; // 50MB
 
@@ -85,6 +87,7 @@ export default function UploadModal({ isOpen, onClose, onUpload }: UploadModalPr
     if (!selectedFile) return;
     
     setIsUploading(true);
+    console.log('2. Starting contract upload...');
     
     try {
       // Create form data for file upload
@@ -95,6 +98,12 @@ export default function UploadModal({ isOpen, onClose, onUpload }: UploadModalPr
       formData.append('type', 'other'); // Default type
       formData.append('status', 'draft');
       formData.append('riskLevel', 'medium');
+      
+      console.log('3. Uploading to server:', {
+        fileName: selectedFile.name,
+        fileSize: selectedFile.size,
+        fileType: selectedFile.type
+      });
       
       // Upload to server
       const response = await fetch('/api/contracts/upload', {
@@ -109,6 +118,7 @@ export default function UploadModal({ isOpen, onClose, onUpload }: UploadModalPr
       }
       
       const result = await response.json();
+      console.log('4. Upload response received:', result);
       
       toast({
         title: t('تم تحميل العقد بنجاح', 'Contract uploaded successfully'),

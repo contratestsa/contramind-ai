@@ -855,6 +855,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.id;
       const userContracts = await storage.getUserContracts(userId);
       
+      console.log(`[${new Date().toISOString()}] Processing ${userContracts.length} contracts for user ${userId}`);
+      
       let processed = 0;
       let failed = 0;
       
@@ -863,11 +865,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
           try {
             const filePath = path.join(__dirname, '..', contract.fileUrl);
             
+            console.log(`[${new Date().toISOString()}] Processing contract ${contract.id}: ${contract.title}`);
+            console.log(`[${new Date().toISOString()}] File path: ${filePath}`);
+            
             // Check if file exists
             if (fs.existsSync(filePath)) {
+              console.log(`[${new Date().toISOString()}] File exists, starting extraction...`);
               await contractExtractor.processContract(contract.id, filePath);
               processed++;
-              console.log(`[${new Date().toISOString()}] Processed contract ${contract.id}: ${contract.title}`);
+              console.log(`[${new Date().toISOString()}] Successfully processed contract ${contract.id}`);
             } else {
               console.log(`[${new Date().toISOString()}] File not found for contract ${contract.id}: ${filePath}`);
               failed++;
@@ -876,6 +882,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             console.error(`[${new Date().toISOString()}] Failed to process contract ${contract.id}:`, error);
             failed++;
           }
+        } else {
+          console.log(`[${new Date().toISOString()}] No file URL for contract ${contract.id}`);
+          failed++;
         }
       }
       
@@ -1183,6 +1192,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         terminationNotice: terminationNoticeData,
         hasExtractedData: contractDetails.length > 0
       };
+
+      console.log(`[${new Date().toISOString()}] Analytics data:`, {
+        uniqueDocs,
+        hasExtractedData: contractDetails.length > 0,
+        contractDetailsCount: contractDetails.length,
+        paymentTermsCount: Object.keys(paymentTermsData).length,
+        breachNoticeCount: Object.keys(breachNoticeData).length,
+        terminationNoticeCount: Object.keys(terminationNoticeData).length
+      });
 
       res.json(analyticsData);
     } catch (error) {
