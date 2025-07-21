@@ -5,6 +5,15 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
+  - **Fixed Contract Upload and Analytics Dashboard Issues**: Resolved critical issues preventing proper contract processing
+    - Fixed UploadModal component which was using mock upload instead of actual API calls
+    - Implemented real file upload to `/api/contracts/upload` endpoint with proper FormData
+    - Added automatic redirection to chatbar after successful contract upload
+    - Dashboard now handles `contractId` query parameter to automatically select uploaded contract
+    - Added welcome message in chat when redirected from upload
+    - Contract extraction pipeline now properly processes uploaded files
+    - Analytics dashboard will show complete data after contracts are processed via "Process All Contracts" button
+- **July 21, 2025** (Earlier):
   - **Implemented Contract Data Extraction Pipeline**: Created comprehensive system for extracting and analyzing contract information
     - Created contract_details database table to store extracted contract information
     - Built contractExtractor.ts service to manage the extraction process

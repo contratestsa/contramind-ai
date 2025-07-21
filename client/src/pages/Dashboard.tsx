@@ -131,6 +131,34 @@ export default function Dashboard() {
     }
   }, [error, userData]);
 
+  // Handle contractId query parameter
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const contractId = urlParams.get('contractId');
+    
+    if (contractId && recentContracts.length > 0) {
+      const contract = recentContracts.find(c => c.id === parseInt(contractId));
+      if (contract) {
+        setSelectedContract(contract);
+        touchContract(contract.id);
+        // Clear the URL parameter to clean up the URL
+        window.history.replaceState({}, '', '/dashboard');
+        
+        // Add a welcome message for the new contract
+        const welcomeMessage: Message = {
+          id: Date.now().toString(),
+          type: 'system',
+          content: t(
+            `مرحباً! لقد تم تحميل "${contract.title}" بنجاح. كيف يمكنني مساعدتك في تحليل هذا العقد؟`,
+            `Welcome! "${contract.title}" has been uploaded successfully. How can I help you analyze this contract?`
+          ),
+          timestamp: new Date()
+        };
+        setMessages([welcomeMessage]);
+      }
+    }
+  }, [recentContracts, touchContract, t]);
+
   // Fetch recent contracts
   const { data: recentContractsData } = useQuery<{ contracts: any[] }>({
     queryKey: ["/api/contracts/recent"],

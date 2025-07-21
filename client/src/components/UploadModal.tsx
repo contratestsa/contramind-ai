@@ -85,30 +85,59 @@ export default function UploadModal({ isOpen, onClose, onUpload }: UploadModalPr
     if (!selectedFile) return;
     
     setIsUploading(true);
-    // Store the file for later use
-    const fileToUpload = selectedFile;
     
-    // Mock upload - in reality this would upload to server
-    setTimeout(() => {
+    try {
+      // Create form data for file upload
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('title', selectedFile.name.replace(/\.[^/.]+$/, '')); // Remove file extension
+      formData.append('partyName', 'Client Party'); // Default party name
+      formData.append('type', 'other'); // Default type
+      formData.append('status', 'draft');
+      formData.append('riskLevel', 'medium');
+      
+      // Upload to server
+      const response = await fetch('/api/contracts/upload', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Upload failed');
+      }
+      
+      const result = await response.json();
+      
       toast({
         title: t('تم تحميل العقد بنجاح', 'Contract uploaded successfully'),
-        description: t('يرجى اختيار دورك في العقد', 'Please select your role in the contract')
+        description: t('جاري الانتقال إلى المحادثة...', 'Redirecting to chat...')
       });
-      // Show party selection modal
+      
+      // Redirect to chat after successful upload
       setTimeout(() => {
         setIsUploading(false);
         setSelectedFile(null);
         onClose();
-        // Pass the file to the party selection modal
-        setShowPartySelection(true);
-        // Store file temporarily for party selection
-        sessionStorage.setItem('uploadedFile', JSON.stringify({
-          name: fileToUpload.name,
-          size: fileToUpload.size,
-          type: fileToUpload.type
-        }));
+        
+        // Navigate to the dashboard chat with the new contract
+        if (result.contract && result.contract.id) {
+          window.location.href = `/dashboard?contractId=${result.contract.id}`;
+        } else {
+          window.location.href = '/dashboard';
+        }
       }, 1000);
-    }, 1000);
+      
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: t('فشل تحميل العقد', 'Failed to upload contract'),
+        description: error instanceof Error ? error.message : 'Unknown error',
+        variant: 'destructive'
+      });
+      setIsUploading(false);
+    }
   };
 
   const handlePartySelection = (partyType: string) => {
