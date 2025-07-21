@@ -1,0 +1,106 @@
+**URGENT: Comprehensive Diagnostic Information Extraction for Persistent Application Issues**
+
+**Problem Context:**
+
+Despite multiple attempts to resolve, the following critical issues persist in the application:
+
+1.  **Analytics Dashboard Data Inconsistency:** The Analytics & Reports dashboard does not accurately reflect data from newly uploaded contracts. It displays outdated/incomplete data or shows "No data available" for specific sections (e.g., Payment Terms, Breach Notice, Termination Notice), even when new contracts are successfully uploaded.
+2.  **Post-Upload Redirection Failure:** After a contract is successfully uploaded, the application fails to automatically redirect the user to the chatbar or the specific chat interface for the newly uploaded contract.
+
+Previous diagnostic prompts have not yielded a complete resolution, indicating a need for deeper insight into the application's internal state and the Replit environment.
+
+**Objective for Replit Agent:**
+
+Your primary objective is NOT to fix the issues directly at this stage, but to **extract and provide comprehensive diagnostic information** from the Replit project. This information will be used for an in-depth external analysis to pinpoint the precise root causes and formulate a robust solution.
+
+**Mandatory Requirements for Agent Execution & Information Provision:**
+
+*   **Capture Full Outputs:** For every command executed, provide the *complete and unedited* output.
+*   **Timestamp All Actions:** Include timestamps for all significant actions and log entries.
+*   **Organize Information:** Clearly label each piece of information (e.g., 
+
+
+File Content, Command Output, Log Snippet).
+*   **Anonymize Sensitive Data:** If any logs or data dumps contain sensitive user information, please anonymize it before providing.
+
+**Detailed Information Extraction Plan:**
+
+### **1. Project Codebase (Key Files):**
+
+Provide the full content of the following files. If a file is not found, state that it is missing.
+
+*   **Frontend Source Code (if applicable):**
+    *   `src/App.js` (or `src/App.tsx`, `src/index.js`, `src/main.js`, `src/main.tsx` - the main entry point)
+    *   `src/components/Dashboard.js` (or equivalent component for the analytics dashboard)
+    *   `src/components/ContractUpload.js` (or equivalent component for contract upload)
+    *   `src/services/api.js` (or equivalent for API calls)
+    *   `src/routes.js` (or equivalent for frontend routing configuration)
+    *   Any other files directly related to analytics data display or contract upload/redirection.
+*   **Backend Source Code:**
+    *   `server/index.js` (or `server/app.py`, `server.js`, `app.py` - the main backend entry point)
+    *   `server/storage.ts` (or equivalent file handling database interactions)
+    *   `shared/schema.ts` (or equivalent database schema definition file)
+    *   Any files containing logic for:
+        *   Contract data extraction (e.g., parsing PDF/document content).
+        *   Analytics data aggregation.
+        *   Handling contract upload requests.
+        *   Post-upload processing and responses.
+*   **Configuration Files:**
+    *   `.replit`
+    *   `package.json` (for Node.js projects - both frontend and backend if separate)
+    *   `requirements.txt` (for Python projects)
+
+### **2. Database Information:**
+
+*   **Database Schema Dump:**
+    *   **Action:** Provide the SQL `CREATE TABLE` statements for all tables in your database, especially those related to contracts and analytics.
+    *   **Method (Example for SQLite/PostgreSQL):** `sqlite3 your_database.db .schema` or `pg_dump -s your_database_name`
+*   **Sample Contract Data:**
+    *   **Action:** Select 3-5 recent contracts (including at least one that you know is *not* reflecting correctly on the dashboard, and one that *should* have data for Payment Terms, Breach Notice, Termination Notice).
+    *   **Action:** For each selected contract, provide the *full row data* from the database. Include all columns.
+    *   **Method (Example for SQL):** `SELECT * FROM contracts WHERE id IN (contract_id_1, contract_id_2, ...);`
+    *   **Method (Example for Replit Database):** List keys and then retrieve values for specific keys.
+
+### **3. Application Logs (Capture during specific actions):**
+
+*   **Backend Logs (during Contract Upload & Analytics Page Load):**
+    *   **Action:** Clear existing backend logs if possible.
+    *   **Action:** Perform a new contract upload.
+    *   **Action:** Immediately after upload, navigate to the Analytics & Reports page.
+    *   **Action:** Capture the *entire* backend log output generated during these two actions.
+    *   **Method:** Provide the content of the Replit console output or any specific log files (e.g., `tail -n 500 /var/log/your_app.log` if applicable).
+*   **Frontend (Browser) Console Logs:**
+    *   **Action:** Open your application in a web browser.
+    *   **Action:** Open the browser's developer console (F12 or Ctrl+Shift+I).
+    *   **Action:** Clear the console.
+    *   **Action:** Perform a new contract upload.
+    *   **Action:** Navigate to the Analytics & Reports page.
+    *   **Action:** Capture *all* console output (errors, warnings, info, network requests) from the `Console` and `Network` tabs. Save as a text file or screenshot.
+
+### **4. Environment Details:**
+
+*   **Running Processes:**
+    *   **Action:** Execute `ps aux` in the Replit shell.
+    *   **Output:** Provide the full output.
+*   **Resource Usage:**
+    *   **Action:** Execute `free -h` (memory usage) and `df -h` (disk usage) in the Replit shell.
+    *   **Output:** Provide the full output for both commands.
+*   **Network Information (Listening Ports):**
+    *   **Action:** Execute `netstat -tulnp` in the Replit shell.
+    *   **Output:** Provide the full output.
+
+### **5. Specific API Responses (Raw):**
+
+*   **Analytics API Response:**
+    *   **Action:** Execute `curl -s -b cookies.txt http://localhost:5000/api/analytics` (adjust URL/port as necessary).
+    *   **Output:** Provide the *full raw JSON response* and HTTP headers.
+*   **Contract Upload API Response:**
+    *   **Action:** Describe the method to trigger a contract upload via `curl` (if possible) or state that it's only via UI. If via UI, the browser network tab capture (from section 3) should suffice.
+    *   **Output:** If `curl` is used, provide the *full raw HTTP response* (headers and body) from a successful contract upload.
+
+**Expected Deliverable:**
+
+A single, well-organized document or a collection of clearly named files containing all the requested information. This comprehensive data will enable a precise diagnosis of the persistent issues.
+
+
+
