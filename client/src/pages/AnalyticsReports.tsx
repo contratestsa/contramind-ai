@@ -207,10 +207,10 @@ export default function AnalyticsReports() {
     governingLawData
   } = processData(analyticsData);
 
-  // Color palettes - using ContraMind brand colors
-  const contractTypeColors = ['#B7DEE8', '#92CED9', '#6DBECA', '#48AEBB', '#239EAC', '#0C8E9D', '#0C7E8E', '#0C6E7F', '#0C5E70', '#0C4E61'];
-  const executedColors = ['#B7DEE8', '#F87171'];
-  const languageColors = ['#B7DEE8', '#0C8E9D', '#0C2836'];
+  // Color palettes matching the screenshot
+  const contractTypeColors = ['#B7DEE8', '#A5D6E4', '#93CED9', '#81C6CF', '#6FBEC5'];
+  const executedColors = ['#B7DEE8', '#F08A8A']; // Light blue for Yes, Light red for No
+  const languageColors = ['#B7DEE8', '#5BABB9', '#2B4F5E']; // Light blue, medium teal, dark teal
 
   return (
     <div className="bg-[#F6F6F6]">
@@ -281,7 +281,7 @@ export default function AnalyticsReports() {
               <DonutChart 
                 data={executedData} 
                 colors={executedColors} 
-                centerText={`${executedData[0].pct}% Yes`}
+                centerText={`${executedData.find(d => d.name === 'Yes')?.pct || 0}% Yes`}
               />
             </motion.div>
 
