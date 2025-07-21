@@ -339,6 +339,12 @@ print('\\n'.join(text))
       }
     }
     
+    // Log what we're searching through
+    if (paymentContexts.length === 0) {
+      // Log first 500 chars of text to see what we're working with
+      console.log(`[${new Date().toISOString()}] Sample text being searched for payment terms (first 500 chars):`, text.substring(0, 500));
+    }
+    
     // Deduplicate and combine contexts
     const uniqueContexts = [...new Set(paymentContexts)];
     
