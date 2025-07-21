@@ -45,6 +45,7 @@ export interface IStorage {
   getAllContracts(userId: number): Promise<Contract[]>;
   updateContract(id: number, updates: Partial<Contract>): Promise<Contract | undefined>;
   deleteContract(id: number): Promise<boolean>;
+  touchContract(userId: number, contractId: number): Promise<void>;
   
   // Contract chat methods
   createContractChat(chat: InsertContractChat): Promise<ContractChat>;
@@ -312,10 +313,11 @@ export class DatabaseStorage implements IStorage {
           risk_level as "riskLevel",
           file_path as "fileUrl",
           created_at as "createdAt",
-          updated_at as "updatedAt"
+          updated_at as "updatedAt",
+          last_viewed_at as "lastViewedAt"
         FROM contracts
         WHERE user_id = ${userId}
-        ORDER BY created_at DESC
+        ORDER BY last_viewed_at DESC
         LIMIT ${limit}
       `);
       
@@ -353,6 +355,19 @@ export class DatabaseStorage implements IStorage {
       console.error('Error in getAllContracts:', error);
       // Return empty array on error to avoid breaking the UI
       return [];
+    }
+  }
+
+  async touchContract(userId: number, contractId: number): Promise<void> {
+    try {
+      await db.execute(sql`
+        UPDATE contracts 
+        SET last_viewed_at = CURRENT_TIMESTAMP 
+        WHERE id = ${contractId} AND user_id = ${userId}
+      `);
+    } catch (error) {
+      console.error('Error in touchContract:', error);
+      throw error;
     }
   }
 

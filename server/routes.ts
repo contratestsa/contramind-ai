@@ -472,6 +472,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Touch contract endpoint - updates last viewed timestamp
+  app.post("/api/contracts/touch", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const { contractId } = req.body;
+      
+      if (!contractId) {
+        return res.status(400).json({ message: "Contract ID is required" });
+      }
+
+      await storage.touchContract(req.user.id, contractId);
+
+      res.status(204).send();
+    } catch (error) {
+      console.error('Error touching contract:', error);
+      res.status(500).json({ message: "Failed to update contract" });
+    }
+  });
+
   app.get("/api/contracts/:id", async (req, res) => {
     try {
       if (!req.user) {

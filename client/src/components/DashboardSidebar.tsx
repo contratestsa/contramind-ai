@@ -8,8 +8,7 @@ import {
 } from 'lucide-react';
 import logoImage from "@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png";
 import iconImage from "@assets/Profile Picture - ContraMind (V001)-1_1752437530152.png";
-import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { useRecentContracts } from '@/hooks/useRecentContracts';
 
 interface Contract {
   id: string;
@@ -41,11 +40,8 @@ export default function DashboardSidebar({
   const [contractSearchQuery, setContractSearchQuery] = useState('');
   const isRTL = language === 'ar';
 
-  // Fetch recent contracts
-  const { data: recentContracts = [] } = useQuery<Contract[]>({
-    queryKey: ['/api/contracts/recent'],
-    refetchInterval: 30000
-  });
+  // Fetch recent contracts with persistence
+  const { recent: recentContracts, isLoading, touch } = useRecentContracts(5);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', {
@@ -154,7 +150,7 @@ export default function DashboardSidebar({
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
                 <button 
-                  onClick={() => setLocation('/repository')}
+                  onClick={() => setLocation('/dashboard/contracts')}
                   className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
                   {t('عرض الكل', 'View All')}
                 </button>
@@ -168,7 +164,10 @@ export default function DashboardSidebar({
                   recentContracts.slice(0, 5).map((contract) => (
                     <button
                       key={contract.id}
-                      onClick={() => setLocation(`/dashboard?contract=${contract.id}`)}
+                      onClick={() => {
+                        touch(contract.id); // Touch contract to update last viewed
+                        setLocation(`/dashboard?contract=${contract.id}`);
+                      }}
                       className="w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group"
                     >
                       <div className="flex items-center justify-between">

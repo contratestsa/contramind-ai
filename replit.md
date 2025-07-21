@@ -5,6 +5,14 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
+  - **Implemented Persistent Recent Contracts**: Recent contracts now persist across sessions and devices
+    - Added `last_viewed_at` column to contracts table in database
+    - Created `/api/contracts/touch` endpoint to update last viewed timestamp
+    - Created `useRecentContracts` React hook to manage recent contracts with automatic refresh
+    - Updated sidebar to use the hook and touch contracts when clicked
+    - Recent contracts are now ordered by most recently viewed (last_viewed_at DESC)
+    - Contracts automatically move to top of list when clicked/viewed
+    - List persists across browser refreshes and different devices for each user
   - **Fixed Contract Upload Database Constraint Error**: Resolved contract type validation issue
     - Updated allowed contract types to match database constraints: 'service', 'nda', 'employment', 'sales', 'other'
     - Removed invalid types 'partnership' and 'lease' that were causing database constraint violations
