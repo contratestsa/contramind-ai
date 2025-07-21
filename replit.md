@@ -4,21 +4,7 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
-- **July 21, 2025** (Latest):
-  - **Complete Analytics Dashboard Redesign with Recharts**: Rebuilt Analytics & Reports page as comprehensive dashboard
-    - Header section with date filter dropdown (Last 30 days, Last 90 days, All time) and Export button
-    - Four key metric cards: Total Contracts, Average Risk Score, Active Contracts, Compliance Rate
-    - Four interactive charts using Recharts library:
-      - Contract Type Distribution (Pie Chart)
-      - Risk Distribution (Donut Chart with center total)
-      - Monthly Contract Volume Trend (Line Chart)
-      - Common Risk Areas (Horizontal Bar Chart)
-    - Recent Contract Analysis table with columns: Name, Date, Risk Score, Status, Action
-    - Export functionality generates JSON report with all analytics data
-    - Empty state with call-to-action when no contracts exist
-    - All data sourced from real contracts with 30-second auto-refresh
-    - Fixed database column mapping issues (date→start_date, name→title)
-- **July 20, 2025** (Earlier):
+- **July 20, 2025** (Latest):
   - **Updated All Sidebar Pages to Use Real Contract Data**: All four core dashboard pages now display data from uploaded contracts
     - Analytics & Reports: Shows real KPIs calculated from contract data (cycle time, risk scores, contract counts, status distribution)
     - Parties & Contacts: Displays unique parties extracted from contracts with aggregated risk levels and contract counts

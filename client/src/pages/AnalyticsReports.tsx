@@ -1,587 +1,343 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
-import DashboardSidebar from '@/components/DashboardSidebar';
-import { useQuery } from '@tanstack/react-query';
-import { 
-  FileText, 
-  Shield, 
-  Activity,
-  CheckCircle,
-  Calendar,
-  Download,
-  TrendingUp,
-  TrendingDown,
-  ChevronDown
-} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer
-} from 'recharts';
+  TrendingUp, Clock, Shield, DollarSign, FileText, Download,
+  Calendar, AlertTriangle
+} from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 
 export default function AnalyticsReports() {
   const { language, t } = useLanguage();
-  const [dateFilter, setDateFilter] = useState('last30days');
-  const [showDateDropdown, setShowDateDropdown] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showMobile, setShowMobile] = useState(false);
+  const isRTL = language === 'ar';
 
-  // Fetch contracts data
-  const { data: contractsData = { contracts: [] }, refetch: refetchContracts } = useQuery<{ contracts: any[] }>({
+  // Fetch all contracts for analytics
+  const { data: contractsData, isLoading } = useQuery({
     queryKey: ['/api/contracts'],
-    enabled: true,
     refetchInterval: 30000 // Refresh every 30 seconds
   });
 
-  // Fetch chat data
-  const { data: chatsData = { chats: [] }, refetch: refetchChats } = useQuery<{ chats: any[] }>({
-    queryKey: ['/api/contracts/chats'],
-    enabled: true,
-    refetchInterval: 30000
-  });
+  const contracts = contractsData?.contracts || [];
 
-  const contracts = contractsData.contracts || [];
-  const hasNoContracts = contracts.length === 0;
-
-  // Calculate metrics from real data
-  const totalContracts = contracts.length;
-  const avgRiskScore = contracts.length > 0 
-    ? Math.round(contracts.reduce((acc: number, c: any) => acc + (c.riskLevel || 0), 0) / contracts.length)
-    : 0;
-  const activeContracts = contracts.filter((c: any) => c.status === 'active').length;
-  const highRiskContracts = contracts.filter((c: any) => c.riskLevel > 70).length;
-  
-  // Calculate compliance rate (contracts with low risk)
-  const complianceRate = contracts.length > 0
-    ? Math.round((contracts.filter((c: any) => c.riskLevel <= 30).length / contracts.length) * 100)
-    : 0;
-
-  // Calculate contracts this month
-  const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const contractsThisMonth = contracts.filter((c: any) => 
-    new Date(c.createdAt) >= firstDayOfMonth
-  ).length;
-
-  // Prepare contract type distribution data
-  const contractTypes = contracts.reduce((acc: any, c: any) => {
-    const type = c.type || 'Other';
-    acc[type] = (acc[type] || 0) + 1;
-    return acc;
-  }, {});
-
-  const contractTypeData = Object.entries(contractTypes).map(([name, value]) => ({
-    name,
-    value,
-    percentage: Math.round((value as number / totalContracts) * 100)
-  }));
-
-  // Risk distribution data
-  const riskDistribution = {
-    low: contracts.filter((c: any) => c.riskLevel <= 30).length,
-    medium: contracts.filter((c: any) => c.riskLevel > 30 && c.riskLevel <= 70).length,
-    high: contracts.filter((c: any) => c.riskLevel > 70).length
-  };
-
-  const riskDistributionData = [
-    { name: t('منخفض', 'Low'), value: riskDistribution.low, color: '#10B981', percentage: Math.round((riskDistribution.low / totalContracts) * 100) || 0 },
-    { name: t('متوسط', 'Medium'), value: riskDistribution.medium, color: '#F59E0B', percentage: Math.round((riskDistribution.medium / totalContracts) * 100) || 0 },
-    { name: t('مرتفع', 'High'), value: riskDistribution.high, color: '#EF4444', percentage: Math.round((riskDistribution.high / totalContracts) * 100) || 0 }
-  ];
-
-  // Monthly trend data
-  const monthlyTrendData: { month: string; count: number }[] = [];
-  for (let i = 5; i >= 0; i--) {
-    const date = new Date();
-    date.setMonth(date.getMonth() - i);
-    const monthName = date.toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US', { month: 'short' });
-    const count = contracts.filter((c: any) => {
-      const contractDate = new Date(c.createdAt);
-      return contractDate.getMonth() === date.getMonth() && 
-             contractDate.getFullYear() === date.getFullYear();
-    }).length;
-    monthlyTrendData.push({ month: monthName, count });
-  }
-
-  // Common risk areas data
-  const riskAreas = [
-    { name: t('المسؤولية', 'Liability'), count: 0 },
-    { name: t('شروط الدفع', 'Payment Terms'), count: 0 },
-    { name: t('الإنهاء', 'Termination'), count: 0 },
-    { name: t('حقوق الملكية الفكرية', 'IP Rights'), count: 0 }
-  ];
-
-  // Simulate risk areas based on contract types and risk levels
-  contracts.forEach((c: any) => {
-    if (c.riskLevel > 50) {
-      // Randomly assign risk areas for demo (in production, this would come from actual analysis)
-      const riskIndex = Math.floor(Math.random() * 4);
-      riskAreas[riskIndex].count++;
-    }
-  });
-
-  // Recent contracts for the table
-  const recentContracts = contracts.slice(0, 5).map((c: any) => ({
-    id: c.id,
-    name: c.title,
-    date: new Date(c.createdAt).toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US'),
-    riskScore: c.riskLevel,
-    status: c.status,
-    type: c.type
-  }));
-
-  // Metric cards data
-  const metricCards = [
-    {
-      title: t('إجمالي العقود', 'Total Contracts'),
-      value: totalContracts.toString(),
-      change: contractsThisMonth > 0 ? `+${contractsThisMonth}` : '0',
-      changeLabel: t('هذا الشهر', 'this month'),
-      icon: FileText,
-      color: 'text-blue-600'
-    },
-    {
-      title: t('متوسط درجة المخاطر', 'Average Risk Score'),
-      value: avgRiskScore.toString(),
-      subtitle: avgRiskScore <= 30 ? t('منخفض', 'Low') : avgRiskScore <= 70 ? t('متوسط', 'Medium') : t('مرتفع', 'High'),
-      icon: Shield,
-      color: avgRiskScore <= 30 ? 'text-green-600' : avgRiskScore <= 70 ? 'text-yellow-600' : 'text-red-600'
-    },
-    {
-      title: t('العقود النشطة', 'Active Contracts'),
-      value: activeContracts.toString(),
-      percentage: totalContracts > 0 ? Math.round((activeContracts / totalContracts) * 100) : 0,
-      percentageLabel: t('من الإجمالي', 'of total'),
-      icon: Activity,
-      color: 'text-purple-600'
-    },
-    {
-      title: t('معدل الامتثال', 'Compliance Rate'),
-      value: `${complianceRate}%`,
-      trend: complianceRate >= 80 ? 'up' : 'down',
-      icon: CheckCircle,
-      color: 'text-green-600'
-    }
-  ];
-
-  // Export functionality
-  const handleExport = () => {
-    // In production, this would generate a real report
-    const reportData = {
-      date: new Date().toISOString(),
-      totalContracts,
-      avgRiskScore,
-      activeContracts,
-      complianceRate,
-      contractTypes: contractTypeData,
-      riskDistribution: riskDistributionData,
-      monthlyTrend: monthlyTrendData
-    };
+  // Calculate real KPIs from contract data
+  const calculateKPIs = () => {
+    const now = new Date();
+    const activeContracts = contracts.filter((c: any) => c.status === 'active').length;
+    const totalContracts = contracts.length;
     
-    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `analytics-report-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
+    // Calculate average cycle time (days from creation to signed)
+    const signedContracts = contracts.filter((c: any) => c.status === 'signed');
+    const cycleTimes = signedContracts.map((c: any) => {
+      const created = new Date(c.createdAt);
+      const signed = new Date(c.updatedAt);
+      return Math.floor((signed.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+    });
+    const avgCycleTime = cycleTimes.length > 0 
+      ? Math.round(cycleTimes.reduce((a: number, b: number) => a + b, 0) / cycleTimes.length)
+      : 0;
+
+    // Calculate on-time renewals percentage (mock calculation)
+    const expiringContracts = contracts.filter((c: any) => {
+      const contractDate = new Date(c.date);
+      const daysDiff = Math.floor((contractDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff >= 0 && daysDiff <= 90;
+    });
+    const onTimePercentage = totalContracts > 0 ? Math.round((expiringContracts.length / totalContracts) * 100) : 0;
+
+    // Calculate average risk score
+    const riskScores = { low: 1, medium: 2, high: 3 };
+    const contractsWithRisk = contracts.filter((c: any) => c.riskLevel);
+    const totalRiskScore = contractsWithRisk.reduce((sum: number, c: any) => 
+      sum + (riskScores[c.riskLevel as keyof typeof riskScores] || 0), 0
+    );
+    const avgRiskScore = contractsWithRisk.length > 0 
+      ? (totalRiskScore / contractsWithRisk.length).toFixed(1)
+      : '0.0';
+
+    return [
+      { label: t('وقت الدورة', 'Cycle-time'), value: `${avgCycleTime} days`, icon: Clock, trend: -15 },
+      { label: t('التجديدات في الوقت', '% On-time renewals'), value: `${onTimePercentage}%`, icon: Calendar, trend: 5 },
+      { label: t('الالتزامات النشطة', 'Active obligations'), value: activeContracts.toString(), icon: FileText, trend: 0 },
+      { label: t('متوسط درجة المخاطر', 'Average risk score'), value: avgRiskScore, icon: Shield, trend: -8 },
+      { label: t('إجمالي العقود', 'Total contracts'), value: totalContracts.toString(), icon: DollarSign, trend: 22 }
+    ];
   };
 
-  const pieChartColors = ['#0C2836', '#1a4158', '#2d5a7b', '#4d7ea8', '#B7DEE8'];
+  const kpiData = calculateKPIs();
+
+  // Calculate contract type distribution
+  const calculateTypeDistribution = () => {
+    const typeMap: Record<string, number> = {};
+    contracts.forEach((c: any) => {
+      typeMap[c.type] = (typeMap[c.type] || 0) + 1;
+    });
+    
+    return Object.entries(typeMap).map(([type, count]) => ({
+      month: type.toUpperCase(),
+      nda: type === 'nda' ? count : 0,
+      msa: type === 'service' ? count : 0,
+      sow: type === 'employment' ? count : 0
+    }));
+  };
+
+  const cycleTimeData = calculateTypeDistribution();
+
+  // Calculate status distribution
+  const calculateStatusDistribution = () => {
+    const statusMap: Record<string, number> = {};
+    contracts.forEach((c: any) => {
+      statusMap[c.status] = (statusMap[c.status] || 0) + 1;
+    });
+    
+    return Object.entries(statusMap).map(([status, count], index) => ({
+      quarter: status.charAt(0).toUpperCase() + status.slice(1),
+      count
+    }));
+  };
+
+  const amendmentsData = calculateStatusDistribution();
+
+  // Calculate upcoming renewals
+  const calculateRenewals = () => {
+    const now = new Date();
+    const renewals = { 30: 0, 60: 0, 90: 0 };
+    
+    contracts.forEach((c: any) => {
+      const contractDate = new Date(c.date);
+      const daysDiff = Math.floor((contractDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysDiff > 0 && daysDiff <= 30) renewals[30]++;
+      else if (daysDiff > 30 && daysDiff <= 60) renewals[60]++;
+      else if (daysDiff > 60 && daysDiff <= 90) renewals[90]++;
+    });
+    
+    return [
+      { days: 90, contracts: renewals[90], status: 'upcoming' },
+      { days: 60, contracts: renewals[60], status: 'review' },
+      { days: 30, contracts: renewals[30], status: 'urgent' }
+    ];
+  };
+
+  const renewalData = calculateRenewals();
+
+  // Risk level distribution
+  const clauseUsageData = [
+    { clause: 'High Risk', usage: contracts.filter((c: any) => c.riskLevel === 'high').length, deviation: 12 },
+    { clause: 'Medium Risk', usage: contracts.filter((c: any) => c.riskLevel === 'medium').length, deviation: 8 },
+    { clause: 'Low Risk', usage: contracts.filter((c: any) => c.riskLevel === 'low').length, deviation: 5 },
+    { clause: 'Draft', usage: contracts.filter((c: any) => c.status === 'draft').length, deviation: 15 },
+    { clause: 'Active', usage: contracts.filter((c: any) => c.status === 'active').length, deviation: 3 }
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <DashboardSidebar 
-        isCollapsed={isCollapsed}
-        setIsCollapsed={setIsCollapsed}
-        showMobile={showMobile}
-        setShowMobile={setShowMobile}
-      />
-      
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.15 }}
-            className="space-y-6"
-          >
-            {/* Header */}
-            <div className={cn("flex flex-col md:flex-row md:items-center md:justify-between gap-4", language === 'ar' && "md:flex-row-reverse")}>
-              <div className={cn(language === 'ar' && "text-right")}>
-                <h1 className="text-2xl font-bold text-[#0C2836]">
-                  {t('التحليلات والتقارير', 'Analytics & Reports')}
-                </h1>
-                <p className="text-gray-600 text-sm mt-1">
-                  {t('رؤى شاملة حول أداء العقود', 'Comprehensive insights into contract performance')}
+    <div className="flex-1 overflow-y-auto bg-gray-50">
+      <div className="p-4 md:p-6 max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15 }}
+          className="space-y-4"
+        >
+          {/* Header */}
+          <div className={cn("mb-4", language === 'ar' && "text-right")}>
+            <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
+              {t('التحليلات والتقارير', 'Analytics & Reports')}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              {t('رؤى شاملة حول أداء العقود', 'Comprehensive insights into contract performance')}
+            </p>
+          </div>
+
+          {/* KPI Cards - 5 cards as requested */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+            {kpiData.map((kpi, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, delay: index * 0.02 }}
+                className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+              >
+                <div className={cn("flex items-center justify-between mb-2", language === 'ar' && "flex-row-reverse")}>
+                  <kpi.icon className="w-5 h-5 text-[#0C2836]" />
+                  {kpi.trend !== 0 && (
+                    <span className={cn(
+                      "text-xs flex items-center gap-1",
+                      kpi.trend > 0 ? "text-green-600" : "text-red-600"
+                    )}>
+                      <TrendingUp className={cn("w-3 h-3", kpi.trend < 0 && "rotate-180")} />
+                      {Math.abs(kpi.trend)}%
+                    </span>
+                  )}
+                </div>
+                <p className={cn("text-2xl font-bold text-[#0C2836] mb-1", language === 'ar' && "text-right")}>
+                  {kpi.value}
                 </p>
+                <p className={cn("text-sm text-gray-600", language === 'ar' && "text-right")}>
+                  {kpi.label}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Cycle Time Trends */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.1 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+            >
+              <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
+                <h3 className="text-lg font-semibold text-[#0C2836]">
+                  {t('اتجاهات وقت الدورة', 'Cycle Time Trends')}
+                </h3>
+                <button className="text-[#B7DEE8] hover:text-[#0C2836] transition-colors">
+                  <Download className="w-5 h-5" />
+                </button>
               </div>
               
-              <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                {/* Date Filter */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowDateDropdown(!showDateDropdown)}
+              {/* Simple bar chart visualization */}
+              <div className="space-y-3">
+                {cycleTimeData.map((data, index) => (
+                  <div key={index} className={cn("flex items-center gap-4", language === 'ar' && "flex-row-reverse")}>
+                    <span className="text-sm text-gray-600 w-12">{data.month}</span>
+                    <div className="flex-1 flex gap-1">
+                      <div className="h-6 bg-[#0C2836] rounded" style={{ width: `${data.nda * 3}px` }} />
+                      <div className="h-6 bg-[#1a4158] rounded" style={{ width: `${data.msa * 3}px` }} />
+                      <div className="h-6 bg-[#B7DEE8] rounded" style={{ width: `${data.sow * 3}px` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className={cn("flex gap-6 mt-4 text-xs", language === 'ar' && "flex-row-reverse")}>
+                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                  <div className="w-3 h-3 bg-[#0C2836] rounded" />
+                  <span className="text-gray-600">NDA</span>
+                </div>
+                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                  <div className="w-3 h-3 bg-[#1a4158] rounded" />
+                  <span className="text-gray-600">MSA</span>
+                </div>
+                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                  <div className="w-3 h-3 bg-[#B7DEE8] rounded" />
+                  <span className="text-gray-600">SOW</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Contract Amendments */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.15 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+            >
+              <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
+                <h3 className="text-lg font-semibold text-[#0C2836]">
+                  {t('تعديلات العقود', 'Contract Amendments')}
+                </h3>
+                <button className="text-[#B7DEE8] hover:text-[#0C2836] transition-colors">
+                  <Download className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-4 gap-4">
+                {amendmentsData.map((data, index) => (
+                  <div key={index} className="text-center">
+                    <div className="h-32 bg-gradient-to-t from-[#0C2836] to-[#B7DEE8] rounded-lg mb-2 relative">
+                      <div 
+                        className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg"
+                        style={{ height: `${100 - (data.count / 61) * 100}%` }}
+                      />
+                    </div>
+                    <p className="text-sm text-gray-600">{data.quarter}</p>
+                    <p className="text-lg font-semibold text-[#0C2836]">{data.count}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Upcoming Renewals */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.2 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+            >
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                {t('التجديدات القادمة', 'Upcoming Renewals')}
+              </h3>
+
+              <div className="space-y-3">
+                {renewalData.map((renewal, index) => (
+                  <div 
+                    key={index}
                     className={cn(
-                      "flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors",
+                      "flex items-center justify-between p-3 rounded-lg",
+                      renewal.status === 'urgent' ? 'bg-red-50' : renewal.status === 'review' ? 'bg-yellow-50' : 'bg-green-50',
                       language === 'ar' && "flex-row-reverse"
                     )}
                   >
-                    <Calendar className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm text-gray-700">
-                      {dateFilter === 'last30days' ? t('آخر 30 يوم', 'Last 30 days') :
-                       dateFilter === 'last90days' ? t('آخر 90 يوم', 'Last 90 days') :
-                       t('كل الوقت', 'All time')}
-                    </span>
-                    <ChevronDown className="w-4 h-4 text-gray-600" />
-                  </button>
-                  
-                  {showDateDropdown && (
-                    <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[180px]">
-                      <button
-                        onClick={() => {
-                          setDateFilter('last30days');
-                          setShowDateDropdown(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm"
-                      >
-                        {t('آخر 30 يوم', 'Last 30 days')}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setDateFilter('last90days');
-                          setShowDateDropdown(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm"
-                      >
-                        {t('آخر 90 يوم', 'Last 90 days')}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setDateFilter('alltime');
-                          setShowDateDropdown(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm"
-                      >
-                        {t('كل الوقت', 'All time')}
-                      </button>
+                    <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
+                      <AlertTriangle className={cn(
+                        "w-4 h-4",
+                        renewal.status === 'urgent' ? 'text-red-600' : renewal.status === 'review' ? 'text-yellow-600' : 'text-green-600'
+                      )} />
+                      <div className={cn(language === 'ar' && "text-right")}>
+                        <p className="text-gray-900 font-medium">
+                          {renewal.contracts} {t('عقود', 'contracts')}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {t('خلال', 'Within')} {renewal.days} {t('يوم', 'days')}
+                        </p>
+                      </div>
                     </div>
-                  )}
-                </div>
-                
-                {/* Export Button */}
-                <button
-                  onClick={handleExport}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 bg-[#0C2836] text-white rounded-lg hover:bg-[#1a4158] transition-colors",
-                    language === 'ar' && "flex-row-reverse"
-                  )}
-                >
-                  <Download className="w-4 h-4" />
-                  <span className="text-sm">{t('تصدير', 'Export')}</span>
-                </button>
+                  </div>
+                ))}
               </div>
-            </div>
+            </motion.div>
 
-            {/* Empty State */}
-            {hasNoContracts ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.15 }}
-                className="bg-white rounded-lg p-12 border border-gray-200 shadow-sm text-center"
-              >
-                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  {t('لا توجد عقود بعد', 'No contracts yet')}
-                </h2>
-                <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                  {t(
-                    'قم بتحميل عقدك الأول لمشاهدة التحليلات والرؤى التفصيلية',
-                    'Upload your first contract to see analytics and detailed insights'
-                  )}
-                </p>
-                <button 
-                  onClick={() => window.location.href = '/chat'}
-                  className="px-6 py-2 bg-[#0C2836] text-white rounded-lg hover:bg-[#1a4158] transition-colors"
-                >
-                  {t('تحميل عقد', 'Upload Contract')}
-                </button>
-              </motion.div>
-            ) : (
-              <>
-                {/* Metric Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {metricCards.map((card, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.15, delay: index * 0.05 }}
-                      className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
-                    >
-                      <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                        <card.icon className={cn("w-8 h-8", card.color)} />
-                        {card.trend && (
-                          <div className={cn("flex items-center gap-1", card.trend === 'up' ? 'text-green-600' : 'text-red-600')}>
-                            {card.trend === 'up' ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-                          </div>
+            {/* Clause Usage Analysis */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.25 }}
+              className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
+            >
+              <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
+                {t('تحليل استخدام البنود', 'Clause Usage Analysis')}
+              </h3>
+
+              <div className="space-y-3">
+                {clauseUsageData.map((clause, index) => (
+                  <div key={index} className={cn(language === 'ar' && "text-right")}>
+                    <div className={cn("flex items-center justify-between mb-1", language === 'ar' && "flex-row-reverse")}>
+                      <p className="text-sm text-gray-900">{clause.clause}</p>
+                      <p className="text-sm text-gray-600">{clause.usage}%</p>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-[#0C2836] h-2 rounded-full relative"
+                        style={{ width: `${clause.usage}%` }}
+                      >
+                        {clause.deviation > 10 && (
+                          <div className="absolute -right-1 -top-1 w-4 h-4 bg-red-500 rounded-full" />
                         )}
                       </div>
-                      <h3 className={cn("text-2xl font-bold text-gray-900", language === 'ar' && "text-right")}>
-                        {card.value}
-                      </h3>
-                      <p className={cn("text-sm text-gray-600 mt-1", language === 'ar' && "text-right")}>
-                        {card.title}
-                      </p>
-                      {card.change && (
-                        <p className={cn("text-xs text-gray-500 mt-2", language === 'ar' && "text-right")}>
-                          <span className="text-green-600 font-medium">{card.change}</span> {card.changeLabel}
-                        </p>
-                      )}
-                      {card.subtitle && (
-                        <p className={cn("text-xs mt-2", card.color, language === 'ar' && "text-right")}>
-                          {card.subtitle}
-                        </p>
-                      )}
-                      {card.percentage !== undefined && (
-                        <p className={cn("text-xs text-gray-500 mt-2", language === 'ar' && "text-right")}>
-                          <span className="font-medium">{card.percentage}%</span> {card.percentageLabel}
-                        </p>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Charts Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Contract Type Distribution */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.15, delay: 0.2 }}
-                    className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
-                  >
-                    <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
-                      {t('توزيع أنواع العقود', 'Contract Types')}
-                    </h3>
-                    {contractTypeData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height={250}>
-                        <PieChart>
-                          <Pie
-                            data={contractTypeData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={({ percentage }) => `${percentage}%`}
-                            outerRadius={80}
-                            fill="#8884d8"
-                            dataKey="value"
-                          >
-                            {contractTypeData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={pieChartColors[index % pieChartColors.length]} />
-                            ))}
-                          </Pie>
-                          <Tooltip />
-                          <Legend />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    ) : (
-                      <div className="h-[250px] flex items-center justify-center text-gray-500">
-                        {t('لا توجد بيانات متاحة', 'No data available')}
-                      </div>
-                    )}
-                  </motion.div>
-
-                  {/* Risk Distribution */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.15, delay: 0.25 }}
-                    className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
-                  >
-                    <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
-                      {t('توزيع مستويات المخاطر', 'Risk Levels')}
-                    </h3>
-                    <ResponsiveContainer width="100%" height={250}>
-                      <PieChart>
-                        <Pie
-                          data={riskDistributionData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          paddingAngle={5}
-                          dataKey="value"
-                        >
-                          {riskDistributionData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="text-center mt-4">
-                      <p className="text-2xl font-bold text-[#0C2836]">{totalContracts}</p>
-                      <p className="text-sm text-gray-600">{t('إجمالي العقود', 'Total Contracts')}</p>
-                    </div>
-                  </motion.div>
-
-                  {/* Monthly Trend */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.15, delay: 0.3 }}
-                    className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
-                  >
-                    <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
-                      {t('اتجاه حجم العقود', 'Contract Volume Trend')}
-                    </h3>
-                    <ResponsiveContainer width="100%" height={250}>
-                      <LineChart data={monthlyTrendData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="count" stroke="#0C2836" strokeWidth={2} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </motion.div>
-
-                  {/* Common Risk Areas */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.15, delay: 0.35 }}
-                    className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm"
-                  >
-                    <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", language === 'ar' && "text-right")}>
-                      {t('مجالات المخاطر الشائعة', 'Common Risk Areas')}
-                    </h3>
-                    <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={riskAreas} layout="horizontal">
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" />
-                        <YAxis dataKey="name" type="category" />
-                        <Tooltip />
-                        <Bar dataKey="count" fill="#0C2836" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </motion.div>
-                </div>
-
-                {/* Recent Activity Table */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.15, delay: 0.4 }}
-                  className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
-                >
-                  <div className={cn("p-6 border-b border-gray-200", language === 'ar' && "text-right")}>
-                    <h3 className="text-lg font-semibold text-[#0C2836]">
-                      {t('تحليل العقود الأخيرة', 'Recent Contract Analysis')}
-                    </h3>
-                  </div>
-                  
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr>
-                          <th className={cn("px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' && "text-right")}>
-                            {t('اسم العقد', 'Contract Name')}
-                          </th>
-                          <th className={cn("px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' && "text-right")}>
-                            {t('التاريخ', 'Date')}
-                          </th>
-                          <th className={cn("px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' && "text-right")}>
-                            {t('درجة المخاطر', 'Risk Score')}
-                          </th>
-                          <th className={cn("px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' && "text-right")}>
-                            {t('الحالة', 'Status')}
-                          </th>
-                          <th className={cn("px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider", language === 'ar' && "text-right")}>
-                            {t('الإجراء', 'Action')}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {recentContracts.map((contract: any) => (
-                          <tr key={contract.id} className="hover:bg-gray-50">
-                            <td className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-900", language === 'ar' && "text-right")}>
-                              {contract.name}
-                            </td>
-                            <td className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-600", language === 'ar' && "text-right")}>
-                              {contract.date}
-                            </td>
-                            <td className={cn("px-6 py-4 whitespace-nowrap text-sm", language === 'ar' && "text-right")}>
-                              <span className={cn(
-                                "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                                contract.riskScore <= 30 ? "bg-green-100 text-green-800" :
-                                contract.riskScore <= 70 ? "bg-yellow-100 text-yellow-800" :
-                                "bg-red-100 text-red-800"
-                              )}>
-                                {contract.riskScore}
-                              </span>
-                            </td>
-                            <td className={cn("px-6 py-4 whitespace-nowrap text-sm text-gray-600", language === 'ar' && "text-right")}>
-                              <span className={cn(
-                                "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                                contract.status === 'active' ? "bg-green-100 text-green-800" :
-                                contract.status === 'draft' ? "bg-gray-100 text-gray-800" :
-                                "bg-blue-100 text-blue-800"
-                              )}>
-                                {contract.status === 'active' ? t('نشط', 'Active') :
-                                 contract.status === 'draft' ? t('مسودة', 'Draft') :
-                                 t('قيد المراجعة', 'Under Review')}
-                              </span>
-                            </td>
-                            <td className={cn("px-6 py-4 whitespace-nowrap text-sm", language === 'ar' && "text-right")}>
-                              <button
-                                onClick={() => window.location.href = `/contracts/${contract.id}`}
-                                className="text-[#0C2836] hover:text-[#1a4158] font-medium"
-                              >
-                                {t('عرض', 'View')}
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  
-                  {/* Pagination */}
-                  <div className="px-6 py-3 border-t border-gray-200 flex items-center justify-between">
-                    <p className="text-sm text-gray-700">
-                      {t(`عرض 1 إلى ${Math.min(5, totalContracts)} من ${totalContracts} نتيجة`, 
-                        `Showing 1 to ${Math.min(5, totalContracts)} of ${totalContracts} results`)}
-                    </p>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900">
-                        {t('السابق', 'Previous')}
-                      </button>
-                      <button className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900">
-                        {t('التالي', 'Next')}
-                      </button>
                     </div>
                   </div>
-                </motion.div>
-              </>
-            )}
-          </motion.div>
-        </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
