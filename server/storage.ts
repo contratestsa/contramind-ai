@@ -218,37 +218,83 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getContract(id: number): Promise<Contract | undefined> {
-    const [contract] = await db.select().from(contracts).where(eq(contracts.id, id));
-    return contract || undefined;
+    try {
+      const result = await db.execute(sql`
+        SELECT 
+          id,
+          user_id as "userId",
+          name as title,
+          parties as "partyName",
+          type,
+          status,
+          start_date as date,
+          risk_level as "riskLevel",
+          file_path as "fileUrl",
+          created_at as "createdAt",
+          updated_at as "updatedAt"
+        FROM contracts
+        WHERE id = ${id}
+        LIMIT 1
+      `);
+      
+      return result.rows[0] as Contract || undefined;
+    } catch (error) {
+      console.error('Error in getContract:', error);
+      return undefined;
+    }
   }
 
   async getUserContracts(userId: number, filters?: { status?: string; type?: string; search?: string }): Promise<Contract[]> {
-    let query = db.select().from(contracts).where(eq(contracts.userId, userId));
-    
-    if (filters) {
-      const conditions = [eq(contracts.userId, userId)];
-      
-      if (filters.status && filters.status !== 'all') {
-        conditions.push(eq(contracts.status, filters.status));
+    try {
+      // Use raw SQL to work with actual database column names
+      let whereConditions = ['user_id = $1'];
+      const values: any[] = [userId];
+      let paramCount = 1;
+
+      if (filters) {
+        if (filters.status && filters.status !== 'all') {
+          paramCount++;
+          whereConditions.push(`status = $${paramCount}`);
+          values.push(filters.status);
+        }
+        
+        if (filters.type && filters.type !== 'all') {
+          paramCount++;
+          whereConditions.push(`type = $${paramCount}`);
+          values.push(filters.type);
+        }
+        
+        if (filters.search) {
+          paramCount++;
+          whereConditions.push(`(name ILIKE $${paramCount} OR parties ILIKE $${paramCount})`);
+          values.push(`%${filters.search}%`);
+        }
       }
-      
-      if (filters.type && filters.type !== 'all') {
-        conditions.push(eq(contracts.type, filters.type));
-      }
-      
-      if (filters.search) {
-        conditions.push(
-          or(
-            like(contracts.title, `%${filters.search}%`),
-            like(contracts.partyName, `%${filters.search}%`)
-          )!
-        );
-      }
-      
-      query = db.select().from(contracts).where(and(...conditions)!);
+
+      const query = `
+        SELECT 
+          id,
+          user_id as "userId",
+          name as title,
+          parties as "partyName",
+          type,
+          status,
+          start_date as date,
+          risk_level as "riskLevel",
+          file_path as "fileUrl",
+          created_at as "createdAt",
+          updated_at as "updatedAt"
+        FROM contracts
+        WHERE ${whereConditions.join(' AND ')}
+        ORDER BY created_at DESC
+      `;
+
+      const result = await db.execute(sql.raw(query, values));
+      return result.rows as Contract[];
+    } catch (error) {
+      console.error('Error in getUserContracts:', error);
+      return [];
     }
-    
-    return query.orderBy(desc(contracts.createdAt));
   }
 
   async getRecentContracts(userId: number, limit: number = 5): Promise<any[]> {

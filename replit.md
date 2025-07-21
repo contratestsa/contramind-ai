@@ -5,17 +5,19 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
-  - **Enhanced Analytics Page with Comprehensive Real Data Integration**: Completely revamped Analytics & Reports page per user requirements
-    - Replaced all fake data with real calculations from user's contracts
-    - Key Metrics Cards: Total Contracts, Average Risk Score (0-100 scale), High Risk Contracts (>70), Contracts This Month
-    - Contract Type Distribution: Dynamic pie chart showing actual contract types (Service, NDA, Employment, etc.)
-    - Risk Distribution: Visual pie chart with Low/Medium/High risk percentages from real data
-    - Monthly Trend: Bar chart showing contract uploads for last 6 months
-    - Top Risk Categories: Analyzes contracts to show most common risk areas (Liability, Payment Terms, etc.)
-    - Language Distribution: Tracks English vs Arabic contract analysis
-    - Empty State: Shows friendly message and upload prompt for users with no contracts
-    - All charts and metrics update automatically every 30 seconds
-    - Added proper loading states and error handling
+  - **Complete Analytics Dashboard Redesign with Recharts**: Rebuilt Analytics & Reports page as comprehensive dashboard
+    - Header section with date filter dropdown (Last 30 days, Last 90 days, All time) and Export button
+    - Four key metric cards: Total Contracts, Average Risk Score, Active Contracts, Compliance Rate
+    - Four interactive charts using Recharts library:
+      - Contract Type Distribution (Pie Chart)
+      - Risk Distribution (Donut Chart with center total)
+      - Monthly Contract Volume Trend (Line Chart)
+      - Common Risk Areas (Horizontal Bar Chart)
+    - Recent Contract Analysis table with columns: Name, Date, Risk Score, Status, Action
+    - Export functionality generates JSON report with all analytics data
+    - Empty state with call-to-action when no contracts exist
+    - All data sourced from real contracts with 30-second auto-refresh
+    - Fixed database column mapping issues (date→start_date, name→title)
 - **July 20, 2025** (Earlier):
   - **Updated All Sidebar Pages to Use Real Contract Data**: All four core dashboard pages now display data from uploaded contracts
     - Analytics & Reports: Shows real KPIs calculated from contract data (cycle time, risk scores, contract counts, status distribution)
