@@ -48,7 +48,7 @@ export const contracts = pgTable("contracts", {
   startDate: date("start_date").notNull(),
   endDate: date("end_date"),
   riskLevel: text("risk_level"), // 'low', 'medium', 'high'
-  fileUrl: text("file_url"),
+  fileUrl: text("file_path"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   last_viewed_at: timestamp("last_viewed_at"),
