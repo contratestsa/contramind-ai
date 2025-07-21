@@ -1,0 +1,49 @@
+**Problem Description:**
+
+The Analytics & Reports page in the application is currently stuck on "Loading analytics..." indefinitely. A previous attempt to fix this involved correcting a database column name mismatch (`file_url` to `file_path`), which was reported as successful. However, the page still does not load, indicating an underlying or additional issue.
+
+**Objective for Replit Agent:**
+
+Diagnose and resolve the root cause preventing the Analytics & Reports page from loading and displaying data. The goal is to ensure the page loads successfully and all six donut charts (Contract Type, Executed Status, Language, Internal Parties, Counterparties, and Governing Law) are populated with data.
+
+**Specific Tasks & Troubleshooting Steps:**
+
+1.  **Frontend Debugging (Browser Console Inspection):**
+    *   Access the application in a web browser and navigate to the Analytics & Reports page.
+    *   Open the browser's developer console (usually F12 or Ctrl+Shift+I).
+    *   **Task:** Check the `Console` tab for any JavaScript errors, warnings, or `Network` tab for failed API requests (e.g., 4xx or 5xx status codes, or pending requests that never complete). Document any findings.
+
+2.  **Backend API Verification:**
+    *   Identify the specific API endpoint(s) that the Analytics page calls to fetch its data. Based on common patterns, it might be something like `/api/analytics` or `/api/dashboard/data`.
+    *   **Task:** From the Replit shell, use `curl` to directly test this API endpoint. For example:
+        ```bash
+        curl -s -b cookies.txt http://localhost:5000/api/analytics
+        ```
+        (Adjust the URL and port as necessary based on your application's configuration. If authentication is required, ensure `cookies.txt` contains valid session cookies or use appropriate headers.)
+    *   **Task:** Analyze the `curl` output: Check the HTTP status code, response time, and the structure/content of the JSON response. Is it returning data? Is the data well-formed? Is it taking an unusually long time?
+
+3.  **Backend Log Inspection:**
+    *   If the API response is problematic (e.g., error status, empty, malformed, or very slow), inspect the backend server logs for detailed error messages.
+    *   **Task:** Locate and review the application logs. Look for recent errors, stack traces, or warnings that coincide with attempts to load the Analytics page. Common log locations might be `stdout`/`stderr` in the Replit console, or specific log files if configured.
+
+4.  **Database Query & Data Integrity Check:**
+    *   If backend logs indicate database-related issues (e.g., query failures, performance problems), investigate the database operations.
+    *   **Task:** Review the code responsible for fetching and aggregating analytics data from the database (e.g., `getAllContractDetails` or similar functions). Verify the queries being executed.
+    *   **Task:** If possible, directly query the database to check the integrity and presence of data required for the analytics charts. Ensure there's actual contract data available that can be aggregated.
+
+5.  **Replit Environment Resource Check:**
+    *   **Task:** Briefly check the Replit environment's resource usage (CPU, Memory) to ensure there are no obvious bottlenecks preventing the application from performing correctly. (e.g., `top` or `htop` in shell if available, or Replit's built-in resource monitoring).
+
+**Expected Outcome:**
+
+*   The Replit agent should identify the specific error or bottleneck preventing the Analytics & Reports page from loading.
+*   The agent should implement a fix for the identified issue.
+*   The Analytics & Reports page should load successfully and display the contract data in all six donut charts.
+
+**Documentation:**
+
+*   Provide a clear summary of the diagnostic steps taken and the findings.
+*   Explain the root cause of the issue.
+*   Detail the implemented solution and any code changes made.
+
+"""

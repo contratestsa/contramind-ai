@@ -22,7 +22,7 @@ import {
   type InsertContractDetails
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, desc, asc, or, like, sql } from "drizzle-orm";
+import { eq, and, desc, asc, or, like, sql, inArray } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -597,7 +597,7 @@ export class DatabaseStorage implements IStorage {
     return db
       .select()
       .from(contractDetails)
-      .where(sql`${contractDetails.contractId} = ANY(${contractIds})`);
+      .where(inArray(contractDetails.contractId, contractIds));
   }
 }
 
