@@ -11,7 +11,7 @@ import ComingSoon from "@/pages/ComingSoon";
 import Dashboard from "@/pages/Dashboard";
 import AnalysisProgress from "@/pages/AnalysisProgress";
 import AnalysisResults from "@/pages/AnalysisResults";
-import Repository from "@/pages/Repository";
+import AllContracts from "@/pages/AllContracts";
 import PersonalSettings from "@/pages/PersonalSettings";
 import OrganizationSettings from "@/pages/OrganizationSettings";
 import Chat from "@/pages/Chat";
@@ -33,7 +33,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/analysis-progress" component={AnalysisProgress} />
       <Route path="/analysis-results" component={AnalysisResults} />
-      <Route path="/repository" component={Repository} />
+      <Route path="/repository" component={AllContracts} />
       <Route path="/settings/personal" component={PersonalSettings} />
       <Route path="/settings/organization" component={OrganizationSettings} />
       <Route path="/chat" component={Chat} />

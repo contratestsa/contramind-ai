@@ -13,7 +13,7 @@ import { apiRequest } from '@/lib/queryClient';
 
 interface Contract {
   id: string;
-  name: string;
+  title: string;
   partyName: string;
   createdAt: string;
   riskLevel: 'low' | 'medium' | 'high';
@@ -48,8 +48,9 @@ export default function DashboardSidebar({
   });
 
   const handleLogout = async () => {
-    await apiRequest('/api/auth/logout', {
-      method: 'POST'
+    await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
     });
     setLocation('/');
   };
@@ -152,7 +153,9 @@ export default function DashboardSidebar({
                 <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
-                <button className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
+                <button 
+                  onClick={() => setLocation('/repository')}
+                  className="text-xs text-[#B7DEE8] hover:text-[#a5d0db] transition-colors">
                   {t('عرض الكل', 'View All')}
                 </button>
               </div>
@@ -169,7 +172,7 @@ export default function DashboardSidebar({
                       className="w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-sm truncate">{contract.name}</span>
+                        <span className="text-sm truncate">{contract.title}</span>
                         <ChevronRight className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[rgba(183,222,232,0.6)] mt-0.5">

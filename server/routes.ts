@@ -457,6 +457,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/contracts", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const contracts = await storage.getAllContracts(req.user.id);
+
+      res.json({ contracts });
+    } catch (error) {
+      console.error('Error fetching all contracts:', error);
+      res.status(500).json({ message: "Failed to fetch contracts" });
+    }
+  });
+
   app.get("/api/contracts/:id", async (req, res) => {
     try {
       if (!req.user) {

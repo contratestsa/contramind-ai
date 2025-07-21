@@ -42,6 +42,7 @@ export interface IStorage {
   getContract(id: number): Promise<Contract | undefined>;
   getUserContracts(userId: number, filters?: { status?: string; type?: string; search?: string }): Promise<Contract[]>;
   getRecentContracts(userId: number, limit?: number): Promise<Contract[]>;
+  getAllContracts(userId: number): Promise<Contract[]>;
   updateContract(id: number, updates: Partial<Contract>): Promise<Contract | undefined>;
   deleteContract(id: number): Promise<boolean>;
   
@@ -321,6 +322,35 @@ export class DatabaseStorage implements IStorage {
       return result.rows || [];
     } catch (error) {
       console.error('Error in getRecentContracts:', error);
+      // Return empty array on error to avoid breaking the UI
+      return [];
+    }
+  }
+
+  async getAllContracts(userId: number): Promise<any[]> {
+    try {
+      // Use raw SQL to work with actual database column names
+      const result = await db.execute(sql`
+        SELECT 
+          id,
+          user_id as "userId",
+          name as title,
+          parties as "partyName",
+          type,
+          status,
+          start_date as date,
+          risk_level as "riskLevel",
+          file_path as "fileUrl",
+          created_at as "createdAt",
+          updated_at as "updatedAt"
+        FROM contracts
+        WHERE user_id = ${userId}
+        ORDER BY created_at DESC
+      `);
+      
+      return result.rows || [];
+    } catch (error) {
+      console.error('Error in getAllContracts:', error);
       // Return empty array on error to avoid breaking the UI
       return [];
     }
