@@ -1,0 +1,94 @@
+Update the existing Analytics page to display real data from user's contracts and chat history:
+
+1. DATA COLLECTION:
+Replace fake data with real data by:
+
+- Get all contracts for current user from Firestore/database
+- Filter by user ID to show only their contracts
+- Calculate metrics from their actual data
+
+2. UPDATE KEY METRICS CARDS:
+
+Total Contracts:
+- Count: Get length of user's contracts array
+- Instead of: "705" → Show actual count
+
+Average Risk Score:
+- Calculate: Sum all risk scores / number of analyzed contracts
+- Show real average (0-100)
+
+High Risk Contracts:
+- Count contracts where riskScore > 70
+- Update number dynamically
+
+Contracts This Month:
+- Filter contracts by uploadDate in current month
+- Show real count
+
+3. UPDATE PIE CHARTS:
+
+Contract Type Distribution:
+- Group user's contracts by type
+- Calculate percentages from actual data
+- Update chart with real distribution
+
+Risk Distribution:
+- Count contracts in each range:
+  * Low: riskScore 0-33
+  * Medium: riskScore 34-66
+  * High: riskScore 67-100
+- Show actual percentages
+
+Language Distribution:
+- Track which language was used for analysis
+- Show EN vs AR percentage from real data
+
+4. UPDATE BAR CHARTS:
+
+Top Risk Categories:
+- Parse all analysis results
+- Count occurrences of each risk type:
+  * Liability issues
+  * Payment terms
+  * Termination clauses
+  * IP rights
+- Sort by frequency and display
+
+Monthly Trend:
+- Group contracts by upload month
+- Show last 6 months of real data
+- Update automatically as new contracts uploaded
+
+5. CONNECT TO CHAT DATA:
+- Track questions asked in chat
+- Show most discussed topics
+- Link chat queries to specific contracts
+
+6. REAL-TIME UPDATES:
+- Refresh data when new contract uploaded
+- Update after each analysis completes
+- Recalculate when contracts deleted
+
+7. EMPTY STATES:
+If user has no contracts:
+- Show friendly message: "Upload your first contract to see analytics"
+- Display sample charts with blur effect
+- Prompt to upload contract
+
+Example code structure:
+```javascript
+// Fetch user's contracts
+const contracts = await getUserContracts(currentUser.id);
+
+// Calculate metrics
+const totalContracts = contracts.length;
+const avgRiskScore = contracts.reduce((sum, c) => sum + c.riskScore, 0) / contracts.length;
+const highRiskCount = contracts.filter(c => c.riskScore > 70).length;
+
+// Update chart data
+const contractTypes = groupBy(contracts, 'contractType');
+const typeDistribution = Object.entries(contractTypes).map(([type, items]) => ({
+  name: type,
+  value: items.length,
+  percentage: (items.length / totalContracts) * 100
+}));
