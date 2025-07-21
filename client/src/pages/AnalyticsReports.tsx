@@ -109,9 +109,10 @@ export default function AnalyticsReports() {
 
   // Process contracts mutation
   const processContractsMutation = useMutation({
-    mutationFn: () => apiRequest<{message: string, total: number, processed: number, failed: number}>('/api/contracts/process-all', {
-      method: 'POST'
-    }),
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/contracts/process-all');
+      return response.json() as Promise<{message: string, total: number, processed: number, failed: number}>;
+    },
     onSuccess: (data) => {
       toast({
         title: t('نجحت معالجة العقود', 'Contracts processed successfully'),
