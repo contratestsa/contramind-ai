@@ -50,16 +50,10 @@ export class ContractExtractor {
 
   // Extract text from DOCX files using Python
   private async extractDocxText(docxPath: string): Promise<string> {
+    console.log(`[${new Date().toISOString()}] Extracting text from DOCX: ${docxPath}`);
+    
     return new Promise((resolve, reject) => {
-      const py = spawn('python3', ['-c', `
-from docx import Document
-doc = Document('${docxPath}')
-text = []
-for paragraph in doc.paragraphs:
-    if paragraph.text.strip():
-        text.append(paragraph.text)
-print('\\n'.join(text))
-`]);
+      const py = spawn('python3', [path.join(__dirname, 'python', 'extract_docx.py'), docxPath]);
       
       let output = '';
       let error = '';
@@ -74,8 +68,10 @@ print('\\n'.join(text))
       
       py.on('close', (code) => {
         if (code !== 0) {
+          console.error(`[${new Date().toISOString()}] DOCX extraction failed: ${error}`);
           reject(new Error(`DOCX extraction failed: ${error}`));
         } else {
+          console.log(`[${new Date().toISOString()}] DOCX extraction successful, extracted ${output.length} characters`);
           resolve(output);
         }
       });
@@ -84,6 +80,7 @@ print('\\n'.join(text))
 
   // Extract information from contract text using patterns and keywords
   private extractInformation(text: string): ExtractedData {
+    console.log(`[${new Date().toISOString()}] Starting comprehensive contract extraction...`);
     const textLower = text.toLowerCase();
     
     // Extract contract type
@@ -101,14 +98,28 @@ print('\\n'.join(text))
     // Extract governing law
     const governingLaw = this.extractGoverningLaw(text);
     
-    // Extract payment terms
+    // Extract payment terms with enhanced logic
     const paymentTerm = this.extractPaymentTerms(text);
     
-    // Extract breach notice
+    // Extract breach notice with enhanced logic
     const breachNotice = this.extractBreachNotice(text);
     
-    // Extract termination notice
+    // Extract termination notice with enhanced logic
     const terminationNotice = this.extractTerminationNotice(text);
+    
+    // Log extraction results for debugging
+    console.log(`[${new Date().toISOString()}] Extraction results:`, {
+      contractType,
+      executedStatus,
+      language,
+      internalPartiesCount: internalParties.length,
+      counterpartiesCount: counterparties.length,
+      governingLaw,
+      paymentTerm,
+      breachNotice,
+      terminationNotice,
+      textLength: text.length
+    });
     
     return {
       contractType,
@@ -696,6 +707,8 @@ print('\\n'.join(text))
   // Main method to process a contract file
   async processContract(contractId: number, filePath: string): Promise<void> {
     try {
+      console.log(`[${new Date().toISOString()}] Processing contract ID ${contractId} from ${filePath}`);
+      
       // Detect file type and extract text
       let text = '';
       
@@ -707,23 +720,31 @@ print('\\n'.join(text))
         const buffer = await fs.promises.readFile(filePath, { length: 4 });
         const header = buffer.toString('hex', 0, 4);
         
+        console.log(`[${new Date().toISOString()}] File header: ${header}`);
+        
         if (header === '504b0304') {
           // PK.. signature for ZIP/DOCX files
+          console.log(`[${new Date().toISOString()}] Detected DOCX file format`);
           text = await this.extractDocxText(filePath);
         } else if (header === '25504446') {
           // %PDF signature
+          console.log(`[${new Date().toISOString()}] Detected PDF file format`);
           text = await this.extractPdfText(filePath);
         } else {
-          // Try both methods as fallback
+          // Try DOCX first since most uploads seem to be DOCX
+          console.log(`[${new Date().toISOString()}] Unknown header, trying DOCX extraction first`);
           try {
             text = await this.extractDocxText(filePath);
-          } catch {
+          } catch (docxError) {
+            console.log(`[${new Date().toISOString()}] DOCX extraction failed, trying PDF`);
             text = await this.extractPdfText(filePath);
           }
         }
       } else if (fileExtension === '.pdf') {
+        console.log(`[${new Date().toISOString()}] Processing as PDF based on extension`);
         text = await this.extractPdfText(filePath);
-      } else if (fileExtension === '.docx') {
+      } else if (fileExtension === '.docx' || fileExtension === '.doc') {
+        console.log(`[${new Date().toISOString()}] Processing as DOCX based on extension`);
         text = await this.extractDocxText(filePath);
       } else {
         throw new Error(`Unsupported file type: ${fileExtension}`);

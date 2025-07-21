@@ -4,7 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["concurrently", "google-cloud-sdk", "python311Packages.pypdf2", "python311Packages.pytesseract", "python311Packages.python-docx", "python312Packages.python-docx", "tesseract"]
+packages = ["concurrently", "freetype", "google-cloud-sdk", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "poppler_utils", "python311Packages.pypdf2", "python311Packages.pytesseract", "python311Packages.python-docx", "python312Packages.python-docx", "tcl", "tesseract", "tk", "zlib"]
 
 [deployment]
 deploymentTarget = "autoscale"
