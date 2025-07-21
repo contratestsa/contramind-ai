@@ -487,7 +487,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Not authenticated" });
       }
 
-      const validatedData = insertContractSchema.parse(req.body);
+      // Convert date string to Date object before validation
+      const dataWithDate = {
+        ...req.body,
+        date: req.body.date ? new Date(req.body.date) : undefined
+      };
+
+      const validatedData = insertContractSchema.parse(dataWithDate);
       const contract = await storage.createContract({
         ...validatedData,
         userId: req.user.id

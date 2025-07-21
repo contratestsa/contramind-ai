@@ -201,10 +201,11 @@ export default function Dashboard() {
           partyName: partyType === 'buyer' ? 'Buyer Corporation' : 'Vendor LLC',
           type: randomType,
           status: 'draft',
-          date: new Date().toISOString(),
+          date: new Date().toISOString(), // Server expects ISO string
           riskLevel: randomRisk,
           fileUrl: `/uploads/${file.name}` // Mock file path
         }),
+        credentials: 'include' // Include cookies for authentication
       });
 
       if (!response.ok) {
