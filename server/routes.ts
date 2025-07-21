@@ -744,6 +744,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Analytics endpoint
+  app.get("/api/analytics", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      // Import the mock analytics data
+      const { mockAnalyticsData } = await import("../client/src/mocks/analyticsData");
+      
+      // In a real application, you would generate this data from your database
+      // For now, we return the mock data
+      res.json(mockAnalyticsData);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+      res.status(500).json({ message: "Failed to fetch analytics" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

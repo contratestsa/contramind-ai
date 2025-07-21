@@ -1,0 +1,47 @@
+Update <Analytics page > that rep-creates the ‘High-level analytics ’  for our ContraMind app.  It will slot into the left-hand menu item “Analytics & Reports” in the existing layout 
+STACK  
+• React 18 + Vite (or Next.js if preferred)  
+• TailwindCSS (already present in project)  
+• Recharts for charts  
+• Zustand (or Context) for in-memory state; assume async fetch to /api/analytics returns JSON described below.  
+• Typescript everywhere, no `any` types.
+
+LAYOUT  
+┌──────────────────────────────────────────────────────────┐  
+│  KPI Header                                             │   ➜ centred large number of **uniqueDocs**  
+│  (705 Unique Documents)                                 │  
+├──────────────────────────────────────────────────────────┤  
+│  Grid 3×2  (gap-6, lg:grid-cols-3)                      │  
+│  ├─ ContractTypeDonut   ├─ ExecutedDonut   ├─ LanguageDonut │  
+│  ├─ InternalPartiesBar  ├─ CounterpartiesBar ├─ GoverningLawBar │  
+└──────────────────────────────────────────────────────────┘  
+
+// Add an optional “See More ▾” toggle under each donut if slice count > 10.
+
+CHART DETAILS  
+1️⃣ ContractTypeDonut  
+   • label & pct (top 10 types + ‘Other’)  
+2️⃣ ExecutedDonut (Yes / No)  
+3️⃣ LanguageDonut (English, Arabic, Unknown…)  
+4️⃣ InternalPartiesBar ─ horizontal, descending, top 10.  
+5️⃣ CounterpartiesBar ─ horizontal, descending, top 10.  
+6️⃣ GoverningLawBar ─ horizontal, descending, top 10.
+
+✨ Design cues  
+• light-theme to match existing ContraMind .  
+• Card containers: rounded-2xl, bg-slate-800, shadow-lg, p-4.  
+• Donut centre text: font-bold, text-xl cyan-200.  
+• Hover tooltip: white text on slate-900 backdrop.  
+• Responsive: stack to 1-col on < 640 px.
+
+API CONTRACT (mock in /src/mocks/data.ts)  
+```ts
+type DashboardData = {
+  uniqueDocs: number;           // 705
+  contractType: Record<string, number>;
+  executed: { yes: number; no: number };
+  language: Record<string, number>;
+  internalParties: Record<string, number>;
+  counterparties: Record<string, number>;
+  governingLaw: Record<string, number>;
+};

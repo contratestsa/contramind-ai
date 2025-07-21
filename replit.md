@@ -5,15 +5,20 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 21, 2025** (Latest):
-  - **Updated Analytics & Reports Page with Dark Theme**: Implemented comprehensive dark theme layout for Analytics page
-    - Background color changed to ContraMind navy (#0C2836)
-    - Max-width set to 1400px with 24px padding for optimal viewing
-    - Added filter bar with date picker and multiple dropdown filters
-    - Header uses Space Grotesk font for professional appearance
-    - All components (KPI cards, charts, tables) updated with dark theme styling
-    - Charts use ContraMind accent colors (#B7DEE8) for visibility
-    - Navigation to /dashboard/analytics works smoothly without page reload
-    - Maintains consistent sidebar across all dashboard pages
+  - **Redesigned Analytics & Reports Page with High-Level Analytics**: Complete redesign with new chart layout
+    - Implemented KPI header showing 705 unique documents count
+    - Created 3x2 grid layout with 6 charts:
+      - 3 donut charts: Contract Type, Executed (Yes/No), Language distribution
+      - 3 horizontal bar charts: Internal Parties, Counterparties, Governing Law (all showing top 10)
+    - Added "See More" toggle for donut charts with more than 10 slices
+    - Charts built with Recharts library for interactive visualizations
+    - Dark theme styling with bg-slate-800 containers and cyan-200 accents
+    - Created /api/analytics endpoint that returns mock analytics data
+    - Added loading state while fetching analytics data
+    - Responsive design that stacks to 1 column on mobile (< 640px)
+    - Custom tooltips with dark theme styling (bg-slate-900)
+    - All chart data dynamically calculated with percentages
+  - **Fixed React Hooks Error**: Removed explicit React import from SimpleLanguage.tsx (Vite handles JSX automatically)
 - **July 20, 2025**:
   - **Updated All Sidebar Pages to Use Real Contract Data**: All four core dashboard pages now display data from uploaded contracts
     - Analytics & Reports: Shows real KPIs calculated from contract data (cycle time, risk scores, contract counts, status distribution)

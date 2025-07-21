@@ -1,134 +1,213 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import {
-  TrendingUp, Clock, Shield, DollarSign, FileText, Download,
-  Calendar, AlertTriangle, ChevronDown
-} from 'lucide-react';
+  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
+import { type DashboardData } from '@/mocks/analyticsData';
+import { FileText, ChevronDown } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+
+// Custom tooltip for dark theme
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-900 p-2 rounded shadow-lg border border-slate-700">
+        <p className="text-white text-sm font-semibold">{label}</p>
+        <p className="text-cyan-200 text-sm">
+          {`${payload[0].name}: ${payload[0].value}`}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+// Donut chart component
+const DonutChart = ({ data, colors, centerText, showMore = false }: { 
+  data: any[], 
+  colors: string[], 
+  centerText: string,
+  showMore?: boolean 
+}) => {
+  const [expanded, setExpanded] = useState(false);
+  const displayData = expanded ? data : data.slice(0, 10);
+
+  return (
+    <div className="relative">
+      <ResponsiveContainer width="100%" height={250}>
+        <PieChart>
+          <Pie
+            data={displayData}
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={90}
+            paddingAngle={2}
+            dataKey="value"
+          >
+            {displayData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-xl font-bold text-cyan-200">{centerText}</span>
+      </div>
+      
+      {/* Legend */}
+      <div className="mt-4 space-y-1 max-h-32 overflow-y-auto">
+        {displayData.map((item, index) => (
+          <div key={item.name} className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <div 
+                className="w-3 h-3 rounded" 
+                style={{ backgroundColor: colors[index % colors.length] }} 
+              />
+              <span className="text-gray-300">{item.name}</span>
+            </div>
+            <span className="text-cyan-200">{item.pct}%</span>
+          </div>
+        ))}
+      </div>
+
+      {/* See More button */}
+      {showMore && data.length > 10 && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="mt-3 text-cyan-200 text-xs hover:text-cyan-100 flex items-center gap-1"
+        >
+          See {expanded ? 'Less' : 'More'} 
+          <ChevronDown className={cn("w-3 h-3 transition-transform", expanded && "rotate-180")} />
+        </button>
+      )}
+    </div>
+  );
+};
+
+// Horizontal bar chart component
+const HorizontalBarChart = ({ data, color }: { data: any[], color: string }) => {
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart 
+        data={data} 
+        layout="horizontal"
+        margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <XAxis type="number" stroke="#9CA3AF" />
+        <YAxis 
+          dataKey="name" 
+          type="category" 
+          stroke="#9CA3AF"
+          tick={{ fontSize: 12 }}
+          width={90}
+        />
+        <Tooltip content={<CustomTooltip />} />
+        <Bar dataKey="value" fill={color} radius={[0, 4, 4, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
 
 export default function AnalyticsReports() {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
 
-  // Fetch all contracts for analytics
-  const { data: contractsData, isLoading } = useQuery({
-    queryKey: ['/api/contracts'],
-    refetchInterval: 30000 // Refresh every 30 seconds
+  // Fetch analytics data from API
+  const { data: analyticsData, isLoading } = useQuery<DashboardData>({
+    queryKey: ['/api/analytics']
   });
 
-  const contracts = contractsData?.contracts || [];
+  // Process data for charts
+  const processData = (data: DashboardData) => {
+    // Contract Type Donut
+    const contractTypeTotal = Object.values(data.contractType).reduce((a, b) => a + b, 0);
+    const contractTypeData = Object.entries(data.contractType)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value]) => ({
+        name,
+        value,
+        pct: Math.round((value / contractTypeTotal) * 100)
+      }));
 
-  // Calculate real KPIs from contract data
-  const calculateKPIs = () => {
-    const now = new Date();
-    const activeContracts = contracts.filter((c: any) => c.status === 'active').length;
-    const totalContracts = contracts.length;
-    
-    // Calculate average cycle time (days from creation to signed)
-    const signedContracts = contracts.filter((c: any) => c.status === 'signed');
-    const cycleTimes = signedContracts.map((c: any) => {
-      const created = new Date(c.createdAt);
-      const signed = new Date(c.updatedAt);
-      return Math.floor((signed.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
-    });
-    const avgCycleTime = cycleTimes.length > 0 
-      ? Math.round(cycleTimes.reduce((a: number, b: number) => a + b, 0) / cycleTimes.length)
-      : 0;
+    // Executed Donut
+    const executedTotal = data.executed.yes + data.executed.no;
+    const executedData = [
+      { name: 'Yes', value: data.executed.yes, pct: Math.round((data.executed.yes / executedTotal) * 100) },
+      { name: 'No', value: data.executed.no, pct: Math.round((data.executed.no / executedTotal) * 100) }
+    ];
 
-    // Calculate on-time renewals percentage (mock calculation)
-    const expiringContracts = contracts.filter((c: any) => {
-      const contractDate = new Date(c.date);
-      const daysDiff = Math.floor((contractDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      return daysDiff >= 0 && daysDiff <= 90;
-    });
-    const onTimePercentage = totalContracts > 0 ? Math.round((expiringContracts.length / totalContracts) * 100) : 0;
+    // Language Donut
+    const languageTotal = Object.values(data.language).reduce((a, b) => a + b, 0);
+    const languageData = Object.entries(data.language)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value]) => ({
+        name,
+        value,
+        pct: Math.round((value / languageTotal) * 100)
+      }));
 
-    // Calculate average risk score
-    const riskScores = { low: 1, medium: 2, high: 3 };
-    const contractsWithRisk = contracts.filter((c: any) => c.riskLevel);
-    const totalRiskScore = contractsWithRisk.reduce((sum: number, c: any) => 
-      sum + (riskScores[c.riskLevel as keyof typeof riskScores] || 0), 0
+    // Internal Parties Bar (top 10)
+    const internalPartiesData = Object.entries(data.internalParties)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([name, value]) => ({ name, value }))
+      .reverse(); // For horizontal bar, reverse to show highest at top
+
+    // Counterparties Bar (top 10)
+    const counterpartiesData = Object.entries(data.counterparties)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([name, value]) => ({ name, value }))
+      .reverse();
+
+    // Governing Law Bar (top 10)
+    const governingLawData = Object.entries(data.governingLaw)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([name, value]) => ({ name, value }))
+      .reverse();
+
+    return {
+      contractTypeData,
+      executedData,
+      languageData,
+      internalPartiesData,
+      counterpartiesData,
+      governingLawData
+    };
+  };
+
+  // Show loading state
+  if (isLoading || !analyticsData) {
+    return (
+      <div className="flex-1 overflow-y-auto bg-[#0C2836] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-200 mx-auto mb-4"></div>
+          <p className="text-gray-400">{t('جاري تحميل التحليلات...', 'Loading analytics...')}</p>
+        </div>
+      </div>
     );
-    const avgRiskScore = contractsWithRisk.length > 0 
-      ? (totalRiskScore / contractsWithRisk.length).toFixed(1)
-      : '0.0';
+  }
 
-    return [
-      { label: t('وقت الدورة', 'Cycle-time'), value: `${avgCycleTime} days`, icon: Clock, trend: -15 },
-      { label: t('التجديدات في الوقت', '% On-time renewals'), value: `${onTimePercentage}%`, icon: Calendar, trend: 5 },
-      { label: t('الالتزامات النشطة', 'Active obligations'), value: activeContracts.toString(), icon: FileText, trend: 0 },
-      { label: t('متوسط درجة المخاطر', 'Average risk score'), value: avgRiskScore, icon: Shield, trend: -8 },
-      { label: t('إجمالي العقود', 'Total contracts'), value: totalContracts.toString(), icon: DollarSign, trend: 22 }
-    ];
-  };
+  const {
+    contractTypeData,
+    executedData,
+    languageData,
+    internalPartiesData,
+    counterpartiesData,
+    governingLawData
+  } = processData(analyticsData);
 
-  const kpiData = calculateKPIs();
-
-  // Calculate contract type distribution
-  const calculateTypeDistribution = () => {
-    const typeMap: Record<string, number> = {};
-    contracts.forEach((c: any) => {
-      typeMap[c.type] = (typeMap[c.type] || 0) + 1;
-    });
-    
-    return Object.entries(typeMap).map(([type, count]) => ({
-      month: type.toUpperCase(),
-      nda: type === 'nda' ? count : 0,
-      msa: type === 'service' ? count : 0,
-      sow: type === 'employment' ? count : 0
-    }));
-  };
-
-  const cycleTimeData = calculateTypeDistribution();
-
-  // Calculate status distribution
-  const calculateStatusDistribution = () => {
-    const statusMap: Record<string, number> = {};
-    contracts.forEach((c: any) => {
-      statusMap[c.status] = (statusMap[c.status] || 0) + 1;
-    });
-    
-    return Object.entries(statusMap).map(([status, count], index) => ({
-      quarter: status.charAt(0).toUpperCase() + status.slice(1),
-      count
-    }));
-  };
-
-  const amendmentsData = calculateStatusDistribution();
-
-  // Calculate upcoming renewals
-  const calculateRenewals = () => {
-    const now = new Date();
-    const renewals = { 30: 0, 60: 0, 90: 0 };
-    
-    contracts.forEach((c: any) => {
-      const contractDate = new Date(c.date);
-      const daysDiff = Math.floor((contractDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      
-      if (daysDiff > 0 && daysDiff <= 30) renewals[30]++;
-      else if (daysDiff > 30 && daysDiff <= 60) renewals[60]++;
-      else if (daysDiff > 60 && daysDiff <= 90) renewals[90]++;
-    });
-    
-    return [
-      { days: 90, contracts: renewals[90], status: 'upcoming' },
-      { days: 60, contracts: renewals[60], status: 'review' },
-      { days: 30, contracts: renewals[30], status: 'urgent' }
-    ];
-  };
-
-  const renewalData = calculateRenewals();
-
-  // Risk level distribution
-  const clauseUsageData = [
-    { clause: 'High Risk', usage: contracts.filter((c: any) => c.riskLevel === 'high').length, deviation: 12 },
-    { clause: 'Medium Risk', usage: contracts.filter((c: any) => c.riskLevel === 'medium').length, deviation: 8 },
-    { clause: 'Low Risk', usage: contracts.filter((c: any) => c.riskLevel === 'low').length, deviation: 5 },
-    { clause: 'Draft', usage: contracts.filter((c: any) => c.status === 'draft').length, deviation: 15 },
-    { clause: 'Active', usage: contracts.filter((c: any) => c.status === 'active').length, deviation: 3 }
-  ];
+  // Color palettes
+  const contractTypeColors = ['#22d3ee', '#06b6d4', '#0891b2', '#0e7490', '#155e75', '#164e63', '#134e4a', '#115e59', '#14532d', '#166534'];
+  const executedColors = ['#34d399', '#ef4444'];
+  const languageColors = ['#3b82f6', '#8b5cf6', '#ec4899'];
 
   return (
     <div className="flex-1 overflow-y-auto bg-[#0C2836]">
@@ -139,244 +218,110 @@ export default function AnalyticsReports() {
           transition={{ duration: 0.15 }}
           className="space-y-6"
         >
-          {/* Header */}
-          <div className={cn("mb-6", language === 'ar' && "text-right")}>
-            <h1 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              {t('التحليلات والتقارير', 'Analytics & Reports')}
-            </h1>
-            <p className="text-gray-400 text-base">
-              {t('رؤى شاملة حول أداء العقود', 'Comprehensive insights into contract performance')}
+          {/* KPI Header */}
+          <div className="text-center py-8">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <FileText className="w-8 h-8 text-cyan-200" />
+              <h1 className="text-5xl font-bold text-cyan-200">
+                {analyticsData.uniqueDocs}
+              </h1>
+            </div>
+            <p className="text-xl text-gray-300">
+              {t('مستندات فريدة', 'Unique Documents')}
             </p>
           </div>
 
-          {/* Filter Bar */}
-          <div className="bg-[#1a4158] rounded-lg p-4 mb-6">
-            <div className={cn(
-              "flex flex-wrap gap-3 items-center",
-              isRTL && "flex-row-reverse"
-            )}>
-              {/* Date Picker */}
-              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
-                <Calendar className="w-4 h-4 text-[#B7DEE8]" />
-                <span>{t('تاريخ الرفع: أي وقت', 'Upload Date: Any time')}</span>
-                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
-              </button>
-
-              {/* Contract Type Dropdown */}
-              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
-                <span>{t('نوع العقد: أي قيمة', 'Contract Type: is any value')}</span>
-                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
-              </button>
-
-              {/* Internal Parties Dropdown */}
-              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
-                <span>{t('الأطراف الداخلية: أي قيمة', 'Internal Parties: is any value')}</span>
-                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
-              </button>
-
-              {/* Counterparties Dropdown */}
-              <button className="flex items-center gap-2 px-4 py-2 bg-[#0C2836] border border-[#B7DEE8]/20 rounded-md text-white hover:bg-[#0C2836]/80 transition-colors">
-                <span>{t('الأطراف المقابلة: أي قيمة', 'Counterparties: is any value')}</span>
-                <ChevronDown className="w-4 h-4 text-[#B7DEE8]" />
-              </button>
-
-              {/* More Filters Button */}
-              <button className="flex items-center gap-2 px-4 py-2 bg-[#B7DEE8] text-[#0C2836] rounded-md hover:bg-[#B7DEE8]/90 transition-colors font-medium">
-                <span>{t('المزيد +3', 'More +3')}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* KPI Cards - 5 cards as requested */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-            {kpiData.map((kpi, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.15, delay: index * 0.02 }}
-                className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
-              >
-                <div className={cn("flex items-center justify-between mb-2", language === 'ar' && "flex-row-reverse")}>
-                  <kpi.icon className="w-5 h-5 text-[#B7DEE8]" />
-                  {kpi.trend !== 0 && (
-                    <span className={cn(
-                      "text-xs flex items-center gap-1",
-                      kpi.trend > 0 ? "text-green-400" : "text-red-400"
-                    )}>
-                      <TrendingUp className={cn("w-3 h-3", kpi.trend < 0 && "rotate-180")} />
-                      {Math.abs(kpi.trend)}%
-                    </span>
-                  )}
-                </div>
-                <p className={cn("text-2xl font-bold text-white mb-1", language === 'ar' && "text-right")}>
-                  {kpi.value}
-                </p>
-                <p className={cn("text-sm text-gray-400", language === 'ar' && "text-right")}>
-                  {kpi.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Charts Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Cycle Time Trends */}
+          {/* Grid 3x2 */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Contract Type Donut */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.1 }}
-              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
+              className="bg-slate-800 rounded-2xl shadow-lg p-4"
             >
-              <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                <h3 className="text-lg font-semibold text-white">
-                  {t('اتجاهات وقت الدورة', 'Cycle Time Trends')}
-                </h3>
-                <button className="text-[#B7DEE8] hover:text-white transition-colors">
-                  <Download className="w-5 h-5" />
-                </button>
-              </div>
-              
-              {/* Simple bar chart visualization */}
-              <div className="space-y-3">
-                {cycleTimeData.map((data, index) => (
-                  <div key={index} className={cn("flex items-center gap-4", language === 'ar' && "flex-row-reverse")}>
-                    <span className="text-sm text-gray-400 w-12">{data.month}</span>
-                    <div className="flex-1 flex gap-1">
-                      <div className="h-6 bg-[#B7DEE8] rounded" style={{ width: `${data.nda * 3}px` }} />
-                      <div className="h-6 bg-[#7ABCCC] rounded" style={{ width: `${data.msa * 3}px` }} />
-                      <div className="h-6 bg-[#4D8FA1] rounded" style={{ width: `${data.sow * 3}px` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className={cn("flex gap-6 mt-4 text-xs", language === 'ar' && "flex-row-reverse")}>
-                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
-                  <div className="w-3 h-3 bg-[#B7DEE8] rounded" />
-                  <span className="text-gray-400">NDA</span>
-                </div>
-                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
-                  <div className="w-3 h-3 bg-[#7ABCCC] rounded" />
-                  <span className="text-gray-400">MSA</span>
-                </div>
-                <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
-                  <div className="w-3 h-3 bg-[#4D8FA1] rounded" />
-                  <span className="text-gray-400">SOW</span>
-                </div>
-              </div>
+              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+                {t('نوع العقد', 'Contract Type')}
+              </h3>
+              <DonutChart 
+                data={contractTypeData} 
+                colors={contractTypeColors} 
+                centerText={`${contractTypeData.length} Types`}
+                showMore={true}
+              />
             </motion.div>
 
-            {/* Contract Amendments */}
+            {/* Executed Donut */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.15 }}
-              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
+              className="bg-slate-800 rounded-2xl shadow-lg p-4"
             >
-              <div className={cn("flex items-center justify-between mb-4", language === 'ar' && "flex-row-reverse")}>
-                <h3 className="text-lg font-semibold text-white">
-                  {t('تعديلات العقود', 'Contract Amendments')}
-                </h3>
-                <button className="text-[#B7DEE8] hover:text-white transition-colors">
-                  <Download className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-4 gap-4">
-                {amendmentsData.map((data, index) => (
-                  <div key={index} className="text-center">
-                    <div className="h-32 bg-gradient-to-t from-[#4D8FA1] to-[#B7DEE8] rounded-lg mb-2 relative">
-                      <div 
-                        className="absolute bottom-0 left-0 right-0 bg-[#0C2836] rounded-t-lg"
-                        style={{ height: `${100 - (data.count / 61) * 100}%` }}
-                      />
-                    </div>
-                    <p className="text-sm text-gray-400">{data.quarter}</p>
-                    <p className="text-lg font-semibold text-white">{data.count}</p>
-                  </div>
-                ))}
-              </div>
+              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+                {t('منفذ', 'Executed')}
+              </h3>
+              <DonutChart 
+                data={executedData} 
+                colors={executedColors} 
+                centerText={`${executedData[0].pct}% Yes`}
+              />
             </motion.div>
-          </div>
 
-          {/* Bottom Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Upcoming Renewals */}
+            {/* Language Donut */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.2 }}
-              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
+              className="bg-slate-800 rounded-2xl shadow-lg p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", language === 'ar' && "text-right")}>
-                {t('التجديدات القادمة', 'Upcoming Renewals')}
+              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+                {t('اللغة', 'Language')}
               </h3>
-
-              <div className="space-y-3">
-                {renewalData.map((renewal, index) => (
-                  <div 
-                    key={index}
-                    className={cn(
-                      "flex items-center justify-between p-3 rounded-lg border",
-                      renewal.status === 'urgent' ? 'bg-red-900/20 border-red-400/30' : 
-                      renewal.status === 'review' ? 'bg-yellow-900/20 border-yellow-400/30' : 
-                      'bg-green-900/20 border-green-400/30',
-                      language === 'ar' && "flex-row-reverse"
-                    )}
-                  >
-                    <div className={cn("flex items-center gap-3", language === 'ar' && "flex-row-reverse")}>
-                      <AlertTriangle className={cn(
-                        "w-4 h-4",
-                        renewal.status === 'urgent' ? 'text-red-400' : 
-                        renewal.status === 'review' ? 'text-yellow-400' : 
-                        'text-green-400'
-                      )} />
-                      <div className={cn(language === 'ar' && "text-right")}>
-                        <p className="text-white font-medium">
-                          {renewal.contracts} {t('عقود', 'contracts')}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          {t('خلال', 'Within')} {renewal.days} {t('يوم', 'days')}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <DonutChart 
+                data={languageData} 
+                colors={languageColors} 
+                centerText={`${languageData.length} Langs`}
+              />
             </motion.div>
 
-            {/* Clause Usage Analysis */}
+            {/* Internal Parties Bar */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.15, delay: 0.25 }}
-              className="bg-[#1a4158] rounded-lg p-6 border border-[#B7DEE8]/20 shadow-sm"
+              className="bg-slate-800 rounded-2xl shadow-lg p-4"
             >
-              <h3 className={cn("text-lg font-semibold text-white mb-4", language === 'ar' && "text-right")}>
-                {t('تحليل استخدام البنود', 'Clause Usage Analysis')}
+              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+                {t('الأطراف الداخلية', 'Internal Parties')}
               </h3>
+              <HorizontalBarChart data={internalPartiesData} color="#22d3ee" />
+            </motion.div>
 
-              <div className="space-y-3">
-                {clauseUsageData.map((clause, index) => (
-                  <div key={index} className={cn(language === 'ar' && "text-right")}>
-                    <div className={cn("flex items-center justify-between mb-1", language === 'ar' && "flex-row-reverse")}>
-                      <p className="text-sm text-white">{clause.clause}</p>
-                      <p className="text-sm text-gray-400">{clause.usage}%</p>
-                    </div>
-                    <div className="w-full bg-[#0C2836] rounded-full h-2">
-                      <div 
-                        className="bg-[#B7DEE8] h-2 rounded-full relative"
-                        style={{ width: `${clause.usage}%` }}
-                      >
-                        {clause.deviation > 10 && (
-                          <div className="absolute -right-1 -top-1 w-4 h-4 bg-red-400 rounded-full" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {/* Counterparties Bar */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.3 }}
+              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+            >
+              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+                {t('الأطراف المقابلة', 'Counterparties')}
+              </h3>
+              <HorizontalBarChart data={counterpartiesData} color="#8b5cf6" />
+            </motion.div>
+
+            {/* Governing Law Bar */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: 0.35 }}
+              className="bg-slate-800 rounded-2xl shadow-lg p-4"
+            >
+              <h3 className={cn("text-lg font-semibold text-white mb-4", isRTL && "text-right")}>
+                {t('القانون الحاكم', 'Governing Law')}
+              </h3>
+              <HorizontalBarChart data={governingLawData} color="#3b82f6" />
             </motion.div>
           </div>
         </motion.div>
