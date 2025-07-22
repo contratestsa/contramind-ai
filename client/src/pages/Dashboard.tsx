@@ -47,7 +47,6 @@ import TagsCategories from "@/pages/TagsCategories";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useRecentContracts } from "@/hooks/useRecentContracts";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface User {
   id: number;
@@ -125,17 +124,6 @@ export default function Dashboard() {
   const [showPartyModal, setShowPartyModal] = useState(false);
   const [selectedPartyRole, setSelectedPartyRole] = useState<'first' | 'second' | 'general' | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  
-  // Analytics state - separate from chat state
-  const [analyticsData, setAnalyticsData] = useState<{
-    contractTypes: { type: string; count: number }[];
-    riskRates: { risk: string; count: number }[];
-    paymentLiabilities: { party: string; amount: number }[];
-  }>({
-    contractTypes: [],
-    riskRates: [],
-    paymentLiabilities: []
-  });
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -231,29 +219,6 @@ export default function Dashboard() {
   useEffect(() => {
     console.log('CONTRACT GATE FULLY FIXED');
   }, []);
-  
-  // Fetch analytics data only when on analytics page
-  useEffect(() => {
-    if (userData?.user?.id && matchAnalytics) {
-      fetchAnalyticsData();
-    }
-  }, [userData, matchAnalytics]);
-  
-  const fetchAnalyticsData = async () => {
-    try {
-      const response = await fetch('/api/contracts/analytics', {
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setAnalyticsData(data);
-        console.log('DASHBOARD ANALYTICS READY');
-      }
-    } catch (error) {
-      console.error('Error fetching analytics:', error);
-    }
-  };
 
   const handleContractUpload = async (file: File, partyType?: string) => {
     // Store file and show party selection modal
@@ -986,7 +951,210 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        ) : null}
+        ) : (
+          /* Empty State */
+          <div className="flex flex-col h-full bg-[var(--bg-main)] relative">
+            {/* Messages/Content Area */}
+            <div className="flex-1 overflow-y-auto flex flex-col">
+              <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
+
+
+                {/* Spacer to push cards to bottom */}
+                <div className="flex-1"></div>
+
+              </div>
+            </div>
+
+            {/* Centered Input Bar Container - Only when no chat started */}
+            <div 
+              className="fixed flex items-center justify-center"
+              style={{ 
+                ...(isRTL 
+                  ? { right: `${sidebarWidth}px`, left: 0 }
+                  : { left: `${sidebarWidth}px`, right: 0 }
+                ),
+                top: 0,
+                bottom: 0,
+                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
+              <div className="w-full max-w-3xl px-6">
+                {/* Welcome Text Above Input Bar */}
+                <div className="text-center mb-12">
+                  <h1 className="text-2xl font-medium text-[var(--text-primary)]">
+                    {isRTL 
+                      ? `مرحباً ${userData?.user?.fullName?.split(' ')[0] || ''}`
+                      : `Welcome back, ${userData?.user?.fullName?.split(' ')[0] || ''}`
+                    }
+                  </h1>
+                </div>
+                
+                {/* Input Bar */}
+                <div className="bg-[var(--input-bg)] p-3 rounded-lg">
+                  <div className="relative">
+                    <input
+                    type="text"
+                    ref={inputRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder={conversationState !== 'ready' 
+                      ? t('يرجى رفع عقد أولاً...', 'Please upload a contract first...') 
+                      : t('اسأل عن هذا العقد...', 'Ask about this contract...')
+                    }
+                    disabled={conversationState !== 'ready'}
+                    className={cn(
+                      "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
+                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24",
+                      conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
+                    )}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                  />
+                  <div className={cn(
+                    "absolute top-1/2 -translate-y-1/2 flex items-center gap-1",
+                    isRTL ? "left-2" : "right-2"
+                  )}>
+                    <button
+                      className="p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
+                      title={t('إرفاق ملف', 'Attach file')}
+                      onClick={() => setIsUploadModalOpen(true)}
+                    >
+                      <Paperclip className="w-4 h-4" />
+                    </button>
+                    <button
+                      className={cn(
+                        "p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors",
+                        conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
+                      )}
+                      disabled={conversationState !== 'ready'}
+                      onClick={() => {
+                        if (conversationState !== 'ready') {
+                          toast({
+                            title: t('يرجى رفع عقد واختيار الطرف أولاً', 'Please upload a contract and select party first'),
+                            variant: 'destructive'
+                          });
+                          return;
+                        }
+                        handleSendMessage();
+                      }}
+                    >
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Prompt Selection System */}
+              <div className="mt-4">
+                <div className="bg-[#0C2836] rounded-lg p-4">
+                  {/* Tab Headers */}
+                  <div className="flex space-x-1 mb-4 bg-[rgba(183,222,232,0.1)] p-1 rounded-lg">
+                    <button
+                      className={cn(
+                        "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300",
+                        activePromptTab === 'suggested' 
+                          ? "bg-[#B7DEE8] text-[#0C2836] shadow-sm" 
+                          : "text-[rgba(183,222,232,0.6)] hover:text-white"
+                      )}
+                      onClick={() => setActivePromptTab('suggested')}
+                    >
+                      {t('مقترحة', 'Suggested')}
+                    </button>
+                    <button
+                      className={cn(
+                        "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300",
+                        activePromptTab === 'myPrompts' 
+                          ? "bg-[#B7DEE8] text-[#0C2836] shadow-sm" 
+                          : "text-[rgba(183,222,232,0.6)] hover:text-white"
+                      )}
+                      onClick={() => setActivePromptTab('myPrompts')}
+                    >
+                      {t('موجهاتي', 'My Prompts')}
+                    </button>
+                  </div>
+                  
+                  {/* Prompts Content */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {activePromptTab === 'suggested' ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setInputValue(t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
+                          }}
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
+                        >
+                          <p className="text-sm text-white">{t('تحليل المخاطر', 'Risk Analysis')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('حدد المخاطر الرئيسية', 'Identify key risks')}</p>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setInputValue(t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
+                          }}
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
+                        >
+                          <p className="text-sm text-white">{t('ملخص العقد', 'Contract Summary')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('البنود الرئيسية', 'Key clauses')}</p>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setInputValue(t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
+                          }}
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
+                        >
+                          <p className="text-sm text-white">{t('شروط الدفع', 'Payment Terms')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('تفاصيل الدفع', 'Payment details')}</p>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setInputValue(t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
+                          }}
+                          className={cn(
+                            "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
+                            isRTL ? "text-right" : "text-left"
+                          )}
+                        >
+                          <p className="text-sm text-white">{t('بنود الإنهاء', 'Termination Clauses')}</p>
+                          <p className="text-xs text-[rgba(183,222,232,0.6)] mt-1">{t('شروط الإلغاء', 'Cancellation terms')}</p>
+                        </button>
+                      </>
+                    ) : (
+                      <div className="col-span-2 text-center py-8">
+                        <p className="text-[rgba(183,222,232,0.6)] text-sm">{t('لا توجد موجهات محفوظة', 'No saved prompts')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              </div>
+            </div>
+          </div>
+        )}
         </div>
       </div>
 

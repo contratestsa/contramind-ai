@@ -462,56 +462,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch recent contracts" });
     }
   });
-  
-  app.get("/api/contracts/analytics", async (req, res) => {
-    try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-      
-      const contracts = await storage.getAllContracts(req.user.id);
-      
-      // Process contract types
-      const typeCounts = contracts.reduce((acc: Record<string, number>, contract: any) => {
-        const type = contract.type || 'other';
-        acc[type] = (acc[type] || 0) + 1;
-        return acc;
-      }, {});
-      
-      const contractTypes = Object.entries(typeCounts).map(([type, count]) => ({
-        type: type.charAt(0).toUpperCase() + type.slice(1),
-        count
-      }));
-      
-      // Process risk rates
-      const riskCounts = contracts.reduce((acc: Record<string, number>, contract: any) => {
-        const risk = contract.riskLevel || 'medium';
-        acc[risk] = (acc[risk] || 0) + 1;
-        return acc;
-      }, {});
-      
-      const riskRates = Object.entries(riskCounts).map(([risk, count]) => ({
-        risk: risk.charAt(0).toUpperCase() + risk.slice(1),
-        count
-      }));
-      
-      // Process payment liabilities (using mock data for now)
-      const paymentLiabilities = [
-        { party: 'Buyer Corp', amount: 125000 },
-        { party: 'Vendor LLC', amount: 87500 },
-        { party: 'Partner Inc', amount: 165000 }
-      ];
-      
-      res.json({
-        contractTypes,
-        riskRates,
-        paymentLiabilities
-      });
-    } catch (error) {
-      console.error('Error fetching analytics:', error);
-      res.status(500).json({ message: 'Failed to fetch analytics' });
-    }
-  });
 
   app.get("/api/contracts", async (req, res) => {
     try {
@@ -676,7 +626,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (!req.file) {
-        return res.status(400).json({ message: "PDF file is required" });
+        return res.status(400).json({ message: "Contract file is required" });
+      }
+      
+      // Validate file type
+      const fileExt = path.extname(req.file.originalname).toLowerCase();
+      if (fileExt !== '.pdf' && fileExt !== '.docx') {
+        // Clean up uploaded file
+        fs.unlinkSync(req.file.path);
+        return res.status(400).json({ message: "Only PDF and DOCX files are supported" });
       }
 
       // Parse contract metadata from form data
@@ -696,17 +654,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: req.user.id
       });
 
-      // Process the PDF asynchronously
-      contractExtractor.processContract(contract.id, req.file.path)
-        .then(() => {
-          console.log(`Contract ${contract.id} processed successfully`);
-        })
-        .catch((error) => {
-          console.error(`Error processing contract ${contract.id}:`, error);
+      // Process the contract using JavaScript extractor
+      try {
+        const { contractExtractorJS } = await import('./contractExtractorJS');
+        const extractedData = await contractExtractorJS.extractContract(req.file.path);
+        
+        // Store extracted data in contract_details table
+        await storage.createContractDetails({
+          contractId: contract.id,
+          executedStatus: false, // Will be determined from text analysis later
+          language: extractedData.rawText.match(/[\u0600-\u06FF]/) ? 'ar' : 'en', // Simple Arabic detection
+          internalParties: extractedData.parties.filter(p => p.role === 'First Party').map(p => p.name),
+          counterparties: extractedData.parties.filter(p => p.role === 'Second Party').map(p => p.name),
+          governingLaw: extractedData.parties.find(p => p.company)?.company || null,
+          paymentTerm: extractedData.paymentDetails.terms || null,
+          breachNotice: extractedData.riskPhrases.find(p => p.includes('breach'))?.substring(0, 200) || null,
+          terminationNotice: extractedData.termDuration || null,
+          extractedText: extractedData.rawText,
+          extractionMetadata: JSON.stringify({
+            contractType: extractedData.contractType,
+            effectiveDate: extractedData.effectiveDate,
+            riskLevel: extractedData.riskLevel,
+            riskPhrases: extractedData.riskPhrases,
+            paymentDetails: extractedData.paymentDetails,
+            parties: extractedData.parties
+          })
         });
+        
+        // Update contract with extracted risk level and type
+        await storage.updateContract(contract.id, {
+          riskLevel: extractedData.riskLevel,
+          type: extractedData.contractType
+        });
+        
+        console.log(`Contract ${contract.id} extracted successfully`);
+      } catch (extractError) {
+        console.error(`Error extracting contract ${contract.id}:`, extractError);
+        // Continue without failing the upload
+      }
 
       res.status(201).json({ 
-        message: "Contract uploaded successfully. Processing will complete shortly.",
+        message: "Contract uploaded successfully. Extraction completed.",
         contract 
       });
     } catch (error) {
