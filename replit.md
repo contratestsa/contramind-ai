@@ -4,16 +4,7 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
-- **July 22, 2025** (Latest):
-  - **JavaScript-Based Universal Extraction Pipeline**: Replaced Python scripts with JavaScript extraction
-    - Created contractExtractorJS.ts using pdf.js for PDFs and mammoth.js for DOCX files
-    - Extracts contract metadata: parties, contract type, dates, risk phrases, payment details
-    - Stores full raw text and extracted fields in contract_details table
-    - Risk level calculation based on detected risk phrases
-    - Automatic contract type detection (service, nda, employment, sales, other)
-    - Updates contract record with extracted risk level and type
-    - EXTRACTION ENGINE READY - successfully tested with PDF contracts
-- **July 22, 2025** (Earlier):
+- **July 22, 2025**:
   - **Navigation Enhancement**: Separated "Parties" and "Contracts" into distinct menu items
     - Renamed "Parties & Contacts" to just "Parties" for simplicity
     - Added new "Contracts" menu item with FileText icon below Parties
