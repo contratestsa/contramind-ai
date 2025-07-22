@@ -1,0 +1,46 @@
+========================================================
+🎯  GOAL: PARALLEL EXTRACTION + DASHBOARD ANALYTICS SYSTEM
+--------------------------------------------------------
+• DO NOT change, replace, or affect any existing chat,
+  chatbar, party-role logic, sidebar, or contract view.
+• The chat system must work exactly as now (streaming,
+  chat-to-contract, popups, saving, etc).
+
+• Add a completely SEPARATE “analytics system” to the dashboard.
+
+========================================================
+🛠  DASHBOARD ANALYTICS REQUIREMENTS
+--------------------------------------------------------
+1. Remove all existing dashboard charts and widgets.
+2. Add exactly THREE new vertical column charts:
+   – Chart 1: Contract Type (counts by type: NDA, MSA, Service Agreement, etc.)
+   – Chart 2: Risk Rate (counts by extracted risk: High, Medium, Low)
+   – Chart 3: Payment Liability (total/sum, by extracted payment field)
+3. The charts must update automatically using data extracted from
+   EVERY contract that the user has uploaded and started a chat with.
+
+4. Build a **standalone atomic extraction pipeline** (can use
+   pdf.js, mammoth.js, or similar) that runs as a side-effect of
+   contract upload, extracting:
+   – Parties
+   – Type
+   – Risk rating
+   – Payment info
+   – Any other fields you want to use for charts
+
+5. Store all extracted analytics data in a separate state object
+   (analyticsStore or similar)—do NOT mix with chat/conversation state.
+
+6. If extraction fails for a contract, skip it in the charts (do not block).
+
+========================================================
+✅  DONE CHECKLIST
+--------------------------------------------------------
+☐ Main chat system works **exactly as before**, no changes.
+☐ Dashboard only shows three live column charts (no pie, no static).
+☐ Charts use only real extracted data from uploaded contracts.
+☐ Extraction and chart logic is totally separate from chat logic.
+☐ No console errors. No change in dark/light mode or layout.
+☐ Log **DASHBOARD ANALYTICS READY** in console when complete.
+
+========================================================

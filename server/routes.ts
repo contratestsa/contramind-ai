@@ -462,6 +462,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch recent contracts" });
     }
   });
+  
+  app.get("/api/contracts/analytics", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const contracts = await storage.getAllContracts(req.user.id);
+      
+      // Process contract types
+      const typeCounts = contracts.reduce((acc: Record<string, number>, contract: any) => {
+        const type = contract.type || 'other';
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+      }, {});
+      
+      const contractTypes = Object.entries(typeCounts).map(([type, count]) => ({
+        type: type.charAt(0).toUpperCase() + type.slice(1),
+        count
+      }));
+      
+      // Process risk rates
+      const riskCounts = contracts.reduce((acc: Record<string, number>, contract: any) => {
+        const risk = contract.riskLevel || 'medium';
+        acc[risk] = (acc[risk] || 0) + 1;
+        return acc;
+      }, {});
+      
+      const riskRates = Object.entries(riskCounts).map(([risk, count]) => ({
+        risk: risk.charAt(0).toUpperCase() + risk.slice(1),
+        count
+      }));
+      
+      // Process payment liabilities (using mock data for now)
+      const paymentLiabilities = [
+        { party: 'Buyer Corp', amount: 125000 },
+        { party: 'Vendor LLC', amount: 87500 },
+        { party: 'Partner Inc', amount: 165000 }
+      ];
+      
+      res.json({
+        contractTypes,
+        riskRates,
+        paymentLiabilities
+      });
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+      res.status(500).json({ message: 'Failed to fetch analytics' });
+    }
+  });
 
   app.get("/api/contracts", async (req, res) => {
     try {

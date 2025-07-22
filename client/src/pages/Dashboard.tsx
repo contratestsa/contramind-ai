@@ -47,6 +47,7 @@ import TagsCategories from "@/pages/TagsCategories";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useRecentContracts } from "@/hooks/useRecentContracts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface User {
   id: number;
@@ -124,6 +125,17 @@ export default function Dashboard() {
   const [showPartyModal, setShowPartyModal] = useState(false);
   const [selectedPartyRole, setSelectedPartyRole] = useState<'first' | 'second' | 'general' | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  
+  // Analytics state - separate from chat state
+  const [analyticsData, setAnalyticsData] = useState<{
+    contractTypes: { type: string; count: number }[];
+    riskRates: { risk: string; count: number }[];
+    paymentLiabilities: { party: string; amount: number }[];
+  }>({
+    contractTypes: [],
+    riskRates: [],
+    paymentLiabilities: []
+  });
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -219,6 +231,29 @@ export default function Dashboard() {
   useEffect(() => {
     console.log('CONTRACT GATE FULLY FIXED');
   }, []);
+  
+  // Fetch analytics data
+  useEffect(() => {
+    if (userData?.user?.id && showNewChat) {
+      fetchAnalyticsData();
+    }
+  }, [userData, showNewChat, recentContracts]);
+  
+  const fetchAnalyticsData = async () => {
+    try {
+      const response = await fetch('/api/contracts/analytics', {
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAnalyticsData(data);
+        console.log('DASHBOARD ANALYTICS READY');
+      }
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    }
+  };
 
   const handleContractUpload = async (file: File, partyType?: string) => {
     // Store file and show party selection modal
@@ -952,16 +987,90 @@ export default function Dashboard() {
             </div>
           </div>
         ) : (
-          /* Empty State */
+          /* Analytics Dashboard */
           <div className="flex flex-col h-full bg-[var(--bg-main)] relative">
-            {/* Messages/Content Area */}
-            <div className="flex-1 overflow-y-auto flex flex-col">
-              <div className="max-w-3xl mx-auto w-full p-4 flex flex-col flex-1">
-
-
-                {/* Spacer to push cards to bottom */}
-                <div className="flex-1"></div>
-
+            {/* Analytics Content Area */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="max-w-6xl mx-auto p-6">
+                <h2 className="text-2xl font-semibold text-[var(--text-primary)] mb-8">
+                  {t('تحليلات العقود', 'Contract Analytics')}
+                </h2>
+                
+                {/* Three Column Charts */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Contract Type Chart */}
+                  <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+                    <h3 className="text-lg font-medium text-[var(--text-primary)] mb-4">
+                      {t('أنواع العقود', 'Contract Types')}
+                    </h3>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={analyticsData.contractTypes}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                          <XAxis dataKey="type" stroke="var(--text-secondary)" />
+                          <YAxis stroke="var(--text-secondary)" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'var(--card-bg)', 
+                              border: '1px solid var(--border-color)',
+                              borderRadius: '8px'
+                            }}
+                          />
+                          <Bar dataKey="count" fill="#B7DEE8" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                  
+                  {/* Risk Rate Chart */}
+                  <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+                    <h3 className="text-lg font-medium text-[var(--text-primary)] mb-4">
+                      {t('معدلات المخاطر', 'Risk Rates')}
+                    </h3>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={analyticsData.riskRates}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                          <XAxis dataKey="risk" stroke="var(--text-secondary)" />
+                          <YAxis stroke="var(--text-secondary)" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'var(--card-bg)', 
+                              border: '1px solid var(--border-color)',
+                              borderRadius: '8px'
+                            }}
+                          />
+                          <Bar dataKey="count" fill="#0C2836" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                  
+                  {/* Payment Liability Chart */}
+                  <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+                    <h3 className="text-lg font-medium text-[var(--text-primary)] mb-4">
+                      {t('التزامات الدفع', 'Payment Liabilities')}
+                    </h3>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={analyticsData.paymentLiabilities}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                          <XAxis dataKey="party" stroke="var(--text-secondary)" />
+                          <YAxis stroke="var(--text-secondary)" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'var(--card-bg)', 
+                              border: '1px solid var(--border-color)',
+                              borderRadius: '8px'
+                            }}
+                            formatter={(value: number) => `$${value.toLocaleString()}`}
+                          />
+                          <Bar dataKey="amount" fill="#5B8FA3" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
