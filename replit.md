@@ -5,13 +5,17 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 22, 2025**:
-  - **Navigation Restructuring**: Updated dashboard navigation to make Analytics the primary dashboard
+  - **Default Landing Page Changed**: Users now land on "New Contract Chat" page after login
+    - Removed automatic redirect from `/dashboard` to `/dashboard/analytics`
+    - Set `showNewChat` to `true` by default in Dashboard component
+    - Users see welcome screen with chat input and prompts immediately after login
+    - Navigation buttons (Dashboard, Parties, etc.) now hide the welcome screen when clicked
+    - New flow: Login → /dashboard → New Contract Chat welcome screen
+  - **Navigation Restructuring**: Updated dashboard navigation for better clarity
     - Renamed "Analytics & Reports" to "Dashboard" in sidebar navigation
     - Updated "New Contract Analysis" button to "New Contract Chat" for clarity
-    - Added automatic redirect from `/dashboard` to `/dashboard/analytics`
     - Removed duplicate Dashboard home button from sidebar to eliminate confusion
-    - Analytics page is now the default landing page when users navigate to dashboard
-    - "New Contract Chat" button opens upload modal and shows welcome chat interface
+    - "New Contract Chat" button shows welcome chat interface with prompts
 - **July 21, 2025** (Latest):
   - **Fixed Contract Upload and Analytics Dashboard Issues**: Resolved critical issues preventing proper contract processing
     - Fixed UploadModal component which was using mock upload instead of actual API calls

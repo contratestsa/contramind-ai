@@ -114,7 +114,7 @@ export default function Dashboard() {
   // Use persistent recent contracts from API
   const { recent: recentContracts, isLoading: isLoadingRecent, touch: touchContract } = useRecentContracts(10);
   const [showAllContracts, setShowAllContracts] = useState(false);
-  const [showNewChat, setShowNewChat] = useState(false);
+  const [showNewChat, setShowNewChat] = useState(true); // Default to showing new chat welcome screen
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -122,12 +122,7 @@ export default function Dashboard() {
     retry: false,
   });
   
-  // Redirect from /dashboard to /dashboard/analytics
-  useEffect(() => {
-    if (location === '/dashboard' && !matchAnalytics && !matchParties && !matchNotifications && !matchTags) {
-      setLocation('/dashboard/analytics');
-    }
-  }, [location, setLocation, matchAnalytics, matchParties, matchNotifications, matchTags]);
+  // No automatic redirect - users land on new chat welcome screen by default
 
   // Debug logging
   useEffect(() => {
@@ -599,6 +594,7 @@ export default function Dashboard() {
                   console.log('Navigating to /dashboard/analytics');
                   setLocation('/dashboard/analytics');
                   setShowMobileSidebar(false);
+                  setShowNewChat(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
@@ -616,6 +612,7 @@ export default function Dashboard() {
                   console.log('Navigating to /dashboard/parties');
                   setLocation('/dashboard/parties');
                   setShowMobileSidebar(false);
+                  setShowNewChat(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
@@ -633,6 +630,7 @@ export default function Dashboard() {
                   console.log('Navigating to /dashboard/notifications');
                   setLocation('/dashboard/notifications');
                   setShowMobileSidebar(false);
+                  setShowNewChat(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
@@ -650,6 +648,7 @@ export default function Dashboard() {
                   console.log('Navigating to /dashboard/tags');
                   setLocation('/dashboard/tags');
                   setShowMobileSidebar(false);
+                  setShowNewChat(false);
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
