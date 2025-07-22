@@ -5,6 +5,13 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 22, 2025**:
+  - **Navigation Enhancement**: Separated "Parties" and "Contracts" into distinct menu items
+    - Renamed "Parties & Contacts" to just "Parties" for simplicity
+    - Added new "Contracts" menu item with FileText icon below Parties
+    - Created separate Contracts.tsx page component with route /dashboard/contracts
+    - Updated both Dashboard sidebar and DashboardSidebar component for consistency
+    - Contracts page shows list of all contracts in a clean table format
+    - Both navigation items have distinct routes: /dashboard/parties and /dashboard/contracts
   - **Default Landing Page Changed**: Users now land on "New Contract Chat" page after login
     - Removed automatic redirect from `/dashboard` to `/dashboard/analytics`
     - Set `showNewChat` to `true` by default in Dashboard component

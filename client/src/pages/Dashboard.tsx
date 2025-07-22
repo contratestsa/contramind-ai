@@ -41,6 +41,7 @@ import { queryClient } from "@/lib/queryClient";
 import { motion } from "framer-motion";
 import AnalyticsReports from "@/pages/AnalyticsReports";
 import PartiesContacts from "@/pages/PartiesContacts";
+import Contracts from "@/pages/Contracts";
 import Notifications from "@/pages/Notifications";
 import TagsCategories from "@/pages/TagsCategories";
 import DashboardSidebar from "@/components/DashboardSidebar";
@@ -88,6 +89,7 @@ export default function Dashboard() {
   // Check current route
   const [matchAnalytics] = useRoute("/dashboard/analytics");
   const [matchParties] = useRoute("/dashboard/parties");
+  const [matchContracts] = useRoute("/dashboard/contracts");
   const [matchNotifications] = useRoute("/dashboard/notifications");
   const [matchTags] = useRoute("/dashboard/tags");
 
@@ -619,10 +621,28 @@ export default function Dashboard() {
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
                   matchParties && "bg-[var(--active-bg)] text-[var(--text-primary)]"
                 )}
-                title={isSidebarCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
+                title={isSidebarCollapsed ? t('الأطراف', 'Parties') : undefined}
               >
                 <Users className={cn("w-4 h-4 flex-shrink-0", matchParties ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
-                {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
+                {!isSidebarCollapsed && <span className="text-sm">{t('الأطراف', 'Parties')}</span>}
+              </button>
+              
+              <button
+                onClick={() => {
+                  console.log('Navigating to /dashboard/contracts');
+                  setLocation('/dashboard/contracts');
+                  setShowMobileSidebar(false);
+                  setShowNewChat(false);
+                }}
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
+                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
+                  matchContracts && "bg-[var(--active-bg)] text-[var(--text-primary)]"
+                )}
+                title={isSidebarCollapsed ? t('العقود', 'Contracts') : undefined}
+              >
+                <FileText className={cn("w-4 h-4 flex-shrink-0", matchContracts ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
+                {!isSidebarCollapsed && <span className="text-sm">{t('العقود', 'Contracts')}</span>}
               </button>
               
               <button
@@ -737,7 +757,7 @@ export default function Dashboard() {
         {/* Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
         {/* Route-based content rendering */}
-        {(matchAnalytics || matchParties || matchNotifications || matchTags) && !showNewChat ? (
+        {(matchAnalytics || matchParties || matchContracts || matchNotifications || matchTags) && !showNewChat ? (
           <motion.div
             initial={{ opacity: 0, y: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -746,6 +766,7 @@ export default function Dashboard() {
           >
             {matchAnalytics && <AnalyticsReports />}
             {matchParties && <PartiesContacts />}
+            {matchContracts && <Contracts />}
             {matchNotifications && <Notifications />}
             {matchTags && <TagsCategories />}
           </motion.div>

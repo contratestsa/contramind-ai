@@ -4,7 +4,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { 
   Plus, Search, ChevronRight, BarChart3, Users, Bell, Tag,
-  Settings, HelpCircle, LogOut, X
+  Settings, HelpCircle, LogOut, X, FileText
 } from 'lucide-react';
 import logoImage from "@assets/RGB_Logo Design - ContraMind (V001)-01 (2)_1752148262770.png";
 import iconImage from "@assets/Profile Picture - ContraMind (V001)-1_1752437530152.png";
@@ -215,10 +215,23 @@ export default function DashboardSidebar({
                   activePage === 'parties' && "bg-[rgba(183,222,232,0.1)]",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
-                title={isCollapsed ? t('الأطراف وجهات الاتصال', 'Parties & Contacts') : undefined}
+                title={isCollapsed ? t('الأطراف', 'Parties') : undefined}
               >
                 <Users className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
-                {!isCollapsed && <span className="text-sm">{t('الأطراف وجهات الاتصال', 'Parties & Contacts')}</span>}
+                {!isCollapsed && <span className="text-sm">{t('الأطراف', 'Parties')}</span>}
+              </button>
+              
+              <button
+                onClick={() => setLocation('/dashboard/contracts')}
+                className={cn(
+                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
+                  activePage === 'contracts' && "bg-[rgba(183,222,232,0.1)]",
+                  isCollapsed ? "justify-center px-2" : "px-3"
+                )}
+                title={isCollapsed ? t('العقود', 'Contracts') : undefined}
+              >
+                <FileText className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
+                {!isCollapsed && <span className="text-sm">{t('العقود', 'Contracts')}</span>}
               </button>
               
               <button
