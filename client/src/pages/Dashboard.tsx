@@ -669,24 +669,6 @@ export default function Dashboard() {
               
               <button
                 onClick={() => {
-                  console.log('Navigating to /dashboard/analytics');
-                  setLocation('/dashboard/analytics');
-                  setShowMobileSidebar(false);
-                  setShowNewChat(false);
-                }}
-                className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  matchAnalytics && "bg-[var(--active-bg)] text-[var(--text-primary)]"
-                )}
-                title={isSidebarCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
-              >
-                <BarChart3 className={cn("w-4 h-4 flex-shrink-0", matchAnalytics ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
-                {!isSidebarCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
-              </button>
-              
-              <button
-                onClick={() => {
                   console.log('Navigating to /dashboard/parties');
                   setLocation('/dashboard/parties');
                   setShowMobileSidebar(false);
