@@ -5,6 +5,12 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 22, 2025** (Latest):
+  - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
+    - Created new ColumnChart component using Recharts BarChart
+    - Replaced all DonutChart components with vertical column charts
+    - Column charts feature rounded tops, angled labels, and grid lines
+    - Maintained same data sources but improved visual presentation
+    - Better readability with vertical bars instead of pie segments
   - **Dashboard Shows Only Three Required Charts**: Simplified Dashboard to display only user-requested analytics
     - Dashboard now shows ONLY three charts: Contract Type, Risk Rate, Payment Liability
     - Removed 6 additional charts (Executed status, Language distribution, Internal Parties, Counterparties, Governing Law)

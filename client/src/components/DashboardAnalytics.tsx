@@ -12,6 +12,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import { ColumnChart } from './ColumnChart';
 
 // Custom tooltip for charts
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -309,10 +310,9 @@ export default function DashboardAnalytics() {
                   {t('نوع العقد', 'Contract Type')}
                 </h3>
               </div>
-              <DonutChart 
+              <ColumnChart 
                 data={contractTypeData} 
-                colors={contractTypeColors} 
-                centerText={`${contractTypeData.length} Types`}
+                colors={contractTypeColors}
               />
             </motion.div>
 
@@ -330,13 +330,12 @@ export default function DashboardAnalytics() {
                 </h3>
               </div>
               {riskData.length > 0 ? (
-                <DonutChart 
+                <ColumnChart 
                   data={riskData} 
-                  colors={riskColors} 
-                  centerText={`${riskData[2]?.pct || 0}% High`}
+                  colors={riskColors}
                 />
               ) : (
-                <div className="h-[200px] flex items-center justify-center">
+                <div className="h-[250px] flex items-center justify-center">
                   <p className="text-gray-400 text-sm text-center">
                     {t('لا توجد بيانات مخاطر', 'No risk data available')}
                   </p>
@@ -358,13 +357,12 @@ export default function DashboardAnalytics() {
                 </h3>
               </div>
               {paymentData.some(item => item.value > 0) ? (
-                <DonutChart 
+                <ColumnChart 
                   data={paymentData} 
-                  colors={paymentColors} 
-                  centerText={`${paymentData[0]?.pct || 0}% Immediate`}
+                  colors={paymentColors}
                 />
               ) : (
-                <div className="h-[200px] flex items-center justify-center">
+                <div className="h-[250px] flex items-center justify-center">
                   <p className="text-gray-400 text-sm text-center">
                     {t('لا توجد بيانات دفع', 'No payment data available')}
                   </p>
