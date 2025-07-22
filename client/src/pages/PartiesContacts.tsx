@@ -109,9 +109,6 @@ export default function PartiesContacts() {
             <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
               {t('الأطراف وجهات الاتصال', 'Parties & Contacts')}
             </h1>
-            <p className="text-gray-600 text-sm">
-              {t('إدارة الأطراف المقابلة وجهات الاتصال', 'Manage counterparties and contacts')}
-            </p>
           </div>
 
           {/* Search and Filters */}

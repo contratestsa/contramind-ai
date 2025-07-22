@@ -28,6 +28,10 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Removed "uppercase" CSS class from "RECENT CONTRACTS" heading
     - Text now displays as "Recent Contracts" (only first letter of each word capitalized)
     - Applied change in both Dashboard.tsx and DashboardSidebar.tsx for consistency
+  - **Removed Subtitle from Parties Page**: Cleaned up page header
+    - Removed "Manage counterparties and contacts" subtitle from Parties & Contacts page
+    - Page now only shows main title "Parties & Contacts" without the descriptive subtitle
+    - Simplified header for cleaner appearance
   - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
     - Created new ColumnChart component using Recharts BarChart
     - Replaced all DonutChart components with vertical column charts
