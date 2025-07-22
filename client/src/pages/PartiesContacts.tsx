@@ -4,9 +4,12 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
   Search, Filter, Building, Phone, Mail, Shield, AlertTriangle,
-  Calendar, Users, Edit, Download, ChevronDown, CheckCircle, Clock
+  Calendar, Users, Edit, Download, ChevronDown, CheckCircle, Clock,
+  Sparkles, X
 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { queryClient } from '@/lib/queryClient';
+import { toast } from '@/hooks/use-toast';
 
 export default function PartiesContacts() {
   const { language, t } = useLanguage();
@@ -15,85 +18,109 @@ export default function PartiesContacts() {
   const [showFilters, setShowFilters] = useState(false);
   const isRTL = language === 'ar';
 
-  // Fetch all contracts to extract parties
-  const { data: contractsData, isLoading } = useQuery({
-    queryKey: ['/api/contracts'],
+  // Fetch parties from the new API endpoint
+  const { data: partiesData, isLoading } = useQuery({
+    queryKey: ['/api/parties', selectedFilter, searchQuery],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (selectedFilter !== 'all') params.append('type', selectedFilter);
+      if (searchQuery) params.append('search', searchQuery);
+      
+      const response = await fetch(`/api/parties?${params}`, {
+        credentials: 'include'
+      });
+      if (!response.ok) throw new Error('Failed to fetch parties');
+      return response.json();
+    },
     refetchInterval: 30000 // Refresh every 30 seconds
   });
 
-  const contracts = contractsData?.contracts || [];
-
-  // Extract unique parties from contracts and build counterparty data
-  const buildCounterparties = () => {
-    const partyMap: Record<string, any> = {};
-    
-    contracts.forEach((contract: any) => {
-      if (!partyMap[contract.partyName]) {
-        partyMap[contract.partyName] = {
-          id: Object.keys(partyMap).length + 1,
-          name: contract.partyName,
-          nameAr: contract.partyName, // Same as English for now
-          type: contract.type === 'service' ? 'vendor' : contract.type === 'sale' ? 'customer' : 'partner',
-          country: 'Saudi Arabia', // Default country
-          fein: `${Math.floor(Math.random() * 90 + 10)}-${Math.floor(Math.random() * 9000000 + 1000000)}`,
-          status: 'active',
-          riskScore: contract.riskLevel || 'low',
-          contracts: 0,
-          lastActivity: new Date(contract.updatedAt || contract.createdAt).toISOString().split('T')[0],
-          w9Status: contract.status === 'signed' ? 'verified' : 'pending',
-          diversity: [],
-          sanctions: { checked: true, date: new Date().toISOString().split('T')[0], result: 'clear' },
-          insurance: { 
-            expiry: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0], 
-            status: 'valid' 
-          },
-          masterAgreement: contract.type === 'service' ? `MSA-2024-${contract.id}` : null,
-          contacts: [
-            { 
-              name: `${contract.partyName} Representative`, 
-              role: 'Contract Manager', 
-              email: `contact@${contract.partyName.toLowerCase().replace(/\s+/g, '')}.com`, 
-              phone: '+966-50-555-0100', 
-              primary: true 
-            }
-          ]
-        };
-      }
-      
-      // Increment contract count for this party
-      partyMap[contract.partyName].contracts++;
-      
-      // Update last activity if this contract is more recent
-      const contractDate = new Date(contract.updatedAt || contract.createdAt);
-      const currentLastActivity = new Date(partyMap[contract.partyName].lastActivity);
-      if (contractDate > currentLastActivity) {
-        partyMap[contract.partyName].lastActivity = contractDate.toISOString().split('T')[0];
-      }
-      
-      // Update risk score to highest risk
-      const riskLevels = { low: 1, medium: 2, high: 3 };
-      const currentRisk = riskLevels[partyMap[contract.partyName].riskScore as keyof typeof riskLevels] || 1;
-      const contractRisk = riskLevels[contract.riskLevel as keyof typeof riskLevels] || 1;
-      if (contractRisk > currentRisk) {
-        partyMap[contract.partyName].riskScore = contract.riskLevel;
-      }
-    });
-    
-    return Object.values(partyMap);
-  };
-
-  const counterparties = buildCounterparties();
-
-  const filteredCounterparties = counterparties.filter(party => {
-    const matchesSearch = searchQuery === '' || 
-      party.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      party.nameAr.includes(searchQuery) ||
-      party.fein.includes(searchQuery);
-    
-    const matchesFilter = selectedFilter === 'all' || party.type === selectedFilter;
-    
-    return matchesSearch && matchesFilter;
+  // Remove highlight mutation
+  const removeHighlight = useMutation({
+    mutationFn: async (partyId: number) => {
+      const response = await fetch(`/api/parties/${partyId}/remove-highlight`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (!response.ok) throw new Error('Failed to remove highlight');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/parties'] });
+    }
   });
+
+  const parties = partiesData?.parties || [];
+
+  // Define party type
+  interface TransformedParty {
+    id: number;
+    name: string;
+    nameAr: string;
+    type: string;
+    country: string;
+    registrationNumber?: string;
+    registrationType?: string;
+    status: string;
+    riskScore: string;
+    contracts: number;
+    lastActivity: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    addressAr?: string;
+    isHighlighted: boolean;
+    sourceContractId?: number;
+    extractedAt: string;
+    contacts: Array<{
+      name: string;
+      role: string;
+      email: string;
+      phone: string;
+      primary: boolean;
+    }>;
+    diversity?: string[];
+    w9Status?: string;
+    w8benStatus?: string;
+    insurance?: {
+      status: string;
+      expiry?: string;
+    };
+  }
+
+  // Transform parties data to match the UI structure
+  const counterparties: TransformedParty[] = parties.map((party: any) => ({
+    id: party.id,
+    name: party.name,
+    nameAr: party.nameAr || party.name,
+    type: party.type,
+    country: 'Saudi Arabia', // Default for now
+    registrationNumber: party.registrationNumber,
+    registrationType: party.registrationType,
+    status: 'active',
+    riskScore: 'low', // Default for now
+    contracts: 1, // Default for now
+    lastActivity: new Date(party.extractedAt).toISOString().split('T')[0],
+    email: party.email,
+    phone: party.phone,
+    address: party.address,
+    addressAr: party.addressAr,
+    isHighlighted: party.isHighlighted,
+    sourceContractId: party.sourceContractId,
+    extractedAt: party.extractedAt,
+    contacts: party.email || party.phone ? [
+      { 
+        name: `${party.name} Representative`, 
+        role: 'Contact', 
+        email: party.email || '', 
+        phone: party.phone || '', 
+        primary: true 
+      }
+    ] : []
+  }));
+
+  // Filter parties (server-side filtering is already applied)
+  const filteredCounterparties = counterparties;
 
   return (
     <div className="flex-1 overflow-y-auto bg-gray-50">
@@ -151,7 +178,7 @@ export default function PartiesContacts() {
               transition={{ duration: 0.15 }}
               className="flex gap-2 flex-wrap mb-4"
             >
-              {['all', 'vendor', 'customer', 'partner'].map((filter) => (
+              {['all', 'vendor', 'client', 'partner', 'contractor'].map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setSelectedFilter(filter)}
@@ -164,8 +191,9 @@ export default function PartiesContacts() {
                 >
                   {filter === 'all' && t('الكل', 'All')}
                   {filter === 'vendor' && t('موردون', 'Vendors')}
-                  {filter === 'customer' && t('عملاء', 'Customers')}
+                  {filter === 'client' && t('عملاء', 'Clients')}
                   {filter === 'partner' && t('شركاء', 'Partners')}
+                  {filter === 'contractor' && t('مقاولون', 'Contractors')}
                 </button>
               ))}
             </motion.div>
@@ -201,7 +229,7 @@ export default function PartiesContacts() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {filteredCounterparties.map((party, index) => (
+                  {filteredCounterparties.map((party: TransformedParty, index: number) => (
                     <motion.tr
                       key={party.id}
                       initial={{ opacity: 0, y: 10 }}
@@ -211,14 +239,33 @@ export default function PartiesContacts() {
                     >
                       <td className="px-6 py-4">
                         <div className={cn(language === 'ar' && "text-right")}>
-                          <p className="text-gray-900 font-medium">
-                            {language === 'ar' ? party.nameAr : party.name}
+                          <div className={cn("flex items-center gap-2", language === 'ar' && "flex-row-reverse")}>
+                            <p className="text-gray-900 font-medium">
+                              {language === 'ar' ? party.nameAr : party.name}
+                            </p>
+                            {party.isHighlighted && (
+                              <div className="flex items-center gap-1">
+                                <Sparkles className="w-4 h-4 text-[#B7DEE8]" />
+                                <button
+                                  onClick={() => removeHighlight.mutate(party.id)}
+                                  className="p-0.5 hover:bg-gray-100 rounded"
+                                  title={t('إزالة التمييز', 'Remove highlight')}
+                                >
+                                  <X className="w-3 h-3 text-gray-400 hover:text-gray-600" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-gray-500 text-sm">
+                            {party.registrationNumber ? 
+                              `${party.registrationType?.toUpperCase() || 'ID'}: ${party.registrationNumber}` : 
+                              'No registration number'
+                            }
                           </p>
-                          <p className="text-gray-500 text-sm">{party.fein}</p>
                           <div className={cn("flex items-center gap-2 mt-1", language === 'ar' && "flex-row-reverse")}>
                             <Building className="w-3 h-3 text-gray-400" />
                             <span className="text-xs text-gray-500">{party.country}</span>
-                            {party.diversity.length > 0 && (
+                            {party.diversity && party.diversity.length > 0 && (
                               <div className="flex gap-1">
                                 {party.diversity.map(cert => (
                                   <span key={cert} className="px-1.5 py-0.5 bg-purple-100 text-purple-700 text-xs rounded">
@@ -228,18 +275,37 @@ export default function PartiesContacts() {
                               </div>
                             )}
                           </div>
+                          {/* Contact Info */}
+                          {(party.email || party.phone) && (
+                            <div className="mt-2 space-y-1">
+                              {party.email && (
+                                <div className={cn("flex items-center gap-1 text-xs text-gray-500", language === 'ar' && "flex-row-reverse")}>
+                                  <Mail className="w-3 h-3" />
+                                  <span>{party.email}</span>
+                                </div>
+                              )}
+                              {party.phone && (
+                                <div className={cn("flex items-center gap-1 text-xs text-gray-500", language === 'ar' && "flex-row-reverse")}>
+                                  <Phone className="w-3 h-3" />
+                                  <span>{party.phone}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <span className={cn(
                           "px-2 py-1 rounded-full text-xs font-medium",
                           party.type === 'vendor' && "bg-blue-100 text-blue-700",
-                          party.type === 'customer' && "bg-green-100 text-green-700",
-                          party.type === 'partner' && "bg-purple-100 text-purple-700"
+                          party.type === 'client' && "bg-green-100 text-green-700",
+                          party.type === 'partner' && "bg-purple-100 text-purple-700",
+                          party.type === 'contractor' && "bg-orange-100 text-orange-700"
                         )}>
                           {party.type === 'vendor' && t('مورد', 'Vendor')}
-                          {party.type === 'customer' && t('عميل', 'Customer')}
+                          {party.type === 'client' && t('عميل', 'Client')}
                           {party.type === 'partner' && t('شريك', 'Partner')}
+                          {party.type === 'contractor' && t('مقاول', 'Contractor')}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -297,12 +363,12 @@ export default function PartiesContacts() {
                                 W-8BEN: {party.w8benStatus}
                               </span>
                             )}
-                            {party.insurance.status === 'expiring' && (
+                            {party.insurance?.status === 'expiring' && (
                               <span className="text-xs px-1.5 py-0.5 bg-yellow-100 text-yellow-700 rounded">
                                 {t('تأمين ينتهي قريباً', 'Insurance expiring')}
                               </span>
                             )}
-                            {party.insurance.status === 'expired' && (
+                            {party.insurance?.status === 'expired' && (
                               <span className="text-xs px-1.5 py-0.5 bg-red-100 text-red-700 rounded">
                                 {t('تأمين منتهي', 'Insurance expired')}
                               </span>
@@ -405,7 +471,7 @@ export default function PartiesContacts() {
                 </div>
                 <div className={cn(language === 'ar' && "text-right")}>
                   <p className="text-2xl font-bold text-gray-900">
-                    {counterparties.filter(p => p.insurance.status === 'expiring').length}
+                    {counterparties.filter(p => p.insurance?.status === 'expiring').length}
                   </p>
                   <p className="text-sm text-gray-600">{t('تنتهي قريباً', 'Expiring Soon')}</p>
                 </div>

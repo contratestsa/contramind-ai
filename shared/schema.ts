@@ -92,6 +92,25 @@ export const contractDetails = pgTable("contract_details", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const parties = pgTable("parties", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  name: text("name").notNull(),
+  nameAr: text("name_ar"), // Arabic name
+  type: text("type").notNull(), // 'vendor', 'client', 'partner', 'contractor'
+  registrationNumber: text("registration_number"), // CR, VAT, National ID
+  registrationType: text("registration_type"), // 'cr', 'vat', 'national_id'
+  email: text("email"),
+  phone: text("phone"),
+  address: text("address"),
+  addressAr: text("address_ar"), // Arabic address
+  sourceContractId: integer("source_contract_id").references(() => contracts.id),
+  extractedAt: timestamp("extracted_at").defaultNow().notNull(),
+  isHighlighted: boolean("is_highlighted").default(true), // For new party highlighting
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   email: true,
@@ -184,3 +203,19 @@ export const insertContractDetailsSchema = createInsertSchema(contractDetails).o
 
 export type InsertContractDetails = z.infer<typeof insertContractDetailsSchema>;
 export type ContractDetails = typeof contractDetails.$inferSelect;
+
+export const insertPartySchema = createInsertSchema(parties).omit({
+  id: true,
+  extractedAt: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(2, "Party name must be at least 2 characters"),
+  type: z.enum(["vendor", "client", "partner", "contractor"]),
+  registrationType: z.enum(["cr", "vat", "national_id"]).optional(),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
+});
+
+export type InsertParty = z.infer<typeof insertPartySchema>;
+export type Party = typeof parties.$inferSelect;

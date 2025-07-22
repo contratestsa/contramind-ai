@@ -23,6 +23,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 // <<< PDF ANALYSIS END
 import { contractExtractor } from "./contractExtractor";
+import { PartyExtractor } from "./partyExtractor";
 
 // Define __dirname for ESM modules
 const __filename = fileURLToPath(import.meta.url);
@@ -648,8 +649,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Process the PDF asynchronously
       contractExtractor.processContract(contract.id, req.file.path)
-        .then(() => {
+        .then(async () => {
           console.log(`Contract ${contract.id} processed successfully`);
+          
+          // Extract parties from the contract text
+          try {
+            // Get the extracted text from contract details
+            const details = await storage.getContractDetails(contract.id);
+            if (details && details.extractedText) {
+              console.log(`Extracting parties from contract ${contract.id}...`);
+              const parties = await PartyExtractor.extractPartiesFromText(
+                contract.id,
+                req.user!.id,
+                details.extractedText
+              );
+              console.log(`Extracted ${parties.length} parties from contract ${contract.id}`);
+            }
+          } catch (partyError) {
+            console.error(`Error extracting parties from contract ${contract.id}:`, partyError);
+          }
         })
         .catch((error) => {
           console.error(`Error processing contract ${contract.id}:`, error);
@@ -966,6 +984,149 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error(`[${new Date().toISOString()}] Error re-processing contracts:`, error);
       res.status(500).json({ message: "Failed to re-process contracts" });
+    }
+  });
+
+  // Party endpoints
+  app.get("/api/parties", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const filters = {
+        type: req.query.type as string | undefined,
+        search: req.query.search as string | undefined,
+        highlighted: req.query.highlighted === 'true' ? true : req.query.highlighted === 'false' ? false : undefined
+      };
+
+      const parties = await storage.getUserParties(req.user.id, filters);
+      res.json({ parties });
+    } catch (error) {
+      console.error('Error fetching parties:', error);
+      res.status(500).json({ message: "Failed to fetch parties" });
+    }
+  });
+
+  app.get("/api/parties/:id", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const partyId = parseInt(req.params.id);
+      const party = await storage.getParty(partyId);
+      
+      if (!party) {
+        return res.status(404).json({ message: "Party not found" });
+      }
+
+      // Verify user owns this party
+      const userParties = await storage.getUserParties(req.user.id);
+      if (!userParties.find(p => p.id === partyId)) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      res.json({ party });
+    } catch (error) {
+      console.error('Error fetching party:', error);
+      res.status(500).json({ message: "Failed to fetch party" });
+    }
+  });
+
+  app.patch("/api/parties/:id", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const partyId = parseInt(req.params.id);
+      
+      // Verify user owns this party
+      const party = await storage.getParty(partyId);
+      if (!party || party.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const updated = await storage.updateParty(partyId, req.body);
+      if (!updated) {
+        return res.status(404).json({ message: "Party not found" });
+      }
+
+      res.json({ party: updated });
+    } catch (error) {
+      console.error('Error updating party:', error);
+      res.status(500).json({ message: "Failed to update party" });
+    }
+  });
+
+  app.delete("/api/parties/:id", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const partyId = parseInt(req.params.id);
+      
+      // Verify user owns this party
+      const party = await storage.getParty(partyId);
+      if (!party || party.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const deleted = await storage.deleteParty(partyId);
+      if (!deleted) {
+        return res.status(404).json({ message: "Party not found" });
+      }
+
+      res.json({ message: "Party deleted successfully" });
+    } catch (error) {
+      console.error('Error deleting party:', error);
+      res.status(500).json({ message: "Failed to delete party" });
+    }
+  });
+
+  app.post("/api/parties/:id/remove-highlight", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const partyId = parseInt(req.params.id);
+      
+      // Verify user owns this party
+      const party = await storage.getParty(partyId);
+      if (!party || party.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      await storage.removePartyHighlight(partyId);
+      res.json({ message: "Highlight removed successfully" });
+    } catch (error) {
+      console.error('Error removing party highlight:', error);
+      res.status(500).json({ message: "Failed to remove highlight" });
+    }
+  });
+
+  app.get("/api/contracts/:id/parties", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const contractId = parseInt(req.params.id);
+      
+      // Verify user owns this contract
+      const contract = await storage.getContract(contractId);
+      if (!contract || contract.userId !== req.user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const parties = await storage.getPartiesBySourceContract(contractId);
+      res.json({ parties });
+    } catch (error) {
+      console.error('Error fetching contract parties:', error);
+      res.status(500).json({ message: "Failed to fetch contract parties" });
     }
   });
 
