@@ -13,6 +13,11 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Fixed parameter indexing in updateContract method
     - Moved id parameter to end of values array with correct index
     - Eliminated "error: there is no parameter $3" database error
+  - **Fixed Contract Upload Navigation**: User now stays in chat after party selection
+    - Added `&& !selectedContract` condition to route rendering logic
+    - Prevents redirect to analytics page when contract is selected
+    - Chat interface properly displays after uploading contract and selecting party
+    - User can continue conversation immediately after party selection
   - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
     - Created new ColumnChart component using Recharts BarChart
     - Replaced all DonutChart components with vertical column charts

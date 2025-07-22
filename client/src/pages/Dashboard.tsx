@@ -815,7 +815,7 @@ export default function Dashboard() {
         {/* Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
         {/* Route-based content rendering */}
-        {(matchDashboardHome || matchAnalytics || matchParties || matchContracts || matchNotifications || matchTags) && !showNewChat ? (
+        {(matchDashboardHome || matchAnalytics || matchParties || matchContracts || matchNotifications || matchTags) && !showNewChat && !selectedContract ? (
           <motion.div
             initial={{ opacity: 0, y: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, y: 0 }}
