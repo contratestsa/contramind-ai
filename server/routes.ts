@@ -1040,6 +1040,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         contractTypeMap[displayType] = (contractTypeMap[displayType] || 0) + 1;
       });
 
+      // Risk Level aggregation
+      const riskLevel = {
+        low: 0,
+        medium: 0,
+        high: 0
+      };
+      
+      userContracts.forEach(contract => {
+        if (contract.riskLevel === 'low') {
+          riskLevel.low++;
+        } else if (contract.riskLevel === 'medium') {
+          riskLevel.medium++;
+        } else if (contract.riskLevel === 'high') {
+          riskLevel.high++;
+        } else {
+          // Default to low if no risk level assigned
+          riskLevel.low++;
+        }
+      });
+
       // Executed aggregation from extracted data
       const executed = {
         yes: 0,
@@ -1220,6 +1240,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const analyticsData = {
         uniqueDocs,
         contractType: contractTypeMap,
+        riskLevel,
         executed,
         language,
         internalParties: internalPartiesData,

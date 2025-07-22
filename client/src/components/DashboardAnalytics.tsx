@@ -139,42 +139,44 @@ export default function DashboardAnalytics() {
     }));
 
   // 2. Risk Rate - Calculate from contract details
-  const riskData = [
-    { name: 'Low Risk', value: 0, pct: 0 },
-    { name: 'Medium Risk', value: 0, pct: 0 },
-    { name: 'High Risk', value: 0, pct: 0 }
-  ];
-
-  // Mock risk calculation (in real app, this would come from contract_details)
-  const totalContracts = analyticsData.uniqueDocs;
-  if (totalContracts > 0) {
-    // Simulating risk distribution based on contract types
-    const highRiskCount = Math.floor(totalContracts * 0.15);
-    const mediumRiskCount = Math.floor(totalContracts * 0.35);
-    const lowRiskCount = totalContracts - highRiskCount - mediumRiskCount;
-    
-    riskData[0].value = lowRiskCount;
-    riskData[0].pct = Math.round((lowRiskCount / totalContracts) * 100);
-    riskData[1].value = mediumRiskCount;
-    riskData[1].pct = Math.round((mediumRiskCount / totalContracts) * 100);
-    riskData[2].value = highRiskCount;
-    riskData[2].pct = Math.round((highRiskCount / totalContracts) * 100);
+  // 2. Risk Rate - Real data from contracts
+  const riskData = [];
+  if (analyticsData?.riskLevel) {
+    const total = analyticsData.riskLevel.low + analyticsData.riskLevel.medium + analyticsData.riskLevel.high;
+    if (total > 0) {
+      riskData.push({
+        name: 'Low Risk',
+        value: analyticsData.riskLevel.low,
+        pct: Math.round((analyticsData.riskLevel.low / total) * 100)
+      });
+      riskData.push({
+        name: 'Medium Risk',
+        value: analyticsData.riskLevel.medium,
+        pct: Math.round((analyticsData.riskLevel.medium / total) * 100)
+      });
+      riskData.push({
+        name: 'High Risk',
+        value: analyticsData.riskLevel.high,
+        pct: Math.round((analyticsData.riskLevel.high / total) * 100)
+      });
+    }
   }
 
-  // 3. Payment Liability - Use payment terms data
+  // 3. Payment Liability - Use real payment terms data only
   const paymentData = [
     { name: 'Immediate', value: 0, pct: 0 },
     { name: '30 Days', value: 0, pct: 0 },
     { name: '60+ Days', value: 0, pct: 0 }
   ];
 
-  // If we have payment terms data, use it
-  if (analyticsData.paymentTerms && Object.keys(analyticsData.paymentTerms).length > 0) {
+  // Only show data if we have real payment terms from contracts
+  if (analyticsData?.paymentTerms && Object.keys(analyticsData.paymentTerms).length > 0) {
     const paymentTotal = Object.values(analyticsData.paymentTerms).reduce((a, b) => a + b, 0);
     Object.entries(analyticsData.paymentTerms).forEach(([term, count]) => {
-      if (term.includes('immediate') || term.includes('upon')) {
+      const lowerTerm = term.toLowerCase();
+      if (lowerTerm.includes('immediate') || lowerTerm.includes('upon') || lowerTerm.includes('receipt')) {
         paymentData[0].value += count;
-      } else if (term.includes('30')) {
+      } else if (lowerTerm.includes('30')) {
         paymentData[1].value += count;
       } else {
         paymentData[2].value += count;
@@ -185,17 +187,6 @@ export default function DashboardAnalytics() {
     paymentData.forEach(item => {
       item.pct = paymentTotal > 0 ? Math.round((item.value / paymentTotal) * 100) : 0;
     });
-  } else {
-    // Fallback distribution if no payment terms data
-    if (totalContracts > 0) {
-      paymentData[0].value = Math.floor(totalContracts * 0.25);
-      paymentData[1].value = Math.floor(totalContracts * 0.50);
-      paymentData[2].value = Math.floor(totalContracts * 0.25);
-      
-      paymentData.forEach(item => {
-        item.pct = Math.round((item.value / totalContracts) * 100);
-      });
-    }
   }
 
   // Color palettes
@@ -363,115 +354,7 @@ export default function DashboardAnalytics() {
             </motion.div>
           </div>
 
-          {/* Second Row - 6 Charts from Analytics & Reports */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Executed Chart */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.15, delay: 0.25 }}
-              className="bg-white rounded-lg shadow-sm p-6"
-            >
-              <h3 className="text-lg font-semibold text-[#0C2836] mb-4">{t('منفذ', 'Executed')}</h3>
-              <DonutChart 
-                data={executedData} 
-                colors={['#22C55E', '#EF4444']} 
-                centerText={`${executedData[0]?.pct || 0}%`}
-              />
-            </motion.div>
 
-            {/* Language Chart */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.15, delay: 0.3 }}
-              className="bg-white rounded-lg shadow-sm p-6"
-            >
-              <h3 className="text-lg font-semibold text-[#0C2836] mb-4">{t('اللغة', 'Language')}</h3>
-              <DonutChart 
-                data={languageData} 
-                colors={['#B7DEE8', '#92CED9', '#6DBECA']} 
-                centerText={`${languageData.length}`}
-              />
-            </motion.div>
-
-            {/* Internal Parties Chart */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.15, delay: 0.35 }}
-              className="bg-white rounded-lg shadow-sm p-6"
-            >
-              <h3 className="text-lg font-semibold text-[#0C2836] mb-4">{t('الأطراف الداخلية', 'Internal Parties')}</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={internalPartiesData} layout="horizontal">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
-                  <XAxis type="category" dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis type="number" />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="value" fill="#B7DEE8" />
-                </BarChart>
-              </ResponsiveContainer>
-            </motion.div>
-
-            {/* Counterparties Chart */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.15, delay: 0.4 }}
-              className="bg-white rounded-lg shadow-sm p-6"
-            >
-              <h3 className="text-lg font-semibold text-[#0C2836] mb-4">{t('الأطراف المقابلة', 'Counterparties')}</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={counterPartiesData} layout="horizontal">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
-                  <XAxis type="category" dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis type="number" />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="value" fill="#92CED9" />
-                </BarChart>
-              </ResponsiveContainer>
-            </motion.div>
-
-            {/* Governing Law Chart */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.15, delay: 0.45 }}
-              className="bg-white rounded-lg shadow-sm p-6 lg:col-span-2"
-            >
-              <h3 className="text-lg font-semibold text-[#0C2836] mb-4">{t('القانون الحاكم', 'Governing Law')}</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={governingLawData} layout="horizontal">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
-                  <XAxis type="category" dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis type="number" />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="value" fill="#6DBECA" />
-                </BarChart>
-              </ResponsiveContainer>
-            </motion.div>
-          </div>
-
-          {/* Summary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
-            <div className="bg-white rounded-lg border border-[#E6E6E6] p-4 text-center">
-              <p className="text-sm text-gray-600 mb-1">{t('إجمالي العقود', 'Total Contracts')}</p>
-              <p className="text-2xl font-bold text-[#0C2836]">{analyticsData.uniqueDocs}</p>
-            </div>
-            <div className="bg-white rounded-lg border border-[#E6E6E6] p-4 text-center">
-              <p className="text-sm text-gray-600 mb-1">{t('العقود المنفذة', 'Executed Contracts')}</p>
-              <p className="text-2xl font-bold text-[#0C2836]">{analyticsData.executed.yes}</p>
-            </div>
-            <div className="bg-white rounded-lg border border-[#E6E6E6] p-4 text-center">
-              <p className="text-sm text-gray-600 mb-1">{t('عقود عالية المخاطر', 'High Risk Contracts')}</p>
-              <p className="text-2xl font-bold text-[#EF4444]">{riskData[2].value}</p>
-            </div>
-            <div className="bg-white rounded-lg border border-[#E6E6E6] p-4 text-center">
-              <p className="text-sm text-gray-600 mb-1">{t('دفعات فورية', 'Immediate Payments')}</p>
-              <p className="text-2xl font-bold text-[#22C55E]">{paymentData[0].value}</p>
-            </div>
-          </div>
         </motion.div>
       </div>
     </div>

@@ -5,16 +5,17 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 22, 2025** (Latest):
-  - **Merged Dashboard and Analytics Pages**: Consolidated all analytics content into single Dashboard page
-    - Combined DashboardAnalytics component with AnalyticsReports page content
-    - Dashboard now shows comprehensive analytics including:
-      - Three primary charts: Contract Type, Risk Rate, Payment Liability
-      - Six additional charts from Analytics: Executed status, Language distribution, Internal Parties, Counterparties, Governing Law
-      - Real-time data refresh every 30 seconds
-      - "Re-process Contracts" button for data updates
-    - Removed separate "Analytics & Reports" menu item from navigation
-    - All analytics accessible by clicking "Dashboard" in sidebar
-    - Fixed routing: "Dashboard" button navigates to /dashboard (not /dashboard/analytics)
+  - **Dashboard Shows Only Three Required Charts**: Simplified Dashboard to display only user-requested analytics
+    - Dashboard now shows ONLY three charts: Contract Type, Risk Rate, Payment Liability
+    - Removed 6 additional charts (Executed status, Language distribution, Internal Parties, Counterparties, Governing Law)
+    - Removed summary stats section from bottom of page
+    - Updated Risk Rate chart to use real risk level data from contracts table
+    - Risk level aggregation added to /api/analytics endpoint
+    - Payment Liability chart now shows only real payment terms data (no mock fallback)
+    - All charts display real uploaded contract data
+    - Fixed API data case mismatch: counterparties (not counterParties)
+    - Real-time data refresh every 30 seconds
+    - "Re-process Contracts" button for data updates
 - **July 22, 2025** (Earlier):
   - **JavaScript-Based Universal Extraction Pipeline**: Replaced Python scripts with JavaScript extraction
     - Created contractExtractorJS.ts using pdf.js for PDFs and mammoth.js for DOCX files
