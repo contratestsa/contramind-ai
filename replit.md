@@ -18,6 +18,16 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Prevents redirect to analytics page when contract is selected
     - Chat interface properly displays after uploading contract and selecting party
     - User can continue conversation immediately after party selection
+  - **Fixed Text Visibility on Contracts Page**: Changed white text to dark colors
+    - Changed "Recent Contracts" heading to gray-900
+    - Changed "Total recent contracts" text to gray-600
+    - Changed contract titles to gray-900
+    - Changed loading text to gray-500
+    - Fixed readability issue with white text on light background
+  - **Updated Recent Contracts Heading Style**: Changed from all uppercase to title case
+    - Removed "uppercase" CSS class from "RECENT CONTRACTS" heading
+    - Text now displays as "Recent Contracts" (only first letter of each word capitalized)
+    - Applied change in both Dashboard.tsx and DashboardSidebar.tsx for consistency
   - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
     - Created new ColumnChart component using Recharts BarChart
     - Replaced all DonutChart components with vertical column charts

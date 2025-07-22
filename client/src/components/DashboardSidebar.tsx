@@ -147,7 +147,7 @@ export default function DashboardSidebar({
           {!isCollapsed && (
             <div className="p-3">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-[#B7DEE8] uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-[#B7DEE8] tracking-wider">
                   {t('العقود الأخيرة', 'Recent Contracts')}
                 </h3>
                 <button 
