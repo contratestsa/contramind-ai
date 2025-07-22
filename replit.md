@@ -36,6 +36,16 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Changed title from "Parties & Contacts" to just "Parties"
     - Removed "& Contacts" from the page title
     - Page now shows cleaner "Parties" title only
+  - **Made Parties Page Interactive with Real Contract Data**: Enhanced data integration
+    - Page now fetches real contract data from `/api/contracts` endpoint
+    - Extracts unique parties from uploaded contracts based on party names
+    - Aggregates contract counts and risk levels for each party
+    - Added loading states while fetching data
+    - Added empty state when no contracts are uploaded
+    - Added no results state when filtering returns no matches
+    - Fixed contract type mapping ('sales' instead of 'sale')
+    - Auto-refreshes data every 30 seconds to show new contracts
+    - Displays real party names, contract counts, and risk scores from uploaded contracts
   - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
     - Created new ColumnChart component using Recharts BarChart
     - Replaced all DonutChart components with vertical column charts
