@@ -425,19 +425,20 @@ export class DatabaseStorage implements IStorage {
       updateFields.push(`updated_at = $${paramIndex++}`);
       values.push(new Date());
       
-      // Add id to values
-      values.push(id);
-      
       if (updateFields.length === 1) {
         // Only updated_at, no actual updates
         const [contract] = await db.select().from(contracts).where(eq(contracts.id, id));
         return contract || undefined;
       }
       
+      // Add id to values last, after all update fields
+      values.push(id);
+      const idParamIndex = paramIndex;
+      
       const query = sql.raw(`
         UPDATE contracts
         SET ${updateFields.join(', ')}
-        WHERE id = $${paramIndex}
+        WHERE id = $${idParamIndex}
         RETURNING 
           id,
           user_id as "userId",

@@ -552,7 +552,7 @@ export default function Dashboard() {
             onClick={() => {
               archiveCurrentChat();
               setShowNewChat(true);
-              setIsUploadModalOpen(true);
+              // Don't open upload modal automatically
             }}
             className={cn(
               "w-full flex items-center gap-2 py-2.5 bg-[var(--accent)] text-[var(--text-on-accent)] rounded-md hover:bg-[var(--accent-hover)] transition-all duration-200 font-medium shadow-sm hover:shadow-md",

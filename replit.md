@@ -5,6 +5,14 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 22, 2025** (Latest):
+  - **Fixed New Contract Chat Button**: Removed automatic upload modal opening
+    - "New Contract Chat" button now only shows welcome screen with chatbar and prompts
+    - Removed `setIsUploadModalOpen(true)` from button click handler
+    - Upload modal can still be accessed via attach icon in chat interface
+  - **Fixed SQL Parameter Error**: Resolved contract update database error
+    - Fixed parameter indexing in updateContract method
+    - Moved id parameter to end of values array with correct index
+    - Eliminated "error: there is no parameter $3" database error
   - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
     - Created new ColumnChart component using Recharts BarChart
     - Replaced all DonutChart components with vertical column charts
