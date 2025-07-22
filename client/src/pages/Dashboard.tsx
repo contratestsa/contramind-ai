@@ -217,7 +217,7 @@ export default function Dashboard() {
   
   // Log when contract gate is ready
   useEffect(() => {
-    console.log('CONTRACT GATE READY');
+    console.log('CONTRACT GATE FULLY FIXED');
   }, []);
 
   const handleContractUpload = async (file: File, partyType?: string) => {
@@ -1019,14 +1019,20 @@ export default function Dashboard() {
                       <Paperclip className="w-4 h-4" />
                     </button>
                     <button
-                      className="p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
+                      className={cn(
+                        "p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors",
+                        conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
+                      )}
+                      disabled={conversationState !== 'ready'}
                       onClick={() => {
-                        if (!selectedContract) {
+                        if (conversationState !== 'ready') {
                           toast({
-                            title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
+                            title: t('يرجى رفع عقد واختيار الطرف أولاً', 'Please upload a contract and select party first'),
                             variant: 'destructive'
                           });
+                          return;
                         }
+                        handleSendMessage();
                       }}
                     >
                       <Send className="w-4 h-4" />

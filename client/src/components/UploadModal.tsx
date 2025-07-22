@@ -84,69 +84,16 @@ export default function UploadModal({ isOpen, onClose, onUpload }: UploadModalPr
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (!selectedFile || !onUpload) return;
     
-    setIsUploading(true);
-    console.log('2. Starting contract upload...');
+    // Call the onUpload callback from Dashboard
+    // This will trigger party selection modal
+    onUpload(selectedFile, '');
     
-    try {
-      // Create form data for file upload
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('title', selectedFile.name.replace(/\.[^/.]+$/, '')); // Remove file extension
-      formData.append('partyName', 'Client Party'); // Default party name
-      formData.append('type', 'other'); // Default type
-      formData.append('status', 'draft');
-      formData.append('riskLevel', 'medium');
-      
-      console.log('3. Uploading to server:', {
-        fileName: selectedFile.name,
-        fileSize: selectedFile.size,
-        fileType: selectedFile.type
-      });
-      
-      // Upload to server
-      const response = await fetch('/api/contracts/upload', {
-        method: 'POST',
-        credentials: 'include',
-        body: formData
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Upload failed');
-      }
-      
-      const result = await response.json();
-      console.log('4. Upload response received:', result);
-      
-      toast({
-        title: t('تم تحميل العقد بنجاح', 'Contract uploaded successfully'),
-        description: t('جاري الانتقال إلى المحادثة...', 'Redirecting to chat...')
-      });
-      
-      // Redirect to chat after successful upload
-      setTimeout(() => {
-        setIsUploading(false);
-        setSelectedFile(null);
-        onClose();
-        
-        // Navigate to the dashboard chat with the new contract
-        if (result.contract && result.contract.id) {
-          window.location.href = `/dashboard?contractId=${result.contract.id}`;
-        } else {
-          window.location.href = '/dashboard';
-        }
-      }, 1000);
-      
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast({
-        title: t('فشل تحميل العقد', 'Failed to upload contract'),
-        description: error instanceof Error ? error.message : 'Unknown error',
-        variant: 'destructive'
-      });
-      setIsUploading(false);
+    // Reset state
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 

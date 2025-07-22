@@ -1,0 +1,48 @@
+========================================================
+🚨  URGENT: GATING STILL BROKEN
+--------------------------------------------------------
+Your previous implementation did NOT truly block the chat
+bar until BOTH a contract file is uploaded and a party is
+selected. Either the modal does not appear, or the chat input
+is enabled too early. You must connect the **state logic**
+all the way through the event flow.
+
+========================================================
+🛠  HOW TO FIX (Do this exactly)
+--------------------------------------------------------
+1. Start with `conversationState = "idle"` (chat input DISABLED)
+2. When user clicks “+ New Contract Chat” or uploads a file:
+    – Save the contract file metadata.
+    – Set `conversationState = "awaitingParty"`
+    – RENDER the party-selection modal ON TOP of everything
+      (it must not be closable except by selecting a party)
+3. Only after the user selects [First Party], [Second Party],
+   or [General], update BOTH:
+    – Store partyRole in chat context
+    – Set `conversationState = "ready"`
+    – ENABLE the chat input bar
+    – Remove the modal
+4. The chat bar must stay fully DISABLED (greyed out,
+   pointer-events: none, disabled cursor) until BOTH steps above
+   have happened (contract uploaded & party selected)
+5. If the user tries to type/send when input is disabled, show
+   a toast: "Please upload a contract first and select your party"
+6. After that, chat streaming and Recent Contracts saving must
+   work as before.
+7. On page reload, reset conversationState to "idle" every time.
+
+========================================================
+✅  DONE CHECKLIST (test yourself)
+--------------------------------------------------------
+☐ Chat bar is disabled on page load
+☐ Clicking “New Contract Chat” opens file dialog
+☐ Uploading a file always triggers the party modal
+☐ Chat stays locked until party selected
+☐ After party pick, input enables and streaming/chatting works
+☐ No way to close modal except picking a party
+☐ Toast appears if user tries to type while disabled
+☐ Log **CONTRACT GATE FULLY FIXED** in console
+
+**Do not change any styles, layout, dark/light theme, header, sidebar, or chat API. Only wire the gating logic!**
+
+========================================================
