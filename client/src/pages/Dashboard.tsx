@@ -299,6 +299,10 @@ export default function Dashboard() {
       // Also refresh analytics immediately
       queryClient.invalidateQueries({ queryKey: ['/api/analytics'] });
       
+      // AUTO-OPEN CHAT: Mark contract as viewed and open chat panel
+      touchContract(contract.id);
+      setShowNewChat(false);
+      
       // Add initial messages
       const initialMessages: Message[] = [
         {
@@ -365,6 +369,9 @@ export default function Dashboard() {
         queryClient.invalidateQueries({ queryKey: ['/api/contracts/recent'] });
         queryClient.invalidateQueries({ queryKey: ['/api/analytics'] });
       }, 3000);
+      
+      // Log successful auto-open
+      console.log('AUTO-OPEN CHAT FIXED');
       
     } catch (error) {
       console.error('Error creating contract:', error);
