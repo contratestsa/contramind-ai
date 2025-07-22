@@ -205,7 +205,7 @@ export default function DashboardAnalytics() {
 
   // Process data for additional charts
   // Language chart
-  const languageData = analyticsData ? Object.entries(analyticsData.language)
+  const languageData = analyticsData?.language ? Object.entries(analyticsData.language)
     .sort((a, b) => b[1] - a[1])
     .map(([name, value]) => ({
       name,
@@ -214,7 +214,7 @@ export default function DashboardAnalytics() {
     })) : [];
 
   // Executed status chart
-  const executedData = analyticsData ? Object.entries(analyticsData.executed)
+  const executedData = analyticsData?.executed ? Object.entries(analyticsData.executed)
     .map(([name, value]) => ({
       name: name === 'yes' ? t('نعم', 'Yes') : t('لا', 'No'),
       value,
@@ -222,17 +222,17 @@ export default function DashboardAnalytics() {
     })) : [];
 
   // Prepare data for bar charts (top 10)
-  const internalPartiesData = analyticsData ? Object.entries(analyticsData.internalParties)
+  const internalPartiesData = analyticsData?.internalParties ? Object.entries(analyticsData.internalParties)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .map(([name, value]) => ({ name, value })) : [];
 
-  const counterPartiesData = analyticsData ? Object.entries(analyticsData.counterParties)
+  const counterPartiesData = analyticsData?.counterparties ? Object.entries(analyticsData.counterparties)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .map(([name, value]) => ({ name, value })) : [];
 
-  const governingLawData = analyticsData ? Object.entries(analyticsData.governingLaw)
+  const governingLawData = analyticsData?.governingLaw ? Object.entries(analyticsData.governingLaw)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .map(([name, value]) => ({ name, value })) : [];
