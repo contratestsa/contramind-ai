@@ -1,10 +1,11 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   PieChart, Pie, Cell,
-  Tooltip, Legend, ResponsiveContainer
+  Tooltip, Legend, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid
 } from 'recharts';
 import { type DashboardData } from '@/mocks/analyticsData';
 import { FileText, ChevronDown, AlertCircle } from 'lucide-react';
@@ -98,6 +99,17 @@ export default function AnalyticsReports() {
   const { language, t } = useLanguage();
   const isRTL = language === 'ar';
   const { toast } = useToast();
+  
+  // State for column charts data
+  const [columnChartsData, setColumnChartsData] = useState<{
+    contractTypes: { type: string; count: number }[];
+    riskRates: { risk: string; count: number }[];
+    paymentLiabilities: { party: string; amount: number }[];
+  }>({
+    contractTypes: [],
+    riskRates: [],
+    paymentLiabilities: []
+  });
 
   // Fetch analytics data from API with automatic refresh
   const { data: analyticsData, isLoading, dataUpdatedAt } = useQuery<DashboardData>({
@@ -106,6 +118,19 @@ export default function AnalyticsReports() {
     refetchIntervalInBackground: true, // Continue refreshing even when tab is not active
     staleTime: 0 // Always fetch fresh data
   });
+  
+  // Fetch column charts data
+  const { data: chartsData } = useQuery({
+    queryKey: ['/api/contracts/analytics'],
+    refetchInterval: 30000
+  });
+  
+  // Update column charts data when fetched
+  useEffect(() => {
+    if (chartsData) {
+      setColumnChartsData(chartsData);
+    }
+  }, [chartsData]);
 
   // Process contracts mutation
   const processContractsMutation = useMutation({
@@ -528,6 +553,99 @@ export default function AnalyticsReports() {
                   <p className="text-center">{t('لا توجد بيانات متاحة', 'No data available')}</p>
                 </div>
               )}
+            </motion.div>
+          </div>
+
+          {/* Column Charts Section */}
+          <div className="mt-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.15, delay: 0.6 }}
+            >
+              <h2 className={cn("text-xl font-semibold text-[#0C2836] mb-6", isRTL && "text-right")}>
+                {t('تحليلات متقدمة', 'Advanced Analytics')}
+              </h2>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Contract Type Column Chart */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.15, delay: 0.65 }}
+                  className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
+                >
+                  <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
+                    {t('أنواع العقود', 'Contract Types')}
+                  </h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={columnChartsData.contractTypes} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
+                      <XAxis 
+                        dataKey="type" 
+                        angle={-45} 
+                        textAnchor="end" 
+                        tick={{ fill: '#0C2836', fontSize: 12 }}
+                        height={80}
+                      />
+                      <YAxis tick={{ fill: '#0C2836', fontSize: 12 }} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Bar dataKey="count" fill="#B7DEE8" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </motion.div>
+
+                {/* Risk Rate Column Chart */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.15, delay: 0.7 }}
+                  className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
+                >
+                  <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
+                    {t('معدل المخاطر', 'Risk Rate')}
+                  </h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={columnChartsData.riskRates} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
+                      <XAxis 
+                        dataKey="risk" 
+                        tick={{ fill: '#0C2836', fontSize: 12 }}
+                      />
+                      <YAxis tick={{ fill: '#0C2836', fontSize: 12 }} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Bar dataKey="count" fill="#FFB800" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </motion.div>
+
+                {/* Payment Liability Column Chart */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.15, delay: 0.75 }}
+                  className="bg-white rounded-2xl border border-[#E6E6E6] shadow-sm p-4"
+                >
+                  <h3 className={cn("text-lg font-semibold text-[#0C2836] mb-4", isRTL && "text-right")}>
+                    {t('التزامات الدفع', 'Payment Liability')}
+                  </h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={columnChartsData.paymentLiabilities} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E6E6E6" />
+                      <XAxis 
+                        dataKey="party" 
+                        angle={-45} 
+                        textAnchor="end" 
+                        tick={{ fill: '#0C2836', fontSize: 11 }}
+                        height={100}
+                      />
+                      <YAxis tick={{ fill: '#0C2836', fontSize: 12 }} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Bar dataKey="amount" fill="#4CAF50" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </motion.div>
+              </div>
             </motion.div>
           </div>
         </motion.div>
