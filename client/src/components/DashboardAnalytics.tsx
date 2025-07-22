@@ -126,6 +126,9 @@ export default function DashboardAnalytics() {
     );
   }
 
+  // Debug log the analytics data
+  console.log('Analytics Data:', analyticsData);
+
   // Process data for charts
   // 1. Contract Type
   const contractTypeTotal = Object.values(analyticsData.contractType).reduce((a, b) => a + b, 0);
@@ -326,11 +329,19 @@ export default function DashboardAnalytics() {
                   {t('معدل المخاطر', 'Risk Rate')}
                 </h3>
               </div>
-              <DonutChart 
-                data={riskData} 
-                colors={riskColors} 
-                centerText={`${riskData[2].pct}% High`}
-              />
+              {riskData.length > 0 ? (
+                <DonutChart 
+                  data={riskData} 
+                  colors={riskColors} 
+                  centerText={`${riskData[2]?.pct || 0}% High`}
+                />
+              ) : (
+                <div className="h-[200px] flex items-center justify-center">
+                  <p className="text-gray-400 text-sm text-center">
+                    {t('لا توجد بيانات مخاطر', 'No risk data available')}
+                  </p>
+                </div>
+              )}
             </motion.div>
 
             {/* Payment Liability Chart */}
@@ -346,11 +357,19 @@ export default function DashboardAnalytics() {
                   {t('التزامات الدفع', 'Payment Liability')}
                 </h3>
               </div>
-              <DonutChart 
-                data={paymentData} 
-                colors={paymentColors} 
-                centerText={`${paymentData[0].pct}% Immediate`}
-              />
+              {paymentData.some(item => item.value > 0) ? (
+                <DonutChart 
+                  data={paymentData} 
+                  colors={paymentColors} 
+                  centerText={`${paymentData[0]?.pct || 0}% Immediate`}
+                />
+              ) : (
+                <div className="h-[200px] flex items-center justify-center">
+                  <p className="text-gray-400 text-sm text-center">
+                    {t('لا توجد بيانات دفع', 'No payment data available')}
+                  </p>
+                </div>
+              )}
             </motion.div>
           </div>
 
