@@ -196,10 +196,10 @@ export default function DashboardSidebar({
           <nav className="px-3 pb-3">
             <div className="space-y-1">
               <button
-                onClick={() => setLocation('/dashboard/analytics')}
+                onClick={() => setLocation('/dashboard')}
                 className={cn(
                   "w-full flex items-center gap-3 py-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
-                  activePage === 'analytics' && "bg-[rgba(183,222,232,0.1)]",
+                  activePage === 'dashboard' && "bg-[rgba(183,222,232,0.1)]",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
                 title={isCollapsed ? t('لوحة التحكم', 'Dashboard') : undefined}

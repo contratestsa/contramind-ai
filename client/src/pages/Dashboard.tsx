@@ -45,6 +45,7 @@ import Contracts from "@/pages/Contracts";
 import Notifications from "@/pages/Notifications";
 import TagsCategories from "@/pages/TagsCategories";
 import DashboardSidebar from "@/components/DashboardSidebar";
+import DashboardAnalytics from "@/components/DashboardAnalytics";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useRecentContracts } from "@/hooks/useRecentContracts";
 
@@ -87,6 +88,7 @@ export default function Dashboard() {
   const { theme, toggleTheme } = useTheme();
   
   // Check current route
+  const [matchDashboardHome] = useRoute("/dashboard");
   const [matchAnalytics] = useRoute("/dashboard/analytics");
   const [matchParties] = useRoute("/dashboard/parties");
   const [matchContracts] = useRoute("/dashboard/contracts");
@@ -813,13 +815,14 @@ export default function Dashboard() {
         {/* Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
         {/* Route-based content rendering */}
-        {(matchAnalytics || matchParties || matchContracts || matchNotifications || matchTags) && !showNewChat ? (
+        {(matchDashboardHome || matchAnalytics || matchParties || matchContracts || matchNotifications || matchTags) && !showNewChat ? (
           <motion.div
             initial={{ opacity: 0, y: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15 }}
             className="flex-1 overflow-y-auto"
           >
+            {matchDashboardHome && <DashboardAnalytics />}
             {matchAnalytics && <AnalyticsReports />}
             {matchParties && <PartiesContacts />}
             {matchContracts && <Contracts />}
