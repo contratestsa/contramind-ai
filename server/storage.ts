@@ -6,7 +6,6 @@ import {
   contractChats,
   savedPrompts,
   contractDetails,
-  parties,
   type User, 
   type InsertUser, 
   type WaitlistEntry, 
@@ -20,9 +19,7 @@ import {
   type SavedPrompt,
   type InsertSavedPrompt,
   type ContractDetails,
-  type InsertContractDetails,
-  type Party,
-  type InsertParty
+  type InsertContractDetails
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, asc, or, like, sql, inArray } from "drizzle-orm";
@@ -70,16 +67,6 @@ export interface IStorage {
   getContractDetails(contractId: number): Promise<ContractDetails | undefined>;
   updateContractDetails(contractId: number, updates: Partial<ContractDetails>): Promise<ContractDetails | undefined>;
   getAllContractDetails(userId: number): Promise<ContractDetails[]>;
-  
-  // Party methods
-  createParty(party: InsertParty): Promise<Party>;
-  getParty(id: number): Promise<Party | undefined>;
-  getUserParties(userId: number, filters?: { type?: string; search?: string; highlighted?: boolean }): Promise<Party[]>;
-  updateParty(id: number, updates: Partial<Party>): Promise<Party | undefined>;
-  deleteParty(id: number): Promise<boolean>;
-  removePartyHighlight(id: number): Promise<void>;
-  getPartiesBySourceContract(contractId: number): Promise<Party[]>;
-  createBulkParties(parties: InsertParty[]): Promise<Party[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -611,82 +598,6 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(contractDetails)
       .where(inArray(contractDetails.contractId, contractIds));
-  }
-
-  // Party methods implementation
-  async createParty(insertParty: InsertParty): Promise<Party> {
-    const [party] = await db
-      .insert(parties)
-      .values(insertParty)
-      .returning();
-    return party;
-  }
-
-  async getParty(id: number): Promise<Party | undefined> {
-    const [party] = await db.select().from(parties).where(eq(parties.id, id));
-    return party || undefined;
-  }
-
-  async getUserParties(
-    userId: number, 
-    filters?: { type?: string; search?: string; highlighted?: boolean }
-  ): Promise<Party[]> {
-    let query = db.select().from(parties).where(eq(parties.userId, userId));
-    
-    if (filters?.type) {
-      query = query.where(eq(parties.type, filters.type));
-    }
-    
-    if (filters?.search) {
-      query = query.where(
-        or(
-          like(parties.name, `%${filters.search}%`),
-          like(parties.nameAr, `%${filters.search}%`),
-          like(parties.email, `%${filters.search}%`),
-          like(parties.registrationNumber, `%${filters.search}%`)
-        )!
-      );
-    }
-    
-    if (filters?.highlighted !== undefined) {
-      query = query.where(eq(parties.isHighlighted, filters.highlighted));
-    }
-    
-    return query.orderBy(desc(parties.extractedAt));
-  }
-
-  async updateParty(id: number, updates: Partial<Party>): Promise<Party | undefined> {
-    const [updated] = await db
-      .update(parties)
-      .set({ ...updates, updatedAt: new Date() })
-      .where(eq(parties.id, id))
-      .returning();
-    return updated || undefined;
-  }
-
-  async deleteParty(id: number): Promise<boolean> {
-    const result = await db.delete(parties).where(eq(parties.id, id));
-    return result.rowCount > 0;
-  }
-
-  async removePartyHighlight(id: number): Promise<void> {
-    await db
-      .update(parties)
-      .set({ isHighlighted: false })
-      .where(eq(parties.id, id));
-  }
-
-  async getPartiesBySourceContract(contractId: number): Promise<Party[]> {
-    return db
-      .select()
-      .from(parties)
-      .where(eq(parties.sourceContractId, contractId))
-      .orderBy(desc(parties.extractedAt));
-  }
-
-  async createBulkParties(insertParties: InsertParty[]): Promise<Party[]> {
-    if (insertParties.length === 0) return [];
-    return db.insert(parties).values(insertParties).returning();
   }
   
   async getContractsWithMissingPartyData(userId: number): Promise<Contract[]> {
