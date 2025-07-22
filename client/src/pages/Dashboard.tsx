@@ -114,6 +114,7 @@ export default function Dashboard() {
   // Use persistent recent contracts from API
   const { recent: recentContracts, isLoading: isLoadingRecent, touch: touchContract } = useRecentContracts(10);
   const [showAllContracts, setShowAllContracts] = useState(false);
+  const [showNewChat, setShowNewChat] = useState(false);
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -496,7 +497,7 @@ export default function Dashboard() {
           <button
             onClick={() => {
               archiveCurrentChat();
-              setIsUploadModalOpen(true);
+              setShowNewChat(true);
             }}
             className={cn(
               "w-full flex items-center gap-2 py-2.5 bg-[var(--accent)] text-[var(--text-on-accent)] rounded-md hover:bg-[var(--accent-hover)] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
@@ -559,6 +560,7 @@ export default function Dashboard() {
                           touchContract(contract.id);
                           setSelectedContract(contract);
                           loadContractMessages(contract);
+                          setShowNewChat(false);
                         }}
                         className={cn(
                           "w-full text-left p-2 rounded hover:bg-[rgba(183,222,232,0.1)] transition-colors group",
@@ -736,7 +738,7 @@ export default function Dashboard() {
         {/* Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
         {/* Route-based content rendering */}
-        {(matchAnalytics || matchParties || matchNotifications || matchTags) ? (
+        {(matchAnalytics || matchParties || matchNotifications || matchTags) && !showNewChat ? (
           <motion.div
             initial={{ opacity: 0, y: isRTL ? -20 : 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -748,7 +750,7 @@ export default function Dashboard() {
             {matchNotifications && <Notifications />}
             {matchTags && <TagsCategories />}
           </motion.div>
-        ) : selectedContract ? (
+        ) : selectedContract && !showNewChat ? (
           <div className="flex flex-col h-full bg-[var(--bg-main)]">
             {/* Contract Header */}
             <div className="flex-shrink-0 bg-[var(--bg-main)] border-b border-[var(--border-color)] px-4 py-3">
