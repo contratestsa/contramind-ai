@@ -117,6 +117,13 @@ export default function Dashboard() {
   const { recent: recentContracts, isLoading: isLoadingRecent, touch: touchContract } = useRecentContracts(10);
   const [showAllContracts, setShowAllContracts] = useState(false);
   const [showNewChat, setShowNewChat] = useState(true); // Default to showing new chat welcome screen
+  
+  // Conversation state management
+  const [conversationState, setConversationState] = useState<'idle' | 'awaitingParty' | 'ready'>('idle');
+  const [currentFile, setCurrentFile] = useState<{ id: string; name: string; size: number } | null>(null);
+  const [showPartyModal, setShowPartyModal] = useState(false);
+  const [selectedPartyRole, setSelectedPartyRole] = useState<'first' | 'second' | 'general' | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   // Fetch user data
   const { data: userData, isLoading, error } = useQuery<{ user: User }>({
@@ -207,8 +214,36 @@ export default function Dashboard() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+  
+  // Log when contract gate is ready
+  useEffect(() => {
+    console.log('CONTRACT GATE READY');
+  }, []);
 
-  const handleContractUpload = async (file: File, partyType: string) => {
+  const handleContractUpload = async (file: File, partyType?: string) => {
+    // Store file and show party selection modal
+    setUploadedFile(file);
+    setCurrentFile({
+      id: Date.now().toString(),
+      name: file.name,
+      size: file.size
+    });
+    setConversationState('awaitingParty');
+    setShowPartyModal(true);
+    setIsUploadModalOpen(false);
+  };
+  
+  const handlePartySelection = async (party: 'first' | 'second' | 'general') => {
+    if (!currentFile || !uploadedFile) return;
+    
+    setSelectedPartyRole(party);
+    setShowPartyModal(false);
+    setConversationState('ready');
+    
+    // Now process the actual upload
+    const file = uploadedFile;
+    const partyType = party === 'first' ? 'buyer' : party === 'second' ? 'vendor' : 'general';
+    
     // Generate random risk level for demo
     const riskLevels: Array<'low' | 'medium' | 'high'> = ['low', 'medium', 'high'];
     const randomRisk = riskLevels[Math.floor(Math.random() * riskLevels.length)];
@@ -343,6 +378,15 @@ export default function Dashboard() {
 
   const handleSendMessage = () => {
     if (!inputValue.trim() || userTokens < 5) return;
+    
+    // Guard: Check if conversation is ready
+    if (conversationState !== 'ready') {
+      toast({
+        title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
+        variant: 'destructive'
+      });
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -398,10 +442,14 @@ export default function Dashboard() {
       // Archive chat functionality removed - contracts are automatically saved in the database
     }
     
-    // Clear current chat
+    // Clear current chat and reset conversation state
     setMessages([]);
     setSelectedContract(null);
     setInputValue('');
+    setConversationState('idle');
+    setCurrentFile(null);
+    setUploadedFile(null);
+    setSelectedPartyRole(null);
   };
 
   // Load archived chat
@@ -495,6 +543,7 @@ export default function Dashboard() {
             onClick={() => {
               archiveCurrentChat();
               setShowNewChat(true);
+              setIsUploadModalOpen(true);
             }}
             className={cn(
               "w-full flex items-center gap-2 py-2.5 bg-[var(--accent)] text-[var(--text-on-accent)] rounded-md hover:bg-[var(--accent-hover)] transition-all duration-200 font-medium shadow-sm hover:shadow-md",
@@ -861,10 +910,15 @@ export default function Dashboard() {
                         handleSendMessage();
                       }
                     }}
-                    placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
+                    placeholder={conversationState !== 'ready' 
+                      ? t('يرجى رفع عقد أولاً...', 'Please upload a contract first...') 
+                      : t('اسأل عن هذا العقد...', 'Ask about this contract...')
+                    }
+                    disabled={conversationState !== 'ready'}
                     className={cn(
                       "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
-                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
+                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24",
+                      conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
                     )}
                     maxLength={500}
                   />
@@ -936,17 +990,20 @@ export default function Dashboard() {
                     ref={inputRef}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
-                    placeholder={t('اسأل عن هذا العقد...', 'Ask about this contract...')}
+                    placeholder={conversationState !== 'ready' 
+                      ? t('يرجى رفع عقد أولاً...', 'Please upload a contract first...') 
+                      : t('اسأل عن هذا العقد...', 'Ask about this contract...')
+                    }
+                    disabled={conversationState !== 'ready'}
                     className={cn(
                       "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
-                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24"
+                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24",
+                      conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
                     )}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !selectedContract) {
-                        toast({
-                          title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
-                          variant: 'destructive'
-                        });
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSendMessage();
                       }
                     }}
                   />
@@ -1211,6 +1268,56 @@ export default function Dashboard() {
           style={{ zIndex: 9998 }}
           onClick={closeSlidingPanel}
         />
+      )}
+      
+      {/* Party Selection Modal */}
+      {showPartyModal && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
+            style={{ zIndex: 10000 }}
+            aria-hidden="true"
+          />
+          <div 
+            className="fixed inset-0 flex items-center justify-center p-4"
+            style={{ zIndex: 10001 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('اختر دور الطرف', 'Select party role')}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15 }}
+              className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full"
+            >
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">
+                {t('أي طرف تمثل؟', 'Which party are you representing?')}
+              </h2>
+              <div className="space-y-3">
+                <button
+                  onClick={() => handlePartySelection('first')}
+                  className="w-full py-3 px-4 bg-gray-100 hover:bg-[#B7DEE8] hover:text-white text-gray-900 rounded-lg transition-colors duration-200 font-medium"
+                  autoFocus
+                >
+                  {t('الطرف الأول', 'First Party')}
+                </button>
+                <button
+                  onClick={() => handlePartySelection('second')}
+                  className="w-full py-3 px-4 bg-gray-100 hover:bg-[#B7DEE8] hover:text-white text-gray-900 rounded-lg transition-colors duration-200 font-medium"
+                >
+                  {t('الطرف الثاني', 'Second Party')}
+                </button>
+                <button
+                  onClick={() => handlePartySelection('general')}
+                  className="w-full py-3 px-4 bg-gray-100 hover:bg-[#B7DEE8] hover:text-white text-gray-900 rounded-lg transition-colors duration-200 font-medium"
+                >
+                  {t('تحليل عام', 'General Analysis')}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </>
       )}
     </div>
   );

@@ -1,0 +1,62 @@
+  GOAL
+--------------------------------------------------------
+1. **Gate the chat box** so a user can’t type until a contract
+   PDF / Word is uploaded.
+2. After upload, show a single pop-up that asks:
+      “Which party are you representing?”
+      • First Party   • Second Party   • General Analysis
+   (This already exists but is not firing consistently—fix it.)
+3. Only after the user clicks one of the three buttons should
+   the chat input unlock and streaming begin.
+
+========================================================
+🔒  DO-NOT-TOUCH
+--------------------------------------------------------
+• Header, sidebar, colours, fonts, spacing, dark/light themes
+• Working send/stream pipeline
+• RECENT CONTRACTS saving logic
+• Home/marketing pages
+
+========================================================
+🛠  IMPLEMENTATION
+--------------------------------------------------------
+1. **Disable chat bar by default**  
+   <ChatInput> gets `disabled={true}` until
+   `conversationState === "ready"`.
+
+2. **Upload flow**  
+   • When “+ New Contract Chat” or the paper-clip icon is used:
+       – Accept .pdf / .doc / .docx (keep existing validator).  
+       – Save file metadata (`fileId`, `fileName`, `fileSize`).  
+       – Set `conversationState = "awaitingParty"`.
+
+3. **Party-selection pop-up**  
+   • Render a modal centred on the screen:
+     ┌───────────────────────────────────────────┐
+     │ Which party are you representing?         │
+     │  [First Party]  [Second Party]  [General] │
+     └───────────────────────────────────────────┘
+   • Buttons use accent colour #B7DEE8 when hovered / focused.  
+   • Clicking a button stores `partyRole` in chat context and
+     sets `conversationState = "ready"` → chat bar enabled.  
+   • ESC or outside-click should **not** close the modal
+     (force a selection).
+
+4. **Guard send handler**  
+   • In `handleSend`, early-return with a toast
+     “Please upload a contract first” if state !== "ready".
+
+5. **Accessibility**  
+   • Pop-up is focus-trapped: first tab lands on First Party,
+     Shift-Tab cycles back.  
+   • aria-label on modal: `"Select party role"`.
+
+========================================================
+✅  DONE CHECKLIST
+--------------------------------------------------------
+☐ Chat box shows a greyed-out placeholder until a file is uploaded.  
+☐ Uploading a contract opens the party-selection modal every time.  
+☐ Choosing a role closes the modal and unlocks the chat bar.  
+☐ Messages stream as before, and thread is saved to RECENT CONTRACTS.  
+☐ No console errors; dark/light & RTL behaviour unchanged.  
+☐ Log **CONTRACT GATE READY** in console when finished.
