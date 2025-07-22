@@ -32,6 +32,10 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Removed "Manage counterparties and contacts" subtitle from Parties & Contacts page
     - Page now only shows main title "Parties & Contacts" without the descriptive subtitle
     - Simplified header for cleaner appearance
+  - **Updated Parties Page Title**: Simplified page heading
+    - Changed title from "Parties & Contacts" to just "Parties"
+    - Removed "& Contacts" from the page title
+    - Page now shows cleaner "Parties" title only
   - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
     - Created new ColumnChart component using Recharts BarChart
     - Replaced all DonutChart components with vertical column charts

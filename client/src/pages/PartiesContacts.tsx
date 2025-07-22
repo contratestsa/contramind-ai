@@ -107,7 +107,7 @@ export default function PartiesContacts() {
           {/* Header */}
           <div className={cn("mb-4", language === 'ar' && "text-right")}>
             <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
-              {t('الأطراف وجهات الاتصال', 'Parties & Contacts')}
+              {t('الأطراف', 'Parties')}
             </h1>
           </div>
 
