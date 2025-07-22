@@ -121,6 +121,13 @@ export default function Dashboard() {
     retry: false,
   });
   
+  // Redirect from /dashboard to /dashboard/analytics
+  useEffect(() => {
+    if (location === '/dashboard' && !matchAnalytics && !matchParties && !matchNotifications && !matchTags) {
+      setLocation('/dashboard/analytics');
+    }
+  }, [location, setLocation, matchAnalytics, matchParties, matchNotifications, matchTags]);
+
   // Debug logging
   useEffect(() => {
     if (error) {
@@ -497,7 +504,7 @@ export default function Dashboard() {
             )}
           >
             <Plus className="w-4 h-4 flex-shrink-0" />
-            {!isSidebarCollapsed && <span>{t('تحليل عقد جديد', 'New Contract Analysis')}</span>}
+            {!isSidebarCollapsed && <span>{t('محادثة عقد جديد', 'New Contract Chat')}</span>}
           </button>
         </div>
 
@@ -583,25 +590,7 @@ export default function Dashboard() {
           {/* Navigation Menu */}
           <nav className="px-3 pb-3">
             <div className="space-y-1">
-              {/* Dashboard Home */}
-              <button
-                onClick={() => {
-                  console.log('Navigating to /dashboard');
-                  setLocation('/dashboard');
-                  setShowMobileSidebar(false);
-                }}
-                className={cn(
-                  "w-full flex items-center gap-3 py-2 rounded hover:bg-[var(--hover-bg)] transition-colors group",
-                  isSidebarCollapsed ? "justify-center px-2" : "px-3",
-                  !matchAnalytics && !matchParties && !matchNotifications && !matchTags && "bg-[var(--active-bg)] text-[var(--text-primary)]"
-                )}
-                title={isSidebarCollapsed ? t('لوحة التحكم', 'Dashboard') : undefined}
-              >
-                <Home className={cn("w-4 h-4 flex-shrink-0", !matchAnalytics && !matchParties && !matchNotifications && !matchTags ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
-                {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
-              </button>
 
-              <div className="my-2 border-t border-[var(--border-color)]"></div>
 
               <button
                 onClick={() => {
@@ -614,10 +603,10 @@ export default function Dashboard() {
                   isSidebarCollapsed ? "justify-center px-2" : "px-3",
                   matchAnalytics && "bg-[var(--active-bg)] text-[var(--text-primary)]"
                 )}
-                title={isSidebarCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
+                title={isSidebarCollapsed ? t('لوحة التحكم', 'Dashboard') : undefined}
               >
                 <BarChart3 className={cn("w-4 h-4 flex-shrink-0", matchAnalytics ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]")} />
-                {!isSidebarCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
+                {!isSidebarCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
               </button>
               
               <button

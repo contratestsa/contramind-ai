@@ -121,7 +121,7 @@ export default function DashboardSidebar({
             )}
           >
             <Plus className="w-4 h-4 flex-shrink-0" />
-            {!isCollapsed && <span>{t('تحليل عقد جديد', 'New Contract Analysis')}</span>}
+            {!isCollapsed && <span>{t('محادثة عقد جديدة', 'New Contract Chat')}</span>}
           </button>
         </div>
 
@@ -202,10 +202,10 @@ export default function DashboardSidebar({
                   activePage === 'analytics' && "bg-[rgba(183,222,232,0.1)]",
                   isCollapsed ? "justify-center px-2" : "px-3"
                 )}
-                title={isCollapsed ? t('التحليلات والتقارير', 'Analytics & Reports') : undefined}
+                title={isCollapsed ? t('لوحة التحكم', 'Dashboard') : undefined}
               >
                 <BarChart3 className="w-4 h-4 text-[rgba(183,222,232,0.6)] group-hover:text-white flex-shrink-0" />
-                {!isCollapsed && <span className="text-sm">{t('التحليلات والتقارير', 'Analytics & Reports')}</span>}
+                {!isCollapsed && <span className="text-sm">{t('لوحة التحكم', 'Dashboard')}</span>}
               </button>
               
               <button

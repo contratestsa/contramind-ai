@@ -4,6 +4,14 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
+- **July 22, 2025**:
+  - **Navigation Restructuring**: Updated dashboard navigation to make Analytics the primary dashboard
+    - Renamed "Analytics & Reports" to "Dashboard" in sidebar navigation
+    - Updated "New Contract Analysis" button to "New Contract Chat" for clarity
+    - Added automatic redirect from `/dashboard` to `/dashboard/analytics`
+    - Removed duplicate Dashboard home button from sidebar to eliminate confusion
+    - Analytics page is now the default landing page when users navigate to dashboard
+    - "New Contract Chat" button opens upload modal and shows welcome chat interface
 - **July 21, 2025** (Latest):
   - **Fixed Contract Upload and Analytics Dashboard Issues**: Resolved critical issues preventing proper contract processing
     - Fixed UploadModal component which was using mock upload instead of actual API calls
