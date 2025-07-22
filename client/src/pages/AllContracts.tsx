@@ -2,6 +2,7 @@ import { useRecentContracts } from '@/hooks/useRecentContracts';
 import { useLanguage } from '@/hooks/useLanguage';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function AllContracts() {
   const { language, t } = useLanguage();
@@ -38,17 +39,17 @@ export default function AllContracts() {
         <div className="flex-1 p-6 overflow-auto">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-lg font-medium mb-4">Recent Contracts</h2>
+              <h2 className="text-lg font-medium mb-4 text-gray-900">Recent Contracts</h2>
               
               {isLoading ? (
-                <p>Loading...</p>
+                <p className="text-gray-500">Loading...</p>
               ) : (
                 <div>
-                  <p className="mb-4">Total recent contracts: {recent.length}</p>
+                  <p className="mb-4 text-gray-600">Total recent contracts: {recent.length}</p>
                   <div className="space-y-2">
                     {recent.map((contract) => (
                       <div key={contract.id} className="p-4 border rounded-lg">
-                        <div className="font-medium">{contract.title}</div>
+                        <div className="font-medium text-gray-900">{contract.title}</div>
                         <div className="text-sm text-gray-600">
                           ID: {contract.id} | Party: {contract.partyName} | Date: {contract.date}
                         </div>
@@ -70,5 +71,3 @@ export default function AllContracts() {
     </div>
   );
 }
-
-import { cn } from '@/lib/utils';
