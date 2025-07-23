@@ -5,6 +5,15 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 23, 2025** (Latest):
+  - **Enhanced Gemini API Configuration**: Updated to use expert-level contract analysis prompts
+    - Added ROLE_SYSTEM prompt defining the AI as expert legal contract analysis assistant
+    - Implemented comprehensive PROMPT_LONG with 4-section analysis structure
+    - Reduced temperature from 0.7 to 0.25 for more focused, consistent responses
+    - Updated to use gemini-1.5-pro as primary model with automatic fallback to gemini-1.5-flash when rate limited
+    - Contract analysis now provides structured responses with: identification, critical clauses, risk assessment, and practical insights
+    - Increased token limits to 4096 for more comprehensive analysis
+    - Successfully tested with Services Agreement producing professional-grade analysis
+- **July 23, 2025** (Earlier):
   - **Fixed React Hooks Error**: Resolved "null is not an object (evaluating 'dispatcher.useState')" error
     - Removed conflicting SimpleLanguageProvider from App.tsx that was causing duplicate language management systems
     - Created simple pass-through SimpleLanguageProvider component to satisfy imports
