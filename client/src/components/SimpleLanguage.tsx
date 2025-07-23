@@ -87,7 +87,12 @@ export const LanguageManager = {
   }
 };
 
-// Commenting out SimpleLanguageProvider as it's not used anymore
+// Simple pass-through component to avoid import errors
+export function SimpleLanguageProvider({ children }: { children: ReactNode }) {
+  return <>{children}</>;
+}
+
+// Commenting out the old SimpleLanguageProvider as it's not used anymore
 // The app uses LanguageManager instead
 /*
 interface SimpleLanguageProviderProps {

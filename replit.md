@@ -7,6 +7,7 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 - **July 23, 2025** (Latest):
   - **Fixed React Hooks Error**: Resolved "null is not an object (evaluating 'dispatcher.useState')" error
     - Removed conflicting SimpleLanguageProvider from App.tsx that was causing duplicate language management systems
+    - Created simple pass-through SimpleLanguageProvider component to satisfy imports
     - Application uses LanguageManager (non-React object) throughout, not React context
     - Removed explicit React import from SimpleLanguage.tsx per Vite's automatic JSX handling
     - Web application now loads properly in Preview Tab without hooks errors
