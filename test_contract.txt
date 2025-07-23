@@ -1,0 +1,11 @@
+TEST SERVICE AGREEMENT
+
+This is a test contract between Company A (Buyer) and Company B (Seller).
+
+1. Service Terms: Company B will provide consulting services.
+2. Payment Terms: 0,000 per month, paid on the 1st of each month.
+3. Duration: 12 months starting January 1, 2025.
+4. Termination: Either party may terminate with 30 days written notice.
+5. Limitation of Liability: Neither party shall be liable for indirect damages.
+
+Signed: Test Contract

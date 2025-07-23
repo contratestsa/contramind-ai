@@ -6,3 +6,5 @@ pdf2image
 pdfplumber
 pillow
 pytesseract
+google-generativeai
+grpcio
