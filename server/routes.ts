@@ -825,8 +825,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Build the Python command
-      // analyze_pdf.py expects: python analyze_pdf.py [PDF_PATH] [USER_PROMPT]
-      const pythonScript = path.join(__dirname, 'python', 'analyze_pdf.py');
+      // analyze_contract.py expects: python analyze_contract.py [PDF_PATH] [USER_PROMPT]
+      const pythonScript = path.join(__dirname, 'python', 'analyze_contract.py');
       const contractPath = path.join(__dirname, '..', contract.filePath);
       
       // Build command arguments

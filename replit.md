@@ -5,8 +5,14 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
 
 ## Recent Changes
 - **July 23, 2025** (Latest):
+  - **Fixed Python Dependencies and Completed Gemini Integration**: Resolved grpc import issues with scalable solution
+    - Created simplified `analyze_contract.py` using HTTP requests instead of problematic google-generativeai package
+    - Avoids Python 3.11/3.12 compatibility issues while maintaining full Gemini API functionality
+    - All integration tests passing: environment checks, direct API calls, multiple analysis types
+    - Successfully extracts and analyzes: payment terms, parties, risks, contract duration
+    - Proper JSON response formatting for frontend consumption
   - **Integrated Gemini AI for Contract Analysis**: Added real-time AI-powered contract analysis
-    - Created new `/api/contracts/gemini-analyze` endpoint that calls analyze_pdf.py Python script
+    - Created new `/api/contracts/gemini-analyze` endpoint that calls analyze_contract.py Python script
     - Endpoint accepts contractId, userPrompt, and analysisType parameters
     - Integrated Gemini analysis into party selection flow - initial AI analysis runs when party is selected
     - Updated handleSendMessage to call Gemini API for user questions instead of mock responses

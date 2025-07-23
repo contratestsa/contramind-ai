@@ -1,11 +1,21 @@
-TEST SERVICE AGREEMENT
+SERVICE AGREEMENT
 
-This is a test contract between Company A (Buyer) and Company B (Seller).
+This Service Agreement ("Agreement") is entered into as of January 1, 2025, between ContraMind AI, Inc. ("Service Provider") and ABC Corporation ("Client").
 
-1. Service Terms: Company B will provide consulting services.
-2. Payment Terms: 0,000 per month, paid on the 1st of each month.
-3. Duration: 12 months starting January 1, 2025.
-4. Termination: Either party may terminate with 30 days written notice.
-5. Limitation of Liability: Neither party shall be liable for indirect damages.
+1. SERVICES
+The Service Provider agrees to provide contract analysis and management software services.
 
-Signed: Test Contract
+2. PAYMENT TERMS
+Client shall pay Service Provider:
+- Monthly subscription fee: $5,000
+- Payment due: Within 30 days of invoice date
+- Late payment penalty: 2% per month
+
+3. TERM
+This Agreement shall commence on January 1, 2025 and continue for 12 months.
+
+4. TERMINATION
+Either party may terminate with 60 days written notice.
+
+5. CONFIDENTIALITY
+Both parties agree to maintain confidentiality of proprietary information.
