@@ -87,6 +87,9 @@ export const LanguageManager = {
   }
 };
 
+// Commenting out SimpleLanguageProvider as it's not used anymore
+// The app uses LanguageManager instead
+/*
 interface SimpleLanguageProviderProps {
   children: ReactNode;
 }
@@ -136,3 +139,4 @@ export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps
     </LanguageContext.Provider>
   );
 }
+*/
