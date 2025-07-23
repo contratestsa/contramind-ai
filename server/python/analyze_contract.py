@@ -3,8 +3,8 @@ import os, sys, json, time, PyPDF2, requests
 
 # Gemini API configuration
 GEMINI_API_KEY = os.environ.get('GEMINI_KEY', '')
-GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent'
-CURRENT_MODEL = 'gemini-1.5-pro'  # Will be updated based on which model responds
+GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-pro:generateContent'
+CURRENT_MODEL = 'gemini-2.5-pro'  # Will be updated based on which model responds
 
 def extract_text_from_pdf(file_path):
     """Extract text from PDF file"""
@@ -86,6 +86,7 @@ def call_gemini_api(prompt, text):
     
     # Try Pro model first, then fallback to Flash
     models = [
+        ('gemini-2.5-pro', 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-pro:generateContent'),
         ('gemini-1.5-pro', 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent'),
         ('gemini-1.5-flash', 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent')
     ]
@@ -94,10 +95,12 @@ def call_gemini_api(prompt, text):
         url = f"{model_url}?key={GEMINI_API_KEY}"
         
         try:
-            response = requests.post(url, headers=headers, json=data, timeout=30)
+            # Use shorter timeout for 2.5 Pro as it may not be available yet
+            timeout = 10 if model_name == 'gemini-2.5-pro' else 30
+            response = requests.post(url, headers=headers, json=data, timeout=timeout)
             
-            # If rate limited on Pro, try Flash
-            if response.status_code == 429 and model_name == 'gemini-1.5-pro':
+            # If rate limited or model not found, try next model
+            if response.status_code in [429, 404, 503]:
                 continue
                 
             response.raise_for_status()
@@ -115,16 +118,21 @@ def call_gemini_api(prompt, text):
             return "I couldn't generate a response. Please try again."
             
         except requests.exceptions.Timeout:
+            # If timeout, try next model instead of returning error
+            if model_name != models[-1][0]:
+                continue
             return "The request timed out. Please try again."
         except requests.exceptions.RequestException as e:
             if model_name == models[-1][0]:  # Last model in list
                 error_msg = str(e)
-                if response and hasattr(response, 'text'):
+                if 'response' in locals() and hasattr(response, 'text'):
                     error_msg += f"\nResponse: {response.text[:500]}"
                 return f"Error calling Gemini API: {error_msg}"
             continue  # Try next model
         except Exception as e:
-            return f"Unexpected error: {str(e)}"
+            if model_name == models[-1][0]:  # Last model in list
+                return f"Unexpected error: {str(e)}"
+            continue  # Try next model
 
 def main():
     if len(sys.argv) < 2:

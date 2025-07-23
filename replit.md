@@ -9,7 +9,9 @@ A bilingual (Arabic/English) AI-powered legal technology platform specializing i
     - Added ROLE_SYSTEM prompt defining the AI as expert legal contract analysis assistant
     - Implemented comprehensive PROMPT_LONG with 4-section analysis structure
     - Reduced temperature from 0.7 to 0.25 for more focused, consistent responses
-    - Updated to use gemini-1.5-pro as primary model with automatic fallback to gemini-1.5-flash when rate limited
+    - Configured Gemini 2.5 Pro as primary model with automatic fallback chain: 2.5 Pro → 1.5 Pro → 1.5 Flash
+    - Smart timeout handling: 10 seconds for 2.5 Pro, 30 seconds for other models
+    - Automatic fallback on 429 (rate limit), 404 (not found), or 503 (unavailable) status codes
     - Contract analysis now provides structured responses with: identification, critical clauses, risk assessment, and practical insights
     - Increased token limits to 4096 for more comprehensive analysis
     - Successfully tested with Services Agreement producing professional-grade analysis
