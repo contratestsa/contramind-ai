@@ -338,19 +338,78 @@ export default function Dashboard() {
       
       setMessages(initialMessages);
       
-      // Simulate analysis completion and update status in database
-      setTimeout(async () => {
-        const analysisMessage: Message = {
-          id: '4',
+      // ========================================
+      // GEMINI ANALYSIS: Call Gemini API for initial contract analysis
+      // Instead of mock analysis, we now use real AI analysis
+      // ========================================
+      try {
+        // Show loading state
+        setMessages(prev => [...prev, {
+          id: 'loading',
           type: 'system',
           content: t(
-            'تم اكتمال التحليل! وجدت 3 مخاطر عالية و5 متوسطة. يمكنك طرح أي أسئلة حول العقد.',
-            'Analysis complete! Found 3 high risks and 5 medium risks. You can ask any questions about the contract.'
+            'جاري التحليل المتقدم للعقد باستخدام الذكاء الاصطناعي...',
+            'Performing advanced AI analysis of the contract...'
           ),
           timestamp: new Date()
-        };
-        setMessages(prev => [...prev, analysisMessage]);
-        
+        }]);
+
+        // Call Gemini analyze endpoint
+        const analysisResponse = await fetch('/api/contracts/gemini-analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            contractId: contract.id,
+            analysisType: partyType // 'buyer', 'vendor', or 'general'
+          })
+        });
+
+        const analysisData = await analysisResponse.json();
+
+        // Remove loading message
+        setMessages(prev => prev.filter(msg => msg.id !== 'loading'));
+
+        if (analysisData.success) {
+          // Add Gemini's analysis as a message
+          const analysisMessage: Message = {
+            id: Date.now().toString(),
+            type: 'system',
+            content: analysisData.content,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, analysisMessage]);
+
+          // Show token usage if available
+          if (analysisData.stats) {
+            console.log('Gemini token usage:', analysisData.stats);
+          }
+        } else {
+          // Handle error cases
+          let errorMessage = t(
+            'عذراً، حدث خطأ في تحليل العقد.',
+            'Sorry, an error occurred while analyzing the contract.'
+          );
+
+          // Provide specific error messages
+          if (analysisData.error?.includes('GEMINI_KEY')) {
+            errorMessage = t(
+              'مفتاح Gemini API غير مُعد. يرجى الاتصال بالمسؤول.',
+              'Gemini API key is not configured. Please contact the administrator.'
+            );
+          }
+
+          const errorMsg: Message = {
+            id: Date.now().toString(),
+            type: 'system',
+            content: errorMessage,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, errorMsg]);
+        }
+
         // Update contract status in database
         await fetch(`/api/contracts/${contract.id}`, {
           method: 'PATCH',
@@ -370,7 +429,25 @@ export default function Dashboard() {
         // Refetch to update analytics and contracts
         queryClient.invalidateQueries({ queryKey: ['/api/contracts/recent'] });
         queryClient.invalidateQueries({ queryKey: ['/api/analytics'] });
-      }, 3000);
+
+      } catch (error) {
+        console.error('Error calling Gemini analysis:', error);
+        
+        // Remove loading message
+        setMessages(prev => prev.filter(msg => msg.id !== 'loading'));
+        
+        // Show error message
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          type: 'system',
+          content: t(
+            'عذراً، فشل الاتصال بخدمة التحليل. يرجى المحاولة مرة أخرى.',
+            'Sorry, failed to connect to the analysis service. Please try again.'
+          ),
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
       
       // Log successful auto-open
       console.log('AUTO-OPEN CHAT FIXED');
@@ -385,11 +462,15 @@ export default function Dashboard() {
     }
   };
 
-  const handleSendMessage = () => {
+  // ========================================
+  // GEMINI CHAT: Handle user messages with real AI responses
+  // This function now calls the Gemini API to answer user questions
+  // ========================================
+  const handleSendMessage = async () => {
     if (!inputValue.trim() || userTokens < 5) return;
     
     // Guard: Check if conversation is ready
-    if (conversationState !== 'ready') {
+    if (conversationState !== 'ready' || !selectedContract) {
       toast({
         title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
         variant: 'destructive'
@@ -397,6 +478,7 @@ export default function Dashboard() {
       return;
     }
 
+    // Add user message to chat
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
@@ -405,22 +487,96 @@ export default function Dashboard() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const userQuestion = inputValue; // Store the question before clearing
     setInputValue('');
     setUserTokens(prev => prev - 5);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
+    // Add loading message
+    const loadingMessage: Message = {
+      id: 'ai-loading',
+      type: 'system',
+      content: t(
+        'جاري التفكير في إجابتك...',
+        'Thinking about your answer...'
+      ),
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, loadingMessage]);
+
+    try {
+      // Call Gemini API with the user's question
+      const response = await fetch('/api/contracts/gemini-analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          contractId: selectedContract.id,
+          userPrompt: userQuestion
+        })
+      });
+
+      const data = await response.json();
+
+      // Remove loading message
+      setMessages(prev => prev.filter(msg => msg.id !== 'ai-loading'));
+
+      if (data.success) {
+        // Add AI response
+        const aiResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          type: 'system',
+          content: data.content,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, aiResponse]);
+
+        // Log token usage if available
+        if (data.stats) {
+          console.log('Token usage for this response:', data.stats);
+        }
+      } else {
+        // Handle error
+        let errorContent = t(
+          'عذراً، لم أتمكن من معالجة سؤالك.',
+          'Sorry, I couldn\'t process your question.'
+        );
+
+        // Provide specific error messages
+        if (data.error?.includes('GEMINI_KEY')) {
+          errorContent = t(
+            'خدمة الذكاء الاصطناعي غير مُعدة. يرجى الاتصال بالمسؤول.',
+            'AI service is not configured. Please contact the administrator.'
+          );
+        }
+
+        const errorResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          type: 'system',
+          content: errorContent,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, errorResponse]);
+      }
+    } catch (error) {
+      console.error('Error sending message to Gemini:', error);
+
+      // Remove loading message
+      setMessages(prev => prev.filter(msg => msg.id !== 'ai-loading'));
+
+      // Show error message
+      const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: 'system',
         content: t(
-          'شكراً على سؤالك. بناءً على تحليلي للعقد، إليك ما وجدته...',
-          'Thank you for your question. Based on my analysis of the contract, here\'s what I found...'
+          'عذراً، حدث خطأ في الاتصال بخدمة الذكاء الاصطناعي.',
+          'Sorry, an error occurred connecting to the AI service.'
         ),
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+      setMessages(prev => [...prev, errorResponse]);
+    }
   };
 
   const copyMessage = (content: string) => {
@@ -1086,10 +1242,13 @@ export default function Dashboard() {
                       <>
                         <button
                           onClick={() => {
-                            setInputValue(t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks'));
-                            if (inputRef.current) {
-                              inputRef.current.focus();
-                            }
+                            // Set prompt text and send message automatically
+                            const promptText = t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks');
+                            setInputValue(promptText);
+                            // Small delay to ensure state is updated before sending
+                            setTimeout(() => {
+                              handleSendMessage();
+                            }, 100);
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -1101,10 +1260,11 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            setInputValue(t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract'));
-                            if (inputRef.current) {
-                              inputRef.current.focus();
-                            }
+                            const promptText = t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract');
+                            setInputValue(promptText);
+                            setTimeout(() => {
+                              handleSendMessage();
+                            }, 100);
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -1116,10 +1276,11 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            setInputValue(t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?'));
-                            if (inputRef.current) {
-                              inputRef.current.focus();
-                            }
+                            const promptText = t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?');
+                            setInputValue(promptText);
+                            setTimeout(() => {
+                              handleSendMessage();
+                            }, 100);
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -1131,10 +1292,11 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            setInputValue(t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses'));
-                            if (inputRef.current) {
-                              inputRef.current.focus();
-                            }
+                            const promptText = t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses');
+                            setInputValue(promptText);
+                            setTimeout(() => {
+                              handleSendMessage();
+                            }, 100);
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",

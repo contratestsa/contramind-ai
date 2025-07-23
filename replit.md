@@ -4,7 +4,17 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
-- **July 22, 2025** (Latest):
+- **July 23, 2025** (Latest):
+  - **Integrated Gemini AI for Contract Analysis**: Added real-time AI-powered contract analysis
+    - Created new `/api/contracts/gemini-analyze` endpoint that calls analyze_pdf.py Python script
+    - Endpoint accepts contractId, userPrompt, and analysisType parameters
+    - Integrated Gemini analysis into party selection flow - initial AI analysis runs when party is selected
+    - Updated handleSendMessage to call Gemini API for user questions instead of mock responses
+    - Modified all prompt buttons (Risk Analysis, Contract Summary, Payment Terms, Termination Clauses) to auto-send messages
+    - Added comprehensive error handling for missing API keys and Python script failures
+    - Chat messages are saved to database for history tracking with token usage stats
+    - GEMINI_KEY environment variable confirmed to exist and be properly configured
+- **July 22, 2025** (Earlier):
   - **Fixed New Contract Chat Button**: Removed automatic upload modal opening
     - "New Contract Chat" button now only shows welcome screen with chatbar and prompts
     - Removed `setIsUploadModalOpen(true)` from button click handler
