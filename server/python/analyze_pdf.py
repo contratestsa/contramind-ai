@@ -4,28 +4,52 @@ from google.generativeai.types import GenerationConfig
 
 # ─────────────────────────────────────────────────────────────
 # Check Input Arguments
+# Modified: Now accepts optional USER_PROMPT as second argument
 # ─────────────────────────────────────────────────────────────
 if len(sys.argv) < 2:
-    print("Usage: python analyze_pdf.py <PDF_PATH>", file=sys.stderr)
+    print("Usage: python analyze_pdf.py <PDF_PATH> [USER_PROMPT]", file=sys.stderr)
     sys.exit(1)
 
 PDF_PATH = sys.argv[1]
+# New: Accept user's specific question/prompt if provided
+USER_PROMPT = sys.argv[2] if len(sys.argv) > 2 else None
 
 # ─────────────────────────────────────────────────────────────
 # Set Gemini API Key
+# Modified: Better error handling for missing API key
 # ─────────────────────────────────────────────────────────────
 api_key = os.getenv("GEMINI_KEY")
 if not api_key:
-    raise ValueError("Env var GEMINI_KEY missing")
-genai.configure(api_key=api_key)
+    # Return error as JSON for frontend to handle gracefully
+    error_response = {
+        "success": False,
+        "error": "GEMINI_KEY environment variable is missing",
+        "message": "Please configure the Gemini API key to enable contract analysis"
+    }
+    print(json.dumps(error_response))
+    sys.exit(1)
+
+try:
+    genai.configure(api_key=api_key)
+except Exception as e:
+    error_response = {
+        "success": False,
+        "error": f"Failed to configure Gemini API: {str(e)}",
+        "message": "There was an error connecting to the AI service"
+    }
+    print(json.dumps(error_response))
+    sys.exit(1)
 
 # ─────────────────────────────────────────────────────────────
 # ContraMind role system prompt
+# Modified: Added flexibility for answering specific user questions
 # ─────────────────────────────────────────────────────────────
 ROLE_SYSTEM = (
-    "You are legal counsel for the SERVICE RECIPIENT reviewing a technology "
-    "services contract under KSA (Kingdom of Saudi Arabia) law. "
-    "Provide concise, actionable guidance aligned with Sharia principles."
+    "You are ContraMind AI, an expert legal counsel specializing in technology "
+    "services contracts under KSA (Kingdom of Saudi Arabia) law. "
+    "Provide concise, actionable guidance aligned with Sharia principles. "
+    "When answering user questions, focus on their specific concerns while "
+    "maintaining a protective stance for the service recipient."
 )
 
 # ─────────────────────────────────────────────────────────────
@@ -62,11 +86,24 @@ Label points R1, R2, R3, … sequentially.
 
 # ─────────────────────────────────────────────────────────────
 # Extract PDF Text
+# Modified: Added error handling for PDF extraction
 # ─────────────────────────────────────────────────────────────
 def extract_pdf_text(path):
-    with open(path, "rb") as f:
-        reader = PyPDF2.PdfReader(f)
-        return "\n".join(p.extract_text() or "" for p in reader.pages)
+    try:
+        with open(path, "rb") as f:
+            reader = PyPDF2.PdfReader(f)
+            text = "\n".join(p.extract_text() or "" for p in reader.pages)
+            if not text.strip():
+                raise ValueError("No text could be extracted from the PDF")
+            return text
+    except Exception as e:
+        error_response = {
+            "success": False,
+            "error": f"Failed to extract PDF text: {str(e)}",
+            "message": "Could not read the contract file. Please ensure it's a valid PDF."
+        }
+        print(json.dumps(error_response))
+        sys.exit(1)
 
 pdf_text = extract_pdf_text(PDF_PATH)
 
@@ -80,47 +117,87 @@ pdf_tokens    = count_tokens(pdf_text)
 
 # ─────────────────────────────────────────────────────────────
 # Build Content
+# Modified: Dynamic prompt based on user input or default analysis
 # ─────────────────────────────────────────────────────────────
-content = f"""{PROMPT_LONG}
+if USER_PROMPT:
+    # User has a specific question - answer it in context of the contract
+    content = f"""Please analyze the following contract and answer this specific question:
 
-===== CONTENIDO DEL PDF ({len(pdf_text)} caracteres) =====
+USER QUESTION: {USER_PROMPT}
+
+When answering:
+1. Focus specifically on the user's question
+2. Provide clear, actionable advice
+3. Reference specific sections of the contract when relevant
+4. Consider KSA law and Sharia principles where applicable
+5. Highlight any risks or concerns related to the question
+
+===== CONTRACT TEXT ({len(pdf_text)} characters) =====
+{pdf_text}
+"""
+else:
+    # No specific question - perform full contract analysis
+    content = f"""{PROMPT_LONG}
+
+===== CONTRACT TEXT ({len(pdf_text)} characters) =====
 {pdf_text}
 """
 
 # ─────────────────────────────────────────────────────────────
 # Generate Response in Streaming Mode
+# Modified: Added try-catch for API errors
 # ─────────────────────────────────────────────────────────────
-model = genai.GenerativeModel(
-    model_name="gemini-2.5-pro",
-    system_instruction=ROLE_SYSTEM
-)
+try:
+    model = genai.GenerativeModel(
+        model_name="gemini-2.5-pro",
+        system_instruction=ROLE_SYSTEM
+    )
 
-gen_cfg = GenerationConfig(
-    temperature=0.25,
-    max_output_tokens=32000
-)
+    gen_cfg = GenerationConfig(
+        temperature=0.25,
+        max_output_tokens=32000
+    )
 
-stream = model.generate_content(
-    content,
-    generation_config=gen_cfg,
-    stream=True,
-    request_options={"timeout": 600}    # 10 min
-)
+    stream = model.generate_content(
+        content,
+        generation_config=gen_cfg,
+        stream=True,
+        request_options={"timeout": 600}    # 10 min
+    )
 
-
-output_text, start = "", time.time()
-for chunk in stream:
-    if chunk.text:
-        print(chunk.text, end="", flush=True)
-        output_text += chunk.text
+    # Modified: Collect response text instead of streaming to stdout
+    output_text, start = "", time.time()
+    for chunk in stream:
+        if chunk.text:
+            output_text += chunk.text
+            
+except Exception as e:
+    # Handle Gemini API errors gracefully
+    error_response = {
+        "success": False,
+        "error": f"Gemini API error: {str(e)}",
+        "message": "Failed to analyze the contract. Please try again later."
+    }
+    print(json.dumps(error_response))
+    sys.exit(1)
 
 # ─────────────────────────────────────────────────────────────
-# Final Statistics *** TO BE DELETED 
+# Return JSON Response
+# Modified: Output JSON format for frontend integration
 # ─────────────────────────────────────────────────────────────
-stats = {
-    "prompt_tokens": prompt_tokens,
-    "pdf_tokens": pdf_tokens,
-    "output_tokens": count_tokens(output_text),
-    "duration_sec": round(time.time() - start, 1)
+response = {
+    "success": True,
+    "content": output_text.strip(),
+    "timestamp": int(time.time() * 1000),  # milliseconds for JS compatibility
+    "contractId": PDF_PATH,  # Include contract reference
+    "userPrompt": USER_PROMPT,  # Include original question if provided
+    "stats": {
+        "prompt_tokens": prompt_tokens,
+        "pdf_tokens": pdf_tokens,
+        "output_tokens": count_tokens(output_text),
+        "duration_sec": round(time.time() - start, 1)
+    }
 }
-print("\n\n" + json.dumps(stats))
+
+# Output JSON to stdout for the backend to capture
+print(json.dumps(response, ensure_ascii=False, indent=2))
