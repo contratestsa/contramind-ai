@@ -90,6 +90,14 @@ export const LanguageManager = {
 // Simple pass-through component to avoid import errors
 // This is just a placeholder since the app uses LanguageManager instead
 export function SimpleLanguageProvider({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    // Initialize direction on mount
+    const currentLang = LanguageManager.getLanguage();
+    document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', currentLang);
+    document.documentElement.setAttribute('data-language', currentLang);
+  }, []);
+  
   return <>{children}</>;
 }
 

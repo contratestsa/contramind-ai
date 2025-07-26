@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { SimpleLanguageProvider } from "@/components/SimpleLanguage";
 import Home from "@/pages/Home";
 import ComingSoon from "@/pages/ComingSoon";
 import Dashboard from "@/pages/Dashboard";
@@ -57,10 +58,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ThemeProvider>
-          <Router />
-          <Toaster />
-        </ThemeProvider>
+        <SimpleLanguageProvider>
+          <ThemeProvider>
+            <Router />
+            <Toaster />
+          </ThemeProvider>
+        </SimpleLanguageProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
