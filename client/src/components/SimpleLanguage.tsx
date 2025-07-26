@@ -4,11 +4,12 @@ export type Language = 'ar' | 'en';
 
 // Detect browser language on initial load
 const detectBrowserLanguage = (): Language => {
-  if (typeof window === 'undefined') return 'ar';
+  if (typeof window === 'undefined') return 'en';
   
   try {
     // Check localStorage first for user preference
     const savedLanguage = localStorage.getItem('language');
+    
     if (savedLanguage === 'ar' || savedLanguage === 'en') {
       return savedLanguage as Language;
     }
@@ -24,7 +25,7 @@ const detectBrowserLanguage = (): Language => {
     // Default to English for all other languages
     return 'en';
   } catch {
-    return 'ar';
+    return 'en';
   }
 };
 
@@ -48,15 +49,16 @@ export const useLanguage = () => {
 // Global language manager for non-React contexts
 export const LanguageManager = {
   getLanguage: (): Language => {
-    if (typeof window === 'undefined') return 'ar';
+    if (typeof window === 'undefined') return 'en';
     try {
       const savedLanguage = localStorage.getItem('language');
+      
       if (savedLanguage === 'ar' || savedLanguage === 'en') {
         return savedLanguage as Language;
       }
       return detectBrowserLanguage();
     } catch {
-      return 'ar';
+      return 'en';
     }
   },
   
@@ -64,9 +66,19 @@ export const LanguageManager = {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('language', lang);
-        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        const dir = lang === 'ar' ? 'rtl' : 'ltr';
+        
+        // Set direction on multiple levels to ensure it takes effect
+        document.documentElement.dir = dir;
+        document.documentElement.setAttribute('dir', dir);
         document.documentElement.setAttribute('lang', lang);
         document.documentElement.setAttribute('data-language', lang);
+        
+        // Also set on body as fallback
+        if (document.body) {
+          document.body.dir = dir;
+          document.body.setAttribute('dir', dir);
+        }
         
         // Force page reload for complete language switch
         setTimeout(() => {
@@ -87,18 +99,56 @@ export const LanguageManager = {
   }
 };
 
-// Simple pass-through component to avoid import errors
-// This is just a placeholder since the app uses LanguageManager instead
+// Simple language provider that bridges LanguageManager with React context
 export function SimpleLanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<Language>(LanguageManager.getLanguage());
+  
   useEffect(() => {
     // Initialize direction on mount
     const currentLang = LanguageManager.getLanguage();
-    document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+    const dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    
+    // Ensure document direction is set correctly
+    document.documentElement.dir = dir;
+    document.documentElement.setAttribute('dir', dir);
     document.documentElement.setAttribute('lang', currentLang);
     document.documentElement.setAttribute('data-language', currentLang);
+    
+    // Also set body direction as fallback
+    if (document.body) {
+      document.body.dir = dir;
+      document.body.setAttribute('dir', dir);
+    }
+    
+    // Update state to match
+    setLanguageState(currentLang);
   }, []);
   
-  return <>{children}</>;
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    LanguageManager.setLanguage(lang);
+  };
+  
+  const t = (ar: string, en: string) => {
+    return language === 'ar' ? ar : en;
+  };
+  
+  const getDir = (): 'rtl' | 'ltr' => {
+    return language === 'ar' ? 'rtl' : 'ltr';
+  };
+  
+  const value = {
+    language,
+    setLanguage,
+    t,
+    getDir
+  };
+  
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
 }
 
 // Commenting out the old SimpleLanguageProvider as it's not used anymore
