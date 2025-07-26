@@ -83,6 +83,7 @@ interface Message {
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage();
+  const isRTL = language === 'ar';
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const { theme, toggleTheme } = useTheme();
