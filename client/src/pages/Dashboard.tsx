@@ -657,14 +657,14 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className={cn("relative flex h-screen bg-[var(--bg-main)] overflow-hidden", isRTL && "flex-row-reverse")}>
+    <div className={cn("relative flex h-screen bg-[var(--bg-main)] overflow-hidden", isRTL ? "flex-row-reverse" : "flex-row")}>
       {/* Sidebar */}
       <div className={cn(
         "bg-[var(--sidebar-bg)] text-[var(--text-primary)] flex flex-col transition-all duration-300 shadow-xl",
         isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
-        showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full lg:translate-x-0" : "-translate-x-full lg:translate-x-0",
         "fixed lg:relative inset-y-0 z-40",
-        isRTL && "lg:order-2"
+        isRTL ? "right-0 lg:right-auto" : "left-0 lg:left-auto"
       )}>
         {/* Logo and Hamburger */}
         <div className="flex items-center justify-between p-3 border-b border-[var(--border-color)]">
@@ -928,8 +928,7 @@ export default function Dashboard() {
       {/* Main Content Area */}
       <div className={cn(
         "flex-1 h-screen flex flex-col transition-all duration-300",
-        showSlidingPanel && "mr-[40%]",
-        isRTL && showSlidingPanel && "mr-0 ml-[40%]"
+        showSlidingPanel && (isRTL ? "ml-[40%]" : "mr-[40%]")
       )}>
         {/* Top Header Bar */}
         <div className="flex-shrink-0 bg-[var(--header-bg)] px-4 py-3 relative z-40">
@@ -1040,10 +1039,8 @@ export default function Dashboard() {
             <div 
               className="fixed flex items-center justify-center"
               style={{ 
-                ...(isRTL 
-                  ? { right: `${sidebarWidth}px`, left: 0 }
-                  : { left: `${sidebarWidth}px`, right: 0 }
-                ),
+                left: isRTL ? 0 : `${sidebarWidth}px`,
+                right: isRTL ? `${sidebarWidth}px` : 0,
                 ...(hasStartedChat 
                   ? { bottom: '32px', height: 'auto' }
                   : { top: 0, bottom: 0 }
@@ -1128,10 +1125,8 @@ export default function Dashboard() {
             <div 
               className="fixed flex items-center justify-center"
               style={{ 
-                ...(isRTL 
-                  ? { right: `${sidebarWidth}px`, left: 0 }
-                  : { left: `${sidebarWidth}px`, right: 0 }
-                ),
+                left: isRTL ? 0 : `${sidebarWidth}px`,
+                right: isRTL ? `${sidebarWidth}px` : 0,
                 top: 0,
                 bottom: 0,
                 transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
