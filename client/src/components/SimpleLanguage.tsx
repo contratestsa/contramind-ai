@@ -66,19 +66,10 @@ export const LanguageManager = {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('language', lang);
-        const dir = lang === 'ar' ? 'rtl' : 'ltr';
         
-        // Set direction on multiple levels to ensure it takes effect
-        document.documentElement.dir = dir;
-        document.documentElement.setAttribute('dir', dir);
-        document.documentElement.setAttribute('lang', lang);
-        document.documentElement.setAttribute('data-language', lang);
-        
-        // Also set on body as fallback
-        if (document.body) {
-          document.body.dir = dir;
-          document.body.setAttribute('dir', dir);
-        }
+        // Single source of truth for direction - only set on documentElement
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        document.documentElement.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
         
         // Force page reload for complete language switch
         setTimeout(() => {
@@ -106,19 +97,10 @@ export function SimpleLanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Initialize direction on mount
     const currentLang = LanguageManager.getLanguage();
-    const dir = currentLang === 'ar' ? 'rtl' : 'ltr';
     
-    // Ensure document direction is set correctly
-    document.documentElement.dir = dir;
-    document.documentElement.setAttribute('dir', dir);
-    document.documentElement.setAttribute('lang', currentLang);
-    document.documentElement.setAttribute('data-language', currentLang);
-    
-    // Also set body direction as fallback
-    if (document.body) {
-      document.body.dir = dir;
-      document.body.setAttribute('dir', dir);
-    }
+    // Single source of truth for direction - only set on documentElement
+    document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', currentLang === 'ar' ? 'ar' : 'en');
     
     // Update state to match
     setLanguageState(currentLang);

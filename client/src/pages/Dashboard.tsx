@@ -109,7 +109,6 @@ export default function Dashboard() {
   const [activePromptTab, setActivePromptTab] = useState<'suggested' | 'myPrompts'>('suggested');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const isRTL = language === 'ar';
   
   // Dynamic sidebar width for layout calculations
   const sidebarWidth = isSidebarCollapsed ? 60 : 260;
@@ -657,14 +656,13 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className={cn("relative flex h-screen bg-[var(--bg-main)] overflow-hidden", isRTL ? "flex-row-reverse" : "flex-row")}>
+    <div className="relative flex h-screen bg-[var(--bg-main)] overflow-hidden">
       {/* Sidebar */}
       <div className={cn(
-        "bg-[var(--sidebar-bg)] text-[var(--text-primary)] flex flex-col transition-all duration-300 shadow-xl",
+        "sidebar bg-[var(--sidebar-bg)] text-[var(--text-primary)] flex flex-col transition-all duration-300 shadow-xl",
         isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
-        showMobileSidebar ? "translate-x-0" : isRTL ? "translate-x-full lg:translate-x-0" : "-translate-x-full lg:translate-x-0",
-        "fixed lg:relative inset-y-0 z-40",
-        isRTL ? "right-0 lg:right-auto" : "left-0 lg:left-auto"
+        showMobileSidebar ? "translate-x-0" : "sidebar-mobile-hidden lg:translate-x-0",
+        "fixed lg:relative inset-y-0 z-40"
       )}>
         {/* Logo and Hamburger */}
         <div className="flex items-center justify-between p-3 border-b border-[var(--border-color)]">
@@ -724,7 +722,7 @@ export default function Dashboard() {
         {!isSidebarCollapsed && (
           <div className="p-3 border-b border-[var(--border-color)]">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />
+              <Search className="absolute inset-inline-start-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />
               <input
                 type="text"
                 value={contractSearchQuery}
@@ -913,8 +911,7 @@ export default function Dashboard() {
       <button
         onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[var(--sidebar-bg)] text-[var(--text-primary)] rounded-md shadow-lg",
-          isRTL ? "right-4" : "left-4",
+          "lg:hidden fixed top-4 z-50 p-2 bg-[var(--sidebar-bg)] text-[var(--text-primary)] rounded-md shadow-lg mobile-toggle",
           showMobileSidebar && "hidden"
         )}
       >
@@ -927,16 +924,17 @@ export default function Dashboard() {
 
       {/* Main Content Area */}
       <div className={cn(
-        "flex-1 h-screen flex flex-col transition-all duration-300",
-        showSlidingPanel && (isRTL ? "ml-[40%]" : "mr-[40%]")
+        "flex-1 h-screen flex flex-col transition-all duration-300 content-with-sidebar",
+        showSlidingPanel && "sliding-panel-open"
       )}>
         {/* Top Header Bar */}
         <div className="flex-shrink-0 bg-[var(--header-bg)] px-4 py-3 relative z-40">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             
-            {/* Theme Toggle */}
-            <button
+            <div className="flex items-center gap-2 header-actions">
+              {/* Theme Toggle */}
+              <button
               onClick={toggleTheme}
               aria-label="Toggle light / dark mode"
               className="mr-4 p-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-[var(--accent)] hover:text-[var(--accent-hover)] relative z-50 cursor-pointer"
@@ -960,9 +958,10 @@ export default function Dashboard() {
               {language === 'ar' ? 'EN' : 'AR'}
             </button>
             
-            {/* Profile Dropdown */}
-            <div className="relative z-50">
-              <ProfileDropdown user={user} />
+              {/* Profile Dropdown */}
+              <div className="relative z-50">
+                <ProfileDropdown user={user} />
+              </div>
             </div>
           </div>
         </div>
@@ -1037,10 +1036,9 @@ export default function Dashboard() {
 
             {/* Input Area - Centered when no messages, Fixed at bottom when messages exist */}
             <div 
-              className="fixed flex items-center justify-center"
+              className="fixed flex items-center justify-center chat-input-area"
               style={{ 
-                left: isRTL ? 0 : `${sidebarWidth}px`,
-                right: isRTL ? `${sidebarWidth}px` : 0,
+                '--sidebar-width': `${sidebarWidth}px`,
                 ...(hasStartedChat 
                   ? { bottom: '32px', height: 'auto' }
                   : { top: 0, bottom: 0 }
@@ -1080,15 +1078,12 @@ export default function Dashboard() {
                     disabled={conversationState !== 'ready'}
                     className={cn(
                       "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
-                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24",
+                      "ps-4 pe-24",
                       conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
                     )}
                     maxLength={500}
                   />
-                  <div className={cn(
-                    "absolute top-1/2 -translate-y-1/2 flex items-center gap-1",
-                    isRTL ? "left-2" : "right-2"
-                  )}>
+                  <div className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 inset-inline-end-2">
                     <button
                       onClick={handleSendMessage}
                       disabled={!inputValue.trim() || userTokens < 5}
@@ -1123,10 +1118,9 @@ export default function Dashboard() {
 
             {/* Centered Input Bar Container - Only when no chat started */}
             <div 
-              className="fixed flex items-center justify-center"
+              className="fixed flex items-center justify-center chat-input-area"
               style={{ 
-                left: isRTL ? 0 : `${sidebarWidth}px`,
-                right: isRTL ? `${sidebarWidth}px` : 0,
+                '--sidebar-width': `${sidebarWidth}px`,
                 top: 0,
                 bottom: 0,
                 transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
@@ -1158,7 +1152,7 @@ export default function Dashboard() {
                     disabled={conversationState !== 'ready'}
                     className={cn(
                       "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
-                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24",
+                      "ps-4 pe-24",
                       conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
                     )}
                     onKeyDown={(e) => {
@@ -1168,10 +1162,7 @@ export default function Dashboard() {
                       }
                     }}
                   />
-                  <div className={cn(
-                    "absolute top-1/2 -translate-y-1/2 flex items-center gap-1",
-                    isRTL ? "left-2" : "right-2"
-                  )}>
+                  <div className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 inset-inline-end-2">
                     <button
                       className="p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
                       title={t('إرفاق ملف', 'Attach file')}
@@ -1328,14 +1319,11 @@ export default function Dashboard() {
       {/* Sliding Panel */}
       <div 
         className={cn(
-          "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out",
-          !isRTL ? "right-0" : "left-0"
+          "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out sliding-panel",
+          showSlidingPanel ? "translate-x-0" : "translate-x-full"
         )}
         style={{ 
-          zIndex: 9999,
-          transform: showSlidingPanel 
-            ? 'translateX(0)' 
-            : (!isRTL ? 'translateX(100%)' : 'translateX(-100%)')
+          zIndex: 9999
         }}>
         <div className="h-full flex flex-col">
           {/* Panel Header */}

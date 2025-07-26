@@ -25,6 +25,7 @@ import TermsPolicies from "@/pages/help/TermsPolicies";
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
 import "@/styles/theme.css";
+import "@/styles/rtl-support.css";
 
 function Router() {
   return (
