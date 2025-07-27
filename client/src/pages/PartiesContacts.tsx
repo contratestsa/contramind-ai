@@ -33,7 +33,7 @@ export default function PartiesContacts() {
           id: Object.keys(partyMap).length + 1,
           name: contract.partyName,
           nameAr: contract.partyName, // Same as English for now
-          type: contract.type === 'service' ? 'vendor' : contract.type === 'sales' ? 'customer' : 'partner',
+          type: contract.type === 'service' ? 'vendor' : contract.type === 'sale' ? 'customer' : 'partner',
           country: 'Saudi Arabia', // Default country
           fein: `${Math.floor(Math.random() * 90 + 10)}-${Math.floor(Math.random() * 9000000 + 1000000)}`,
           status: 'active',
@@ -94,39 +94,6 @@ export default function PartiesContacts() {
     
     return matchesSearch && matchesFilter;
   });
-
-  // Add loading state
-  if (isLoading) {
-    return (
-      <div className="flex-1 overflow-y-auto bg-gray-50">
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B7DEE8] mx-auto"></div>
-            <p className="mt-4 text-gray-600">{t('جاري تحميل الأطراف...', 'Loading parties...')}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Add empty state
-  if (counterparties.length === 0) {
-    return (
-      <div className="flex-1 overflow-y-auto bg-gray-50">
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
-          <div className={cn("mb-4", language === 'ar' && "text-right")}>
-            <h1 className="text-2xl font-bold text-[#0C2836] mb-2">
-              {t('الأطراف', 'Parties')}
-            </h1>
-          </div>
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <Building className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">{t('لا توجد أطراف بعد. قم برفع عقود لعرض الأطراف.', 'No parties yet. Upload contracts to see parties.')}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex-1 overflow-y-auto bg-gray-50">
@@ -203,13 +170,6 @@ export default function PartiesContacts() {
 
           {/* Counterparties Table */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            {filteredCounterparties.length === 0 ? (
-              <div className="text-center py-12">
-                <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">{t('لم يتم العثور على أطراف مطابقة', 'No matching parties found')}</p>
-                <p className="text-sm text-gray-500 mt-2">{t('حاول تغيير معايير البحث', 'Try changing your search criteria')}</p>
-              </div>
-            ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
@@ -371,7 +331,6 @@ export default function PartiesContacts() {
                 </tbody>
               </table>
             </div>
-            )}
           </div>
 
           {/* Bottom Stats */}
