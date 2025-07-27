@@ -1,3 +1,4 @@
+google-generativeai==0.6.0
 PyPDF2==3.0.1
 pypdf2
 python-docx
@@ -5,8 +6,3 @@ pdf2image
 pdfplumber
 pillow
 pytesseract
-google-generativeai==0.8.0
-grpcio==1.65.5
-grpcio-status==1.65.5
-protobuf==5.27.3
-requests

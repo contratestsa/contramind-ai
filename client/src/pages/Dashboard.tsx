@@ -83,7 +83,6 @@ interface Message {
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage();
-  const isRTL = language === 'ar';
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const { theme, toggleTheme } = useTheme();
@@ -110,6 +109,7 @@ export default function Dashboard() {
   const [activePromptTab, setActivePromptTab] = useState<'suggested' | 'myPrompts'>('suggested');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isRTL = language === 'ar';
   
   // Dynamic sidebar width for layout calculations
   const sidebarWidth = isSidebarCollapsed ? 60 : 260;
@@ -338,78 +338,19 @@ export default function Dashboard() {
       
       setMessages(initialMessages);
       
-      // ========================================
-      // GEMINI ANALYSIS: Call Gemini API for initial contract analysis
-      // Instead of mock analysis, we now use real AI analysis
-      // ========================================
-      try {
-        // Show loading state
-        setMessages(prev => [...prev, {
-          id: 'loading',
+      // Simulate analysis completion and update status in database
+      setTimeout(async () => {
+        const analysisMessage: Message = {
+          id: '4',
           type: 'system',
           content: t(
-            'جاري التحليل المتقدم للعقد باستخدام الذكاء الاصطناعي...',
-            'Performing advanced AI analysis of the contract...'
+            'تم اكتمال التحليل! وجدت 3 مخاطر عالية و5 متوسطة. يمكنك طرح أي أسئلة حول العقد.',
+            'Analysis complete! Found 3 high risks and 5 medium risks. You can ask any questions about the contract.'
           ),
           timestamp: new Date()
-        }]);
-
-        // Call Gemini analyze endpoint
-        const analysisResponse = await fetch('/api/contracts/gemini-analyze', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            contractId: contract.id,
-            analysisType: partyType // 'buyer', 'vendor', or 'general'
-          })
-        });
-
-        const analysisData = await analysisResponse.json();
-
-        // Remove loading message
-        setMessages(prev => prev.filter(msg => msg.id !== 'loading'));
-
-        if (analysisData.success) {
-          // Add Gemini's analysis as a message
-          const analysisMessage: Message = {
-            id: Date.now().toString(),
-            type: 'system',
-            content: analysisData.content,
-            timestamp: new Date()
-          };
-          setMessages(prev => [...prev, analysisMessage]);
-
-          // Show token usage if available
-          if (analysisData.stats) {
-            console.log('Gemini token usage:', analysisData.stats);
-          }
-        } else {
-          // Handle error cases
-          let errorMessage = t(
-            'عذراً، حدث خطأ في تحليل العقد.',
-            'Sorry, an error occurred while analyzing the contract.'
-          );
-
-          // Provide specific error messages
-          if (analysisData.error?.includes('GEMINI_KEY')) {
-            errorMessage = t(
-              'مفتاح Gemini API غير مُعد. يرجى الاتصال بالمسؤول.',
-              'Gemini API key is not configured. Please contact the administrator.'
-            );
-          }
-
-          const errorMsg: Message = {
-            id: Date.now().toString(),
-            type: 'system',
-            content: errorMessage,
-            timestamp: new Date()
-          };
-          setMessages(prev => [...prev, errorMsg]);
-        }
-
+        };
+        setMessages(prev => [...prev, analysisMessage]);
+        
         // Update contract status in database
         await fetch(`/api/contracts/${contract.id}`, {
           method: 'PATCH',
@@ -429,25 +370,7 @@ export default function Dashboard() {
         // Refetch to update analytics and contracts
         queryClient.invalidateQueries({ queryKey: ['/api/contracts/recent'] });
         queryClient.invalidateQueries({ queryKey: ['/api/analytics'] });
-
-      } catch (error) {
-        console.error('Error calling Gemini analysis:', error);
-        
-        // Remove loading message
-        setMessages(prev => prev.filter(msg => msg.id !== 'loading'));
-        
-        // Show error message
-        const errorMessage: Message = {
-          id: Date.now().toString(),
-          type: 'system',
-          content: t(
-            'عذراً، فشل الاتصال بخدمة التحليل. يرجى المحاولة مرة أخرى.',
-            'Sorry, failed to connect to the analysis service. Please try again.'
-          ),
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      }
+      }, 3000);
       
       // Log successful auto-open
       console.log('AUTO-OPEN CHAT FIXED');
@@ -462,15 +385,11 @@ export default function Dashboard() {
     }
   };
 
-  // ========================================
-  // GEMINI CHAT: Handle user messages with real AI responses
-  // This function now calls the Gemini API to answer user questions
-  // ========================================
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (!inputValue.trim() || userTokens < 5) return;
     
     // Guard: Check if conversation is ready
-    if (conversationState !== 'ready' || !selectedContract) {
+    if (conversationState !== 'ready') {
       toast({
         title: t('يرجى رفع عقد أولاً', 'Please upload a contract first'),
         variant: 'destructive'
@@ -478,7 +397,6 @@ export default function Dashboard() {
       return;
     }
 
-    // Add user message to chat
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
@@ -487,96 +405,22 @@ export default function Dashboard() {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    const userQuestion = inputValue; // Store the question before clearing
     setInputValue('');
     setUserTokens(prev => prev - 5);
 
-    // Add loading message
-    const loadingMessage: Message = {
-      id: 'ai-loading',
-      type: 'system',
-      content: t(
-        'جاري التفكير في إجابتك...',
-        'Thinking about your answer...'
-      ),
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, loadingMessage]);
-
-    try {
-      // Call Gemini API with the user's question
-      const response = await fetch('/api/contracts/gemini-analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          contractId: selectedContract.id,
-          userPrompt: userQuestion
-        })
-      });
-
-      const data = await response.json();
-
-      // Remove loading message
-      setMessages(prev => prev.filter(msg => msg.id !== 'ai-loading'));
-
-      if (data.success) {
-        // Add AI response
-        const aiResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          type: 'system',
-          content: data.content,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, aiResponse]);
-
-        // Log token usage if available
-        if (data.stats) {
-          console.log('Token usage for this response:', data.stats);
-        }
-      } else {
-        // Handle error
-        let errorContent = t(
-          'عذراً، لم أتمكن من معالجة سؤالك.',
-          'Sorry, I couldn\'t process your question.'
-        );
-
-        // Provide specific error messages
-        if (data.error?.includes('GEMINI_KEY')) {
-          errorContent = t(
-            'خدمة الذكاء الاصطناعي غير مُعدة. يرجى الاتصال بالمسؤول.',
-            'AI service is not configured. Please contact the administrator.'
-          );
-        }
-
-        const errorResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          type: 'system',
-          content: errorContent,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, errorResponse]);
-      }
-    } catch (error) {
-      console.error('Error sending message to Gemini:', error);
-
-      // Remove loading message
-      setMessages(prev => prev.filter(msg => msg.id !== 'ai-loading'));
-
-      // Show error message
-      const errorResponse: Message = {
+    // Simulate AI response
+    setTimeout(() => {
+      const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: 'system',
         content: t(
-          'عذراً، حدث خطأ في الاتصال بخدمة الذكاء الاصطناعي.',
-          'Sorry, an error occurred connecting to the AI service.'
+          'شكراً على سؤالك. بناءً على تحليلي للعقد، إليك ما وجدته...',
+          'Thank you for your question. Based on my analysis of the contract, here\'s what I found...'
         ),
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, errorResponse]);
-    }
+      setMessages(prev => [...prev, aiResponse]);
+    }, 1000);
   };
 
   const copyMessage = (content: string) => {
@@ -657,13 +501,14 @@ export default function Dashboard() {
   const user = userData?.user;
 
   return (
-    <div className="relative flex h-screen bg-[var(--bg-main)] overflow-hidden">
+    <div className={cn("relative flex h-screen bg-[var(--bg-main)] overflow-hidden", isRTL && "flex-row-reverse")}>
       {/* Sidebar */}
       <div className={cn(
-        "sidebar bg-[var(--sidebar-bg)] text-[var(--text-primary)] flex flex-col transition-all duration-300 shadow-xl",
+        "bg-[var(--sidebar-bg)] text-[var(--text-primary)] flex flex-col transition-all duration-300 shadow-xl",
         isSidebarCollapsed ? "w-[60px]" : "w-[260px]",
-        showMobileSidebar ? "translate-x-0" : "sidebar-mobile-hidden lg:translate-x-0",
-        "fixed lg:relative inset-y-0 z-40"
+        showMobileSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        "fixed lg:relative inset-y-0 z-40",
+        isRTL && "lg:order-2"
       )}>
         {/* Logo and Hamburger */}
         <div className="flex items-center justify-between p-3 border-b border-[var(--border-color)]">
@@ -723,7 +568,7 @@ export default function Dashboard() {
         {!isSidebarCollapsed && (
           <div className="p-3 border-b border-[var(--border-color)]">
             <div className="relative">
-              <Search className="absolute inset-inline-start-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--text-secondary)]" />
               <input
                 type="text"
                 value={contractSearchQuery}
@@ -912,7 +757,8 @@ export default function Dashboard() {
       <button
         onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         className={cn(
-          "lg:hidden fixed top-4 z-50 p-2 bg-[var(--sidebar-bg)] text-[var(--text-primary)] rounded-md shadow-lg mobile-toggle",
+          "lg:hidden fixed top-4 z-50 p-2 bg-[var(--sidebar-bg)] text-[var(--text-primary)] rounded-md shadow-lg",
+          isRTL ? "right-4" : "left-4",
           showMobileSidebar && "hidden"
         )}
       >
@@ -925,17 +771,17 @@ export default function Dashboard() {
 
       {/* Main Content Area */}
       <div className={cn(
-        "flex-1 h-screen flex flex-col transition-all duration-300 content-with-sidebar",
-        showSlidingPanel && "sliding-panel-open"
+        "flex-1 h-screen flex flex-col transition-all duration-300",
+        showSlidingPanel && "mr-[40%]",
+        isRTL && showSlidingPanel && "mr-0 ml-[40%]"
       )}>
         {/* Top Header Bar */}
         <div className="flex-shrink-0 bg-[var(--header-bg)] px-4 py-3 relative z-40">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             
-            <div className="flex items-center gap-2 header-actions">
-              {/* Theme Toggle */}
-              <button
+            {/* Theme Toggle */}
+            <button
               onClick={toggleTheme}
               aria-label="Toggle light / dark mode"
               className="mr-4 p-1.5 bg-[var(--input-bg)] hover:bg-[var(--hover-bg)] rounded-md transition-all duration-200 text-[var(--accent)] hover:text-[var(--accent-hover)] relative z-50 cursor-pointer"
@@ -959,10 +805,9 @@ export default function Dashboard() {
               {language === 'ar' ? 'EN' : 'AR'}
             </button>
             
-              {/* Profile Dropdown */}
-              <div className="relative z-50">
-                <ProfileDropdown user={user} />
-              </div>
+            {/* Profile Dropdown */}
+            <div className="relative z-50">
+              <ProfileDropdown user={user} />
             </div>
           </div>
         </div>
@@ -1037,9 +882,12 @@ export default function Dashboard() {
 
             {/* Input Area - Centered when no messages, Fixed at bottom when messages exist */}
             <div 
-              className="fixed flex items-center justify-center chat-input-area"
+              className="fixed flex items-center justify-center"
               style={{ 
-                '--sidebar-width': `${sidebarWidth}px`,
+                ...(isRTL 
+                  ? { right: `${sidebarWidth}px`, left: 0 }
+                  : { left: `${sidebarWidth}px`, right: 0 }
+                ),
                 ...(hasStartedChat 
                   ? { bottom: '32px', height: 'auto' }
                   : { top: 0, bottom: 0 }
@@ -1079,12 +927,15 @@ export default function Dashboard() {
                     disabled={conversationState !== 'ready'}
                     className={cn(
                       "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
-                      "ps-4 pe-24",
+                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24",
                       conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
                     )}
                     maxLength={500}
                   />
-                  <div className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 inset-inline-end-2">
+                  <div className={cn(
+                    "absolute top-1/2 -translate-y-1/2 flex items-center gap-1",
+                    isRTL ? "left-2" : "right-2"
+                  )}>
                     <button
                       onClick={handleSendMessage}
                       disabled={!inputValue.trim() || userTokens < 5}
@@ -1119,9 +970,12 @@ export default function Dashboard() {
 
             {/* Centered Input Bar Container - Only when no chat started */}
             <div 
-              className="fixed flex items-center justify-center chat-input-area"
+              className="fixed flex items-center justify-center"
               style={{ 
-                '--sidebar-width': `${sidebarWidth}px`,
+                ...(isRTL 
+                  ? { right: `${sidebarWidth}px`, left: 0 }
+                  : { left: `${sidebarWidth}px`, right: 0 }
+                ),
                 top: 0,
                 bottom: 0,
                 transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
@@ -1153,7 +1007,7 @@ export default function Dashboard() {
                     disabled={conversationState !== 'ready'}
                     className={cn(
                       "w-full bg-[var(--input-field-bg)] border border-[var(--border-color)] rounded-lg py-2.5 text-[var(--input-text)] placeholder-[var(--input-placeholder)] focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-50",
-                      "ps-4 pe-24",
+                      isRTL ? "pr-4 pl-24" : "pl-4 pr-24",
                       conversationState !== 'ready' && "opacity-50 cursor-not-allowed"
                     )}
                     onKeyDown={(e) => {
@@ -1163,7 +1017,10 @@ export default function Dashboard() {
                       }
                     }}
                   />
-                  <div className="absolute top-1/2 -translate-y-1/2 flex items-center gap-1 inset-inline-end-2">
+                  <div className={cn(
+                    "absolute top-1/2 -translate-y-1/2 flex items-center gap-1",
+                    isRTL ? "left-2" : "right-2"
+                  )}>
                     <button
                       className="p-1.5 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
                       title={t('إرفاق ملف', 'Attach file')}
@@ -1229,13 +1086,10 @@ export default function Dashboard() {
                       <>
                         <button
                           onClick={() => {
-                            // Set prompt text and send message automatically
-                            const promptText = t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks');
-                            setInputValue(promptText);
-                            // Small delay to ensure state is updated before sending
-                            setTimeout(() => {
-                              handleSendMessage();
-                            }, 100);
+                            setInputValue(t('قم بتحليل هذا العقد وحدد المخاطر الرئيسية', 'Analyze this contract and identify key risks'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -1247,11 +1101,10 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            const promptText = t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract');
-                            setInputValue(promptText);
-                            setTimeout(() => {
-                              handleSendMessage();
-                            }, 100);
+                            setInputValue(t('لخص البنود الرئيسية في هذا العقد', 'Summarize the key clauses in this contract'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -1263,11 +1116,10 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            const promptText = t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?');
-                            setInputValue(promptText);
-                            setTimeout(() => {
-                              handleSendMessage();
-                            }, 100);
+                            setInputValue(t('ما هي شروط الدفع في هذا العقد؟', 'What are the payment terms in this contract?'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -1279,11 +1131,10 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {
-                            const promptText = t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses');
-                            setInputValue(promptText);
-                            setTimeout(() => {
-                              handleSendMessage();
-                            }, 100);
+                            setInputValue(t('راجع بنود الإنهاء والإلغاء', 'Review termination and cancellation clauses'));
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
                           }}
                           className={cn(
                             "p-3 bg-[rgba(183,222,232,0.05)] border border-[rgba(183,222,232,0.2)] rounded-lg hover:bg-[rgba(183,222,232,0.1)] hover:border-[#B7DEE8] transition-all duration-300",
@@ -1320,11 +1171,14 @@ export default function Dashboard() {
       {/* Sliding Panel */}
       <div 
         className={cn(
-          "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out sliding-panel",
-          showSlidingPanel ? "translate-x-0" : "translate-x-full"
+          "fixed inset-y-0 w-[40%] bg-white shadow-2xl transition-transform duration-300 ease-in-out",
+          !isRTL ? "right-0" : "left-0"
         )}
         style={{ 
-          zIndex: 9999
+          zIndex: 9999,
+          transform: showSlidingPanel 
+            ? 'translateX(0)' 
+            : (!isRTL ? 'translateX(100%)' : 'translateX(-100%)')
         }}>
         <div className="h-full flex flex-col">
           {/* Panel Header */}

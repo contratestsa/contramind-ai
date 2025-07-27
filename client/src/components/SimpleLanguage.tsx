@@ -1,15 +1,15 @@
+import React from 'react';
 import { ReactNode, useEffect, useState, createContext, useContext } from 'react';
 
 export type Language = 'ar' | 'en';
 
 // Detect browser language on initial load
 const detectBrowserLanguage = (): Language => {
-  if (typeof window === 'undefined') return 'en';
+  if (typeof window === 'undefined') return 'ar';
   
   try {
     // Check localStorage first for user preference
     const savedLanguage = localStorage.getItem('language');
-    
     if (savedLanguage === 'ar' || savedLanguage === 'en') {
       return savedLanguage as Language;
     }
@@ -25,7 +25,7 @@ const detectBrowserLanguage = (): Language => {
     // Default to English for all other languages
     return 'en';
   } catch {
-    return 'en';
+    return 'ar';
   }
 };
 
@@ -49,16 +49,15 @@ export const useLanguage = () => {
 // Global language manager for non-React contexts
 export const LanguageManager = {
   getLanguage: (): Language => {
-    if (typeof window === 'undefined') return 'en';
+    if (typeof window === 'undefined') return 'ar';
     try {
       const savedLanguage = localStorage.getItem('language');
-      
       if (savedLanguage === 'ar' || savedLanguage === 'en') {
         return savedLanguage as Language;
       }
       return detectBrowserLanguage();
     } catch {
-      return 'en';
+      return 'ar';
     }
   },
   
@@ -66,10 +65,9 @@ export const LanguageManager = {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('language', lang);
-        
-        // Single source of truth for direction - only set on documentElement
         document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        document.documentElement.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
+        document.documentElement.setAttribute('lang', lang);
+        document.documentElement.setAttribute('data-language', lang);
         
         // Force page reload for complete language switch
         setTimeout(() => {
@@ -90,52 +88,6 @@ export const LanguageManager = {
   }
 };
 
-// Simple language provider that bridges LanguageManager with React context
-export function SimpleLanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(LanguageManager.getLanguage());
-  
-  useEffect(() => {
-    // Initialize direction on mount
-    const currentLang = LanguageManager.getLanguage();
-    
-    // Single source of truth for direction - only set on documentElement
-    document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
-    document.documentElement.setAttribute('lang', currentLang === 'ar' ? 'ar' : 'en');
-    
-    // Update state to match
-    setLanguageState(currentLang);
-  }, []);
-  
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    LanguageManager.setLanguage(lang);
-  };
-  
-  const t = (ar: string, en: string) => {
-    return language === 'ar' ? ar : en;
-  };
-  
-  const getDir = (): 'rtl' | 'ltr' => {
-    return language === 'ar' ? 'rtl' : 'ltr';
-  };
-  
-  const value = {
-    language,
-    setLanguage,
-    t,
-    getDir
-  };
-  
-  return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
-  );
-}
-
-// Commenting out the old SimpleLanguageProvider as it's not used anymore
-// The app uses LanguageManager instead
-/*
 interface SimpleLanguageProviderProps {
   children: ReactNode;
 }
@@ -185,4 +137,3 @@ export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps
     </LanguageContext.Provider>
   );
 }
-*/

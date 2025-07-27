@@ -4,40 +4,7 @@
 A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
 
 ## Recent Changes
-- **July 23, 2025** (Latest):
-  - **Enhanced Gemini API Configuration**: Updated to use expert-level contract analysis prompts
-    - Added ROLE_SYSTEM prompt defining the AI as expert legal contract analysis assistant
-    - Implemented comprehensive PROMPT_LONG with 4-section analysis structure
-    - Reduced temperature from 0.7 to 0.25 for more focused, consistent responses
-    - Configured Gemini 2.5 Pro as primary model with automatic fallback chain: 2.5 Pro → 1.5 Pro → 1.5 Flash
-    - Smart timeout handling: 10 seconds for 2.5 Pro, 30 seconds for other models
-    - Automatic fallback on 429 (rate limit), 404 (not found), or 503 (unavailable) status codes
-    - Contract analysis now provides structured responses with: identification, critical clauses, risk assessment, and practical insights
-    - Increased token limits to 4096 for more comprehensive analysis
-    - Successfully tested with Services Agreement producing professional-grade analysis
-- **July 23, 2025** (Earlier):
-  - **Fixed React Hooks Error**: Resolved "null is not an object (evaluating 'dispatcher.useState')" error
-    - Removed conflicting SimpleLanguageProvider from App.tsx that was causing duplicate language management systems
-    - Created simple pass-through SimpleLanguageProvider component to satisfy imports
-    - Application uses LanguageManager (non-React object) throughout, not React context
-    - Removed explicit React import from SimpleLanguage.tsx per Vite's automatic JSX handling
-    - Web application now loads properly in Preview Tab without hooks errors
-  - **Fixed Python Dependencies and Completed Gemini Integration**: Resolved grpc import issues with scalable solution
-    - Created simplified `analyze_contract.py` using HTTP requests instead of problematic google-generativeai package
-    - Avoids Python 3.11/3.12 compatibility issues while maintaining full Gemini API functionality
-    - All integration tests passing: environment checks, direct API calls, multiple analysis types
-    - Successfully extracts and analyzes: payment terms, parties, risks, contract duration
-    - Proper JSON response formatting for frontend consumption
-  - **Integrated Gemini AI for Contract Analysis**: Added real-time AI-powered contract analysis
-    - Created new `/api/contracts/gemini-analyze` endpoint that calls analyze_contract.py Python script
-    - Endpoint accepts contractId, userPrompt, and analysisType parameters
-    - Integrated Gemini analysis into party selection flow - initial AI analysis runs when party is selected
-    - Updated handleSendMessage to call Gemini API for user questions instead of mock responses
-    - Modified all prompt buttons (Risk Analysis, Contract Summary, Payment Terms, Termination Clauses) to auto-send messages
-    - Added comprehensive error handling for missing API keys and Python script failures
-    - Chat messages are saved to database for history tracking with token usage stats
-    - GEMINI_KEY environment variable confirmed to exist and be properly configured
-- **July 22, 2025** (Earlier):
+- **July 22, 2025** (Latest):
   - **Fixed New Contract Chat Button**: Removed automatic upload modal opening
     - "New Contract Chat" button now only shows welcome screen with chatbar and prompts
     - Removed `setIsUploadModalOpen(true)` from button click handler
