@@ -1,3 +1,9 @@
+/**
+ * DashboardAnalytics Component
+ * Displays real-time contract analytics including risk distribution,
+ * contract types, and performance metrics with interactive visualizations
+ */
+
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -14,7 +20,10 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { ColumnChart } from './ColumnChart';
 
-// Custom tooltip for charts
+/**
+ * Custom tooltip component for chart hover interactions
+ * Displays detailed information in a styled popup
+ */
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -29,7 +38,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-// Donut chart component
+/**
+ * DonutChart Component
+ * Renders a donut chart with legend for visualizing proportional data
+ * @param data - Array of data points with name, value, and percentage
+ * @param colors - Array of color values for chart segments
+ * @param centerText - Text to display in the center of the donut
+ */
 const DonutChart = ({ data, colors, centerText }: { 
   data: any[], 
   colors: string[], 

@@ -9,25 +9,35 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Configure PDF.js worker for Node.js - use fake worker path
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/legacy/build/pdf.worker.mjs';
 
+/**
+ * Extracted contract data structure containing all analyzed information
+ */
 interface ExtractedData {
-  rawText: string;
-  parties: Array<{ name: string; role: string; company?: string }>;
-  contractType: string;
-  effectiveDate: string | null;
-  termDuration: string | null;
-  riskPhrases: string[];
-  riskLevel: 'low' | 'medium' | 'high';
-  paymentDetails: {
-    amount?: string;
-    currency?: string;
-    terms?: string;
-    schedule?: string;
+  rawText: string;                                              // Full extracted text from the contract
+  parties: Array<{ name: string; role: string; company?: string }>; // Identified parties with roles
+  contractType: string;                                         // Type of contract (service, NDA, etc.)
+  effectiveDate: string | null;                                 // Contract start date if found
+  termDuration: string | null;                                  // Contract duration or end date
+  riskPhrases: string[];                                        // Phrases that indicate potential risks
+  riskLevel: 'low' | 'medium' | 'high';                       // Calculated risk assessment
+  paymentDetails: {                                             // Financial terms and conditions
+    amount?: string;                                            // Payment amount if specified
+    currency?: string;                                          // Currency type (USD, EUR, etc.)
+    terms?: string;                                             // Payment terms (Net 30, etc.)
+    schedule?: string;                                          // Payment schedule details
   };
 }
 
+/**
+ * JavaScript-based contract extraction and analysis service
+ * Processes PDF and DOCX files to extract structured contract data
+ */
 export class ContractExtractorJS {
   /**
-   * Extract text from PDF using pdf.js
+   * Extract text content from PDF files using pdf.js library
+   * @param filePath - Path to the PDF file
+   * @returns Extracted text content
+   * @throws Error if PDF extraction fails
    */
   private async extractPDFText(filePath: string): Promise<string> {
     try {
@@ -73,12 +83,14 @@ export class ContractExtractorJS {
   }
 
   /**
-   * Extract parties from contract text using RegEx and keyword matching
+   * Extract party names and roles from contract text using pattern matching
+   * @param text - Full contract text
+   * @returns Array of identified parties with roles and company types
    */
   private extractParties(text: string): Array<{ name: string; role: string; company?: string }> {
     const parties: Array<{ name: string; role: string; company?: string }> = [];
     
-    // Common party patterns
+    // Define regex patterns for common party identification formats
     const partyPatterns = [
       // "between X and Y" pattern
       /between\s+([A-Z][^,\n]+?)(?:\s*\(.*?\))?\s+(?:and|&)\s+([A-Z][^,\n]+?)(?:\s*\(.*?\))?/gi,

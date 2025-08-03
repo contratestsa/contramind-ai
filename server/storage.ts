@@ -1,3 +1,9 @@
+/**
+ * Storage layer for ContraMind database operations
+ * Implements a clean interface for all database interactions
+ * Uses Drizzle ORM for type-safe queries
+ */
+
 import { 
   users, 
   waitlistEntries, 
@@ -24,6 +30,10 @@ import {
 import { db } from "./db";
 import { eq, and, desc, asc, or, like, sql, inArray } from "drizzle-orm";
 
+/**
+ * Storage interface defining all database operations
+ * Ensures consistent data access patterns across the application
+ */
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
@@ -69,7 +79,17 @@ export interface IStorage {
   getAllContractDetails(userId: number): Promise<ContractDetails[]>;
 }
 
+/**
+ * DatabaseStorage Class
+ * Concrete implementation of IStorage interface using PostgreSQL
+ * Handles all database operations with type-safe queries via Drizzle ORM
+ */
 export class DatabaseStorage implements IStorage {
+  /**
+   * Retrieve a user by their ID
+   * @param id - User's unique identifier
+   * @returns User object or undefined if not found
+   */
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
