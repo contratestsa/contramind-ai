@@ -1,0 +1,3097 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ContraMind Complete Documentation</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">ContraMind Complete Documentation</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#contramind.ai---legal-tech-platform"
+id="toc-contramind.ai---legal-tech-platform">ContraMind.ai - Legal Tech
+Platform</a>
+<ul>
+<li><a href="#overview" id="toc-overview">📋 Overview</a></li>
+<li><a href="#key-features" id="toc-key-features">✨ Key
+Features</a></li>
+<li><a href="#technology-stack" id="toc-technology-stack">🛠️ Technology
+Stack</a>
+<ul>
+<li><a href="#frontend" id="toc-frontend">Frontend</a></li>
+<li><a href="#backend" id="toc-backend">Backend</a></li>
+<li><a href="#document-processing" id="toc-document-processing">Document
+Processing</a></li>
+</ul></li>
+<li><a href="#installation" id="toc-installation">🚀 Installation</a>
+<ul>
+<li><a href="#prerequisites"
+id="toc-prerequisites">Prerequisites</a></li>
+<li><a href="#setup-instructions" id="toc-setup-instructions">Setup
+Instructions</a></li>
+</ul></li>
+<li><a href="#documentation" id="toc-documentation">📖
+Documentation</a></li>
+<li><a href="#contributing" id="toc-contributing">🤝
+Contributing</a></li>
+<li><a href="#license" id="toc-license">📝 License</a></li>
+<li><a href="#acknowledgments" id="toc-acknowledgments">🙏
+Acknowledgments</a></li>
+</ul></li>
+<li><a href="#contramind-features-documentation"
+id="toc-contramind-features-documentation">ContraMind Features
+Documentation</a>
+<ul>
+<li><a href="#table-of-contents" id="toc-table-of-contents">Table of
+Contents</a></li>
+<li><a href="#authentication-system"
+id="toc-authentication-system">Authentication System</a>
+<ul>
+<li><a href="#overview-1" id="toc-overview-1">Overview</a></li>
+<li><a href="#features" id="toc-features">Features</a></li>
+<li><a href="#security-features" id="toc-security-features">Security
+Features</a></li>
+</ul></li>
+<li><a href="#dashboard-analytics"
+id="toc-dashboard-analytics">Dashboard &amp; Analytics</a>
+<ul>
+<li><a href="#overview-2" id="toc-overview-2">Overview</a></li>
+<li><a href="#key-metrics-display" id="toc-key-metrics-display">Key
+Metrics Display</a></li>
+<li><a href="#real-time-updates" id="toc-real-time-updates">Real-time
+Updates</a></li>
+</ul></li>
+<li><a href="#contract-chat-interface"
+id="toc-contract-chat-interface">Contract Chat Interface</a>
+<ul>
+<li><a href="#overview-3" id="toc-overview-3">Overview</a></li>
+<li><a href="#upload-process" id="toc-upload-process">Upload
+Process</a></li>
+<li><a href="#contract-analysis" id="toc-contract-analysis">Contract
+Analysis</a></li>
+<li><a href="#chat-functionality" id="toc-chat-functionality">Chat
+Functionality</a></li>
+</ul></li>
+<li><a href="#recent-contracts" id="toc-recent-contracts">Recent
+Contracts</a>
+<ul>
+<li><a href="#overview-4" id="toc-overview-4">Overview</a></li>
+<li><a href="#features-1" id="toc-features-1">Features</a></li>
+</ul></li>
+<li><a href="#settings" id="toc-settings">Settings</a>
+<ul>
+<li><a href="#personal-settings" id="toc-personal-settings">Personal
+Settings</a></li>
+<li><a href="#notification-preferences"
+id="toc-notification-preferences">Notification Preferences</a></li>
+<li><a href="#account-management" id="toc-account-management">Account
+Management</a></li>
+</ul></li>
+<li><a href="#help-center" id="toc-help-center">Help Center</a>
+<ul>
+<li><a href="#faq-section" id="toc-faq-section">FAQ Section</a></li>
+<li><a href="#support-information" id="toc-support-information">Support
+Information</a></li>
+</ul></li>
+<li><a href="#language-support" id="toc-language-support">Language
+Support</a>
+<ul>
+<li><a href="#bilingual-interface"
+id="toc-bilingual-interface">Bilingual Interface</a></li>
+<li><a href="#language-detection" id="toc-language-detection">Language
+Detection</a></li>
+</ul></li>
+<li><a href="#theme-system" id="toc-theme-system">Theme System</a>
+<ul>
+<li><a href="#light-theme" id="toc-light-theme">Light Theme</a></li>
+<li><a href="#dark-theme" id="toc-dark-theme">Dark Theme</a></li>
+<li><a href="#theme-features" id="toc-theme-features">Theme
+Features</a></li>
+</ul></li>
+<li><a href="#additional-features"
+id="toc-additional-features">Additional Features</a>
+<ul>
+<li><a href="#desktop-application" id="toc-desktop-application">Desktop
+Application</a></li>
+<li><a href="#security-features-1" id="toc-security-features-1">Security
+Features</a></li>
+<li><a href="#performance-optimizations"
+id="toc-performance-optimizations">Performance Optimizations</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#contramind-api-documentation"
+id="toc-contramind-api-documentation">ContraMind API Documentation</a>
+<ul>
+<li><a href="#table-of-contents-1" id="toc-table-of-contents-1">Table of
+Contents</a></li>
+<li><a href="#overview-5" id="toc-overview-5">Overview</a>
+<ul>
+<li><a href="#base-url" id="toc-base-url">Base URL</a></li>
+<li><a href="#headers" id="toc-headers">Headers</a></li>
+</ul></li>
+<li><a href="#authentication" id="toc-authentication">Authentication</a>
+<ul>
+<li><a href="#session-management" id="toc-session-management">Session
+Management</a></li>
+</ul></li>
+<li><a href="#endpoints" id="toc-endpoints">Endpoints</a>
+<ul>
+<li><a href="#authentication-endpoints"
+id="toc-authentication-endpoints">Authentication Endpoints</a></li>
+<li><a href="#contract-management" id="toc-contract-management">Contract
+Management</a></li>
+<li><a href="#chat-interface" id="toc-chat-interface">Chat
+Interface</a></li>
+<li><a href="#analytics" id="toc-analytics">Analytics</a></li>
+<li><a href="#user-management" id="toc-user-management">User
+Management</a></li>
+</ul></li>
+<li><a href="#data-structures" id="toc-data-structures">Data
+Structures</a>
+<ul>
+<li><a href="#contract-analysis-object"
+id="toc-contract-analysis-object">Contract Analysis Object</a></li>
+<li><a href="#chat-message-object" id="toc-chat-message-object">Chat
+Message Object</a></li>
+<li><a href="#user-object" id="toc-user-object">User Object</a></li>
+</ul></li>
+<li><a href="#error-handling" id="toc-error-handling">Error Handling</a>
+<ul>
+<li><a href="#error-response-format"
+id="toc-error-response-format">Error Response Format</a></li>
+<li><a href="#common-error-codes" id="toc-common-error-codes">Common
+Error Codes</a></li>
+</ul></li>
+<li><a href="#rate-limiting" id="toc-rate-limiting">Rate Limiting</a>
+<ul>
+<li><a href="#limits" id="toc-limits">Limits</a></li>
+<li><a href="#rate-limit-headers" id="toc-rate-limit-headers">Rate Limit
+Headers</a></li>
+</ul></li>
+<li><a href="#websocket-events" id="toc-websocket-events">WebSocket
+Events</a>
+<ul>
+<li><a href="#connection" id="toc-connection">Connection</a></li>
+<li><a href="#event-types" id="toc-event-types">Event Types</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#contramind-user-guide"
+id="toc-contramind-user-guide">ContraMind User Guide</a>
+<ul>
+<li><a href="#table-of-contents-2" id="toc-table-of-contents-2">Table of
+Contents</a></li>
+<li><a href="#getting-started" id="toc-getting-started">Getting
+Started</a>
+<ul>
+<li><a href="#system-requirements" id="toc-system-requirements">System
+Requirements</a></li>
+</ul></li>
+<li><a href="#creating-your-account"
+id="toc-creating-your-account">Creating Your Account</a>
+<ul>
+<li><a href="#step-1-navigate-to-sign-up"
+id="toc-step-1-navigate-to-sign-up">Step 1: Navigate to Sign Up</a></li>
+<li><a href="#step-2-choose-your-sign-up-method"
+id="toc-step-2-choose-your-sign-up-method">Step 2: Choose Your Sign-Up
+Method</a></li>
+<li><a href="#step-3-welcome-bonus" id="toc-step-3-welcome-bonus">Step
+3: Welcome Bonus</a></li>
+</ul></li>
+<li><a href="#logging-in" id="toc-logging-in">Logging In</a>
+<ul>
+<li><a href="#regular-login" id="toc-regular-login">Regular
+Login</a></li>
+<li><a href="#social-login" id="toc-social-login">Social Login</a></li>
+<li><a href="#forgot-password" id="toc-forgot-password">Forgot
+Password?</a></li>
+</ul></li>
+<li><a href="#dashboard-overview" id="toc-dashboard-overview">Dashboard
+Overview</a>
+<ul>
+<li><a href="#header-section" id="toc-header-section">1. Header
+Section</a></li>
+<li><a href="#analytics-section" id="toc-analytics-section">2. Analytics
+Section</a></li>
+<li><a href="#navigation-sidebar" id="toc-navigation-sidebar">3.
+Navigation Sidebar</a></li>
+</ul></li>
+<li><a href="#uploading-contracts"
+id="toc-uploading-contracts">Uploading Contracts</a>
+<ul>
+<li><a href="#step-1-navigate-to-chat"
+id="toc-step-1-navigate-to-chat">Step 1: Navigate to Chat</a></li>
+<li><a href="#step-2-select-your-role"
+id="toc-step-2-select-your-role">Step 2: Select Your Role</a></li>
+<li><a href="#step-3-upload-your-contract"
+id="toc-step-3-upload-your-contract">Step 3: Upload Your
+Contract</a></li>
+<li><a href="#step-4-processing" id="toc-step-4-processing">Step 4:
+Processing</a></li>
+</ul></li>
+<li><a href="#understanding-analysis-results"
+id="toc-understanding-analysis-results">Understanding Analysis
+Results</a>
+<ul>
+<li><a href="#risk-assessment" id="toc-risk-assessment">Risk
+Assessment</a></li>
+<li><a href="#key-information-extracted"
+id="toc-key-information-extracted">Key Information Extracted</a></li>
+<li><a href="#risk-factors" id="toc-risk-factors">Risk Factors</a></li>
+<li><a href="#recommendations"
+id="toc-recommendations">Recommendations</a></li>
+</ul></li>
+<li><a href="#using-the-chat-feature"
+id="toc-using-the-chat-feature">Using the Chat Feature</a>
+<ul>
+<li><a href="#starting-a-conversation"
+id="toc-starting-a-conversation">Starting a Conversation</a></li>
+<li><a href="#example-questions" id="toc-example-questions">Example
+Questions</a></li>
+<li><a href="#chat-features" id="toc-chat-features">Chat
+Features</a></li>
+<li><a href="#best-practices" id="toc-best-practices">Best
+Practices</a></li>
+</ul></li>
+<li><a href="#managing-your-contracts"
+id="toc-managing-your-contracts">Managing Your Contracts</a>
+<ul>
+<li><a href="#contract-library" id="toc-contract-library">Contract
+Library</a></li>
+<li><a href="#contract-details" id="toc-contract-details">Contract
+Details</a></li>
+<li><a href="#organization-tips" id="toc-organization-tips">Organization
+Tips</a></li>
+</ul></li>
+<li><a href="#token-system-1" id="toc-token-system-1">Token System</a>
+<ul>
+<li><a href="#understanding-tokens"
+id="toc-understanding-tokens">Understanding Tokens</a></li>
+<li><a href="#checking-balance" id="toc-checking-balance">Checking
+Balance</a></li>
+<li><a href="#getting-more-tokens" id="toc-getting-more-tokens">Getting
+More Tokens</a></li>
+<li><a href="#token-packages" id="toc-token-packages">Token
+Packages</a></li>
+</ul></li>
+<li><a href="#settings-and-preferences"
+id="toc-settings-and-preferences">Settings and Preferences</a>
+<ul>
+<li><a href="#profile-settings" id="toc-profile-settings">Profile
+Settings</a></li>
+<li><a href="#preferences-1" id="toc-preferences-1">Preferences</a></li>
+<li><a href="#privacy-settings" id="toc-privacy-settings">Privacy
+Settings</a></li>
+</ul></li>
+<li><a href="#troubleshooting"
+id="toc-troubleshooting">Troubleshooting</a>
+<ul>
+<li><a href="#common-issues" id="toc-common-issues">Common
+Issues</a></li>
+<li><a href="#getting-help" id="toc-getting-help">Getting Help</a></li>
+</ul></li>
+<li><a href="#tips-for-success" id="toc-tips-for-success">Tips for
+Success</a>
+<ul>
+<li><a href="#best-practices-1" id="toc-best-practices-1">Best
+Practices</a></li>
+<li><a href="#advanced-features" id="toc-advanced-features">Advanced
+Features</a></li>
+</ul></li>
+<li><a href="#keyboard-shortcuts" id="toc-keyboard-shortcuts">Keyboard
+Shortcuts</a></li>
+<li><a href="#mobile-experience" id="toc-mobile-experience">Mobile
+Experience</a></li>
+</ul></li>
+<li><a href="#contramind-developer-guide"
+id="toc-contramind-developer-guide">ContraMind Developer Guide</a>
+<ul>
+<li><a href="#table-of-contents-3" id="toc-table-of-contents-3">Table of
+Contents</a></li>
+<li><a href="#project-structure" id="toc-project-structure">Project
+Structure</a></li>
+<li><a href="#development-setup" id="toc-development-setup">Development
+Setup</a>
+<ul>
+<li><a href="#prerequisites-1"
+id="toc-prerequisites-1">Prerequisites</a></li>
+<li><a href="#initial-setup" id="toc-initial-setup">Initial
+Setup</a></li>
+<li><a href="#development-commands"
+id="toc-development-commands">Development Commands</a></li>
+</ul></li>
+<li><a href="#architecture-overview"
+id="toc-architecture-overview">Architecture Overview</a>
+<ul>
+<li><a href="#system-architecture-diagram"
+id="toc-system-architecture-diagram">System Architecture
+Diagram</a></li>
+<li><a href="#key-design-decisions" id="toc-key-design-decisions">Key
+Design Decisions</a></li>
+</ul></li>
+<li><a href="#component-hierarchy"
+id="toc-component-hierarchy">Component Hierarchy</a>
+<ul>
+<li><a href="#main-application-structure"
+id="toc-main-application-structure">Main Application Structure</a></li>
+<li><a href="#key-components" id="toc-key-components">Key
+Components</a></li>
+</ul></li>
+<li><a href="#state-management" id="toc-state-management">State
+Management</a>
+<ul>
+<li><a href="#global-state-with-react-query"
+id="toc-global-state-with-react-query">Global State with React
+Query</a></li>
+<li><a href="#local-state-management"
+id="toc-local-state-management">Local State Management</a></li>
+</ul></li>
+<li><a href="#database-schema" id="toc-database-schema">Database
+Schema</a>
+<ul>
+<li><a href="#core-tables" id="toc-core-tables">Core Tables</a></li>
+<li><a href="#database-migrations" id="toc-database-migrations">Database
+Migrations</a></li>
+</ul></li>
+<li><a href="#adding-new-features" id="toc-adding-new-features">Adding
+New Features</a>
+<ul>
+<li><a href="#feature-development-workflow"
+id="toc-feature-development-workflow">Feature Development
+Workflow</a></li>
+</ul></li>
+<li><a href="#testing" id="toc-testing">Testing</a>
+<ul>
+<li><a href="#unit-testing" id="toc-unit-testing">Unit Testing</a></li>
+<li><a href="#integration-testing"
+id="toc-integration-testing">Integration Testing</a></li>
+<li><a href="#e2e-testing" id="toc-e2e-testing">E2E Testing</a></li>
+</ul></li>
+<li><a href="#deployment" id="toc-deployment">Deployment</a>
+<ul>
+<li><a href="#production-build" id="toc-production-build">Production
+Build</a></li>
+<li><a href="#environment-configuration"
+id="toc-environment-configuration">Environment Configuration</a></li>
+<li><a href="#deployment-checklist"
+id="toc-deployment-checklist">Deployment Checklist</a></li>
+<li><a href="#docker-deployment" id="toc-docker-deployment">Docker
+Deployment</a></li>
+</ul></li>
+<li><a href="#code-standards" id="toc-code-standards">Code Standards</a>
+<ul>
+<li><a href="#typescript-guidelines"
+id="toc-typescript-guidelines">TypeScript Guidelines</a></li>
+<li><a href="#react-best-practices" id="toc-react-best-practices">React
+Best Practices</a></li>
+<li><a href="#api-design" id="toc-api-design">API Design</a></li>
+<li><a href="#git-workflow" id="toc-git-workflow">Git Workflow</a></li>
+</ul></li>
+<li><a href="#performance-optimization"
+id="toc-performance-optimization">Performance Optimization</a>
+<ul>
+<li><a href="#frontend-optimization"
+id="toc-frontend-optimization">Frontend Optimization</a></li>
+<li><a href="#backend-optimization"
+id="toc-backend-optimization">Backend Optimization</a></li>
+<li><a href="#monitoring" id="toc-monitoring">Monitoring</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#changelog" id="toc-changelog">Changelog</a>
+<ul>
+<li><a href="#unreleased" id="toc-unreleased">[Unreleased]</a>
+<ul>
+<li><a href="#added" id="toc-added">Added</a></li>
+</ul></li>
+<li><a href="#section" id="toc-section">[2.0.0] - 2025-01-25</a>
+<ul>
+<li><a href="#changed" id="toc-changed">Changed</a></li>
+<li><a href="#added-1" id="toc-added-1">Added</a></li>
+<li><a href="#improved" id="toc-improved">Improved</a></li>
+</ul></li>
+<li><a href="#section-1" id="toc-section-1">[1.5.0] - 2025-01-20</a>
+<ul>
+<li><a href="#added-2" id="toc-added-2">Added</a></li>
+<li><a href="#changed-1" id="toc-changed-1">Changed</a></li>
+</ul></li>
+<li><a href="#section-2" id="toc-section-2">[1.4.0] - 2025-01-15</a>
+<ul>
+<li><a href="#added-3" id="toc-added-3">Added</a></li>
+<li><a href="#improved-1" id="toc-improved-1">Improved</a></li>
+</ul></li>
+<li><a href="#section-3" id="toc-section-3">[1.3.0] - 2025-01-10</a>
+<ul>
+<li><a href="#added-4" id="toc-added-4">Added</a></li>
+<li><a href="#changed-2" id="toc-changed-2">Changed</a></li>
+</ul></li>
+<li><a href="#section-4" id="toc-section-4">[1.2.0] - 2025-01-05</a>
+<ul>
+<li><a href="#added-5" id="toc-added-5">Added</a></li>
+<li><a href="#improved-2" id="toc-improved-2">Improved</a></li>
+</ul></li>
+<li><a href="#section-5" id="toc-section-5">[1.1.0] - 2024-12-28</a>
+<ul>
+<li><a href="#added-6" id="toc-added-6">Added</a></li>
+<li><a href="#changed-3" id="toc-changed-3">Changed</a></li>
+</ul></li>
+<li><a href="#section-6" id="toc-section-6">[1.0.0] - 2024-12-20</a>
+<ul>
+<li><a href="#added-7" id="toc-added-7">Added</a></li>
+<li><a href="#security" id="toc-security">Security</a></li>
+</ul></li>
+<li><a href="#version-history-summary"
+id="toc-version-history-summary">Version History Summary</a>
+<ul>
+<li><a href="#major-versions" id="toc-major-versions">Major
+Versions</a></li>
+<li><a href="#feature-milestones" id="toc-feature-milestones">Feature
+Milestones</a></li>
+<li><a href="#upcoming-features" id="toc-upcoming-features">Upcoming
+Features</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#contributing-to-contramind"
+id="toc-contributing-to-contramind">Contributing to ContraMind</a>
+<ul>
+<li><a href="#table-of-contents-4" id="toc-table-of-contents-4">Table of
+Contents</a></li>
+<li><a href="#code-of-conduct" id="toc-code-of-conduct">Code of
+Conduct</a>
+<ul>
+<li><a href="#our-pledge" id="toc-our-pledge">Our Pledge</a></li>
+<li><a href="#unacceptable-behavior"
+id="toc-unacceptable-behavior">Unacceptable Behavior</a></li>
+</ul></li>
+<li><a href="#getting-started-1" id="toc-getting-started-1">Getting
+Started</a>
+<ul>
+<li><a href="#prerequisites-2"
+id="toc-prerequisites-2">Prerequisites</a></li>
+<li><a href="#development-setup-1"
+id="toc-development-setup-1">Development Setup</a></li>
+</ul></li>
+<li><a href="#development-process"
+id="toc-development-process">Development Process</a>
+<ul>
+<li><a href="#create-a-branch" id="toc-create-a-branch">1. Create a
+Branch</a></li>
+<li><a href="#make-your-changes" id="toc-make-your-changes">2. Make Your
+Changes</a></li>
+<li><a href="#test-your-changes" id="toc-test-your-changes">3. Test Your
+Changes</a></li>
+<li><a href="#commit-your-changes" id="toc-commit-your-changes">4.
+Commit Your Changes</a></li>
+<li><a href="#push-and-create-a-pull-request"
+id="toc-push-and-create-a-pull-request">5. Push and Create a Pull
+Request</a></li>
+</ul></li>
+<li><a href="#coding-standards" id="toc-coding-standards">Coding
+Standards</a>
+<ul>
+<li><a href="#typescript-guidelines-1"
+id="toc-typescript-guidelines-1">TypeScript Guidelines</a></li>
+<li><a href="#react-best-practices-1"
+id="toc-react-best-practices-1">React Best Practices</a></li>
+<li><a href="#cssstyling-guidelines"
+id="toc-cssstyling-guidelines">CSS/Styling Guidelines</a></li>
+<li><a href="#file-organization" id="toc-file-organization">File
+Organization</a></li>
+</ul></li>
+<li><a href="#commit-guidelines" id="toc-commit-guidelines">Commit
+Guidelines</a>
+<ul>
+<li><a href="#format" id="toc-format">Format</a></li>
+<li><a href="#types" id="toc-types">Types</a></li>
+<li><a href="#examples" id="toc-examples">Examples</a></li>
+</ul></li>
+<li><a href="#pull-request-process" id="toc-pull-request-process">Pull
+Request Process</a>
+<ul>
+<li><a href="#before-submitting" id="toc-before-submitting">Before
+Submitting</a></li>
+<li><a href="#pr-template" id="toc-pr-template">PR Template</a></li>
+<li><a href="#review-process" id="toc-review-process">Review
+Process</a></li>
+</ul></li>
+<li><a href="#issue-guidelines" id="toc-issue-guidelines">Issue
+Guidelines</a>
+<ul>
+<li><a href="#bug-reports" id="toc-bug-reports">Bug Reports</a></li>
+<li><a href="#feature-requests" id="toc-feature-requests">Feature
+Requests</a></li>
+<li><a href="#good-first-issues" id="toc-good-first-issues">Good First
+Issues</a></li>
+</ul></li>
+<li><a href="#community" id="toc-community">Community</a>
+<ul>
+<li><a href="#communication-channels"
+id="toc-communication-channels">Communication Channels</a></li>
+<li><a href="#getting-help-1" id="toc-getting-help-1">Getting
+Help</a></li>
+</ul></li>
+<li><a href="#recognition" id="toc-recognition">Recognition</a></li>
+<li><a href="#license-1" id="toc-license-1">License</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="contramind.ai---legal-tech-platform">ContraMind.ai - Legal Tech
+Platform</h1>
+<div data-align="center">
+<p><img src="./client/public/ContraMind Logo.png" alt="ContraMind Logo" width="200"/></p>
+<p>### AI-Powered Contract Management for the MENA Region</p>
+<p><a href="LICENSE"><img
+src="https://img.shields.io/badge/license-MIT-blue.svg"
+alt="License" /></a> <a href="https://reactjs.org/"><img
+src="https://img.shields.io/badge/React-18.3-61dafb.svg"
+alt="React" /></a> <a href="https://www.typescriptlang.org/"><img
+src="https://img.shields.io/badge/TypeScript-5.3-blue.svg"
+alt="TypeScript" /></a> <a href="https://www.postgresql.org/"><img
+src="https://img.shields.io/badge/PostgreSQL-16-336791.svg"
+alt="PostgreSQL" /></a></p>
+</div>
+<h2 id="overview">📋 Overview</h2>
+<p>ContraMind.ai is an advanced AI-powered legal technology platform
+specializing in bilingual contract management for the MENA region. Built
+with cutting-edge technology, it provides intelligent document
+extraction, comprehensive analysis capabilities, and a ChatGPT-style
+interface for intuitive contract interactions.</p>
+<h2 id="key-features">✨ Key Features</h2>
+<ul>
+<li><strong>🔐 Advanced Authentication</strong>
+<ul>
+<li>Google &amp; Microsoft OAuth integration</li>
+<li>Secure email/password authentication</li>
+<li>Email verification system</li>
+<li>Token-based usage management (1000 free tokens)</li>
+</ul></li>
+<li><strong>📊 Interactive Dashboard</strong>
+<ul>
+<li>Real-time analytics visualization</li>
+<li>Contract statistics and metrics</li>
+<li>Recent activity tracking</li>
+<li>Risk assessment overview</li>
+</ul></li>
+<li><strong>💬 AI Contract Assistant</strong>
+<ul>
+<li>ChatGPT-style conversational interface</li>
+<li>Multi-format support (PDF/DOCX)</li>
+<li>Intelligent contract analysis</li>
+<li>Risk level assessment</li>
+<li>Party-based perspective (Client/Vendor/Neutral)</li>
+</ul></li>
+<li><strong>🌐 Bilingual Support</strong>
+<ul>
+<li>Full Arabic and English interface</li>
+<li>RTL/LTR layout support</li>
+<li>Browser language detection</li>
+<li>Seamless language switching</li>
+</ul></li>
+<li><strong>🎨 Modern UI/UX</strong>
+<ul>
+<li>Professional, minimalist design</li>
+<li>Light/Dark theme support</li>
+<li>Responsive layout</li>
+<li>Smooth animations with Framer Motion</li>
+</ul></li>
+<li><strong>🖥️ Desktop Application</strong>
+<ul>
+<li>Electron-based native app</li>
+<li>Integrated session management</li>
+<li>Enhanced performance</li>
+</ul></li>
+</ul>
+<h2 id="technology-stack">🛠️ Technology Stack</h2>
+<h3 id="frontend">Frontend</h3>
+<ul>
+<li><strong>React 18.3</strong> with TypeScript</li>
+<li><strong>Tailwind CSS</strong> for styling</li>
+<li><strong>Radix UI</strong> for accessible components</li>
+<li><strong>Framer Motion</strong> for animations</li>
+<li><strong>Recharts</strong> for data visualization</li>
+<li><strong>Wouter</strong> for routing</li>
+<li><strong>React Query</strong> for state management</li>
+</ul>
+<h3 id="backend">Backend</h3>
+<ul>
+<li><strong>Express.js</strong> server</li>
+<li><strong>PostgreSQL</strong> database (Alibaba Cloud ApsaraDB)</li>
+<li><strong>Drizzle ORM</strong> for database management</li>
+<li><strong>Passport.js</strong> for authentication</li>
+<li><strong>Resend</strong> for email services</li>
+</ul>
+<h3 id="document-processing">Document Processing</h3>
+<ul>
+<li><strong>pdf.js</strong> for PDF parsing</li>
+<li><strong>mammoth.js</strong> for DOCX processing</li>
+<li>Custom extraction pipeline for contract analysis</li>
+</ul>
+<h2 id="installation">🚀 Installation</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Node.js 20.x or higher</li>
+<li>PostgreSQL database</li>
+<li>Google OAuth credentials (optional)</li>
+<li>Microsoft OAuth credentials (optional)</li>
+<li>Resend API key for email services</li>
+</ul>
+<h3 id="setup-instructions">Setup Instructions</h3>
+<ol type="1">
+<li><p><strong>Clone the repository</strong></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/yourusername/contramind.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> contramind</span></code></pre></div></li>
+<li><p><strong>Install dependencies</strong></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install</span></code></pre></div></li>
+<li><p><strong>Environment Setup</strong> Create a <code>.env</code>
+file in the root directory:</p>
+<pre class="env"><code># Database
+DATABASE_URL=postgresql://user:password@host:port/database
+
+# Authentication
+SESSION_SECRET=your-session-secret
+
+# Google OAuth (optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Microsoft OAuth (optional)
+MICROSOFT_CLIENT_ID=your-microsoft-client-id
+MICROSOFT_CLIENT_SECRET=your-microsoft-client-secret
+
+# Email Service
+RESEND_API_KEY=your-resend-api-key
+
+# Application URLs
+VITE_API_URL=http://localhost:5000</code></pre></li>
+<li><p><strong>Database Setup</strong></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run db:push</span></code></pre></div></li>
+<li><p><strong>Start Development Server</strong></p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev</span></code></pre></div>
+<p>The application will be available at
+<code>http://localhost:5000</code></p></li>
+</ol>
+<h2 id="documentation">📖 Documentation</h2>
+<ul>
+<li><a href="docs/FEATURES.md">Features Documentation</a> - Detailed
+feature descriptions</li>
+<li><a href="docs/API.md">API Documentation</a> - API endpoints and data
+structures</li>
+<li><a href="docs/USER_GUIDE.md">User Guide</a> - Step-by-step usage
+instructions</li>
+<li><a href="docs/DEVELOPER.md">Developer Guide</a> - Technical
+documentation for developers</li>
+</ul>
+<h2 id="contributing">🤝 Contributing</h2>
+<p>We welcome contributions! Please see our <a
+href="CONTRIBUTING.md">Contributing Guide</a> for details.</p>
+<h2 id="license">📝 License</h2>
+<p>This project is licensed under the MIT License - see the <a
+href="LICENSE">LICENSE</a> file for details.</p>
+<h2 id="acknowledgments">🙏 Acknowledgments</h2>
+<ul>
+<li>Built with love by the ContraMind team</li>
+<li>Special thanks to all contributors and early adopters</li>
+<li>Powered by cutting-edge AI technology</li>
+</ul>
+<hr />
+<div data-align="center">
+<p>
+© 2025 ContraMind.ai - Revolutionizing Legal Tech in MENA
+</p>
+</div>
+<h1 id="contramind-features-documentation">ContraMind Features
+Documentation</h1>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#authentication-system">Authentication System</a></li>
+<li><a href="#dashboard--analytics">Dashboard &amp; Analytics</a></li>
+<li><a href="#contract-chat-interface">Contract Chat Interface</a></li>
+<li><a href="#recent-contracts">Recent Contracts</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#help-center">Help Center</a></li>
+<li><a href="#language-support">Language Support</a></li>
+<li><a href="#theme-system">Theme System</a></li>
+</ul>
+<hr />
+<h2 id="authentication-system">Authentication System</h2>
+<h3 id="overview-1">Overview</h3>
+<p>ContraMind provides a comprehensive authentication system supporting
+multiple login methods and secure session management.</p>
+<h3 id="features">Features</h3>
+<h4 id="oauth-integration">OAuth Integration</h4>
+<ul>
+<li><strong>Google Login</strong>
+<ul>
+<li>One-click authentication</li>
+<li>Automatic profile information retrieval</li>
+<li>Secure token management</li>
+</ul></li>
+<li><strong>Microsoft Login</strong>
+<ul>
+<li>Enterprise-ready authentication</li>
+<li>Azure AD integration support</li>
+<li>Seamless corporate account access</li>
+</ul></li>
+</ul>
+<h4 id="emailpassword-authentication">Email/Password Authentication</h4>
+<ul>
+<li><strong>User Registration</strong>
+<ul>
+<li>Email validation</li>
+<li>Password strength requirements</li>
+<li>Verification email system</li>
+</ul></li>
+<li><strong>Login System</strong>
+<ul>
+<li>Secure password handling</li>
+<li>“Remember me” functionality</li>
+<li>Session persistence</li>
+</ul></li>
+</ul>
+<h4 id="token-system">Token System</h4>
+<ul>
+<li><strong>Initial Allocation</strong>: 1000 free tokens upon
+registration</li>
+<li><strong>Token Usage</strong>:
+<ul>
+<li>Contract upload: -10 tokens</li>
+<li>Chat interaction: -5 tokens per message</li>
+</ul></li>
+<li><strong>Token Display</strong>: Real-time token balance in
+header</li>
+</ul>
+<h3 id="security-features">Security Features</h3>
+<ul>
+<li>Password encryption with bcrypt</li>
+<li>Session management with secure cookies</li>
+<li>CSRF protection</li>
+<li>Rate limiting on authentication endpoints</li>
+</ul>
+<hr />
+<h2 id="dashboard-analytics">Dashboard &amp; Analytics</h2>
+<h3 id="overview-2">Overview</h3>
+<p>The dashboard provides real-time insights into contract analysis
+activities and performance metrics.</p>
+<h3 id="key-metrics-display">Key Metrics Display</h3>
+<h4 id="contract-statistics">Contract Statistics</h4>
+<ul>
+<li><strong>Total Contracts</strong>: Overall number of processed
+contracts</li>
+<li><strong>High Risk</strong>: Count of contracts with high risk
+levels</li>
+<li><strong>Medium Risk</strong>: Count of contracts with medium risk
+levels</li>
+<li><strong>Low Risk</strong>: Count of contracts with low risk
+levels</li>
+</ul>
+<h4 id="visual-analytics">Visual Analytics</h4>
+<ul>
+<li><strong>Risk Distribution Chart</strong>
+<ul>
+<li>Interactive column chart using Recharts</li>
+<li>Color-coded risk levels</li>
+<li>Hover tooltips with exact values</li>
+</ul></li>
+<li><strong>Contract Types Chart</strong>
+<ul>
+<li>Distribution of contract categories</li>
+<li>Dynamic data updates</li>
+<li>Responsive design</li>
+</ul></li>
+</ul>
+<h4 id="recent-activity">Recent Activity</h4>
+<ul>
+<li>Latest 5 contract analyses</li>
+<li>Quick access links</li>
+<li>Risk level indicators</li>
+<li>Timestamp information</li>
+</ul>
+<h3 id="real-time-updates">Real-time Updates</h3>
+<ul>
+<li>Auto-refresh every 30 seconds</li>
+<li>WebSocket integration for live updates</li>
+<li>Loading states for data fetching</li>
+<li>Error handling with retry logic</li>
+</ul>
+<hr />
+<h2 id="contract-chat-interface">Contract Chat Interface</h2>
+<h3 id="overview-3">Overview</h3>
+<p>A ChatGPT-style interface designed specifically for contract
+analysis, providing intuitive AI-powered interactions.</p>
+<h3 id="upload-process">Upload Process</h3>
+<h4 id="file-support">File Support</h4>
+<ul>
+<li><strong>Supported Formats</strong>:
+<ul>
+<li>PDF documents</li>
+<li>DOCX files</li>
+<li>File size limit: 10MB</li>
+</ul></li>
+</ul>
+<h4 id="upload-interface">Upload Interface</h4>
+<ul>
+<li>Drag-and-drop functionality</li>
+<li>Click-to-browse option</li>
+<li>File validation</li>
+<li>Progress indicator</li>
+</ul>
+<h3 id="contract-analysis">Contract Analysis</h3>
+<h4 id="party-selection">Party Selection</h4>
+<p>Users must select their perspective: - <strong>Client</strong>:
+Analyze from buyer’s perspective - <strong>Vendor</strong>: Analyze from
+seller’s perspective - <strong>Neutral</strong>: Objective third-party
+analysis</p>
+<h4 id="ai-powered-features">AI-Powered Features</h4>
+<ul>
+<li><strong>Automatic Extraction</strong>:
+<ul>
+<li>Contract parties identification</li>
+<li>Key dates and deadlines</li>
+<li>Payment terms</li>
+<li>Obligations and responsibilities</li>
+</ul></li>
+<li><strong>Risk Assessment</strong>:
+<ul>
+<li>High/Medium/Low risk classification</li>
+<li>Specific risk factors identification</li>
+<li>Actionable recommendations</li>
+</ul></li>
+<li><strong>Key Insights</strong>:
+<ul>
+<li>Contract type classification</li>
+<li>Important clauses highlighting</li>
+<li>Missing elements detection</li>
+</ul></li>
+</ul>
+<h3 id="chat-functionality">Chat Functionality</h3>
+<h4 id="message-interface">Message Interface</h4>
+<ul>
+<li>Clean, modern chat bubbles</li>
+<li>User/AI message differentiation</li>
+<li>Timestamp display</li>
+<li>Loading indicators</li>
+</ul>
+<h4 id="ai-capabilities">AI Capabilities</h4>
+<ul>
+<li>Context-aware responses</li>
+<li>Multi-turn conversations</li>
+<li>Clause explanations</li>
+<li>Amendment suggestions</li>
+<li>Risk mitigation advice</li>
+</ul>
+<h4 id="interaction-features">Interaction Features</h4>
+<ul>
+<li>Copy message functionality</li>
+<li>Message history preservation</li>
+<li>Export chat transcript</li>
+<li>Print-friendly view</li>
+</ul>
+<hr />
+<h2 id="recent-contracts">Recent Contracts</h2>
+<h3 id="overview-4">Overview</h3>
+<p>Quick access sidebar showing contract history and enabling easy
+resumption of previous analyses.</p>
+<h3 id="features-1">Features</h3>
+<h4 id="contract-list">Contract List</h4>
+<ul>
+<li><strong>Display Information</strong>:
+<ul>
+<li>Contract title/filename</li>
+<li>Upload date and time</li>
+<li>Risk level indicator (color-coded)</li>
+<li>Contract type</li>
+</ul></li>
+</ul>
+<h4 id="resume-functionality">Resume Functionality</h4>
+<ul>
+<li>One-click chat resumption</li>
+<li>Full conversation history</li>
+<li>Context preservation</li>
+<li>Seamless continuation</li>
+</ul>
+<h4 id="management-options">Management Options</h4>
+<ul>
+<li>Search contracts by name</li>
+<li>Filter by risk level</li>
+<li>Sort by date/type</li>
+<li>Delete old analyses</li>
+</ul>
+<hr />
+<h2 id="settings">Settings</h2>
+<h3 id="personal-settings">Personal Settings</h3>
+<h4 id="profile-management">Profile Management</h4>
+<ul>
+<li>Name update</li>
+<li>Email change (with verification)</li>
+<li>Password reset</li>
+<li>Profile picture upload</li>
+</ul>
+<h4 id="preferences">Preferences</h4>
+<ul>
+<li>Default language selection</li>
+<li>Theme preference (Light/Dark/System)</li>
+<li>Email notification settings</li>
+<li>Data export options</li>
+</ul>
+<h3 id="notification-preferences">Notification Preferences</h3>
+<h4 id="email-notifications">Email Notifications</h4>
+<ul>
+<li>Contract analysis completion</li>
+<li>High-risk contract alerts</li>
+<li>Token balance warnings</li>
+<li>System updates</li>
+</ul>
+<h4 id="in-app-notifications">In-App Notifications</h4>
+<ul>
+<li>Real-time alerts</li>
+<li>Desktop notifications (optional)</li>
+<li>Sound preferences</li>
+<li>Do not disturb mode</li>
+</ul>
+<h3 id="account-management">Account Management</h3>
+<ul>
+<li>Token purchase options</li>
+<li>Usage history</li>
+<li>Billing information</li>
+<li>Subscription management</li>
+</ul>
+<hr />
+<h2 id="help-center">Help Center</h2>
+<h3 id="faq-section">FAQ Section</h3>
+<h4 id="common-questions">Common Questions</h4>
+<ul>
+<li>How to upload contracts</li>
+<li>Understanding risk levels</li>
+<li>Token system explanation</li>
+<li>Language switching guide</li>
+<li>Troubleshooting tips</li>
+</ul>
+<h3 id="support-information">Support Information</h3>
+<h4 id="contact-options">Contact Options</h4>
+<ul>
+<li>Email support</li>
+<li>Live chat (business hours)</li>
+<li>Ticket system</li>
+<li>Response time expectations</li>
+</ul>
+<h4 id="resources">Resources</h4>
+<ul>
+<li>Video tutorials</li>
+<li>User guide PDF</li>
+<li>Best practices guide</li>
+<li>API documentation links</li>
+</ul>
+<hr />
+<h2 id="language-support">Language Support</h2>
+<h3 id="bilingual-interface">Bilingual Interface</h3>
+<h4 id="arabic-support">Arabic Support</h4>
+<ul>
+<li>Full RTL layout</li>
+<li>Arabic UI translation</li>
+<li>Arabic contract analysis</li>
+<li>Culturally appropriate design</li>
+</ul>
+<h4 id="english-support">English Support</h4>
+<ul>
+<li>LTR layout</li>
+<li>Professional terminology</li>
+<li>International standards</li>
+<li>Clear, concise language</li>
+</ul>
+<h3 id="language-detection">Language Detection</h3>
+<ul>
+<li>Browser language auto-detection</li>
+<li>User preference persistence</li>
+<li>Quick toggle button</li>
+<li>Seamless switching</li>
+</ul>
+<hr />
+<h2 id="theme-system">Theme System</h2>
+<h3 id="light-theme">Light Theme</h3>
+<ul>
+<li>Clean white backgrounds</li>
+<li>High contrast text</li>
+<li>Professional appearance</li>
+<li>Reduced eye strain in bright environments</li>
+</ul>
+<h3 id="dark-theme">Dark Theme</h3>
+<ul>
+<li>Modern dark UI</li>
+<li>Reduced blue light</li>
+<li>Energy efficient (OLED screens)</li>
+<li>Comfortable for extended use</li>
+</ul>
+<h3 id="theme-features">Theme Features</h3>
+<ul>
+<li>System preference detection</li>
+<li>Manual override option</li>
+<li>Smooth transitions</li>
+<li>Consistent across all pages</li>
+</ul>
+<hr />
+<h2 id="additional-features">Additional Features</h2>
+<h3 id="desktop-application">Desktop Application</h3>
+<ul>
+<li>Native Electron app</li>
+<li>Offline capabilities</li>
+<li>Enhanced performance</li>
+<li>System tray integration</li>
+</ul>
+<h3 id="security-features-1">Security Features</h3>
+<ul>
+<li>End-to-end encryption</li>
+<li>Data privacy compliance</li>
+<li>Regular security audits</li>
+<li>GDPR compliance</li>
+</ul>
+<h3 id="performance-optimizations">Performance Optimizations</h3>
+<ul>
+<li>Lazy loading</li>
+<li>Code splitting</li>
+<li>Image optimization</li>
+<li>Cache management</li>
+</ul>
+<hr />
+<div data-align="center">
+<p>
+Last updated: January 2025
+</p>
+</div>
+<h1 id="contramind-api-documentation">ContraMind API Documentation</h1>
+<h2 id="table-of-contents-1">Table of Contents</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#endpoints">Endpoints</a></li>
+<li><a href="#data-structures">Data Structures</a></li>
+<li><a href="#error-handling">Error Handling</a></li>
+<li><a href="#rate-limiting">Rate Limiting</a></li>
+</ul>
+<hr />
+<h2 id="overview-5">Overview</h2>
+<p>The ContraMind API is a RESTful service that powers the contract
+analysis platform. All endpoints return JSON responses and require
+authentication unless specified otherwise.</p>
+<h3 id="base-url">Base URL</h3>
+<pre><code>Development: http://localhost:5000/api
+Production: https://api.contramind.ai</code></pre>
+<h3 id="headers">Headers</h3>
+<pre class="http"><code>Content-Type: application/json
+Authorization: Bearer &lt;session-token&gt;</code></pre>
+<hr />
+<h2 id="authentication">Authentication</h2>
+<h3 id="session-management">Session Management</h3>
+<p>ContraMind uses session-based authentication with secure HTTP-only
+cookies.</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Client] --&gt;|Login Request| B[Auth Endpoint]
+    B --&gt;|Validate Credentials| C[Database]
+    C --&gt;|User Data| B
+    B --&gt;|Set Session Cookie| A
+    A --&gt;|Subsequent Requests| D[Protected Endpoints]
+    D --&gt;|Validate Session| E[Session Store]</code></pre>
+<hr />
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="authentication-endpoints">Authentication Endpoints</h3>
+<h4 id="post-apiauthsignup">POST /api/auth/signup</h4>
+<p>Create a new user account.</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;email&quot;</span><span class="fu">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="fu">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;password&quot;</span><span class="fu">:</span> <span class="st">&quot;SecurePassword123!&quot;</span><span class="fu">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;John Doe&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;email&quot;</span><span class="fu">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="fu">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;John Doe&quot;</span><span class="fu">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;tokens&quot;</span><span class="fu">:</span> <span class="dv">1000</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="post-apiauthlogin">POST /api/auth/login</h4>
+<p>Authenticate a user.</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;email&quot;</span><span class="fu">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;password&quot;</span><span class="fu">:</span> <span class="st">&quot;SecurePassword123!&quot;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;email&quot;</span><span class="fu">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;John Doe&quot;</span><span class="fu">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;tokens&quot;</span><span class="fu">:</span> <span class="dv">950</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="get-apiauthgoogle">GET /api/auth/google</h4>
+<p>Initiate Google OAuth flow.</p>
+<h4 id="get-apiauthmicrosoft">GET /api/auth/microsoft</h4>
+<p>Initiate Microsoft OAuth flow.</p>
+<h4 id="post-apiauthlogout">POST /api/auth/logout</h4>
+<p>End user session.</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Logged out successfully&quot;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h3 id="contract-management">Contract Management</h3>
+<h4 id="post-apicontractsupload">POST /api/contracts/upload</h4>
+<p>Upload and analyze a contract.</p>
+<p><strong>Request:</strong> - Method: POST - Content-Type:
+multipart/form-data - Token Cost: 10 tokens</p>
+<p><strong>Form Data:</strong></p>
+<pre><code>file: &lt;contract-file&gt;
+party: &quot;client&quot; | &quot;vendor&quot; | &quot;neutral&quot;</code></pre>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;contract&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;contract.pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;uploadDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-27T10:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;party&quot;</span><span class="fu">:</span> <span class="st">&quot;client&quot;</span><span class="fu">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;analysis&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;contractType&quot;</span><span class="fu">:</span> <span class="st">&quot;Service Agreement&quot;</span><span class="fu">,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;parties&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;Company A&quot;</span><span class="ot">,</span> <span class="st">&quot;Company B&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;startDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-02-01&quot;</span><span class="fu">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;endDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-01-31&quot;</span><span class="fu">,</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;riskLevel&quot;</span><span class="fu">:</span> <span class="st">&quot;medium&quot;</span><span class="fu">,</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;riskFactors&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Unlimited liability clause&quot;</span><span class="ot">,</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;No termination clause&quot;</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;keyInsights&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Payment terms: Net 30&quot;</span><span class="ot">,</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Renewal: Automatic&quot;</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="get-apicontracts">GET /api/contracts</h4>
+<p>Get user’s contracts.</p>
+<p><strong>Query Parameters:</strong> - <code>limit</code> (optional):
+Number of contracts to return (default: 10) - <code>offset</code>
+(optional): Pagination offset (default: 0) - <code>riskLevel</code>
+(optional): Filter by risk level</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;contracts&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;contract.pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;uploadDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-27T10:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;riskLevel&quot;</span><span class="fu">:</span> <span class="st">&quot;high&quot;</span><span class="fu">,</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;contractType&quot;</span><span class="fu">:</span> <span class="st">&quot;Service Agreement&quot;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">25</span><span class="fu">,</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;hasMore&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="get-apicontractsid">GET /api/contracts/:id</h4>
+<p>Get specific contract details.</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;contract&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;contract.pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;uploadDate&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-27T10:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;party&quot;</span><span class="fu">:</span> <span class="st">&quot;client&quot;</span><span class="fu">,</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;analysis&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="er">/*</span> <span class="er">Full</span> <span class="er">analysis</span> <span class="er">data</span> <span class="er">*/</span> <span class="fu">},</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;chatHistory&quot;</span><span class="fu">:</span> <span class="ot">[</span> <span class="er">/*</span> <span class="er">Chat</span> <span class="er">messages</span> <span class="er">*/</span> <span class="ot">]</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h3 id="chat-interface">Chat Interface</h3>
+<h4 id="post-apicontractsidchat">POST /api/contracts/:id/chat</h4>
+<p>Send a message about a contract.</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Can you explain the termination clause?&quot;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Token Cost:</strong> 5 tokens per message</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;response&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;msg-uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;The termination clause in this contract states...&quot;</span><span class="fu">,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-27T10:05:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;tokensUsed&quot;</span><span class="fu">:</span> <span class="dv">5</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;remainingTokens&quot;</span><span class="fu">:</span> <span class="dv">940</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="get-apicontractsidchat">GET /api/contracts/:id/chat</h4>
+<p>Get chat history for a contract.</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;messages&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;msg-uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;role&quot;</span><span class="fu">:</span> <span class="st">&quot;user&quot;</span><span class="fu">,</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;What are the payment terms?&quot;</span><span class="fu">,</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-27T10:00:00Z&quot;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;msg-uuid-2&quot;</span><span class="fu">,</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;role&quot;</span><span class="fu">:</span> <span class="st">&quot;assistant&quot;</span><span class="fu">,</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;The payment terms are Net 30...&quot;</span><span class="fu">,</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-27T10:00:05Z&quot;</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h3 id="analytics">Analytics</h3>
+<h4 id="get-apianalyticsdashboard">GET /api/analytics/dashboard</h4>
+<p>Get dashboard statistics.</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;analytics&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;totalContracts&quot;</span><span class="fu">:</span> <span class="dv">45</span><span class="fu">,</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;riskDistribution&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;high&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;medium&quot;</span><span class="fu">:</span> <span class="dv">15</span><span class="fu">,</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;low&quot;</span><span class="fu">:</span> <span class="dv">25</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;contractTypes&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;Service Agreement&quot;</span><span class="fu">:</span> <span class="dv">20</span><span class="fu">,</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;NDA&quot;</span><span class="fu">:</span> <span class="dv">15</span><span class="fu">,</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;Employment&quot;</span><span class="fu">:</span> <span class="dv">10</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;recentActivity&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;contractId&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;contract.pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;uploaded&quot;</span><span class="fu">,</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-27T10:00:00Z&quot;</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h3 id="user-management">User Management</h3>
+<h4 id="get-apiuserprofile">GET /api/user/profile</h4>
+<p>Get current user profile.</p>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;email&quot;</span><span class="fu">:</span> <span class="st">&quot;user@example.com&quot;</span><span class="fu">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;John Doe&quot;</span><span class="fu">,</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;tokens&quot;</span><span class="fu">:</span> <span class="dv">940</span><span class="fu">,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;createdAt&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-01T00:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;preferences&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;language&quot;</span><span class="fu">:</span> <span class="st">&quot;en&quot;</span><span class="fu">,</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;theme&quot;</span><span class="fu">:</span> <span class="st">&quot;light&quot;</span><span class="fu">,</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;notifications&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="patch-apiuserprofile">PATCH /api/user/profile</h4>
+<p>Update user profile.</p>
+<p><strong>Request Body:</strong></p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Jane Doe&quot;</span><span class="fu">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;preferences&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;language&quot;</span><span class="fu">:</span> <span class="st">&quot;ar&quot;</span><span class="fu">,</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;theme&quot;</span><span class="fu">:</span> <span class="st">&quot;dark&quot;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="data-structures">Data Structures</h2>
+<h3 id="contract-analysis-object">Contract Analysis Object</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ContractAnalysis {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  contractType<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  parties<span class="op">:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  startDate<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  endDate<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  value<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  currency<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  riskLevel<span class="op">:</span> <span class="st">&#39;high&#39;</span> <span class="op">|</span> <span class="st">&#39;medium&#39;</span> <span class="op">|</span> <span class="st">&#39;low&#39;</span><span class="op">;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  riskFactors<span class="op">:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  keyInsights<span class="op">:</span> <span class="dt">string</span>[]<span class="op">;</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  obligations<span class="op">:</span> {</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    party<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    description<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    deadline<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  }[]<span class="op">;</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  paymentTerms<span class="op">?:</span> {</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    schedule<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    method<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    penalties<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="chat-message-object">Chat Message Object</h3>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ChatMessage {</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  contractId<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  role<span class="op">:</span> <span class="st">&#39;user&#39;</span> <span class="op">|</span> <span class="st">&#39;assistant&#39;</span><span class="op">;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  timestamp<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  tokensUsed<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="user-object">User Object</h3>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> User {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  email<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  tokens<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  createdAt<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  preferences<span class="op">:</span> {</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    language<span class="op">:</span> <span class="st">&#39;en&#39;</span> <span class="op">|</span> <span class="st">&#39;ar&#39;</span><span class="op">;</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    theme<span class="op">:</span> <span class="st">&#39;light&#39;</span> <span class="op">|</span> <span class="st">&#39;dark&#39;</span><span class="op">;</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    notifications<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="error-response-format">Error Response Format</h3>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;success&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;ERROR_CODE&quot;</span><span class="fu">,</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Human-readable error message&quot;</span><span class="fu">,</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="common-error-codes">Common Error Codes</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>HTTP Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AUTH_REQUIRED</code></td>
+<td>401</td>
+<td>Authentication required</td>
+</tr>
+<tr class="even">
+<td><code>INVALID_CREDENTIALS</code></td>
+<td>401</td>
+<td>Invalid email or password</td>
+</tr>
+<tr class="odd">
+<td><code>INSUFFICIENT_TOKENS</code></td>
+<td>402</td>
+<td>Not enough tokens</td>
+</tr>
+<tr class="even">
+<td><code>NOT_FOUND</code></td>
+<td>404</td>
+<td>Resource not found</td>
+</tr>
+<tr class="odd">
+<td><code>VALIDATION_ERROR</code></td>
+<td>400</td>
+<td>Invalid request data</td>
+</tr>
+<tr class="even">
+<td><code>FILE_TOO_LARGE</code></td>
+<td>413</td>
+<td>File exceeds size limit</td>
+</tr>
+<tr class="odd">
+<td><code>UNSUPPORTED_FORMAT</code></td>
+<td>415</td>
+<td>File format not supported</td>
+</tr>
+<tr class="even">
+<td><code>RATE_LIMIT_EXCEEDED</code></td>
+<td>429</td>
+<td>Too many requests</td>
+</tr>
+<tr class="odd">
+<td><code>SERVER_ERROR</code></td>
+<td>500</td>
+<td>Internal server error</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rate-limiting">Rate Limiting</h2>
+<h3 id="limits">Limits</h3>
+<ul>
+<li>Authentication endpoints: 5 requests per minute</li>
+<li>Upload endpoint: 10 requests per hour</li>
+<li>Chat endpoint: 30 requests per minute</li>
+<li>Other endpoints: 60 requests per minute</li>
+</ul>
+<h3 id="rate-limit-headers">Rate Limit Headers</h3>
+<pre class="http"><code>X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 45
+X-RateLimit-Reset: 1643723400</code></pre>
+<hr />
+<h2 id="websocket-events">WebSocket Events</h2>
+<h3 id="connection">Connection</h3>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> ws <span class="op">=</span> <span class="kw">new</span> <span class="bu">WebSocket</span>(<span class="st">&#39;wss://api.contramind.ai/ws&#39;</span>)<span class="op">;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ws<span class="op">.</span><span class="fu">on</span>(<span class="st">&#39;open&#39;</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  ws<span class="op">.</span><span class="fu">send</span>(<span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>({</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">&#39;auth&#39;</span><span class="op">,</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">token</span><span class="op">:</span> sessionToken</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  }))<span class="op">;</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="event-types">Event Types</h3>
+<h4 id="contract-analysis-update">Contract Analysis Update</h4>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;analysis_update&quot;</span><span class="fu">,</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;contractId&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;processing&quot;</span> <span class="er">|</span> <span class="st">&quot;completed&quot;</span> <span class="er">|</span> <span class="st">&quot;failed&quot;</span><span class="fu">,</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;progress&quot;</span><span class="fu">:</span> <span class="dv">75</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="real-time-analytics">Real-time Analytics</h4>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;analytics_update&quot;</span><span class="fu">,</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;totalContracts&quot;</span><span class="fu">:</span> <span class="dv">46</span><span class="fu">,</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;latestContract&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;uuid&quot;</span><span class="fu">,</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;new-contract.pdf&quot;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<div data-align="center">
+<p>
+API Version: 1.0 | Last updated: January 2025
+</p>
+</div>
+<h1 id="contramind-user-guide">ContraMind User Guide</h1>
+<h2 id="table-of-contents-2">Table of Contents</h2>
+<ul>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#creating-your-account">Creating Your Account</a></li>
+<li><a href="#logging-in">Logging In</a></li>
+<li><a href="#dashboard-overview">Dashboard Overview</a></li>
+<li><a href="#uploading-contracts">Uploading Contracts</a></li>
+<li><a href="#understanding-analysis-results">Understanding Analysis
+Results</a></li>
+<li><a href="#using-the-chat-feature">Using the Chat Feature</a></li>
+<li><a href="#managing-your-contracts">Managing Your Contracts</a></li>
+<li><a href="#token-system">Token System</a></li>
+<li><a href="#settings-and-preferences">Settings and
+Preferences</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started</h2>
+<p>Welcome to ContraMind! This guide will help you navigate through our
+AI-powered contract analysis platform. Whether you’re a legal
+professional, business owner, or contract manager, ContraMind simplifies
+contract review and risk assessment.</p>
+<h3 id="system-requirements">System Requirements</h3>
+<ul>
+<li>Modern web browser (Chrome, Firefox, Safari, Edge)</li>
+<li>Internet connection</li>
+<li>PDF or DOCX contracts for analysis</li>
+</ul>
+<hr />
+<h2 id="creating-your-account">Creating Your Account</h2>
+<h3 id="step-1-navigate-to-sign-up">Step 1: Navigate to Sign Up</h3>
+<ol type="1">
+<li>Visit <a href="https://contramind.ai">ContraMind.ai</a></li>
+<li>Click the <strong>“Get Started”</strong> or <strong>“Sign
+Up”</strong> button</li>
+</ol>
+<h3 id="step-2-choose-your-sign-up-method">Step 2: Choose Your Sign-Up
+Method</h3>
+<h4 id="option-a-email-sign-up">Option A: Email Sign-Up</h4>
+<ol type="1">
+<li>Enter your email address</li>
+<li>Create a strong password (minimum 8 characters)</li>
+<li>Enter your full name</li>
+<li>Click <strong>“Create Account”</strong></li>
+<li>Check your email for verification link</li>
+<li>Click the verification link to activate your account</li>
+</ol>
+<h4 id="option-b-google-sign-up">Option B: Google Sign-Up</h4>
+<ol type="1">
+<li>Click <strong>“Continue with Google”</strong></li>
+<li>Select your Google account</li>
+<li>Authorize ContraMind access</li>
+<li>Complete your profile if needed</li>
+</ol>
+<h4 id="option-c-microsoft-sign-up">Option C: Microsoft Sign-Up</h4>
+<ol type="1">
+<li>Click <strong>“Continue with Microsoft”</strong></li>
+<li>Enter your Microsoft credentials</li>
+<li>Authorize ContraMind access</li>
+<li>Complete your profile if needed</li>
+</ol>
+<h3 id="step-3-welcome-bonus">Step 3: Welcome Bonus</h3>
+<ul>
+<li>You’ll receive <strong>1000 free tokens</strong> upon
+registration</li>
+<li>Tokens are used for contract uploads and chat interactions</li>
+</ul>
+<hr />
+<h2 id="logging-in">Logging In</h2>
+<h3 id="regular-login">Regular Login</h3>
+<ol type="1">
+<li>Go to the login page</li>
+<li>Enter your email and password</li>
+<li>Check “Remember me” to stay logged in</li>
+<li>Click <strong>“Sign In”</strong></li>
+</ol>
+<h3 id="social-login">Social Login</h3>
+<ol type="1">
+<li>Click <strong>“Continue with Google”</strong> or <strong>“Continue
+with Microsoft”</strong></li>
+<li>Select your account</li>
+<li>You’ll be automatically logged in</li>
+</ol>
+<h3 id="forgot-password">Forgot Password?</h3>
+<ol type="1">
+<li>Click <strong>“Forgot Password?”</strong> on the login page</li>
+<li>Enter your email address</li>
+<li>Check your email for reset instructions</li>
+<li>Create a new password</li>
+</ol>
+<hr />
+<h2 id="dashboard-overview">Dashboard Overview</h2>
+<p>Once logged in, you’ll see your personalized dashboard with:</p>
+<h3 id="header-section">1. Header Section</h3>
+<ul>
+<li><strong>ContraMind Logo</strong>: Click to return to dashboard</li>
+<li><strong>Token Balance</strong>: Shows remaining tokens</li>
+<li><strong>Profile Menu</strong>: Access settings and logout</li>
+</ul>
+<h3 id="analytics-section">2. Analytics Section</h3>
+<ul>
+<li><strong>Total Contracts</strong>: Number of contracts analyzed</li>
+<li><strong>Risk Distribution</strong>: Visual breakdown of risk
+levels</li>
+<li><strong>Contract Types</strong>: Distribution of contract
+categories</li>
+<li><strong>Recent Activity</strong>: Latest 5 contracts</li>
+</ul>
+<h3 id="navigation-sidebar">3. Navigation Sidebar</h3>
+<ul>
+<li><strong>Dashboard</strong>: Main overview page</li>
+<li><strong>Contracts</strong>: Your contract library</li>
+<li><strong>Chat</strong>: Contract analysis interface</li>
+<li><strong>Settings</strong>: Account preferences</li>
+<li><strong>Help</strong>: Support and FAQ</li>
+</ul>
+<hr />
+<h2 id="uploading-contracts">Uploading Contracts</h2>
+<h3 id="step-1-navigate-to-chat">Step 1: Navigate to Chat</h3>
+<ol type="1">
+<li>Click <strong>“Chat”</strong> in the sidebar</li>
+<li>Or click <strong>“New Analysis”</strong> button</li>
+</ol>
+<h3 id="step-2-select-your-role">Step 2: Select Your Role</h3>
+<p>Choose your perspective for analysis: - <strong>Client</strong>: If
+you’re the buyer/customer - <strong>Vendor</strong>: If you’re the
+seller/provider - <strong>Neutral</strong>: For objective third-party
+analysis</p>
+<h3 id="step-3-upload-your-contract">Step 3: Upload Your Contract</h3>
+<ol type="1">
+<li><strong>Drag and Drop</strong>: Drag your file into the upload
+area</li>
+<li><strong>Or Browse</strong>: Click to select file from your
+computer</li>
+<li><strong>Supported formats</strong>: PDF and DOCX</li>
+<li><strong>Maximum size</strong>: 10MB</li>
+</ol>
+<h3 id="step-4-processing">Step 4: Processing</h3>
+<ul>
+<li>Upload costs <strong>10 tokens</strong></li>
+<li>Processing typically takes 10-30 seconds</li>
+<li>You’ll see a progress indicator</li>
+<li>Analysis begins automatically</li>
+</ul>
+<hr />
+<h2 id="understanding-analysis-results">Understanding Analysis
+Results</h2>
+<p>After upload, ContraMind provides comprehensive analysis:</p>
+<h3 id="risk-assessment">Risk Assessment</h3>
+<ul>
+<li><strong>High Risk</strong> 🔴: Requires immediate attention</li>
+<li><strong>Medium Risk</strong> 🟡: Review recommended changes</li>
+<li><strong>Low Risk</strong> 🟢: Generally acceptable terms</li>
+</ul>
+<h3 id="key-information-extracted">Key Information Extracted</h3>
+<ol type="1">
+<li><strong>Contract Type</strong>: Service Agreement, NDA, etc.</li>
+<li><strong>Parties</strong>: All involved parties identified</li>
+<li><strong>Dates</strong>: Start, end, and key milestone dates</li>
+<li><strong>Financial Terms</strong>: Payment amounts and schedules</li>
+<li><strong>Obligations</strong>: Key responsibilities for each
+party</li>
+</ol>
+<h3 id="risk-factors">Risk Factors</h3>
+<ul>
+<li>Specific clauses that pose risks</li>
+<li>Missing standard protections</li>
+<li>Unfavorable terms highlighted</li>
+<li>Compliance issues identified</li>
+</ul>
+<h3 id="recommendations">Recommendations</h3>
+<ul>
+<li>Suggested amendments</li>
+<li>Negotiation points</li>
+<li>Alternative clause suggestions</li>
+<li>Risk mitigation strategies</li>
+</ul>
+<hr />
+<h2 id="using-the-chat-feature">Using the Chat Feature</h2>
+<h3 id="starting-a-conversation">Starting a Conversation</h3>
+<ol type="1">
+<li>After contract analysis, the chat interface opens</li>
+<li>Type your question in the message box</li>
+<li>Press Enter or click Send</li>
+<li>Each message costs <strong>5 tokens</strong></li>
+</ol>
+<h3 id="example-questions">Example Questions</h3>
+<ul>
+<li>“Can you explain the termination clause?”</li>
+<li>“What are the payment penalties?”</li>
+<li>“Is the liability clause standard?”</li>
+<li>“What changes would you recommend?”</li>
+<li>“Can you draft an amendment for the delivery terms?”</li>
+</ul>
+<h3 id="chat-features">Chat Features</h3>
+<ul>
+<li><strong>Copy Messages</strong>: Click copy icon to copy AI
+responses</li>
+<li><strong>Clear Context</strong>: Start fresh conversation</li>
+<li><strong>Export Chat</strong>: Download conversation as PDF</li>
+<li><strong>Print View</strong>: Print-friendly format</li>
+</ul>
+<h3 id="best-practices">Best Practices</h3>
+<ol type="1">
+<li>Be specific in your questions</li>
+<li>Ask follow-up questions for clarity</li>
+<li>Request specific clause explanations</li>
+<li>Ask for amendment suggestions</li>
+</ol>
+<hr />
+<h2 id="managing-your-contracts">Managing Your Contracts</h2>
+<h3 id="contract-library">Contract Library</h3>
+<p>Access all your contracts from the sidebar:</p>
+<ol type="1">
+<li><strong>View List</strong>: See all uploaded contracts</li>
+<li><strong>Search</strong>: Find contracts by name</li>
+<li><strong>Filter</strong>: Sort by risk level or date</li>
+<li><strong>Resume Chat</strong>: Continue previous conversations</li>
+</ol>
+<h3 id="contract-details">Contract Details</h3>
+<p>Click any contract to view: - Full analysis report - Chat history -
+Risk assessment - Download original file</p>
+<h3 id="organization-tips">Organization Tips</h3>
+<ul>
+<li>Use descriptive filenames</li>
+<li>Regularly review high-risk contracts</li>
+<li>Archive completed contracts</li>
+<li>Export important analyses</li>
+</ul>
+<hr />
+<h2 id="token-system-1">Token System</h2>
+<h3 id="understanding-tokens">Understanding Tokens</h3>
+<p>Tokens are ContraMind’s usage credits: - <strong>Initial
+Balance</strong>: 1000 free tokens - <strong>Contract Upload</strong>:
+10 tokens - <strong>Chat Message</strong>: 5 tokens</p>
+<h3 id="checking-balance">Checking Balance</h3>
+<p>Your token balance appears in: - Header (top right) - Profile
+settings - After each transaction</p>
+<h3 id="getting-more-tokens">Getting More Tokens</h3>
+<ol type="1">
+<li>Go to Settings &gt; Billing</li>
+<li>Choose a token package</li>
+<li>Complete secure payment</li>
+<li>Tokens added instantly</li>
+</ol>
+<h3 id="token-packages">Token Packages</h3>
+<ul>
+<li><strong>Starter</strong>: 500 tokens</li>
+<li><strong>Professional</strong>: 2000 tokens</li>
+<li><strong>Enterprise</strong>: 10000 tokens</li>
+<li><strong>Custom</strong>: Contact sales</li>
+</ul>
+<hr />
+<h2 id="settings-and-preferences">Settings and Preferences</h2>
+<h3 id="profile-settings">Profile Settings</h3>
+<ol type="1">
+<li>Click your profile icon</li>
+<li>Select <strong>Settings</strong></li>
+<li>Update:
+<ul>
+<li>Name</li>
+<li>Email</li>
+<li>Password</li>
+<li>Profile picture</li>
+</ul></li>
+</ol>
+<h3 id="preferences-1">Preferences</h3>
+<p>Configure your experience:</p>
+<h4 id="language">Language</h4>
+<ul>
+<li>English or Arabic</li>
+<li>Auto-detect browser language</li>
+<li>RTL/LTR layout support</li>
+</ul>
+<h4 id="theme">Theme</h4>
+<ul>
+<li>Light mode</li>
+<li>Dark mode</li>
+<li>System preference</li>
+</ul>
+<h4 id="notifications">Notifications</h4>
+<ul>
+<li>Email alerts for high-risk contracts</li>
+<li>Analysis completion notifications</li>
+<li>Token balance warnings</li>
+<li>Marketing communications</li>
+</ul>
+<h3 id="privacy-settings">Privacy Settings</h3>
+<ul>
+<li>Data export options</li>
+<li>Account deletion</li>
+<li>Privacy preferences</li>
+<li>Cookie settings</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<h4 id="upload-fails">Upload Fails</h4>
+<ul>
+<li>Check file format (PDF/DOCX only)</li>
+<li>Ensure file size &lt; 10MB</li>
+<li>Verify sufficient tokens</li>
+<li>Try different browser</li>
+</ul>
+<h4 id="analysis-errors">Analysis Errors</h4>
+<ul>
+<li>Re-upload the file</li>
+<li>Check file isn’t corrupted</li>
+<li>Ensure text is extractable</li>
+<li>Contact support if persists</li>
+</ul>
+<h4 id="login-problems">Login Problems</h4>
+<ul>
+<li>Reset password</li>
+<li>Clear browser cache</li>
+<li>Check email verification</li>
+<li>Try different login method</li>
+</ul>
+<h4 id="token-issues">Token Issues</h4>
+<ul>
+<li>Verify current balance</li>
+<li>Check transaction history</li>
+<li>Ensure payment processed</li>
+<li>Contact billing support</li>
+</ul>
+<h3 id="getting-help">Getting Help</h3>
+<h4 id="in-app-support">In-App Support</h4>
+<ol type="1">
+<li>Click <strong>Help</strong> in sidebar</li>
+<li>Browse FAQ section</li>
+<li>Start live chat (business hours)</li>
+<li>Submit support ticket</li>
+</ol>
+<h4 id="email-support">Email Support</h4>
+<ul>
+<li>General: support@contramind.ai</li>
+<li>Billing: billing@contramind.ai</li>
+<li>Technical: tech@contramind.ai</li>
+</ul>
+<h4 id="response-times">Response Times</h4>
+<ul>
+<li>Live chat: Immediate (business hours)</li>
+<li>Email: Within 24 hours</li>
+<li>Urgent issues: Within 4 hours</li>
+</ul>
+<hr />
+<h2 id="tips-for-success">Tips for Success</h2>
+<h3 id="best-practices-1">Best Practices</h3>
+<ol type="1">
+<li><strong>Upload Quality</strong>: Use clear, complete contracts</li>
+<li><strong>Role Selection</strong>: Choose correct perspective</li>
+<li><strong>Specific Questions</strong>: Ask detailed questions</li>
+<li><strong>Regular Reviews</strong>: Check high-risk contracts
+frequently</li>
+<li><strong>Token Management</strong>: Monitor usage patterns</li>
+</ol>
+<h3 id="advanced-features">Advanced Features</h3>
+<ul>
+<li>Batch upload (coming soon)</li>
+<li>API access (Enterprise)</li>
+<li>Team collaboration</li>
+<li>Custom risk profiles</li>
+<li>White-label options</li>
+</ul>
+<hr />
+<h2 id="keyboard-shortcuts">Keyboard Shortcuts</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Windows/Linux</th>
+<th>Mac</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>New Chat</td>
+<td>Ctrl + N</td>
+<td>Cmd + N</td>
+</tr>
+<tr class="even">
+<td>Upload</td>
+<td>Ctrl + U</td>
+<td>Cmd + U</td>
+</tr>
+<tr class="odd">
+<td>Search</td>
+<td>Ctrl + K</td>
+<td>Cmd + K</td>
+</tr>
+<tr class="even">
+<td>Settings</td>
+<td>Ctrl + ,</td>
+<td>Cmd + ,</td>
+</tr>
+<tr class="odd">
+<td>Help</td>
+<td>F1</td>
+<td>F1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="mobile-experience">Mobile Experience</h2>
+<p>ContraMind is fully responsive: - Touch-optimized interface - Swipe
+navigation - Mobile upload support - Responsive charts - Optimized chat
+interface</p>
+<hr />
+<div data-align="center">
+<p>
+Need more help? Contact us at support@contramind.ai
+</p>
+<p>
+Last updated: January 2025
+</p>
+</div>
+<h1 id="contramind-developer-guide">ContraMind Developer Guide</h1>
+<h2 id="table-of-contents-3">Table of Contents</h2>
+<ul>
+<li><a href="#project-structure">Project Structure</a></li>
+<li><a href="#development-setup">Development Setup</a></li>
+<li><a href="#architecture-overview">Architecture Overview</a></li>
+<li><a href="#component-hierarchy">Component Hierarchy</a></li>
+<li><a href="#state-management">State Management</a></li>
+<li><a href="#database-schema">Database Schema</a></li>
+<li><a href="#adding-new-features">Adding New Features</a></li>
+<li><a href="#testing">Testing</a></li>
+<li><a href="#deployment">Deployment</a></li>
+<li><a href="#code-standards">Code Standards</a></li>
+</ul>
+<hr />
+<h2 id="project-structure">Project Structure</h2>
+<pre><code>contramind/
+├── client/                    # Frontend React application
+│   ├── public/               # Static assets
+│   ├── src/
+│   │   ├── components/       # React components
+│   │   │   ├── ui/          # Shadcn UI components
+│   │   │   └── ...          # Feature components
+│   │   ├── hooks/           # Custom React hooks
+│   │   ├── lib/             # Utilities and helpers
+│   │   ├── pages/           # Page components
+│   │   ├── App.tsx          # Main app component
+│   │   └── main.tsx         # Entry point
+│   └── index.html
+├── server/                   # Backend Express application
+│   ├── routes.ts            # API route definitions
+│   ├── storage.ts           # Database interface
+│   ├── auth.ts              # Authentication logic
+│   ├── contractExtractor.ts # Contract processing
+│   └── index.ts             # Server entry point
+├── shared/                   # Shared types and schemas
+│   └── schema.ts            # Database schemas
+├── docs/                     # Documentation
+├── attached_assets/          # User uploaded assets
+├── package.json             # Dependencies
+├── vite.config.ts           # Vite configuration
+├── drizzle.config.ts        # Database configuration
+├── tailwind.config.ts       # Tailwind CSS config
+└── tsconfig.json            # TypeScript config</code></pre>
+<hr />
+<h2 id="development-setup">Development Setup</h2>
+<h3 id="prerequisites-1">Prerequisites</h3>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Required versions</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Node.js</span> <span class="op">&gt;</span>= 20.x</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="ex">PostgreSQL</span> <span class="op">&gt;</span>= 16.x</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> <span class="op">&gt;</span>= 10.x</span></code></pre></div>
+<h3 id="initial-setup">Initial Setup</h3>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clone repository</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/yourusername/contramind.git</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> contramind</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install dependencies</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup environment variables</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Edit .env with your configuration</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup database</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run db:push</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Start development server</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev</span></code></pre></div>
+<h3 id="development-commands">Development Commands</h3>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;scripts&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;dev&quot;</span><span class="fu">:</span> <span class="st">&quot;Starts both frontend and backend&quot;</span><span class="fu">,</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;build&quot;</span><span class="fu">:</span> <span class="st">&quot;Production build&quot;</span><span class="fu">,</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;db:push&quot;</span><span class="fu">:</span> <span class="st">&quot;Push schema changes to database&quot;</span><span class="fu">,</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;db:studio&quot;</span><span class="fu">:</span> <span class="st">&quot;Open Drizzle Studio&quot;</span><span class="fu">,</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;typecheck&quot;</span><span class="fu">:</span> <span class="st">&quot;Run TypeScript checks&quot;</span><span class="fu">,</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;lint&quot;</span><span class="fu">:</span> <span class="st">&quot;Run ESLint&quot;</span><span class="fu">,</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;format&quot;</span><span class="fu">:</span> <span class="st">&quot;Format code with Prettier&quot;</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="architecture-overview">Architecture Overview</h2>
+<h3 id="system-architecture-diagram">System Architecture Diagram</h3>
+<pre class="mermaid"><code>graph TB
+    subgraph &quot;Frontend&quot;
+        A[React App] --&gt; B[Wouter Router]
+        A --&gt; C[React Query]
+        A --&gt; D[Shadcn UI]
+        C --&gt; E[API Client]
+    end
+    
+    subgraph &quot;Backend&quot;
+        F[Express Server] --&gt; G[Routes]
+        G --&gt; H[Storage Layer]
+        G --&gt; I[Auth Middleware]
+        H --&gt; J[Drizzle ORM]
+    end
+    
+    subgraph &quot;External Services&quot;
+        K[PostgreSQL]
+        L[Resend Email]
+        M[OAuth Providers]
+    end
+    
+    E --&gt; F
+    J --&gt; K
+    I --&gt; M
+    F --&gt; L</code></pre>
+<h3 id="key-design-decisions">Key Design Decisions</h3>
+<h4 id="frontend-architecture">Frontend Architecture</h4>
+<ul>
+<li><strong>React 18.3</strong> with TypeScript for type safety</li>
+<li><strong>Wouter</strong> for lightweight client-side routing</li>
+<li><strong>React Query</strong> for server state management</li>
+<li><strong>Tailwind CSS</strong> for utility-first styling</li>
+<li><strong>Shadcn UI</strong> for accessible component library</li>
+<li><strong>Framer Motion</strong> for animations</li>
+</ul>
+<h4 id="backend-architecture">Backend Architecture</h4>
+<ul>
+<li><strong>Express.js</strong> for REST API</li>
+<li><strong>Drizzle ORM</strong> for type-safe database queries</li>
+<li><strong>Passport.js</strong> for authentication strategies</li>
+<li><strong>Session-based</strong> auth with secure cookies</li>
+<li><strong>Custom extraction pipeline</strong> for document
+processing</li>
+</ul>
+<hr />
+<h2 id="component-hierarchy">Component Hierarchy</h2>
+<h3 id="main-application-structure">Main Application Structure</h3>
+<pre><code>App.tsx
+├── SimpleLanguageProvider
+├── TooltipProvider
+├── QueryClientProvider
+│   └── Router
+│       ├── Layout
+│       │   ├── Header
+│       │   ├── Sidebar
+│       │   └── Content
+│       └── Routes
+│           ├── Dashboard
+│           ├── Chat
+│           ├── Settings
+│           └── Auth Pages</code></pre>
+<h3 id="key-components">Key Components</h3>
+<h4 id="dashboard-components">Dashboard Components</h4>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">// client/src/pages/Dashboard.tsx</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>Dashboard</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>├── <span class="fu">StatCard</span> (Total Contracts<span class="op">,</span> Risk Levels)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>├── RiskDistributionChart</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>├── ContractTypesChart</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>└── RecentActivity</span></code></pre></div>
+<h4 id="chat-interface-1">Chat Interface</h4>
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">// client/src/pages/Chat.tsx</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>Chat</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>├── ContractUpload</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>│   ├── PartySelector</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>│   └── FileDropzone</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>├── ChatMessages</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>│   ├── UserMessage</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>│   └── AssistantMessage</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>└── ChatInput</span></code></pre></div>
+<h4 id="authentication-flow">Authentication Flow</h4>
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">// client/src/pages/auth/</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>AuthLayout</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>├── Login</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>│   ├── EmailPasswordForm</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>│   └── SocialLogins</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>├── Signup</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>│   ├── RegistrationForm</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>│   └── EmailVerification</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>└── ForgotPassword</span></code></pre></div>
+<hr />
+<h2 id="state-management">State Management</h2>
+<h3 id="global-state-with-react-query">Global State with React
+Query</h3>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Query Keys Convention</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> queryKeys <span class="op">=</span> {</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  user<span class="op">:</span> [<span class="st">&#39;user&#39;</span>]<span class="op">,</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  contracts<span class="op">:</span> [<span class="st">&#39;contracts&#39;</span>]<span class="op">,</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  contract<span class="op">:</span> (id<span class="op">:</span> <span class="dt">string</span>) <span class="kw">=&gt;</span> [<span class="st">&#39;contracts&#39;</span><span class="op">,</span> id]<span class="op">,</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  analytics<span class="op">:</span> [<span class="st">&#39;analytics&#39;</span>]<span class="op">,</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  chat<span class="op">:</span> (contractId<span class="op">:</span> <span class="dt">string</span>) <span class="kw">=&gt;</span> [<span class="st">&#39;chat&#39;</span><span class="op">,</span> contractId]</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Example Query Hook</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">useContracts</span>() {</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">useQuery</span>({</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    queryKey<span class="op">:</span> queryKeys<span class="op">.</span><span class="at">contracts</span><span class="op">,</span></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    queryFn<span class="op">:</span> () <span class="kw">=&gt;</span> <span class="fu">apiRequest</span>(<span class="st">&#39;/api/contracts&#39;</span>)<span class="op">,</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    staleTime<span class="op">:</span> <span class="dv">5</span> <span class="op">*</span> <span class="dv">60</span> <span class="op">*</span> <span class="dv">1000</span><span class="op">,</span> <span class="co">// 5 minutes</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="co">// Example Mutation Hook</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">useUploadContract</span>() {</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> queryClient <span class="op">=</span> <span class="fu">useQueryClient</span>()<span class="op">;</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">useMutation</span>({</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>    mutationFn<span class="op">:</span> (data<span class="op">:</span> <span class="bu">FormData</span>) <span class="kw">=&gt;</span> </span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apiRequest</span>(<span class="st">&#39;/api/contracts/upload&#39;</span><span class="op">,</span> {</span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>        method<span class="op">:</span> <span class="st">&#39;POST&#39;</span><span class="op">,</span></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>        body<span class="op">:</span> data</span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>    onSuccess<span class="op">:</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a>      queryClient<span class="op">.</span><span class="fu">invalidateQueries</span>({ </span>
+<span id="cb41-31"><a href="#cb41-31" aria-hidden="true" tabindex="-1"></a>        queryKey<span class="op">:</span> queryKeys<span class="op">.</span><span class="at">contracts</span> </span>
+<span id="cb41-32"><a href="#cb41-32" aria-hidden="true" tabindex="-1"></a>      })<span class="op">;</span></span>
+<span id="cb41-33"><a href="#cb41-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb41-34"><a href="#cb41-34" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb41-35"><a href="#cb41-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="local-state-management">Local State Management</h3>
+<ul>
+<li>Component state with <code>useState</code></li>
+<li>Form state with <code>react-hook-form</code></li>
+<li>Theme state with Context API</li>
+<li>Language state with custom provider</li>
+</ul>
+<hr />
+<h2 id="database-schema">Database Schema</h2>
+<h3 id="core-tables">Core Tables</h3>
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Users Table</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> users <span class="op">=</span> <span class="fu">pgTable</span>(<span class="st">&#39;users&#39;</span><span class="op">,</span> {</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;id&#39;</span>)<span class="op">.</span><span class="fu">primaryKey</span>()<span class="op">.</span><span class="fu">defaultRandom</span>()<span class="op">,</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  email<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;email&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">.</span><span class="fu">unique</span>()<span class="op">,</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  password<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;password&#39;</span>)<span class="op">,</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;name&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">,</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  tokens<span class="op">:</span> <span class="fu">integer</span>(<span class="st">&#39;tokens&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">.</span><span class="fu">default</span>(<span class="dv">1000</span>)<span class="op">,</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  emailVerified<span class="op">:</span> <span class="dt">boolean</span>(<span class="st">&#39;email_verified&#39;</span>)<span class="op">.</span><span class="fu">default</span>(<span class="kw">false</span>)<span class="op">,</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  createdAt<span class="op">:</span> <span class="fu">timestamp</span>(<span class="st">&#39;created_at&#39;</span>)<span class="op">.</span><span class="fu">defaultNow</span>()<span class="op">,</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  preferences<span class="op">:</span> <span class="fu">jsonb</span>(<span class="st">&#39;preferences&#39;</span>)<span class="op">.</span><span class="fu">$type</span><span class="op">&lt;</span>UserPreferences<span class="op">&gt;</span>()</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Contracts Table</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> contracts <span class="op">=</span> <span class="fu">pgTable</span>(<span class="st">&#39;contracts&#39;</span><span class="op">,</span> {</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;id&#39;</span>)<span class="op">.</span><span class="fu">primaryKey</span>()<span class="op">.</span><span class="fu">defaultRandom</span>()<span class="op">,</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  userId<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;user_id&#39;</span>)<span class="op">.</span><span class="fu">references</span>(() <span class="kw">=&gt;</span> users<span class="op">.</span><span class="at">id</span>)<span class="op">,</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  filename<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;filename&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">,</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  party<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;party&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">,</span> <span class="co">// client, vendor, neutral</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>  uploadDate<span class="op">:</span> <span class="fu">timestamp</span>(<span class="st">&#39;upload_date&#39;</span>)<span class="op">.</span><span class="fu">defaultNow</span>()<span class="op">,</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>  fileData<span class="op">:</span> <span class="fu">bytea</span>(<span class="st">&#39;file_data&#39;</span>)<span class="op">,</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>  analysis<span class="op">:</span> <span class="fu">jsonb</span>(<span class="st">&#39;analysis&#39;</span>)<span class="op">.</span><span class="fu">$type</span><span class="op">&lt;</span>ContractAnalysis<span class="op">&gt;</span>()</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a><span class="co">// Contract Details Table</span></span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> contractDetails <span class="op">=</span> <span class="fu">pgTable</span>(<span class="st">&#39;contract_details&#39;</span><span class="op">,</span> {</span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;id&#39;</span>)<span class="op">.</span><span class="fu">primaryKey</span>()<span class="op">.</span><span class="fu">defaultRandom</span>()<span class="op">,</span></span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>  contractId<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;contract_id&#39;</span>)<span class="op">.</span><span class="fu">references</span>(() <span class="kw">=&gt;</span> contracts<span class="op">.</span><span class="at">id</span>)<span class="op">,</span></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>  contractType<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;contract_type&#39;</span>)<span class="op">,</span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>  parties<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;parties&#39;</span>)<span class="op">.</span><span class="fu">array</span>()<span class="op">,</span></span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a>  startDate<span class="op">:</span> <span class="fu">date</span>(<span class="st">&#39;start_date&#39;</span>)<span class="op">,</span></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a>  endDate<span class="op">:</span> <span class="fu">date</span>(<span class="st">&#39;end_date&#39;</span>)<span class="op">,</span></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a>  riskLevel<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;risk_level&#39;</span>)<span class="op">,</span></span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a>  riskFactors<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;risk_factors&#39;</span>)<span class="op">.</span><span class="fu">array</span>()<span class="op">,</span></span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a>  keyInsights<span class="op">:</span> <span class="fu">jsonb</span>(<span class="st">&#39;key_insights&#39;</span>)</span>
+<span id="cb42-35"><a href="#cb42-35" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb42-36"><a href="#cb42-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-37"><a href="#cb42-37" aria-hidden="true" tabindex="-1"></a><span class="co">// Chat Messages Table</span></span>
+<span id="cb42-38"><a href="#cb42-38" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> contractChats <span class="op">=</span> <span class="fu">pgTable</span>(<span class="st">&#39;contract_chats&#39;</span><span class="op">,</span> {</span>
+<span id="cb42-39"><a href="#cb42-39" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;id&#39;</span>)<span class="op">.</span><span class="fu">primaryKey</span>()<span class="op">.</span><span class="fu">defaultRandom</span>()<span class="op">,</span></span>
+<span id="cb42-40"><a href="#cb42-40" aria-hidden="true" tabindex="-1"></a>  contractId<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;contract_id&#39;</span>)<span class="op">.</span><span class="fu">references</span>(() <span class="kw">=&gt;</span> contracts<span class="op">.</span><span class="at">id</span>)<span class="op">,</span></span>
+<span id="cb42-41"><a href="#cb42-41" aria-hidden="true" tabindex="-1"></a>  role<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;role&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">,</span> <span class="co">// user, assistant</span></span>
+<span id="cb42-42"><a href="#cb42-42" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;message&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">,</span></span>
+<span id="cb42-43"><a href="#cb42-43" aria-hidden="true" tabindex="-1"></a>  timestamp<span class="op">:</span> <span class="fu">timestamp</span>(<span class="st">&#39;timestamp&#39;</span>)<span class="op">.</span><span class="fu">defaultNow</span>()<span class="op">,</span></span>
+<span id="cb42-44"><a href="#cb42-44" aria-hidden="true" tabindex="-1"></a>  tokensUsed<span class="op">:</span> <span class="fu">integer</span>(<span class="st">&#39;tokens_used&#39;</span>)</span>
+<span id="cb42-45"><a href="#cb42-45" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="database-migrations">Database Migrations</h3>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Push schema changes (development)</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run db:push</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate migration files (production)</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run db:generate</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run migrations</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run db:migrate</span></code></pre></div>
+<hr />
+<h2 id="adding-new-features">Adding New Features</h2>
+<h3 id="feature-development-workflow">Feature Development Workflow</h3>
+<h4 id="define-data-model">1. Define Data Model</h4>
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">// shared/schema.ts</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> newFeature <span class="op">=</span> <span class="fu">pgTable</span>(<span class="st">&#39;new_feature&#39;</span><span class="op">,</span> {</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;id&#39;</span>)<span class="op">.</span><span class="fu">primaryKey</span>()<span class="op">.</span><span class="fu">defaultRandom</span>()<span class="op">,</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add fields</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Create schemas</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> insertNewFeatureSchema <span class="op">=</span> <span class="fu">createInsertSchema</span>(newFeature)<span class="op">;</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="im">export type</span> InsertNewFeature <span class="op">=</span> z<span class="op">.</span><span class="at">infer</span><span class="op">&lt;</span><span class="kw">typeof</span> insertNewFeatureSchema<span class="op">&gt;;</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="im">export type</span> SelectNewFeature <span class="op">=</span> <span class="kw">typeof</span> newFeature<span class="op">.</span><span class="at">$inferSelect</span><span class="op">;</span></span></code></pre></div>
+<h4 id="update-storage-interface">2. Update Storage Interface</h4>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">// server/storage.ts</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> IStorage {</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Existing methods...</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// New feature methods</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">createNewFeature</span>(data<span class="op">:</span> InsertNewFeature)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>SelectNewFeature<span class="op">&gt;;</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">getNewFeatures</span>(userId<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>SelectNewFeature[]<span class="op">&gt;;</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h4 id="implement-api-routes">3. Implement API Routes</h4>
+<div class="sourceCode" id="cb46"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">// server/routes.ts</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>router<span class="op">.</span><span class="fu">post</span>(<span class="st">&#39;/api/new-feature&#39;</span><span class="op">,</span> authenticate<span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> {</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> validated <span class="op">=</span> insertNewFeatureSchema<span class="op">.</span><span class="fu">parse</span>(req<span class="op">.</span><span class="at">body</span>)<span class="op">;</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> storage<span class="op">.</span><span class="fu">createNewFeature</span>(validated)<span class="op">;</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    res<span class="op">.</span><span class="fu">json</span>({ success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span> data<span class="op">:</span> result })<span class="op">;</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (error) {</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">handleError</span>(error<span class="op">,</span> res)<span class="op">;</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h4 id="create-frontend-components">4. Create Frontend Components</h4>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">// client/src/components/NewFeature.tsx</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">NewFeature</span>() {</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { data<span class="op">,</span> isLoading } <span class="op">=</span> <span class="fu">useQuery</span>({</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    queryKey<span class="op">:</span> [<span class="st">&#39;new-feature&#39;</span>]<span class="op">,</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    queryFn<span class="op">:</span> () <span class="kw">=&gt;</span> <span class="fu">apiRequest</span>(<span class="st">&#39;/api/new-feature&#39;</span>)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Component implementation</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h4 id="add-to-router">5. Add to Router</h4>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">// client/src/App.tsx</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>Route path<span class="op">=</span><span class="st">&quot;/new-feature&quot;</span> component<span class="op">=</span>{NewFeature} <span class="op">/&gt;</span></span></code></pre></div>
+<hr />
+<h2 id="testing">Testing</h2>
+<h3 id="unit-testing">Unit Testing</h3>
+<div class="sourceCode" id="cb49"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Example test file</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co">// tests/contractExtractor.test.ts</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { extractContractData } <span class="im">from</span> <span class="st">&#39;../server/contractExtractor&#39;</span><span class="op">;</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(<span class="st">&#39;Contract Extractor&#39;</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;should extract party names from PDF&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">extractContractData</span>(testPDF)<span class="op">;</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(result<span class="op">.</span><span class="at">parties</span>)<span class="op">.</span><span class="fu">toHaveLength</span>(<span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="integration-testing">Integration Testing</h3>
+<div class="sourceCode" id="cb50"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">// tests/api.test.ts</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(<span class="st">&#39;API Endpoints&#39;</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">it</span>(<span class="st">&#39;should upload contract successfully&#39;</span><span class="op">,</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">request</span>(app)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">post</span>(<span class="st">&#39;/api/contracts/upload&#39;</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attach</span>(<span class="st">&#39;file&#39;</span><span class="op">,</span> <span class="st">&#39;test-contract.pdf&#39;</span>)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">field</span>(<span class="st">&#39;party&#39;</span><span class="op">,</span> <span class="st">&#39;client&#39;</span>)<span class="op">;</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(response<span class="op">.</span><span class="at">status</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="dv">200</span>)<span class="op">;</span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expect</span>(response<span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">success</span>)<span class="op">.</span><span class="fu">toBe</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<h3 id="e2e-testing">E2E Testing</h3>
+<div class="sourceCode" id="cb51"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">// tests/e2e/contract-flow.test.ts</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">test</span>(<span class="st">&#39;complete contract analysis flow&#39;</span><span class="op">,</span> <span class="kw">async</span> ({ page }) <span class="kw">=&gt;</span> {</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> page<span class="op">.</span><span class="fu">goto</span>(<span class="st">&#39;/&#39;</span>)<span class="op">;</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> page<span class="op">.</span><span class="fu">click</span>(<span class="st">&#39;text=Login&#39;</span>)<span class="op">;</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ... complete flow test</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<hr />
+<h2 id="deployment">Deployment</h2>
+<h3 id="production-build">Production Build</h3>
+<div class="sourceCode" id="cb52"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build frontend and backend</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Output structure</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="ex">dist/</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> client/          <span class="co"># Vite build output</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> server/          <span class="co"># TypeScript compiled output</span></span></code></pre></div>
+<h3 id="environment-configuration">Environment Configuration</h3>
+<pre class="env"><code># Production .env
+NODE_ENV=production
+DATABASE_URL=postgresql://prod-connection
+SESSION_SECRET=strong-secret-key
+GOOGLE_CLIENT_ID=prod-client-id
+GOOGLE_CLIENT_SECRET=prod-client-secret
+RESEND_API_KEY=prod-api-key</code></pre>
+<h3 id="deployment-checklist">Deployment Checklist</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Update environment
+variables</label></li>
+<li><label><input type="checkbox" />Run database migrations</label></li>
+<li><label><input type="checkbox" />Build production assets</label></li>
+<li><label><input type="checkbox" />Configure SSL
+certificates</label></li>
+<li><label><input type="checkbox" />Setup monitoring</label></li>
+<li><label><input type="checkbox" />Configure backup
+strategy</label></li>
+<li><label><input type="checkbox" />Update DNS records</label></li>
+<li><label><input type="checkbox" />Test OAuth redirects</label></li>
+</ul>
+<h3 id="docker-deployment">Docker Deployment</h3>
+<div class="sourceCode" id="cb54"><pre
+class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dockerfile</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> node:20-alpine</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WORKDIR</span> /app</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> package*.json ./</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">npm</span> ci <span class="at">--production</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> . .</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">npm</span> run build</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="kw">EXPOSE</span> 5000</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;npm&quot;</span>, <span class="st">&quot;start&quot;</span>]</span></code></pre></div>
+<hr />
+<h2 id="code-standards">Code Standards</h2>
+<h3 id="typescript-guidelines">TypeScript Guidelines</h3>
+<div class="sourceCode" id="cb55"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Use explicit types</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> UserData {</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  email<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Avoid any</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">processUser</span>(user<span class="op">:</span> UserData)<span class="op">:</span> <span class="dt">void</span> {</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Implementation</span></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Use enums for constants</span></span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> RiskLevel {</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  LOW <span class="op">=</span> <span class="st">&#39;low&#39;</span><span class="op">,</span></span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>  MEDIUM <span class="op">=</span> <span class="st">&#39;medium&#39;</span><span class="op">,</span></span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>  HIGH <span class="op">=</span> <span class="st">&#39;high&#39;</span></span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="react-best-practices">React Best Practices</h3>
+<div class="sourceCode" id="cb56"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Use functional components</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">Component</span>({ prop }<span class="op">:</span> Props) {</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Use hooks</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> [state<span class="op">,</span> setState] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">&gt;</span>(<span class="st">&#39;&#39;</span>)<span class="op">;</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Memoize expensive computations</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> computed <span class="op">=</span> <span class="fu">useMemo</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">expensiveOperation</span>(state)<span class="op">;</span></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span> [state])<span class="op">;</span></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">&lt;</span>div<span class="op">&gt;</span>{computed}<span class="op">&lt;/</span>div<span class="op">&gt;;</span></span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="api-design">API Design</h3>
+<div class="sourceCode" id="cb57"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">// RESTful naming</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>GET    <span class="op">/</span>api<span class="op">/</span>contracts      <span class="co">// List</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>GET    <span class="op">/</span>api<span class="op">/</span>contracts<span class="op">/:</span>id  <span class="co">// Get one</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>POST   <span class="op">/</span>api<span class="op">/</span>contracts      <span class="co">// Create</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>PATCH  <span class="op">/</span>api<span class="op">/</span>contracts<span class="op">/:</span>id  <span class="co">// Update</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>DELETE <span class="op">/</span>api<span class="op">/</span>contracts<span class="op">/:</span>id  <span class="co">// Delete</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Consistent response format</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  success<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>  data<span class="op">?:</span> <span class="dt">any</span><span class="op">;</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  error<span class="op">?:</span> {</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    code<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>    message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="git-workflow">Git Workflow</h3>
+<div class="sourceCode" id="cb58"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Branch naming</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="ex">feature/contract-export</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bugfix/token-calculation</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="ex">hotfix/auth-redirect</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Commit messages</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="ex">feat:</span> add contract export functionality</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="ex">fix:</span> correct token deduction logic</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docs:</span> update API documentation</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="ex">refactor:</span> simplify chat component</span></code></pre></div>
+<hr />
+<h2 id="performance-optimization">Performance Optimization</h2>
+<h3 id="frontend-optimization">Frontend Optimization</h3>
+<ul>
+<li>Code splitting with React.lazy</li>
+<li>Image optimization with WebP</li>
+<li>Bundle size monitoring</li>
+<li>Lighthouse performance audits</li>
+</ul>
+<h3 id="backend-optimization">Backend Optimization</h3>
+<ul>
+<li>Database query optimization</li>
+<li>Redis caching for sessions</li>
+<li>Rate limiting</li>
+<li>Request compression</li>
+</ul>
+<h3 id="monitoring">Monitoring</h3>
+<ul>
+<li>Error tracking with Sentry</li>
+<li>Performance monitoring</li>
+<li>User analytics</li>
+<li>Uptime monitoring</li>
+</ul>
+<hr />
+<div data-align="center">
+<p>
+For additional help, contact the development team
+</p>
+<p>
+Last updated: January 2025
+</p>
+</div>
+<h1 id="changelog">Changelog</h1>
+<p>All notable changes to the ContraMind project will be documented in
+this file.</p>
+<p>The format is based on <a
+href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>, and
+this project adheres to <a
+href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2 id="unreleased">[Unreleased]</h2>
+<h3 id="added">Added</h3>
+<ul>
+<li>Comprehensive project documentation</li>
+<li>README.md with installation instructions</li>
+<li>Feature documentation in docs/FEATURES.md</li>
+<li>API documentation in docs/API.md</li>
+<li>User guide in docs/USER_GUIDE.md</li>
+<li>Developer guide in docs/DEVELOPER.md</li>
+</ul>
+<h2 id="section">[2.0.0] - 2025-01-25</h2>
+<h3 id="changed">Changed</h3>
+<ul>
+<li>Complete redesign to ChatGPT-style interface</li>
+<li>Migrated from multi-page to single-page chat interface</li>
+<li>Redesigned contract upload flow with party selection</li>
+<li>Implemented sliding panel for contract details</li>
+<li>Enhanced mobile responsiveness</li>
+</ul>
+<h3 id="added-1">Added</h3>
+<ul>
+<li>Real-time chat interface for contract analysis</li>
+<li>Token-based usage system (1000 free tokens)</li>
+<li>Contract risk scoring and visualization</li>
+<li>Recent contracts sidebar with resume functionality</li>
+<li>Saved prompts feature</li>
+<li>Dark/Light theme toggle</li>
+<li>Comprehensive RTL support for Arabic</li>
+</ul>
+<h3 id="improved">Improved</h3>
+<ul>
+<li>Performance optimization with lazy loading</li>
+<li>Enhanced error handling and user feedback</li>
+<li>Better session management</li>
+<li>Streamlined authentication flow</li>
+</ul>
+<h2 id="section-1">[1.5.0] - 2025-01-20</h2>
+<h3 id="added-2">Added</h3>
+<ul>
+<li>Google OAuth authentication</li>
+<li>Microsoft OAuth authentication</li>
+<li>Email verification system</li>
+<li>Password reset functionality</li>
+<li>User preferences storage</li>
+<li>Notification system</li>
+</ul>
+<h3 id="changed-1">Changed</h3>
+<ul>
+<li>Updated authentication flow</li>
+<li>Enhanced security measures</li>
+<li>Improved session handling</li>
+</ul>
+<h2 id="section-2">[1.4.0] - 2025-01-15</h2>
+<h3 id="added-3">Added</h3>
+<ul>
+<li>Real-time analytics dashboard</li>
+<li>Risk distribution charts using Recharts</li>
+<li>Contract type analysis</li>
+<li>Recent activity tracking</li>
+<li>WebSocket support for live updates</li>
+</ul>
+<h3 id="improved-1">Improved</h3>
+<ul>
+<li>Dashboard performance</li>
+<li>Data visualization</li>
+<li>Loading states</li>
+<li>Error boundaries</li>
+</ul>
+<h2 id="section-3">[1.3.0] - 2025-01-10</h2>
+<h3 id="added-4">Added</h3>
+<ul>
+<li>Electron desktop application</li>
+<li>Native app features</li>
+<li>System tray integration</li>
+<li>Splash screen</li>
+<li>Auto-updater</li>
+</ul>
+<h3 id="changed-2">Changed</h3>
+<ul>
+<li>Improved offline capabilities</li>
+<li>Enhanced file handling</li>
+<li>Better performance on desktop</li>
+</ul>
+<h2 id="section-4">[1.2.0] - 2025-01-05</h2>
+<h3 id="added-5">Added</h3>
+<ul>
+<li>Contract extraction pipeline</li>
+<li>PDF parsing with pdf.js</li>
+<li>DOCX parsing with mammoth.js</li>
+<li>Automated risk assessment</li>
+<li>Key information extraction</li>
+</ul>
+<h3 id="improved-2">Improved</h3>
+<ul>
+<li>Document processing accuracy</li>
+<li>Support for complex contracts</li>
+<li>Multi-language extraction</li>
+</ul>
+<h2 id="section-5">[1.1.0] - 2024-12-28</h2>
+<h3 id="added-6">Added</h3>
+<ul>
+<li>Bilingual support (Arabic/English)</li>
+<li>RTL/LTR layout switching</li>
+<li>Browser language detection</li>
+<li>Translated UI elements</li>
+<li>Arabic contract analysis</li>
+</ul>
+<h3 id="changed-3">Changed</h3>
+<ul>
+<li>Updated UI for better RTL support</li>
+<li>Improved font rendering</li>
+<li>Enhanced navigation for both languages</li>
+</ul>
+<h2 id="section-6">[1.0.0] - 2024-12-20</h2>
+<h3 id="added-7">Added</h3>
+<ul>
+<li>Initial release</li>
+<li>Basic contract upload functionality</li>
+<li>User authentication</li>
+<li>Simple dashboard</li>
+<li>Contract storage</li>
+<li>Basic analysis features</li>
+</ul>
+<h3 id="security">Security</h3>
+<ul>
+<li>Implemented secure authentication</li>
+<li>Added CSRF protection</li>
+<li>Encrypted sensitive data</li>
+<li>Secure session management</li>
+</ul>
+<hr />
+<h2 id="version-history-summary">Version History Summary</h2>
+<h3 id="major-versions">Major Versions</h3>
+<ul>
+<li><strong>2.0.0</strong> - ChatGPT-style redesign</li>
+<li><strong>1.0.0</strong> - Initial release</li>
+</ul>
+<h3 id="feature-milestones">Feature Milestones</h3>
+<ul>
+<li>OAuth Integration (v1.5.0)</li>
+<li>Analytics Dashboard (v1.4.0)</li>
+<li>Desktop Application (v1.3.0)</li>
+<li>Document Extraction (v1.2.0)</li>
+<li>Bilingual Support (v1.1.0)</li>
+</ul>
+<h3 id="upcoming-features">Upcoming Features</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Batch contract upload</label></li>
+<li><label><input type="checkbox" />Team collaboration</label></li>
+<li><label><input type="checkbox" />API access for
+enterprise</label></li>
+<li><label><input type="checkbox" />Advanced contract
+templates</label></li>
+<li><label><input type="checkbox" />AI-powered contract
+drafting</label></li>
+<li><label><input type="checkbox" />Integration with legal
+databases</label></li>
+<li><label><input type="checkbox" />Mobile applications
+(iOS/Android)</label></li>
+</ul>
+<hr />
+<div data-align="center">
+<p>
+For detailed commit history, visit our
+<a href="https://github.com/contramind/contramind">GitHub repository</a>
+</p>
+</div>
+<h1 id="contributing-to-contramind">Contributing to ContraMind</h1>
+<p>We’re thrilled that you’re interested in contributing to ContraMind!
+This document provides guidelines for contributing to the project.</p>
+<h2 id="table-of-contents-4">Table of Contents</h2>
+<ul>
+<li><a href="#code-of-conduct">Code of Conduct</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#development-process">Development Process</a></li>
+<li><a href="#coding-standards">Coding Standards</a></li>
+<li><a href="#commit-guidelines">Commit Guidelines</a></li>
+<li><a href="#pull-request-process">Pull Request Process</a></li>
+<li><a href="#issue-guidelines">Issue Guidelines</a></li>
+<li><a href="#community">Community</a></li>
+</ul>
+<h2 id="code-of-conduct">Code of Conduct</h2>
+<h3 id="our-pledge">Our Pledge</h3>
+<p>We are committed to providing a welcoming and inspiring community for
+all. Contributors are expected to: - Use welcoming and inclusive
+language - Be respectful of differing viewpoints and experiences -
+Gracefully accept constructive criticism - Focus on what is best for the
+community - Show empathy towards other community members</p>
+<h3 id="unacceptable-behavior">Unacceptable Behavior</h3>
+<ul>
+<li>Harassment, discriminatory language, or personal attacks</li>
+<li>Public or private harassment</li>
+<li>Publishing others’ private information without permission</li>
+<li>Other conduct which could reasonably be considered
+inappropriate</li>
+</ul>
+<h2 id="getting-started-1">Getting Started</h2>
+<h3 id="prerequisites-2">Prerequisites</h3>
+<ol type="1">
+<li><p>Fork the repository on GitHub</p></li>
+<li><p>Clone your fork locally:</p>
+<div class="sourceCode" id="cb59"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/yourusername/contramind.git</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> contramind</span></code></pre></div></li>
+<li><p>Add the upstream repository:</p>
+<div class="sourceCode" id="cb60"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add upstream https://github.com/contramind/contramind.git</span></code></pre></div></li>
+</ol>
+<h3 id="development-setup-1">Development Setup</h3>
+<ol type="1">
+<li><p>Install dependencies:</p>
+<div class="sourceCode" id="cb61"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install</span></code></pre></div></li>
+<li><p>Copy environment variables:</p>
+<div class="sourceCode" id="cb62"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env</span></code></pre></div></li>
+<li><p>Set up the database:</p>
+<div class="sourceCode" id="cb63"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run db:push</span></code></pre></div></li>
+<li><p>Start development server:</p>
+<div class="sourceCode" id="cb64"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev</span></code></pre></div></li>
+</ol>
+<h2 id="development-process">Development Process</h2>
+<h3 id="create-a-branch">1. Create a Branch</h3>
+<p>Always create a new branch for your work:</p>
+<div class="sourceCode" id="cb65"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> feature/your-feature-name</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> bugfix/issue-description</span></code></pre></div>
+<h3 id="make-your-changes">2. Make Your Changes</h3>
+<ul>
+<li>Write clean, readable code</li>
+<li>Add appropriate comments</li>
+<li>Update documentation if needed</li>
+<li>Write or update tests for your changes</li>
+</ul>
+<h3 id="test-your-changes">3. Test Your Changes</h3>
+<div class="sourceCode" id="cb66"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run type checking</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run typecheck</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run linting</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run lint</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run tests</span></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> test</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test the application manually</span></span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev</span></code></pre></div>
+<h3 id="commit-your-changes">4. Commit Your Changes</h3>
+<p>Follow our commit message conventions (see below).</p>
+<h3 id="push-and-create-a-pull-request">5. Push and Create a Pull
+Request</h3>
+<div class="sourceCode" id="cb67"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin feature/your-feature-name</span></code></pre></div>
+<p>Then create a pull request on GitHub.</p>
+<h2 id="coding-standards">Coding Standards</h2>
+<h3 id="typescript-guidelines-1">TypeScript Guidelines</h3>
+<div class="sourceCode" id="cb68"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Use explicit types</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> UserData {</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  email<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Avoid &#39;any&#39; type</span></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">processUser</span>(user<span class="op">:</span> UserData)<span class="op">:</span> <span class="dt">void</span> {</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Implementation</span></span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Use enums for constants</span></span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> RiskLevel {</span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>  LOW <span class="op">=</span> <span class="st">&#39;low&#39;</span><span class="op">,</span></span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>  MEDIUM <span class="op">=</span> <span class="st">&#39;medium&#39;</span><span class="op">,</span></span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>  HIGH <span class="op">=</span> <span class="st">&#39;high&#39;</span></span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Document complex functions</span></span>
+<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a><span class="co"> * Processes contract data and returns risk assessment</span></span>
+<span id="cb68-23"><a href="#cb68-23" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">contract</span><span class="co"> - The contract to analyze</span></span>
+<span id="cb68-24"><a href="#cb68-24" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@returns</span><span class="co"> Risk assessment result</span></span>
+<span id="cb68-25"><a href="#cb68-25" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
+<span id="cb68-26"><a href="#cb68-26" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">analyzeContract</span>(contract<span class="op">:</span> Contract)<span class="op">:</span> RiskAssessment {</span>
+<span id="cb68-27"><a href="#cb68-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Implementation</span></span>
+<span id="cb68-28"><a href="#cb68-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="react-best-practices-1">React Best Practices</h3>
+<div class="sourceCode" id="cb69"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Use functional components with hooks</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">Component</span>({ prop }<span class="op">:</span> Props) {</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> [state<span class="op">,</span> setState] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">&gt;</span>(<span class="st">&#39;&#39;</span>)<span class="op">;</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Use useCallback for event handlers</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> handleClick <span class="op">=</span> <span class="fu">useCallback</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Handle click</span></span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span> [dependency])<span class="op">;</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">&lt;</span>div onClick<span class="op">=</span>{handleClick}<span class="op">&gt;</span>{state}<span class="op">&lt;/</span>div<span class="op">&gt;;</span></span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Use proper prop types</span></span>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ComponentProps {</span>
+<span id="cb69-15"><a href="#cb69-15" aria-hidden="true" tabindex="-1"></a>  title<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb69-16"><a href="#cb69-16" aria-hidden="true" tabindex="-1"></a>  onSave<span class="op">:</span> (data<span class="op">:</span> <span class="bu">FormData</span>) <span class="kw">=&gt;</span> <span class="dt">void</span><span class="op">;</span></span>
+<span id="cb69-17"><a href="#cb69-17" aria-hidden="true" tabindex="-1"></a>  children<span class="op">:</span> React<span class="op">.</span><span class="at">ReactNode</span><span class="op">;</span></span>
+<span id="cb69-18"><a href="#cb69-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="cssstyling-guidelines">CSS/Styling Guidelines</h3>
+<ul>
+<li>Use Tailwind CSS utilities first</li>
+<li>Use CSS modules for complex component-specific styles</li>
+<li>Follow mobile-first responsive design</li>
+<li>Maintain consistent spacing and colors from the design system</li>
+</ul>
+<h3 id="file-organization">File Organization</h3>
+<pre><code>src/
+├── components/      # Reusable components
+│   ├── ui/         # Basic UI components
+│   └── ...         # Feature components
+├── pages/          # Page components
+├── hooks/          # Custom React hooks
+├── lib/            # Utilities and helpers
+├── contexts/       # React contexts
+└── types/          # TypeScript type definitions</code></pre>
+<h2 id="commit-guidelines">Commit Guidelines</h2>
+<p>We follow the <a
+href="https://www.conventionalcommits.org/">Conventional Commits</a>
+specification.</p>
+<h3 id="format">Format</h3>
+<pre><code>&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;
+
+&lt;body&gt;
+
+&lt;footer&gt;</code></pre>
+<h3 id="types">Types</h3>
+<ul>
+<li><code>feat</code>: New feature</li>
+<li><code>fix</code>: Bug fix</li>
+<li><code>docs</code>: Documentation changes</li>
+<li><code>style</code>: Code style changes (formatting, missing
+semicolons, etc)</li>
+<li><code>refactor</code>: Code refactoring</li>
+<li><code>test</code>: Adding or updating tests</li>
+<li><code>chore</code>: Maintenance tasks</li>
+<li><code>perf</code>: Performance improvements</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<div class="sourceCode" id="cb72"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="ex">feat</span><span class="er">(</span><span class="ex">auth</span><span class="kw">)</span><span class="bu">:</span> add Google OAuth integration</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Implement Google OAuth strategy</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Add login button component</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Update user schema for OAuth data</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="ex">Closes</span> <span class="co">#123</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span></span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a><span class="ex">fix</span><span class="er">(</span><span class="ex">contracts</span><span class="kw">)</span><span class="bu">:</span> correct risk calculation for payment terms</span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> risk level was not properly calculated when payment</span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a><span class="ex">terms</span> exceeded 60 days. This fix ensures proper risk</span>
+<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a><span class="ex">assessment</span> for extended payment schedules.</span>
+<span id="cb72-16"><a href="#cb72-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-17"><a href="#cb72-17" aria-hidden="true" tabindex="-1"></a><span class="ex">---</span></span>
+<span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a><span class="ex">docs</span><span class="er">(</span><span class="ex">api</span><span class="kw">)</span><span class="bu">:</span> update contract upload endpoint documentation</span>
+<span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-21"><a href="#cb72-21" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Add missing parameters</span>
+<span id="cb72-22"><a href="#cb72-22" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Include example responses</span>
+<span id="cb72-23"><a href="#cb72-23" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Document error codes</span></code></pre></div>
+<h2 id="pull-request-process">Pull Request Process</h2>
+<h3 id="before-submitting">Before Submitting</h3>
+<ol type="1">
+<li><p><strong>Update your branch</strong>:</p>
+<div class="sourceCode" id="cb73"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch upstream</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rebase upstream/main</span></code></pre></div></li>
+<li><p><strong>Ensure all tests pass</strong></p></li>
+<li><p><strong>Update documentation</strong> if you’ve made API
+changes</p></li>
+<li><p><strong>Add tests</strong> for new functionality</p></li>
+</ol>
+<h3 id="pr-template">PR Template</h3>
+<p>When creating a pull request, please include: -
+<strong>Description</strong>: Clear explanation of changes -
+<strong>Related Issue</strong>: Link to related issue(s) - <strong>Type
+of Change</strong>: Bug fix, feature, etc. - <strong>Testing</strong>:
+How you tested the changes - <strong>Screenshots</strong>: For UI
+changes</p>
+<h3 id="review-process">Review Process</h3>
+<ol type="1">
+<li>At least one maintainer review is required</li>
+<li>All CI checks must pass</li>
+<li>No merge conflicts</li>
+<li>Code coverage should not decrease</li>
+</ol>
+<h2 id="issue-guidelines">Issue Guidelines</h2>
+<h3 id="bug-reports">Bug Reports</h3>
+<p>Please include: - Clear, descriptive title - Steps to reproduce -
+Expected behavior - Actual behavior - Environment details (OS, browser,
+etc.) - Screenshots if applicable - Error messages and logs</p>
+<h3 id="feature-requests">Feature Requests</h3>
+<p>Please include: - Clear problem statement - Proposed solution -
+Alternative solutions considered - Additional context</p>
+<h3 id="good-first-issues">Good First Issues</h3>
+<p>Look for issues labeled <code>good first issue</code> if you’re new
+to the project.</p>
+<h2 id="community">Community</h2>
+<h3 id="communication-channels">Communication Channels</h3>
+<ul>
+<li><strong>GitHub Issues</strong>: For bugs and feature requests</li>
+<li><strong>GitHub Discussions</strong>: For questions and general
+discussions</li>
+<li><strong>Email</strong>: dev@contramind.ai for security issues</li>
+</ul>
+<h3 id="getting-help-1">Getting Help</h3>
+<ul>
+<li>Check existing documentation</li>
+<li>Search closed issues</li>
+<li>Ask in GitHub Discussions</li>
+<li>Reach out to maintainers</li>
+</ul>
+<h2 id="recognition">Recognition</h2>
+<p>Contributors will be recognized in: - The project README - Release
+notes - Our website’s contributors page</p>
+<h2 id="license-1">License</h2>
+<p>By contributing to ContraMind, you agree that your contributions will
+be licensed under the project’s MIT License.</p>
+<hr />
+<p>Thank you for contributing to ContraMind! Your efforts help make
+contract management better for everyone.</p>
+</body>
+</html>
