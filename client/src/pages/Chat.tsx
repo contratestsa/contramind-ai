@@ -28,40 +28,27 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-/**
- * Sidebar navigation item structure with bilingual support
- */
 interface SidebarItem {
-  icon: React.ReactNode;                    // Icon component to display
-  label: { ar: string; en: string };        // Bilingual label
-  path: string;                             // Route path
-  subItems?: SidebarItem[];                 // Optional nested items
+  icon: React.ReactNode;
+  label: { ar: string; en: string };
+  path: string;
+  subItems?: SidebarItem[];
 }
 
-/**
- * User interface for authenticated user data
- */
 interface User {
-  id: number;                               // User's unique identifier
-  username: string;                         // Username for display
-  fullName?: string;                        // Optional full name
-  profilePicture?: string;                  // Optional profile image URL
+  id: number;
+  username: string;
+  fullName?: string;
+  profilePicture?: string;
 }
 
-/**
- * Chat message structure for contract conversations
- */
 interface Message {
-  id: string;                               // Unique message identifier
-  content: string;                          // Message text content
-  role: 'user' | 'assistant' | 'system';    // Message sender type
-  timestamp: Date;                          // Message timestamp
+  id: string;
+  content: string;
+  role: 'user' | 'assistant' | 'system';
+  timestamp: Date;
 }
 
-/**
- * Main Chat component - ChatGPT-style interface for contract analysis
- * Handles contract upload, analysis, and AI-powered conversations
- */
 export default function Chat() {
   const { t, language, setLanguage } = useLanguage();
   const toggleLanguage = () => setLanguage(language === 'ar' ? 'en' : 'ar');

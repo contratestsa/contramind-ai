@@ -28,33 +28,24 @@ import { contractExtractor } from "./contractExtractor";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/**
- * Register all API routes for the ContraMind application
- * @param app - Express application instance
- * @returns HTTP server instance
- */
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Configure file upload middleware for contract processing
-  // Files are temporarily stored in uploads/ directory
+  // >>> PDF ANALYSIS START
   const upload = multer({ dest: "uploads/" });
 
   /**
    * POST /api/analyze
-   * Legacy Python-based PDF analysis endpoint
-   * @deprecated Use JavaScript-based contract extraction instead
-   * Body (multipart/form-data): { pdf: <file.pdf> }
+   * Cuerpo (multipart/form-data): { pdf: <archivo.pdf> }
    */
   app.post("/api/analyze", upload.single("pdf"), (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: "PDF file is required" });
     }
 
-    const pdfPath = req.file.path;                                  // Temporary file path
+    const pdfPath = req.file.path;                                  // tmp file
     const pythonScript = path.join(__dirname, "python", "analyze_pdf.py");
 
-    // Execute Python script for PDF analysis
-    // Note: Use "python" instead of "python3" if command fails
-    const py = spawn("python3", [pythonScript, pdfPath]);
+    // Ejecuta: python3 analyze_pdf.py <ruta_pdf>
+    const py = spawn("python3", [pythonScript, pdfPath]);           // usa "python" si "python3" falla
 
     let output = "";
     py.stdout.on("data", (chunk) => (output += chunk.toString()));

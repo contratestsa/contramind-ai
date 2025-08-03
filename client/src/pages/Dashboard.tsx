@@ -49,53 +49,38 @@ import DashboardAnalytics from "@/components/DashboardAnalytics";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useRecentContracts } from "@/hooks/useRecentContracts";
 
-/**
- * User interface matching the database schema
- * Contains all user profile and preference data
- */
 interface User {
-  id: number;                               // Unique user identifier
-  username: string;                         // Unique username for login
-  email: string;                            // User email address
-  fullName: string;                         // Display name
-  emailVerified: boolean;                   // Email verification status
-  profilePicture?: string;                  // Optional profile image URL
-  onboardingCompleted: boolean;             // Onboarding completion flag
-  companyNameEn?: string;                   // Company name in English
-  companyNameAr?: string;                   // Company name in Arabic
-  country?: string;                         // User's country (default: saudi-arabia)
-  contractRole?: string;                    // Default contract role (buyer/vendor)
+  id: number;
+  username: string;
+  email: string;
+  fullName: string;
+  emailVerified: boolean;
+  profilePicture?: string;
+  onboardingCompleted: boolean;
+  companyNameEn?: string;
+  companyNameAr?: string;
+  country?: string;
+  contractRole?: string;
 }
 
-/**
- * Contract interface for document management
- * Represents uploaded and analyzed contracts
- */
 interface Contract {
-  id: number;                               // Unique contract identifier
-  title: string;                            // Contract title/filename
-  partyName: string;                        // Primary party name
-  uploadedAt?: Date;                        // Upload timestamp
-  status: string;                           // Contract status (draft/active/etc)
-  riskLevel?: string;                       // Risk assessment (low/medium/high)
-  date: string;                             // Contract date
-  type?: string;                            // Contract type (service/NDA/etc)
+  id: number;
+  title: string;
+  partyName: string;
+  uploadedAt?: Date;
+  status: string;
+  riskLevel?: string;
+  date: string;
+  type?: string;
 }
 
-/**
- * Chat message interface for contract conversations
- */
 interface Message {
-  id: string;                               // Unique message identifier
-  type: 'user' | 'system';                 // Message sender type
-  content: string;                          // Message content
-  timestamp: Date;                          // Message timestamp
+  id: string;
+  type: 'user' | 'system';
+  content: string;
+  timestamp: Date;
 }
 
-/**
- * Main Dashboard component - Central hub for contract management
- * Provides analytics, recent contracts, and chat interface
- */
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage();
   const [location, setLocation] = useLocation();

@@ -1,45 +1,32 @@
-/**
- * Database schema definitions for ContraMind using Drizzle ORM
- * All tables use PostgreSQL with type-safe schema definitions
- */
-
 import { pgTable, text, serial, integer, boolean, timestamp, date } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-/**
- * Users table - Stores all registered user accounts
- * Includes authentication data, profile information, and preferences
- */
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),                              // Auto-incrementing primary key
-  username: text("username").notNull().unique(),              // Unique username for login
-  email: text("email").notNull().unique(),                    // Unique email address
-  password: text("password").notNull(),                       // Hashed password (bcrypt)
-  fullName: text("full_name").notNull(),                     // User's display name
-  profilePicture: text("profile_picture"),                    // URL to profile image
-  emailVerified: boolean("email_verified").default(false).notNull(), // Email verification status
-  verificationToken: text("verification_token"),              // Token for email verification
-  onboardingCompleted: boolean("onboarding_completed").default(false).notNull(), // Onboarding status
-  companyNameEn: text("company_name_en"),                     // Company name in English
-  companyNameAr: text("company_name_ar"),                     // Company name in Arabic
-  country: text("country").default("saudi-arabia"),          // User's country (default: KSA)
-  contractRole: text("contract_role"),                        // Default role: 'buyer' or 'vendor'
-  createdAt: timestamp("created_at").defaultNow().notNull(), // Account creation timestamp
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  fullName: text("full_name").notNull(),
+  profilePicture: text("profile_picture"),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  verificationToken: text("verification_token"),
+  onboardingCompleted: boolean("onboarding_completed").default(false).notNull(),
+  companyNameEn: text("company_name_en"),
+  companyNameAr: text("company_name_ar"),
+  country: text("country").default("saudi-arabia"),
+  contractRole: text("contract_role"), // 'buyer' or 'vendor'
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-/**
- * Waitlist entries table - Stores early access registrations
- * Captures lead information for platform launch
- */
 export const waitlistEntries = pgTable("waitlist_entries", {
-  id: serial("id").primaryKey(),                              // Auto-incrementing ID
-  fullName: text("full_name").notNull(),                     // Registrant's full name
-  email: text("email").notNull().unique(),                   // Unique email address
-  phoneNumber: text("phone_number").notNull(),               // Contact phone number
-  company: text("company").default(""),                       // Optional company name
-  jobTitle: text("job_title").default(""),                   // Optional job title
-  createdAt: timestamp("created_at").defaultNow().notNull(), // Registration timestamp
+  id: serial("id").primaryKey(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull().unique(),
+  phoneNumber: text("phone_number").notNull(),
+  company: text("company").default(""),
+  jobTitle: text("job_title").default(""),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const contactMessages = pgTable("contact_messages", {
@@ -51,38 +38,30 @@ export const contactMessages = pgTable("contact_messages", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-/**
- * Contracts table - Core contract management entity
- * Stores contract metadata and analysis results
- */
 export const contracts = pgTable("contracts", {
-  id: serial("id").primaryKey(),                                      // Unique contract ID
-  userId: integer("user_id").notNull().references(() => users.id),   // Owner user reference
-  title: text("title").notNull(),                                    // Contract title/filename
-  partyName: text("party_name").notNull(),                          // Primary party name
-  type: text("type").notNull(),                                      // Contract type: 'service', 'nda', 'employment', 'lease', 'sale', 'partnership'
-  status: text("status").notNull().default("draft"),                // Status: 'draft', 'active', 'under_review', 'signed', 'expired'
-  startDate: date("start_date").notNull(),                          // Contract effective date
-  endDate: date("end_date"),                                         // Contract end date (optional)
-  riskLevel: text("risk_level"),                                    // Risk assessment: 'low', 'medium', 'high'
-  fileUrl: text("file_path"),                                        // Path to stored contract file
-  createdAt: timestamp("created_at").defaultNow().notNull(),        // Creation timestamp
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),        // Last update timestamp
-  last_viewed_at: timestamp("last_viewed_at"),                      // Last access timestamp
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  title: text("title").notNull(),
+  partyName: text("party_name").notNull(),
+  type: text("type").notNull(), // 'service', 'nda', 'employment', 'lease', 'sale', 'partnership'
+  status: text("status").notNull().default("draft"), // 'draft', 'active', 'under_review', 'signed', 'expired'
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date"),
+  riskLevel: text("risk_level"), // 'low', 'medium', 'high'
+  fileUrl: text("file_path"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  last_viewed_at: timestamp("last_viewed_at"),
 });
 
-/**
- * Contract chats table - Stores conversation history for contracts
- * Tracks all user and AI interactions with token usage
- */
 export const contractChats = pgTable("contract_chats", {
-  id: serial("id").primaryKey(),                                      // Message ID
-  contractId: integer("contract_id").notNull().references(() => contracts.id), // Associated contract
-  userId: integer("user_id").notNull().references(() => users.id),   // Message author
-  message: text("message").notNull(),                                // Message content
-  role: text("role").notNull(),                                      // Sender role: 'user' or 'assistant'
-  tokenCount: integer("token_count").default(0),                     // Tokens consumed by this message
-  createdAt: timestamp("created_at").defaultNow().notNull(),        // Message timestamp
+  id: serial("id").primaryKey(),
+  contractId: integer("contract_id").notNull().references(() => contracts.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  message: text("message").notNull(),
+  role: text("role").notNull(), // 'user' or 'assistant'
+  tokenCount: integer("token_count").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const savedPrompts = pgTable("saved_prompts", {
@@ -96,25 +75,21 @@ export const savedPrompts = pgTable("saved_prompts", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-/**
- * Contract details table - Stores extracted contract information
- * Contains parsed data from contract analysis including parties, terms, and metadata
- */
 export const contractDetails = pgTable("contract_details", {
-  id: serial("id").primaryKey(),                                      // Detail record ID
-  contractId: integer("contract_id").notNull().references(() => contracts.id), // Parent contract reference
-  executedStatus: boolean("executed_status").default(false),          // Whether contract is executed
-  language: text("language"),                                         // Contract language (en/ar)
-  internalParties: text("internal_parties").array(),                 // Array of internal party names
-  counterparties: text("counterparties").array(),                    // Array of counterparty names
-  governingLaw: text("governing_law"),                               // Applicable law jurisdiction
-  paymentTerm: text("payment_term"),                                 // Payment terms description
-  breachNotice: text("breach_notice"),                               // Breach notification period
-  terminationNotice: text("termination_notice"),                     // Termination notice requirements
-  extractedText: text("extracted_text"),                             // Full extracted text from the contract
-  extractionMetadata: text("extraction_metadata"),                   // JSON string for additional metadata
-  createdAt: timestamp("created_at").defaultNow().notNull(),        // Creation timestamp
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),        // Last update timestamp
+  id: serial("id").primaryKey(),
+  contractId: integer("contract_id").notNull().references(() => contracts.id),
+  executedStatus: boolean("executed_status").default(false),
+  language: text("language"),
+  internalParties: text("internal_parties").array(),
+  counterparties: text("counterparties").array(),
+  governingLaw: text("governing_law"),
+  paymentTerm: text("payment_term"),
+  breachNotice: text("breach_notice"),
+  terminationNotice: text("termination_notice"),
+  extractedText: text("extracted_text"), // Full extracted text from the contract
+  extractionMetadata: text("extraction_metadata"), // JSON string for additional metadata
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

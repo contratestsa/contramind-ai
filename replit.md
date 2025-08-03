@@ -1,7 +1,508 @@
 # ContraMind.ai - Legal Tech Platform
 
-## Overview
-ContraMind.ai is an AI-powered legal technology platform designed for contract management in the MENA region, supporting both Arabic and English. Its core purpose is to streamline legal operations through intelligent contract analysis, offering features like comprehensive waitlist registration, a user authentication system, and a ChatGPT-style dashboard for intuitive interaction. The platform aims to revolutionize legal document processing, providing efficient tools for businesses to manage their legal agreements.
+## Project Overview
+A bilingual (Arabic/English) AI-powered legal technology platform specializing in contract management for the MENA region. Features a comprehensive waitlist registration system with countdown timer, real-time counter functionality, professional language switching interface, automated email confirmations, contact system, complete customer authentication, and a ChatGPT-style dashboard with sliding panel interface.
+
+## Recent Changes
+- **July 22, 2025** (Latest):
+  - **Fixed New Contract Chat Button**: Removed automatic upload modal opening
+    - "New Contract Chat" button now only shows welcome screen with chatbar and prompts
+    - Removed `setIsUploadModalOpen(true)` from button click handler
+    - Upload modal can still be accessed via attach icon in chat interface
+  - **Fixed SQL Parameter Error**: Resolved contract update database error
+    - Fixed parameter indexing in updateContract method
+    - Moved id parameter to end of values array with correct index
+    - Eliminated "error: there is no parameter $3" database error
+  - **Fixed Contract Upload Navigation**: User now stays in chat after party selection
+    - Added `&& !selectedContract` condition to route rendering logic
+    - Prevents redirect to analytics page when contract is selected
+    - Chat interface properly displays after uploading contract and selecting party
+    - User can continue conversation immediately after party selection
+  - **Fixed Text Visibility on Contracts Page**: Changed white text to dark colors
+    - Changed "Recent Contracts" heading to gray-900
+    - Changed "Total recent contracts" text to gray-600
+    - Changed contract titles to gray-900
+    - Changed loading text to gray-500
+    - Fixed readability issue with white text on light background
+  - **Updated Recent Contracts Heading Style**: Changed from all uppercase to title case
+    - Removed "uppercase" CSS class from "RECENT CONTRACTS" heading
+    - Text now displays as "Recent Contracts" (only first letter of each word capitalized)
+    - Applied change in both Dashboard.tsx and DashboardSidebar.tsx for consistency
+  - **Removed Subtitle from Parties Page**: Cleaned up page header
+    - Removed "Manage counterparties and contacts" subtitle from Parties & Contacts page
+    - Page now only shows main title "Parties & Contacts" without the descriptive subtitle
+    - Simplified header for cleaner appearance
+  - **Updated Parties Page Title**: Simplified page heading
+    - Changed title from "Parties & Contacts" to just "Parties"
+    - Removed "& Contacts" from the page title
+    - Page now shows cleaner "Parties" title only
+  - **Replaced Pie Charts with Column Charts**: Updated all three dashboard charts to column format
+    - Created new ColumnChart component using Recharts BarChart
+    - Replaced all DonutChart components with vertical column charts
+    - Column charts feature rounded tops, angled labels, and grid lines
+    - Maintained same data sources but improved visual presentation
+    - Better readability with vertical bars instead of pie segments
+  - **Dashboard Shows Only Three Required Charts**: Simplified Dashboard to display only user-requested analytics
+    - Dashboard now shows ONLY three charts: Contract Type, Risk Rate, Payment Liability
+    - Removed 6 additional charts (Executed status, Language distribution, Internal Parties, Counterparties, Governing Law)
+    - Removed summary stats section from bottom of page
+    - Updated Risk Rate chart to use real risk level data from contracts table
+    - Risk level aggregation added to /api/analytics endpoint
+    - Payment Liability chart now shows only real payment terms data (no mock fallback)
+    - All charts display real uploaded contract data
+    - Fixed API data case mismatch: counterparties (not counterParties)
+    - Real-time data refresh every 30 seconds
+    - "Re-process Contracts" button for data updates
+- **July 22, 2025** (Earlier):
+  - **JavaScript-Based Universal Extraction Pipeline**: Replaced Python scripts with JavaScript extraction
+    - Created contractExtractorJS.ts using pdf.js for PDFs and mammoth.js for DOCX files
+    - Extracts contract metadata: parties, contract type, dates, risk phrases, payment details
+    - Stores full raw text and extracted fields in contract_details table
+    - Risk level calculation based on detected risk phrases
+    - Automatic contract type detection (service, nda, employment, sales, other)
+    - Updates contract record with extracted risk level and type
+    - EXTRACTION ENGINE READY - successfully tested with PDF contracts
+- **July 22, 2025** (Earlier):
+  - **Navigation Enhancement**: Separated "Parties" and "Contracts" into distinct menu items
+    - Renamed "Parties & Contacts" to just "Parties" for simplicity
+    - Added new "Contracts" menu item with FileText icon below Parties
+    - Created separate Contracts.tsx page component with route /dashboard/contracts
+    - Updated both Dashboard sidebar and DashboardSidebar component for consistency
+    - Contracts page shows list of all contracts in a clean table format
+    - Both navigation items have distinct routes: /dashboard/parties and /dashboard/contracts
+  - **Default Landing Page Changed**: Users now land on "New Contract Chat" page after login
+    - Removed automatic redirect from `/dashboard` to `/dashboard/analytics`
+    - Set `showNewChat` to `true` by default in Dashboard component
+    - Users see welcome screen with chat input and prompts immediately after login
+    - Navigation buttons (Dashboard, Parties, etc.) now hide the welcome screen when clicked
+    - New flow: Login → /dashboard → New Contract Chat welcome screen
+  - **Navigation Restructuring**: Updated dashboard navigation for better clarity
+    - Renamed "Analytics & Reports" to "Dashboard" in sidebar navigation
+    - Updated "New Contract Analysis" button to "New Contract Chat" for clarity
+    - Removed duplicate Dashboard home button from sidebar to eliminate confusion
+    - "New Contract Chat" button shows welcome chat interface with prompts
+- **July 21, 2025** (Latest):
+  - **Fixed Contract Upload and Analytics Dashboard Issues**: Resolved critical issues preventing proper contract processing
+    - Fixed UploadModal component which was using mock upload instead of actual API calls
+    - Implemented real file upload to `/api/contracts/upload` endpoint with proper FormData
+    - Added automatic redirection to chatbar after successful contract upload
+    - Dashboard now handles `contractId` query parameter to automatically select uploaded contract
+    - Added welcome message in chat when redirected from upload
+    - Contract extraction pipeline now properly processes uploaded files
+    - Analytics dashboard will show complete data after contracts are processed via "Process All Contracts" button
+- **July 21, 2025** (Earlier):
+  - **Implemented Contract Data Extraction Pipeline**: Created comprehensive system for extracting and analyzing contract information
+    - Created contract_details database table to store extracted contract information
+    - Built contractExtractor.ts service to manage the extraction process
+    - Implemented Python scripts for PDF text extraction (server/python/extract_text.py)
+    - Updated /api/analytics endpoint to use real extracted data instead of mock data
+    - Added new /api/contracts/upload endpoint that handles file upload and triggers extraction
+    - Updated Dashboard frontend to use proper file upload with FormData
+    - Installed necessary Python packages (PyPDF2, python-docx, pytesseract)
+    - Analytics now displays real data: executed status, language, parties, governing law from extracted contracts
+    - System processes contracts asynchronously after upload for better performance
+  - **Improved Recent Contracts Display**: Enhanced the sidebar recent contracts functionality
+    - Shows only 3 contracts initially with expandable "View All" button
+    - Button toggles between "View All" and "Show Less" within the sidebar
+    - Fixed Dashboard page to use persistent recent contracts from API
+    - Replaced local archivedChats state with useRecentContracts hook
+    - Recent contracts now properly persist across logout/login sessions
+  - **Implemented Persistent Recent Contracts**: Recent contracts now persist across sessions and devices
+    - Added `last_viewed_at` column to contracts table in database
+    - Created `/api/contracts/touch` endpoint to update last viewed timestamp
+    - Created `useRecentContracts` React hook to manage recent contracts with automatic refresh
+    - Updated sidebar to use the hook and touch contracts when clicked
+    - Recent contracts are now ordered by most recently viewed (last_viewed_at DESC)
+    - Contracts automatically move to top of list when clicked/viewed
+    - List persists across browser refreshes and different devices for each user
+  - **Fixed Contract Upload Database Constraint Error**: Resolved contract type validation issue
+    - Updated allowed contract types to match database constraints: 'service', 'nda', 'employment', 'sales', 'other'
+    - Removed invalid types 'partnership' and 'lease' that were causing database constraint violations
+    - Fixed both Dashboard.tsx (frontend) and analytics route (backend) to use correct contract types
+    - Database check constraint allows only: service, sales, employment, nda, other
+- **July 21, 2025** (Earlier):
+  - **Redesigned Analytics & Reports Page with Light Theme**: Complete redesign from dark to light theme
+    - Updated to ContraMind's light theme brand palette (#F6F6F6 background, #0C2836 text, white cards with #E6E6E6 borders)
+    - Implemented KPI header showing unique documents count from real data
+    - Created 3x2 grid layout with 6 charts:
+      - 3 donut charts: Contract Type, Executed (Yes/No), Language distribution
+      - 3 horizontal bar charts: Internal Parties, Counterparties, Governing Law (all showing top 10)
+    - Added "See More" toggle for donut charts with more than 10 slices
+    - Charts built with Recharts library for interactive visualizations
+    - Updated chart colors to use ContraMind brand colors (#B7DEE8 primary accent)
+    - Created /api/analytics endpoint that fetches real contract data from database
+    - Counterparties chart now shows actual party names from uploaded contracts
+    - Added TypeScript type declarations for Express.User to include id property
+    - Added header with title "Analytics & Reports" and subtitle
+    - Responsive design that stacks to 1 column on mobile (< 640px)
+    - All chart data dynamically calculated with percentages
+  - **Fixed React Hooks Error**: Removed explicit React import from SimpleLanguage.tsx (Vite handles JSX automatically)
+- **July 20, 2025**:
+  - **Updated All Sidebar Pages to Use Real Contract Data**: All four core dashboard pages now display data from uploaded contracts
+    - Analytics & Reports: Shows real KPIs calculated from contract data (cycle time, risk scores, contract counts, status distribution)
+    - Parties & Contacts: Displays unique parties extracted from contracts with aggregated risk levels and contract counts
+    - Notifications: Generates real-time notifications based on contract statuses (drafts needing review, upcoming renewals, high-risk alerts)
+    - Tags & Categories: Builds dynamic taxonomy from actual contract types, statuses, and risk levels in the database
+    - All pages refresh data every 30 seconds to stay current
+    - Added loading states and proper error handling for all data fetching
+- **July 20, 2025** (Earlier):
+  - **Added Light Theme Support**: Implemented comprehensive light/dark theme system
+    - Created theme.css with CSS variables for both light and dark themes
+    - Added ThemeProvider component to manage theme state across the application
+    - Theme toggle button placed to the left of language switch in dashboard header
+    - Used CSS variables throughout Dashboard component for dynamic theme switching
+    - Dark theme preserved exactly as before with ContraMind navy (#0C2836)
+    - Light theme uses professional whites/grays for readability
+    - Theme preference saved in localStorage for persistence
+    - All dashboard pages support theme switching (Analytics, Parties, Notifications, Tags)
+    - Updated all hardcoded colors to CSS variables for consistent theming
+- **July 15, 2025**:
+  - **Added Authentication Foundation for Electron Desktop App**: Implemented secure authentication system
+    - Created AuthManager class (auth.js) to handle authentication in main process
+    - Updated preload.js to expose auth APIs: check(), login(), logout()
+    - Authentication uses existing Express session cookies (connect.sid)
+    - Login opens web app in browser for authentication flow
+    - Session sharing between desktop and web app on localhost:5000
+    - Created AUTH_GUIDE.md with usage examples and security notes
+  - **Enhanced Electron Desktop App with Splash Screen**: Added professional splash screen and improved window management
+    - Created splash.html with ContraMind branding and smooth fade-in animation
+    - Splash screen displays for 2-3 seconds on app startup with logo and tagline
+    - Improved window management with centered positioning and proper state handling
+    - Added IPC handlers for minimize, maximize, and close operations
+    - Implemented graceful shutdown and navigation prevention
+    - Dev tools only open when OPEN_DEVTOOLS=true environment variable is set
+    - Enhanced second instance handling to restore and focus existing window
+  - **Fixed Electron Desktop App Integration**: Properly integrated Electron into main project
+    - Removed separate npm project from desktop folder
+    - Installed Electron (v28.3.3) and concurrently in root project
+    - Desktop folder now contains: main.js, preload.js, icon.svg, entitlements.mac.plist, splash.html
+    - Created electron-dev.sh and electron-prod.sh scripts for running desktop app
+    - Desktop app connects to existing web app on port 5000
+    - To run: `./electron-dev.sh` (requires server running on port 5000)
+- **July 15, 2025**:
+  - **Added Dashboard Navigation to Sidebar**: Successfully implemented nested routing
+    - Fixed routing to render all pages (/analytics, /parties, /notifications, /tags) within Dashboard layout
+    - Added Home icon to sidebar for easy navigation back to main dashboard
+    - Dashboard link is highlighted when on the main dashboard view
+    - All navigation items close mobile sidebar automatically when clicked
+    - Added visual separator between Dashboard home and other navigation items
+- **July 15, 2025** (Earlier):
+  - **Added Main Dashboard Sidebar to All Four Core Pages**: Successfully integrated DashboardSidebar component
+    - ✓ Analytics & Reports - Dashboard sidebar integrated
+    - ✓ Parties & Contacts - Dashboard sidebar integrated  
+    - ✓ Notifications - Dashboard sidebar integrated
+    - ✓ Tags & Categories - Dashboard sidebar integrated
+    - All pages now have consistent sidebar navigation with mobile responsive design
+    - Fixed database schema mismatch where actual columns differed from schema.ts definitions
+    - Updated getRecentContracts to use raw SQL with correct column mappings (name→title, parties→partyName, start_date→date)
+    - Added 5 sample contracts to database for testing
+  - **Removed Sub-Sidebars from All Four Core Pages**: Successfully removed individual page sidebars
+    - Removed sidebar from Tags & Categories page - now shows hierarchical tag taxonomy directly
+    - Removed sidebar from Analytics & Reports page - displays KPI cards and charts without navigation
+    - Removed sidebar from Parties & Contacts page - shows counterparty table with filters
+    - Removed sidebar from Notifications page - presents tabbed notification system
+    - All pages now use light theme (gray-50 background) with direct access from Dashboard sidebar
+    - Pages maintain scrollable-column shell with ContraMind colors and 150ms animations
+    - Icons in Dashboard sidebar now directly link to pages without any sub-navigation
+- **July 14, 2025**:
+  - **Help Center Enhancement**: Added three new Help menu pages while preserving existing Help Center
+    - Created Desktop App page (/help/desktop-app) with download cards for macOS and Windows
+    - Added Release Notes page (/help/release-notes) with timeline view and filter chips
+    - Implemented Terms & Policies page (/help/terms) with sticky TOC and scrollable sections
+    - All pages fully bilingual with RTL/LTR support and proper Arabic font rendering
+    - Updated Help Center with navigation cards to new pages without modifying FAQ or footer
+    - Applied 150ms Framer Motion transitions and ContraMind brand colors throughout
+    - Added breadcrumb navigation on all new pages with RTL-aware ordering
+  - **Profile Dropdown Update**: Removed "Workspace settings" option from profile dropdown
+    - Deleted the workspace settings menu item that was showing "Coming Soon"
+    - Cleaned up unused Building icon import from lucide-react
+    - Simplified profile dropdown menu to focus on active features
+- **July 14, 2025** (Earlier):
+  - **Arabic UI Chat Controls Positioning**: Fixed chat controls positioning for RTL layout
+    - Updated both empty state and active chat positioning to use dynamic RTL-aware logic
+    - Chat controls now use `right: ${sidebarWidth}px` for Arabic and `left: ${sidebarWidth}px` for English
+    - Maintained two vertical states: pre-chat (vertically centered) and active chat (32px from bottom)
+    - Updated all prompt buttons to use RTL-aware text alignment (text-right for Arabic, text-left for English)
+    - Ensured horizontal centering remains consistent regardless of language direction
+    - Chat controls respond dynamically to sidebar width changes in both languages
+    - Fixed scrollable messages area padding to account for input bar height in both languages
+    - **Chat Input Icons**: Fixed icon positioning in chatbar for RTL layout
+      - Icons now appear on the left side of input field for Arabic (RTL)
+      - Icons remain on the right side for English (LTR)
+      - Updated padding to accommodate icon positioning (pl-24 for Arabic, pr-24 for English)
+      - Applied to both active chat and empty state input areas
+    - **Prompt Button Functionality**: Fixed prompts to update chat input instead of sidebar search
+      - Changed onClick handlers to use setInputValue() instead of querySelector
+      - Prompts now properly populate the chat input field when clicked
+      - Added input focus after prompt selection for better UX
+    - **Welcome Text Positioning**: Moved welcome text to appear directly above chatbar
+      - Welcome text now displays "مرحباً Sarah" for Arabic and "Welcome back, Sarah" for English
+      - Positioned above the input area in empty state (centered vertically with input)
+      - Removed duplicate welcome text from content area
+      - Text dynamically switches based on language selection
+- **July 14, 2025** (Earlier):
+  - **Dashboard Color Update**: Updated entire dashboard to use ContraMind brand colors
+    - Replaced ChatGPT-style colors (#343541, #202123, #40414F) with ContraMind navy (#0C2836)
+    - Updated input fields and borders to use sky blue (#B7DEE8) with transparent variations
+    - Changed all hover states from gray-700 to transparent sky blue (rgba(183,222,232,0.1))
+    - Updated text colors and placeholders to use sky blue transparencies
+    - Modified message bubbles: user messages use #1a4158, system messages use transparent sky blue
+    - Updated all gray icon colors to rgba(183,222,232,0.6)
+    - Changed all border colors to rgba(183,222,232,0.2)
+    - Updated loading spinner to use sky blue (#B7DEE8)
+    - Changed input chat bar text color from white to dark gray (text-gray-900) for better visibility
+    - Removed border line below profile dropdown (SA. icon) in top header bar
+    - Maintained consistent color scheme across sidebar, main content area, and sliding panels
+    - Fixed input field visibility with white background and dark text for proper contrast
+    - Increased spacing between language toggle and profile dropdown (mr-8) for better visual separation
+    - Adjusted welcome text positioning above chatbar with 48px spacing
+- **July 13, 2025**:
+  - **Hamburger Menu Animation Enhancement**: 
+    - Changed X animation to display ContraMind logo icon when sidebar is collapsed
+    - Implemented smooth fade and scale transitions (300ms) between hamburger and logo
+    - Menu shows three lines when expanded, ContraMind logo when collapsed
+    - Added hover effects and proper centering for both states
+  - **Dashboard Redesign Phase 2 Complete**: Implemented new sidebar navigation and sliding panel interface
+    - Step 3 - New Sidebar Component:
+      - Redesigned sidebar with animated hamburger menu (3-line to ContraMind logo transition with 300ms animation)
+      - Added sidebar collapse functionality (260px → 60px width)
+      - Logo fades out when sidebar collapsed
+      - Navigation items show only icons with tooltips when collapsed
+      - Search box and Recent Contracts section hide when collapsed
+      - Added contract search box for searching chat history
+      - Implemented complete navigation structure with icons:
+        - Recent Contracts section showing 5 most recent with risk indicators
+        - Analytics & Reports, Parties & Contacts, Notifications, Tags & Categories, Settings
+        - Help section: Legal Resources, Help Center, What's New, Feedback
+      - Profile section at bottom with sign out
+      - Dark theme (#202123) matching ChatGPT style
+      - Fetches real contract data from API
+    - Step 4 - Sliding Panel Component:
+      - Implemented 40% width sliding panel from right side (300ms animation)
+      - Main content shrinks to 60% when panel opens
+      - Two panel types: prompts selection and contract details
+      - Prompts panel includes two-tab system (ContraMind vs User Saved)
+      - Added 5 pre-built ContraMind prompts in UI
+      - Contract details panel shows name, date, risk level, status
+      - Overlay background when panel is open
+      - RTL language support for Arabic
+      - Trigger buttons: chevron down in chat input, contract items open details
+  - **Dashboard Redesign Phase 1**: Implemented database schema and backend API for new dashboard features
+    - Step 1 - Database Schema:
+      - Created contracts table: stores contract information with type, status, risk level
+      - Created contract_chats table: stores chat history for each contract with token tracking
+      - Created saved_prompts table: stores user-saved and ContraMind system prompts
+      - Added 10 pre-built ContraMind prompts for contract analysis
+      - Updated shared/schema.ts with proper TypeScript types and validation schemas
+    - Step 2 - Backend API Routes:
+      - Implemented complete storage interface methods for contracts, chats, and prompts
+      - Added REST API endpoints for contracts (CRUD operations, recent contracts, search)
+      - Added chat endpoints for contract-specific conversations
+      - Added prompts endpoints for user and system prompts management
+      - Added sample contracts data for testing
+      - All endpoints include authentication and authorization checks
+- **July 13, 2025 (Earlier)**:
+  - **Database Migration**: Successfully migrated from Neon database to Alibaba Cloud ApsaraDB PostgreSQL
+    - Removed @neondatabase/serverless package
+    - Installed standard PostgreSQL drivers (pg, @types/pg)
+    - Updated server/db.ts to use node-postgres driver
+    - Connected to PostgreSQL 15.12 on Alibaba Cloud
+    - All database queries and API endpoints working correctly
+    - Maintained all existing data (122 waitlist entries)
+  - **Fixed Account Creation Issues**:
+    - Resolved React hooks error in SimpleLanguageProvider that was blocking the entire app
+    - Added browser alerts to ensure signup success/error messages are visible
+    - Improved error handling to gracefully handle email verification failures
+    - Backend creates accounts successfully even if email service fails
+    - Added console logging for debugging signup process
+    - Removed email verification requirement from login process for immediate access
+  - **Updated Settings and Help Pages with ContraMind Brand Colors**:
+    - Applied ContraMind navy (#0C2836) as main background instead of generic grey
+    - Updated sidebars to use navy background with sky blue accents (#B7DEE8)
+    - Card backgrounds now use subtle white overlay (rgba(255,255,255,0.05))
+    - Card borders use sky blue transparency (rgba(183,222,232,0.1))
+    - Input fields styled with ContraMind colors and sky blue focus rings
+    - Labels use ContraMind sky blue (#B7DEE8) color
+    - Save buttons use sky blue background (#B7DEE8) with navy text (#0C2836)
+    - Switch components styled with ContraMind brand colors
+    - FAQ cards have hover effects with sky blue background
+    - Contact section uses ContraMind brand styling
+    - All text colors updated to use white and transparent white variants
+    - Maintained GPT-style layout with ContraMind brand identity
+- **July 13, 2025 (Earlier)**:
+  - **Complete Dashboard Redesign**: Redesigned entire dashboard to match ChatGPT interface style
+    - Created narrow sidebar (260px) with dark background (#202123)
+    - Main content area with background #343541 (matching GPT dark theme)
+    - Personalized welcome message showing user's first name
+    - Contract list shows risk indicators (🟢 Low / 🟡 Medium / 🔴 High) and dates
+    - Fixed bottom input bar with background #40414F and border #565869
+    - Token balance displayed subtly with 🪙 icon
+    - Example cards with minimal design (white bg, arrow →)
+    - Upload button with transparent bg and border styling
+    - Input field integrated into fixed bottom bar design
+    - Messages area with proper padding for fixed input
+    - Mobile responsive with collapsible sidebar
+  - **Authentication Fix**: Fixed missing login route in server/routes.ts
+    - Added complete login endpoint with email verification check
+    - Verified user emails in database for testing
+  - **Sidebar Simplification**: Removed old dashboard navigation from settings pages
+    - Updated PersonalSettings and OrganizationSettings to use simplified sidebar
+    - Removed complex navigation items (Dashboard, Create, My Drive, Alerts, Tasks, Reports)
+    - Settings pages now only show: Back to Dashboard, Personal/Organization Settings toggle, and Help
+    - Settings and Help icons in main dashboard now navigate directly to their respective pages
+    - Activated attach file icon in chat bar to trigger upload modal functionality
+- **July 10, 2025**: 
+  - **Logo Update**: Updated all dashboard pages with new ContraMind logo
+    - Replaced old CMYK logo with new RGB logo (RGB_Logo Design - ContraMind V001-01)
+    - Logo now takes full width of sidebar (200px) with no padding
+    - Updated logo in all pages: Dashboard, Repository, Tasks, PersonalSettings, OrganizationSettings, Chat, Help, AnalysisProgress, and AnalysisResults
+    - Updated Onboarding welcome screen to use new logo variant (RGB_Logo Design - ContraMind V001-11)
+    - Changed logo container background to dark blue (#0C2836) and used object-cover to eliminate white spaces
+  - **UI Updates**:
+    - Changed "My Work" section background from dark blue to white with dark blue text
+    - Updated onboarding form from full-screen overlay to centered card with backdrop blur
+    - Added 3D effect to sidebar with shadows and gradient background
+    - Customized Switch/Toggle components with ContraMind brand colors and modern styling
+  - **Tasks Feature**: Implemented comprehensive task management for contract revisions
+    - Created Tasks page (/tasks) accessible from all dashboard sidebars
+    - Shows contracts under revision with status tracking (Draft, Under Review, Pending Approval, Revision Requested)
+    - Displays days in revision, assigned reviewers, progress bars, and priority indicators
+    - Added task statistics showing Under Revision, Pending Approval, High Priority, and Completed This Week counts
+    - Implemented filtering by category and status
+    - Quick actions for View Contract and Continue Editing
+    - Mobile responsive with hamburger menu and card layouts
+  - **Onboarding Flow**: Implemented onboarding flow for new users
+  - **Database Updates**: 
+    - Added onboarding fields to users table (onboardingCompleted, companyNameEn, companyNameAr, country, contractRole)
+    - Successfully migrated database schema with new columns
+  - **Onboarding Component**: Created 3-step onboarding flow
+    - Step 1: Welcome screen with ContraMind logo
+    - Step 2: Company information form (name in English/Arabic, country)
+    - Step 3: Contract role selection (buyer/vendor)
+    - Step 4: Completion screen with 1000 tokens granted
+  - **Backend Integration**: 
+    - Added /api/onboarding/complete endpoint
+    - Updated storage interface with updateUserOnboarding method
+  - **Dashboard Integration**: 
+    - Shows onboarding automatically for new users (onboardingCompleted = false)
+    - Full-screen overlay that cannot be skipped
+    - Refreshes dashboard after completion
+  - **Notification System**: 
+    - Removed "صفحات مكدسة" (Deals Stack) feature from all pages
+    - Maintained consistent notification dropdown across all dashboard pages
+- **July 9, 2025**: Fixed navigation and sidebar positioning for Arabic RTL layout
+  - **Navigation Fixes**: 
+    - Changed "لوحة القيادة" to "لوحة التحكم" across all dashboard pages for consistency
+    - Made breadcrumb navigation clickable in Chat page (Dashboard link navigates back)
+    - Fixed sidebar positioning for RTL layout - sidebar appears on right side for Arabic
+    - Fixed content margins to accommodate sidebar position based on language direction
+  - **Help Page**: Created simple Help page accessible from sidebar
+    - Route: /help accessible from Help button in sidebar across all dashboard pages
+    - FAQ Section: 5 questions copied from homepage covering ContraMind features
+    - Simple styling: 24px Space Grotesk for title, 16px Inter for questions (navy), 14px Inter for answers (grey)
+    - Contact Section: Light blue background (#E8F4F8) with CEO email (Ceo@contramind.com)
+    - Updated all dashboard pages to navigate to /help instead of showing "Coming Soon"
+  - **Navigation Updates**:
+    - Removed "Schedule Demo" button from all dashboard sidebars
+    - Changed "المستودع" to "ملفاتي" and "Repository" to "My Drive" across all pages
+  - **Chat Interface**: Created comprehensive chat system accessible from dashboard search
+    - Activation: User types in dashboard search bar and presses Enter to navigate to chat
+    - Pre-fills user's question from search query
+    - Token-based system: 5 tokens per message with live token counter
+    - Clickable breadcrumb navigation: Dashboard > Contract Assistant
+  - **Chat Features**:
+    - System message explaining token cost and capabilities
+    - User messages (right/navy) and AI messages (left/light grey) with distinct styling
+    - Mock AI responses for common contract questions (limitation of liability, payment terms, IP ownership, termination)
+    - Copy button on AI messages, timestamps on hover
+    - Loading animation with 3 bouncing dots while waiting for response
+    - Suggested question chips below input field
+    - Character counter (500 max) and send button
+    - Responsive design with adjusted sizing for mobile
+  - **Previous Updates**: Enhanced sidebar navigation and settings pages
+    - Settings Navigation: Implemented expandable Settings menu in sidebar across all pages
+    - Settings Pages: Created Personal Settings and Organization Settings pages
+    - Contract Analysis Flow: Dashboard → Upload Modal → Party Selection → Analysis Progress → Results
+    - Sidebar UI Update: Icons positioned on left side of text for all languages
+- **July 8, 2025**: Added GitHub integration and Google Cloud migration capabilities
+  - **GitHub Integration**: Configured for read/write access to https://github.com/contramindai/contramindPoC
+  - **Google Cloud Migration**: Created comprehensive migration guide and deployment configurations
+    - Added Dockerfile for containerization
+    - Created cloudbuild.yaml for automatic deployments from GitHub
+    - Documented complete migration process including Cloud SQL setup
+    - Prepared application for Cloud Run deployment with environment variable configurations
+- **July 2, 2025**: Implemented comprehensive email verification system
+  - **Email Verification**: Full verification workflow using Resend integration
+    - Added emailVerified and verificationToken fields to user schema
+    - Automatic verification email sending on signup with professional templates
+    - Email verification required for login (blocks unverified users)
+    - Verification route /api/auth/verify-email with secure token validation
+    - OAuth users automatically verified (Google/Microsoft emails pre-trusted)
+    - Bilingual verification email templates with ContraMind branding
+    - Verification emails include secure 32-byte hex tokens with 24-hour expiry messaging
+  - Updated authentication flow to enforce email verification
+  - Enhanced user experience with clear verification requirements
+- **July 1, 2025**: Successfully implemented and debugged complete OAuth authentication system
+  - **Google OAuth**: Fully operational with Client ID configured
+  - **Microsoft OAuth**: Fully operational after resolving configuration issues
+    - Updated Microsoft Client ID: `ebe21e1e-5db3-460d-9b22-417687ce8a87`
+    - Created new client secret in Azure and updated Replit Account Secrets
+    - Fixed redirect URI mismatch by configuring proper URIs in Azure portal
+    - Resolved Account Secrets vs App Secrets conflict in Replit
+  - Configured OAuth callback routes (/api/auth/google/callback, /api/auth/microsoft/callback)
+  - Added OAuth buttons to both login and signup modals with proper styling
+  - Implemented secure session management with express-session
+  - OAuth redirects users to /coming-soon page after successful authentication
+  - Both OAuth providers properly create new users or authenticate existing ones
+  - Fixed password validation minimum length (reduced to 3 characters for testing)
+  - Maintained backward compatibility with email/password authentication
+- **June 29, 2025**: Fixed React hooks errors and completed authentication system
+  - Resolved "Cannot read properties of null (reading 'useState')" errors
+  - Removed conflicting LanguageProvider component causing React initialization issues
+  - Implemented global language manager to avoid React hooks dependencies
+  - Added ContraMind design tokens to Tailwind configuration
+  - Enhanced font support with Space Grotesk, Inter, and Almarai fonts
+  - Simplified language switching system for better reliability
+  - Fixed logo positioning to always stay on left side regardless of language
+  - Added right-text alignment for Arabic modal titles and descriptions
+  - Implemented absolute positioning for header logo to override RTL layout
+- **June 28, 2025**: Created complete bilingual authentication system
+  - Added comprehensive login and signup pages with Arabic/English support
+  - Implemented backend authentication routes (/api/auth/login, /api/auth/signup)
+  - Updated database schema with user authentication fields (email, fullName, createdAt)
+  - Added login/signup navigation links to header with proper bilingual text
+  - Enhanced user schema with email-based authentication
+  - Fixed countdown timer to use fixed target date (July 18, 2025) instead of dynamic calculation
+
+## Project Architecture
+
+### Frontend
+- React with TypeScript
+- Wouter for routing (/, /login, /signup)
+- TailwindCSS with custom color scheme
+- Framer Motion for animations
+- TanStack Query for data fetching
+- Bilingual language system (Arabic/English) with browser detection
+
+### Backend
+- Express.js server
+- PostgreSQL database with Drizzle ORM
+- Authentication routes for signup/login
+- Email service with Resend integration
+- Waitlist and contact form endpoints
+
+### Key Features
+- **Authentication System**: Complete login/signup with email validation
+- **Waitlist Registration**: Real-time counter, personalized confirmations
+- **Countdown Timer**: Fixed launch date with live updates
+- **Language System**: Browser detection defaulting Arabic browsers to Arabic
+- **Email Integration**: Welcome emails for waitlist, contact confirmations
+- **Responsive Design**: Mobile-first with professional Arabic/English typography
+
+### Database Schema
+- `users`: Authentication with email, username, fullName, password
+- `waitlist_entries`: Registration data with timestamps
+- `contact_messages`: Contact form submissions
 
 ## User Preferences
 - Professional bilingual messaging with personalized user names
@@ -11,23 +512,16 @@ ContraMind.ai is an AI-powered legal technology platform designed for contract m
 - Fixed countdown timer instead of dynamic calculation
 - Dashboard screens: Don't focus on specific font types or colors - keep it simple
 
-## System Architecture
-The platform features a React-based frontend built with TypeScript, utilizing Wouter for routing and TailwindCSS for styling, enhanced with Framer Motion for animations. A key highlight is the comprehensive bilingual language system with browser detection. The backend is an Express.js server interacting with a PostgreSQL database via Drizzle ORM.
+## Technical Decisions
+- Browser language detection for initial language setting
+- Email-based authentication instead of username-only
+- Real-time waitlist counter with proper cache invalidation
+- Fixed launch date (July 18, 2025) for countdown consistency
+- Professional error handling with bilingual messages
 
-Core architectural decisions include:
-- **UI/UX**: Implementation of a professional, minimalist design using ContraMind's brand palette. The dashboard mimics a ChatGPT-style interface with a collapsible sidebar, sliding panels for prompts and contract details, and consistent theming. Analytics are visualized using Recharts column charts.
-- **Contract Processing**: A JavaScript-based universal extraction pipeline (`contractExtractorJS.ts`) processes PDF and DOCX files to extract metadata such as parties, contract type, dates, risk phrases, and payment details. This data populates a `contract_details` table and informs risk level calculations.
-- **Authentication**: A secure email and password authentication system is integrated, supporting both direct signup/login and OAuth (Google, Microsoft). Email verification is a core part of the signup flow.
-- **Data Management**: The system uses `contracts`, `contract_chats`, and `saved_prompts` tables to manage core application data. Real-time data refresh mechanisms are in place for analytics and recent contracts display.
-- **Desktop Application**: An Electron-based desktop application integrates with the web app, sharing session cookies and offering a native experience with splash screens and improved window management.
-- **Theming**: Comprehensive light/dark theme support is implemented using CSS variables, allowing dynamic switching and persistence of user preferences.
-- **Internationalization**: Full RTL/LTR support for Arabic and English is implemented across all UI elements, including chat controls, navigation, and text alignment.
-
-## External Dependencies
-- **Database**: PostgreSQL (via Alibaba Cloud ApsaraDB PostgreSQL)
-- **ORM**: Drizzle ORM
-- **Email Service**: Resend
-- **File Processing Libraries**: pdf.js (for PDFs), mammoth.js (for DOCX)
-- **Charting Library**: Recharts
-- **Authentication**: Google OAuth, Microsoft OAuth
-- **Version Control/Deployment**: GitHub, Google Cloud Build, Google Cloud Run
+## Current Status
+- Authentication system fully operational
+- Waitlist registration with email confirmations working
+- Contact form with automated responses functional
+- Countdown timer displaying correct time until launch
+- All pages responsive and bilingual
