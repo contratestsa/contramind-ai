@@ -14,6 +14,12 @@ ContraMind.ai is a bilingual (Arabic/English) AI-powered legal technology platfo
 ## System Architecture
 The platform is built with a React-based frontend using TypeScript, Wouter for routing, TailwindCSS for styling, and Framer Motion for animations. Data fetching is managed with TanStack Query. A comprehensive bilingual language system supports Arabic and English, including browser detection for initial language settings. The backend runs on an Express.js server, utilizing a PostgreSQL database with Drizzle ORM.
 
+### Authentication System (Updated: January 2025)
+- **JWT-based Authentication**: Migrated from session-based to JWT token authentication for improved security and scalability
+- **Backward Compatibility**: Supports both hashed passwords (new users) and plain text passwords (existing users) with automatic upgrade to hashed format on login
+- **Token Management**: Implements access tokens (15 min expiry) and refresh tokens (7 days expiry) with automatic renewal
+- **OAuth Integration**: Google and Microsoft OAuth providers generate JWT tokens for seamless authentication
+
 Core architectural decisions include:
 - **UI/UX**: The dashboard employs a ChatGPT-style interface with a narrow, dark-themed sidebar and a main content area. It features a sliding panel component for prompts and contract details. The overall design emphasizes a professional appearance with a consistent brand color palette (ContraMind navy and sky blue accents), ensuring readability and a cohesive user experience across all pages (Dashboard, Parties, Contracts, Help). The system supports both light and dark themes, with theme preference persistence.
 - **Technical Implementations**:
