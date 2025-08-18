@@ -20,6 +20,7 @@ import Tasks from "@/pages/Tasks";
 import DesktopApp from "@/pages/help/DesktopApp";
 import ReleaseNotes from "@/pages/help/ReleaseNotes";
 import TermsPolicies from "@/pages/help/TermsPolicies";
+import OAuthCallback from "@/components/auth/OAuthCallback";
 
 // import AuthTest from "@/pages/AuthTest"; // Removed for clean slate
 import NotFound from "@/pages/not-found";
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/coming-soon" component={ComingSoon} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/oauth/callback" component={OAuthCallback} />
       <Route path="/analysis-progress" component={AnalysisProgress} />
       <Route path="/analysis-results" component={AnalysisResults} />
       <Route path="/repository" component={AllContracts} />

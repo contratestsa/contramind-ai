@@ -9,6 +9,7 @@ import { useSimpleLanguage } from '@/hooks/useSimpleLanguage';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
+import { storeTokens } from '@/lib/auth';
 
 interface AuthModalsProps {
   triggerLoginButton?: React.ReactNode;
@@ -59,6 +60,15 @@ export default function AuthModals({ triggerLoginButton, triggerSignupButton }: 
     },
     onSuccess: async (data) => {
       console.log('Login successful, response:', data);
+      
+      // Store JWT tokens
+      if (data.accessToken && data.refreshToken) {
+        storeTokens({
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken
+        });
+      }
+      
       toast({
         title: t('تم تسجيل الدخول بنجاح', 'Login Successful'),
         description: t('مرحباً بك في ContraMind', 'Welcome to ContraMind')

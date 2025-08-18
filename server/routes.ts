@@ -14,6 +14,8 @@ import {
   insertSavedPromptSchema 
 } from "@shared/schema";
 import { sendWelcomeEmail, sendContactEmail, sendVerificationEmail, sendLoginConfirmationEmail } from "./emailService";
+import { generateTokens, hashPassword, comparePassword, verifyRefreshToken } from "./jwt";
+import { authenticateToken } from "./jwtMiddleware";
 
 // >>> PDF ANALYSIS START
 import multer from "multer";
@@ -165,8 +167,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Create user (in production, hash the password)
-      const user = await storage.createUser(validatedData);
+      // Hash the password before storing
+      const hashedPassword = await hashPassword(validatedData.password);
+      const userData = {
+        ...validatedData,
+        password: hashedPassword
+      };
+
+      // Create user with hashed password
+      const user = await storage.createUser(userData);
 
       // Generate verification token and send verification email
       const verificationToken = randomBytes(32).toString('hex');
@@ -190,6 +199,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Continue with signup even if email fails
       }
 
+      // Generate JWT tokens
+      const tokens = generateTokens(user);
+
       // Remove password from response
       const { password, ...userWithoutPassword } = user;
 
@@ -198,6 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ? "Account created successfully. Please check your email to verify your account."
           : "Account created successfully. Email verification may be pending.", 
         user: userWithoutPassword,
+        ...tokens,
         emailSent
       });
     } catch (error) {
@@ -235,42 +248,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       //   });
       // }
 
-      // In production, use bcrypt to compare hashed passwords
-      if (user.password !== password) {
+      // Compare password with hashed password
+      const isValidPassword = await comparePassword(password, user.password);
+      if (!isValidPassword) {
         return res.status(401).json({ 
           message: "Invalid email or password" 
         });
       }
 
-      // Log user in using passport (skip email confirmation)
-      req.login(user, (err) => {
-        if (err) {
-          console.error("Login error:", err);
-          return res.status(500).json({ 
-            message: "Failed to establish session" 
-          });
-        }
-        
-        // Save session explicitly
-        req.session.save((saveErr) => {
-          if (saveErr) {
-            console.error("Session save error:", saveErr);
-            return res.status(500).json({ 
-              message: "Failed to save session" 
-            });
-          }
-          
-          console.log("Session saved successfully for user:", user.email);
-          console.log("Session ID:", req.sessionID);
-          
-          // Remove password from response
-          const { password: _, ...userWithoutPassword } = user;
-          
-          res.json({ 
-            message: "Login successful",
-            user: userWithoutPassword
-          });
-        });
+      // Generate JWT tokens
+      const tokens = generateTokens(user);
+      
+      console.log("JWT login successful for user:", user.email);
+      
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+      
+      res.json({ 
+        message: "Login successful",
+        user: userWithoutPassword,
+        ...tokens
       });
     } catch (error) {
       console.error("Login error:", error);
@@ -287,26 +284,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/auth/me", (req, res) => {
-    console.log("Auth check - Session ID:", req.sessionID);
-    console.log("Auth check - User:", req.user);
-    console.log("Auth check - Session:", req.session);
-    
-    if (!req.user) {
-      return res.status(401).json({ message: "Not authenticated" });
+  app.get("/api/auth/me", authenticateToken, async (req, res) => {
+    try {
+      // User is already verified by authenticateToken middleware
+      const user = await storage.getUser(req.user!.id);
+      
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+      
+      const { password: _, ...userWithoutPassword } = user;
+      res.json({ user: userWithoutPassword });
+    } catch (error) {
+      console.error("Auth check error:", error);
+      res.status(500).json({ message: "Failed to fetch user data" });
     }
-    
-    const { password: _, ...userWithoutPassword } = req.user as any;
-    res.json({ user: userWithoutPassword });
+  });
+
+  // Refresh token endpoint
+  app.post("/api/auth/refresh", async (req, res) => {
+    try {
+      const { refreshToken } = req.body;
+      
+      if (!refreshToken) {
+        return res.status(400).json({ message: "Refresh token required" });
+      }
+
+      // Verify refresh token
+      const decoded = verifyRefreshToken(refreshToken);
+      
+      // Get user from database
+      const user = await storage.getUser(decoded.id);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+
+      // Generate new tokens
+      const tokens = generateTokens(user);
+      
+      res.json(tokens);
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      res.status(401).json({ message: "Invalid refresh token" });
+    }
   });
 
   app.post("/api/auth/logout", (req, res) => {
-    req.logout((err) => {
-      if (err) {
-        return res.status(500).json({ message: "Failed to logout" });
-      }
-      res.json({ message: "Logout successful" });
-    });
+    // With JWT, logout is handled client-side by removing the token
+    // Optionally, you could maintain a token blacklist in production
+    res.json({ message: "Logout successful" });
   });
 
   app.get("/api/auth/verify-email", async (req, res) => {
@@ -340,19 +366,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
   
   app.get("/api/auth/google/callback", 
-    passport.authenticate("google", { 
-      failureRedirect: "/login?error=google_auth_failed",
-      successRedirect: "/dashboard" 
-    })
+    passport.authenticate("google", { failureRedirect: "/login?error=google_auth_failed" }),
+    (req, res) => {
+      // Generate JWT tokens for OAuth user
+      const user = req.user as any;
+      const tokens = generateTokens(user);
+      
+      // Redirect with tokens in URL (in production, use a more secure method)
+      res.redirect(`/dashboard?accessToken=${tokens.accessToken}&refreshToken=${tokens.refreshToken}`);
+    }
   );
 
   app.get("/api/auth/microsoft", passport.authenticate("microsoft", { scope: ["user.read"] }));
   
   app.get("/api/auth/microsoft/callback", 
-    passport.authenticate("microsoft", { 
-      failureRedirect: "/login?error=microsoft_auth_failed",
-      successRedirect: "/dashboard" 
-    })
+    passport.authenticate("microsoft", { failureRedirect: "/login?error=microsoft_auth_failed" }),
+    (req, res) => {
+      // Generate JWT tokens for OAuth user
+      const user = req.user as any;
+      const tokens = generateTokens(user);
+      
+      // Redirect with tokens in URL (in production, use a more secure method)
+      res.redirect(`/dashboard?accessToken=${tokens.accessToken}&refreshToken=${tokens.refreshToken}`);
+    }
   );
 
   // Contact form endpoint
@@ -396,15 +432,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Onboarding endpoint
-  app.post("/api/onboarding/complete", async (req, res) => {
-    try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-      
+  app.post("/api/onboarding/complete", authenticateToken, async (req, res) => {
+    try {      
       const { companyNameEn, companyNameAr, country, contractRole } = req.body;
       
-      const updatedUser = await storage.updateUserOnboarding(req.user.id, {
+      const updatedUser = await storage.updateUserOnboarding(req.user!.id, {
         companyNameEn,
         companyNameAr,
         country,
@@ -427,14 +459,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Contract endpoints
-  app.get("/api/contracts", async (req, res) => {
+  app.get("/api/contracts", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const { status, type, search } = req.query;
-      const contracts = await storage.getUserContracts(req.user.id, {
+      const contracts = await storage.getUserContracts(req.user!.id, {
         status: status as string,
         type: type as string,
         search: search as string
@@ -447,14 +475,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/contracts/recent", async (req, res) => {
+  app.get("/api/contracts/recent", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
-      const contracts = await storage.getRecentContracts(req.user.id, limit);
+      const contracts = await storage.getRecentContracts(req.user!.id, limit);
 
       res.json({ contracts });
     } catch (error) {
@@ -463,35 +487,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/contracts", async (req, res) => {
-    try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
-      const contracts = await storage.getAllContracts(req.user.id);
-
-      res.json({ contracts });
-    } catch (error) {
-      console.error('Error fetching all contracts:', error);
-      res.status(500).json({ message: "Failed to fetch contracts" });
-    }
-  });
-
   // Touch contract endpoint - updates last viewed timestamp
-  app.post("/api/contracts/touch", async (req, res) => {
+  app.post("/api/contracts/touch", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const { contractId } = req.body;
       
       if (!contractId) {
         return res.status(400).json({ message: "Contract ID is required" });
       }
 
-      await storage.touchContract(req.user.id, contractId);
+      await storage.touchContract(req.user!.id, contractId);
 
       res.status(204).send();
     } catch (error) {
@@ -500,12 +505,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/contracts/:id", async (req, res) => {
+  app.get("/api/contracts/:id", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const contract = await storage.getContract(parseInt(req.params.id));
       
       if (!contract) {
@@ -513,7 +514,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if user owns this contract
-      if (contract.userId !== req.user.id) {
+      if (contract.userId !== req.user!.id) {
         return res.status(403).json({ message: "Access denied" });
       }
 
@@ -524,11 +525,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/contracts", async (req, res) => {
+  app.post("/api/contracts", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
 
       // Convert date string to Date object before validation
       const dataWithDate = {
@@ -559,12 +557,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/contracts/:id", async (req, res) => {
+  app.patch("/api/contracts/:id", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const contractId = parseInt(req.params.id);
       const contract = await storage.getContract(contractId);
       
@@ -572,7 +566,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Contract not found" });
       }
 
-      if (contract.userId !== req.user.id) {
+      if (contract.userId !== req.user!.id) {
         return res.status(403).json({ message: "Access denied" });
       }
 
@@ -588,12 +582,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/contracts/:id", async (req, res) => {
+  app.delete("/api/contracts/:id", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const contractId = parseInt(req.params.id);
       const contract = await storage.getContract(contractId);
       
@@ -601,7 +591,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Contract not found" });
       }
 
-      if (contract.userId !== req.user.id) {
+      if (contract.userId !== req.user!.id) {
         return res.status(403).json({ message: "Access denied" });
       }
 
@@ -619,11 +609,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Upload contract with file and extract details
-  app.post("/api/contracts/upload", upload.single("file"), async (req, res) => {
+  app.post("/api/contracts/upload", upload.single("file"), authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
 
       if (!req.file) {
         return res.status(400).json({ message: "Contract file is required" });
@@ -709,12 +696,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Contract chat endpoints
-  app.get("/api/contracts/:id/chats", async (req, res) => {
+  app.get("/api/contracts/:id/chats", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const contractId = parseInt(req.params.id);
       const contract = await storage.getContract(contractId);
       
@@ -722,7 +705,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Contract not found" });
       }
 
-      if (contract.userId !== req.user.id) {
+      if (contract.userId !== req.user!.id) {
         return res.status(403).json({ message: "Access denied" });
       }
 
@@ -734,12 +717,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/contracts/:id/chats", async (req, res) => {
+  app.post("/api/contracts/:id/chats", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const contractId = parseInt(req.params.id);
       const contract = await storage.getContract(contractId);
       
@@ -747,7 +726,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Contract not found" });
       }
 
-      if (contract.userId !== req.user.id) {
+      if (contract.userId !== req.user!.id) {
         return res.status(403).json({ message: "Access denied" });
       }
 
@@ -755,7 +734,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chat = await storage.createContractChat({
         ...validatedData,
         contractId,
-        userId: req.user.id
+        userId: req.user!.id
       });
 
       res.status(201).json({ 
@@ -775,19 +754,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/contracts/search/chats", async (req, res) => {
+  app.get("/api/contracts/search/chats", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const searchTerm = req.query.q as string;
       
       if (!searchTerm) {
         return res.status(400).json({ message: "Search term is required" });
       }
 
-      const results = await storage.searchContractChats(req.user.id, searchTerm);
+      const results = await storage.searchContractChats(req.user!.id, searchTerm);
       res.json({ results });
     } catch (error) {
       console.error('Error searching contract chats:', error);
@@ -796,14 +771,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Saved prompts endpoints
-  app.get("/api/prompts", async (req, res) => {
+  app.get("/api/prompts", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const [userPrompts, systemPrompts] = await Promise.all([
-        storage.getUserPrompts(req.user.id),
+        storage.getUserPrompts(req.user!.id),
         storage.getSystemPrompts()
       ]);
 
@@ -817,16 +788,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/prompts", async (req, res) => {
+  app.post("/api/prompts", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const validatedData = insertSavedPromptSchema.parse(req.body);
       const prompt = await storage.createSavedPrompt({
         ...validatedData,
-        userId: req.user.id,
+        userId: req.user!.id,
         isSystem: false
       });
 
@@ -847,12 +814,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/prompts/:id/use", async (req, res) => {
+  app.post("/api/prompts/:id/use", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const promptId = parseInt(req.params.id);
       await storage.updatePromptUsage(promptId);
 
@@ -863,14 +826,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/prompts/:id", async (req, res) => {
+  app.delete("/api/prompts/:id", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
       const promptId = parseInt(req.params.id);
-      const deleted = await storage.deleteSavedPrompt(promptId, req.user.id);
+      const deleted = await storage.deleteSavedPrompt(promptId, req.user!.id);
 
       if (deleted) {
         res.json({ message: "Prompt deleted successfully" });
@@ -884,11 +843,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Process all contracts endpoint - extracts data from existing contracts
-  app.post("/api/contracts/process-all", async (req, res) => {
+  app.post("/api/contracts/process-all", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
 
       const userId = req.user.id;
       const userContracts = await storage.getUserContracts(userId);
@@ -939,13 +895,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Process existing contracts endpoint - re-processes contracts with empty party data
-  app.post("/api/process-existing-contracts", async (req, res) => {
+  app.post("/api/process-existing-contracts", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
-      const userId = req.user.id;
+      const userId = req.user!.id;
       console.log(`[${new Date().toISOString()}] Starting re-processing of contracts for user ${userId}`);
       
       // Get all contracts with missing party data
@@ -1008,13 +960,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Analytics endpoint
-  app.get("/api/analytics", async (req, res) => {
+  app.get("/api/analytics", authenticateToken, async (req, res) => {
     try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
-      const userId = req.user.id;
+      const userId = req.user!.id;
 
       // Get all user contracts from database
       const userContracts = await storage.getUserContracts(userId);
