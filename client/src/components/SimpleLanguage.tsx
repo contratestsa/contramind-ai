@@ -93,7 +93,7 @@ interface SimpleLanguageProviderProps {
 
 export function SimpleLanguageProvider({ children }: SimpleLanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>(detectBrowserLanguage());
-
+  
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('language', lang);
