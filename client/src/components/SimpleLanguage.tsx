@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState, createContext, useContext } from 'react';
+import { type ReactNode, useEffect, useState, createContext, useContext } from 'react';
 
 export type Language = 'ar' | 'en';
 

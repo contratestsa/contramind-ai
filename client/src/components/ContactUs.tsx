@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,18 +14,19 @@ import { z } from 'zod';
 import { Mail } from 'lucide-react';
 import { LanguageManager } from '@/components/SimpleLanguage';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
+import { useState, type ReactNode } from 'react';
 
 type ContactFormData = z.infer<typeof insertContactSchema>;
 
 interface ContactUsProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export default function ContactUs({ children }: ContactUsProps) {
   const t = LanguageManager.t;
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(insertContactSchema),
