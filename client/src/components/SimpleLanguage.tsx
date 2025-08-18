@@ -1,4 +1,3 @@
-import React from 'react';
 import { ReactNode, useEffect, useState, createContext, useContext } from 'react';
 
 export type Language = 'ar' | 'en';
