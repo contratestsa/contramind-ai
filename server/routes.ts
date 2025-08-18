@@ -248,8 +248,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       //   });
       // }
 
-      // Compare password with hashed password
-      const isValidPassword = await comparePassword(password, user.password);
+      // Compare password - handle both hashed and plain text for backward compatibility
+      let isValidPassword = false;
+      
+      // First try bcrypt comparison (for new users with hashed passwords)
+      try {
+        isValidPassword = await comparePassword(password, user.password);
+      } catch (err) {
+        // If bcrypt comparison fails, it might be a plain text password
+        console.log("Bcrypt comparison failed, trying plain text comparison");
+      }
+      
+      // If bcrypt comparison didn't work, try plain text comparison (for existing users)
+      if (!isValidPassword && user.password === password) {
+        isValidPassword = true;
+        
+        // Optional: Update the plain text password to hashed version
+        try {
+          const hashedPassword = await hashPassword(password);
+          await storage.updateUserPassword(user.id, hashedPassword);
+          console.log(`Updated password to hashed version for user: ${user.email}`);
+        } catch (updateErr) {
+          console.error("Failed to update password to hashed version:", updateErr);
+        }
+      }
+      
       if (!isValidPassword) {
         return res.status(401).json({ 
           message: "Invalid email or password" 

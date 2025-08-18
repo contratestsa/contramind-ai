@@ -134,6 +134,15 @@ export class DatabaseStorage implements IStorage {
     return user || undefined;
   }
 
+  async updateUserPassword(id: number, hashedPassword: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ password: hashedPassword })
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
   async createWaitlistEntry(insertEntry: InsertWaitlistEntry): Promise<WaitlistEntry> {
     // Check if email already exists
     const [existingEntry] = await db
