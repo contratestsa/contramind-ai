@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { LanguageManager } from '@/utils/languageManager';
 
 interface FAQItem {
   question: { ar: string; en: string };

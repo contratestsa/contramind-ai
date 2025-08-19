@@ -1,7 +1,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { LanguageManager } from '@/utils/languageManager';
 
 export default function Hero() {
   const t = LanguageManager.t;

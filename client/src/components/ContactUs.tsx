@@ -12,7 +12,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { insertContactSchema } from '@shared/schema';
 import { z } from 'zod';
 import { Mail } from 'lucide-react';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { LanguageManager } from '@/utils/languageManager';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import { useState, type ReactNode } from 'react';
 

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { LanguageManager } from '@/utils/languageManager';
 import { cn } from '@/lib/utils';
 
 interface TypographyProps {

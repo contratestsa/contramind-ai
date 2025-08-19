@@ -1,4 +1,4 @@
-import { LanguageManager, type Language } from '@/components/SimpleLanguage';
+import { LanguageManager, type Language } from '@/utils/languageManager';
 
 export type { Language };
 

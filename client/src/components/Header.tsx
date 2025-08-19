@@ -4,7 +4,7 @@ import { ChevronDown, Globe, Flag } from 'lucide-react';
 import logoImage from '@assets/RGB_Logo Design - ContraMind (V001)-01 (1)_1749730411676.png';
 import ContactUs from '@/components/ContactUs';
 import AuthModals from '@/components/auth/AuthModals';
-import { LanguageManager } from '@/components/SimpleLanguage';
+import { LanguageManager } from '@/utils/languageManager';
 
 export default function Header() {
   const language = LanguageManager.getLanguage();
