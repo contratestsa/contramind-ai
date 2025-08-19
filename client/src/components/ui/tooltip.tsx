@@ -1,18 +1,18 @@
-import * as React from "react"
+import { forwardRef,HTMLAttributes,ReactNode, } from "react"
 import { cn } from "@/lib/utils"
 
 // Simple fallback components to avoid Radix UI React hooks issues
-const TooltipProvider = ({ children, ...props }: { children: React.ReactNode; delayDuration?: number }) => {
+const TooltipProvider = ({ children, ...props }: { children: ReactNode; delayDuration?: number }) => {
   return <>{children}</>
 }
 
-const Tooltip = ({ children }: { children: React.ReactNode }) => {
+const Tooltip = ({ children }: { children: ReactNode }) => {
   return <>{children}</>
 }
 
-const TooltipTrigger = React.forwardRef<
+const TooltipTrigger = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
+  HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
 >(({ children, ...props }, ref) => (
   <div ref={ref} {...props}>
     {children}
@@ -20,9 +20,9 @@ const TooltipTrigger = React.forwardRef<
 ))
 TooltipTrigger.displayName = "TooltipTrigger"
 
-const TooltipContent = React.forwardRef<
+const TooltipContent = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
