@@ -1,4 +1,4 @@
-import {
+import React, {
   useEffect,
   useState,
   createContext,
@@ -37,7 +37,7 @@ export function SimpleLanguageProvider({
   children,
 }: SimpleLanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>(() =>
-    detectBrowserLanguage()
+    detectBrowserLanguage(),
   );
 
   const setLanguage = useCallback((lang: Language) => {
