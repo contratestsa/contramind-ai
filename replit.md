@@ -14,6 +14,9 @@ ContraMind.ai is a bilingual (Arabic/English) AI-powered legal technology platfo
 ## System Architecture
 The platform is built with a React-based frontend using TypeScript, Wouter for routing, TailwindCSS for styling, and Framer Motion for animations. Data fetching is managed with TanStack Query. A comprehensive bilingual language system supports Arabic and English, including browser detection for initial language settings. The backend runs on an Express.js server, utilizing a PostgreSQL database with Drizzle ORM.
 
+### Recent Fixes (January 2025)
+- **React Import Standardization**: Resolved persistent Vite preamble errors by standardizing all React imports to use destructured imports instead of namespace imports (`import * as React`). This ensures compatibility with Vite's React plugin and eliminates runtime hook errors.
+
 ### Authentication System (Updated: January 2025)
 - **JWT-based Authentication**: Migrated from session-based to JWT token authentication for improved security and scalability
 - **Backward Compatibility**: Supports both hashed passwords (new users) and plain text passwords (existing users) with automatic upgrade to hashed format on login
