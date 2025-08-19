@@ -106,8 +106,8 @@ interface SimpleLanguageProviderProps {
 export function SimpleLanguageProvider({
   children,
 }: SimpleLanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(() => 
-    detectBrowserLanguage()
+  const [language, setLanguageState] = useState<Language>(() =>
+    detectBrowserLanguage(),
   );
 
   const setLanguage = useCallback((lang: Language) => {
@@ -123,9 +123,12 @@ export function SimpleLanguageProvider({
     }, 100);
   }, []);
 
-  const t = useCallback((ar: string, en: string) => {
-    return language === "ar" ? ar : en;
-  }, [language]);
+  const t = useCallback(
+    (ar: string, en: string) => {
+      return language === "ar" ? ar : en;
+    },
+    [language],
+  );
 
   const getDir = useCallback((): "rtl" | "ltr" => {
     return language === "ar" ? "rtl" : "ltr";
@@ -139,16 +142,19 @@ export function SimpleLanguageProvider({
     document.documentElement.setAttribute("data-language", language);
   }, [language, getDir]);
 
-  const value = useMemo(() => ({
-    language,
-    setLanguage,
-    t,
-    getDir,
-  }), [language, setLanguage, t, getDir]);
+  const value = useMemo(
+    () => ({
+      language,
+      setLanguage,
+      t,
+      getDir,
+    }),
+    [language, setLanguage, t, getDir],
+  );
 
   return (
     <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
-};
+}
