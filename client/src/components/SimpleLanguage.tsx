@@ -3,6 +3,8 @@ import {
   useState,
   createContext,
   useContext,
+  useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 
@@ -104,12 +106,11 @@ interface SimpleLanguageProviderProps {
 export function SimpleLanguageProvider({
   children,
 }: SimpleLanguageProviderProps) {
-  console.log(detectBrowserLanguage());
-  const [language, setLanguageState] = useState<Language>(
-    detectBrowserLanguage(),
+  const [language, setLanguageState] = useState<Language>(() => 
+    detectBrowserLanguage()
   );
 
-  const setLanguage = (lang: Language) => {
+  const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem("language", lang);
     document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
@@ -120,15 +121,15 @@ export function SimpleLanguageProvider({
     setTimeout(() => {
       window.location.reload();
     }, 100);
-  };
+  }, []);
 
-  const t = (ar: string, en: string) => {
+  const t = useCallback((ar: string, en: string) => {
     return language === "ar" ? ar : en;
-  };
+  }, [language]);
 
-  const getDir = (): "rtl" | "ltr" => {
+  const getDir = useCallback((): "rtl" | "ltr" => {
     return language === "ar" ? "rtl" : "ltr";
-  };
+  }, [language]);
 
   useEffect(() => {
     // Set initial document attributes
@@ -136,18 +137,18 @@ export function SimpleLanguageProvider({
     document.documentElement.setAttribute("dir", dir);
     document.documentElement.setAttribute("lang", language);
     document.documentElement.setAttribute("data-language", language);
-  }, [language]);
+  }, [language, getDir]);
 
-  const value = {
+  const value = useMemo(() => ({
     language,
     setLanguage,
     t,
     getDir,
-  };
+  }), [language, setLanguage, t, getDir]);
 
   return (
     <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
-}
+};
