@@ -29,8 +29,6 @@ export const useLanguage = () => {
   return context;
 };
 
-
-
 interface SimpleLanguageProviderProps {
   children: ReactNode;
 }

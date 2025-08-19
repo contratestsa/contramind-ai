@@ -16,6 +16,7 @@ The platform is built with a React-based frontend using TypeScript, Wouter for r
 
 ### Recent Fixes (January 2025)
 - **React Import Standardization**: Resolved persistent Vite preamble errors by standardizing all React imports to use destructured imports instead of namespace imports (`import * as React`). This ensures compatibility with Vite's React plugin and eliminates runtime hook errors.
+- **LanguageManager Separation** (January 19, 2025): Fixed intermittent React hooks errors by separating `LanguageManager` utility object from `SimpleLanguage.tsx` into its own file (`utils/languageManager.ts`). Vite's Fast Refresh feature cannot handle mixed exports of React components and plain JavaScript objects from the same file, causing React context to be lost and hooks like `useState` to fail. This architectural separation ensures stable hot module replacement and prevents the "Invalid hook call" errors.
 
 ### Authentication System (Updated: January 2025)
 - **JWT-based Authentication**: Migrated from session-based to JWT token authentication for improved security and scalability
