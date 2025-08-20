@@ -13,7 +13,7 @@
     "electron:start": "electron desktop/main.js"
   },
   "dependencies": {
-    "@ai-sdk/google": "^2.0.6",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@radix-ui/react-accordion": "^1.2.4",
@@ -51,7 +51,6 @@
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-microsoft": "^2.1.0",
     "@types/pg": "^8.15.4",
-    "ai": "^5.0.15",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

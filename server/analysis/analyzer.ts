@@ -1,7 +1,3 @@
-import { google } from "@ai-sdk/google";
-import { generateText } from "ai";
-
-// src/geminiClient.ts
 import { GoogleGenAI } from "@google/genai";
 
 export function makeGemini() {
