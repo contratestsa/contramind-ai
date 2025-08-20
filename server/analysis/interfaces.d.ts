@@ -6,7 +6,7 @@ export type TExtractedData =
 export type TSupportedModels = "gemini-2.5-pro" | "gemini-2.5-flash";
 export type TAnalisysResponse = "application/json" | "text/plain";
 
-export interface AnalyzeOptions {
+export interface IAnalyzeOptions {
   model?: TSupportedModels;
   system?: string; // High-level instruction for the agent
   prompt: string; // Task-specific instruction
