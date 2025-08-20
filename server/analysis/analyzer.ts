@@ -1,8 +1,11 @@
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
 
-const { text } = await generateText({
-  model: google("gemini-2.5-flash"),
-  prompt: "Explain the concept of the Hilbert space.",
-});
-console.log(text);
+// src/geminiClient.ts
+import { GoogleGenAI } from "@google/genai";
+
+export function makeGemini() {
+  // Automatically picks Vertex AI if GOOGLE_GENAI_USE_VERTEXAI=true
+  // or AI Studio if GEMINI_API_KEY is present.  [oai_citation:4‡GitHub](https://github.com/googleapis/js-genai)
+  return new GoogleGenAI();
+}
