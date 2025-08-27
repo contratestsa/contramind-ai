@@ -2,7 +2,6 @@ import {
   useEffect,
   useState,
   createContext,
-  useContext,
   useCallback,
   useMemo,
   type ReactNode,
@@ -16,15 +15,6 @@ const LanguageContext = createContext<{
   t: (ar: string, en: string) => string;
   getDir: () => "rtl" | "ltr";
 } | null>(null);
-
-// Hook to use language context
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error("useLanguage must be used within a SimpleLanguageProvider");
-  }
-  return context;
-};
 
 interface SimpleLanguageProviderProps {
   children: ReactNode;
