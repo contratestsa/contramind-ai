@@ -36,6 +36,11 @@ import { fileURLToPath } from "url";
 // <<< PDF ANALYSIS END
 import { contractExtractor } from "./contractExtractor";
 
+// >>> AI ANALYSIS START
+import { analyzeContract } from "./analysis/analyzer";
+import { PROMPTS } from "./analysis/prompts";
+// <<< AI ANALYSIS END
+
 // Define __dirname for ESM modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -765,6 +770,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log(`Contract ${contract.id} extracted successfully`);
 
           // Implement contract analysis with Gemini2.5 AI here
+          const contractSchema = {
+            type: "object",
+            properties: {
+              parties: {
+                type: "array",
+                items: { type: "string" },
+              },
+              jurisdiction: { type: "string" },
+              effectiveDate: { type: "string" },
+              terminationNotice: { type: "string" },
+              confidentialityPeriod: { type: "string" },
+              contractValue: { type: "string" },
+              risks: {
+                type: "array",
+                items: { type: "string" },
+              },
+              summary: { type: "string" },
+            },
+            required: [
+              "parties",
+              "jurisdiction",
+              "effectiveDate",
+              "terminationNotice",
+              "confidentialityPeriod",
+              "contractValue",
+              "risks",
+              "summary",
+            ],
+            additionalProperties: false,
+          };
+
+          const thinkingBudget = extractedData.rawText.length ?? 2048;
+          const result = await analyzeContract(extractedData.rawText, {
+            model: "gemini-2.5-pro",
+            system:
+              "You are legal counsel for the SERVICE RECIPIENT reviewing a technology services contract under KSA (Kingdom Saudi Arabia) law. Provide concise, actionable guidance.",
+            prompt: PROMPTS.LARGE_PROMPT,
+            responseType: "application/json",
+            responseSchema: contractSchema,
+            thinking: { thinkingBudget },
+          });
+
+          console.log(result);
         } catch (extractError) {
           console.error(
             `Error extracting contract ${contract.id}:`,

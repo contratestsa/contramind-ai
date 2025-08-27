@@ -10,9 +10,9 @@ export interface IAnalyzeOptions {
   model?: TSupportedModels;
   system?: string; // High-level instruction for the agent
   prompt: string; // Task-specific instruction
-  responseMimeType?: TAnalisysResponse;
+  responseType?: TAnalisysResponse;
   responseSchema?: unknown; // JSON Schema if you want structured output
   thinking?: {
-    budgetTokens?: number;
+    thinkingBudget?: number;
   };
 }

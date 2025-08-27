@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
   useState,
   createContext,
@@ -8,9 +8,6 @@ import React, {
   type ReactNode,
 } from "react";
 import { Language, detectBrowserLanguage } from "@/utils/languageManager";
-
-// Re-export types
-export type { Language };
 
 // Language context
 const LanguageContext = createContext<{
@@ -36,9 +33,9 @@ interface SimpleLanguageProviderProps {
 export function SimpleLanguageProvider({
   children,
 }: SimpleLanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(() =>
-    detectBrowserLanguage(),
-  );
+  const defaultLanguage: Language = detectBrowserLanguage() || "ar";
+
+  const [language, setLanguageState] = useState<Language>(defaultLanguage);
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);

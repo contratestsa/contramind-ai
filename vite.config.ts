@@ -22,6 +22,12 @@ export default defineConfig({
       "@shared": path.resolve(import.meta.dirname, "shared"),
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
+    // Avoid double bundling of dependencies
+    dedupe: ["react", "react-dom"],
+  },
+  optimizeDeps: {
+    // Ensure these dependencies are pre-bundled
+    include: ["react", "react-dom"],
   },
   root: path.resolve(import.meta.dirname, "client"),
   build: {
