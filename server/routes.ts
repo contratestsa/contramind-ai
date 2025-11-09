@@ -704,7 +704,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .json({ message: "Only PDF and DOCX files are supported" });
         }
 
-        // Parse contract metadata from form data
+        // Parse contract metadata from form data including party perspective
         const contractData = {
           title: req.body.title || `Contract_${Date.now()}`,
           partyName: req.body.partyName || "Unknown Party",
@@ -716,6 +716,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           riskLevel: req.body.riskLevel || "medium",
           fileUrl: `/uploads/${req.file.filename}`,
         };
+        
+        // Extract party perspective and jurisdiction from request
+        const partyPerspective = req.body.partyPerspective || 'neutral';
+        const jurisdiction = req.body.jurisdiction || 'KSA';
 
         // Create contract record
         const contract = await storage.createContract({
@@ -779,15 +783,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           console.log(`Contract ${contract.id} extracted successfully`);
 
-          // Perform AI analysis using ContractAnalysisService
+          // Perform AI analysis using ContractAnalysisService with party perspective
           try {
             const contractAnalysisService = new ContractAnalysisService();
-            const language = extractedData.rawText.match(/[\u0600-\u06FF]/) ? "ar" : "en";
             
-            console.log(`Starting Gemini AI analysis for ${language} contract...`);
+            // Detect contract language (arabic, english, or bilingual)
+            const hasArabic = /[\u0600-\u06FF]/.test(extractedData.rawText);
+            const hasEnglish = /[a-zA-Z]/.test(extractedData.rawText);
+            let language = 'english';
+            
+            if (hasArabic && hasEnglish) {
+              // Check proportion for bilingual detection
+              const arabicCount = (extractedData.rawText.match(/[\u0600-\u06FF]/g) || []).length;
+              const englishCount = (extractedData.rawText.match(/[a-zA-Z]/g) || []).length;
+              const total = arabicCount + englishCount;
+              if (arabicCount > total * 0.2 && englishCount > total * 0.2) {
+                language = 'bilingual';
+              } else if (arabicCount > englishCount) {
+                language = 'arabic';
+              }
+            } else if (hasArabic) {
+              language = 'arabic';
+            }
+            
+            console.log(`Starting Gemini AI analysis: language=${language}, perspective=${partyPerspective}, jurisdiction=${jurisdiction}`);
             analysisResult = await contractAnalysisService.analyzeContract(
               extractedData.rawText,
-              language
+              language,
+              partyPerspective,
+              jurisdiction
             );
             
             // Log analysis results
@@ -806,7 +830,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 extractedData.contractType : analysisResult.contractType.toLowerCase()
             });
 
-            // Store AI analysis results in contract details
+            // Store comprehensive AI analysis results including four categories
             const contractDetails = await storage.getContractDetails(contract.id);
             if (contractDetails) {
               const existingMetadata = contractDetails.extractionMetadata ? 
@@ -816,14 +840,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 extractionMetadata: JSON.stringify({
                   ...existingMetadata,
                   aiAnalysis: {
+                    // Core analysis results
                     riskLevel: analysisResult.riskLevel,
                     riskSummary: analysisResult.riskSummary,
-                    keyFindings: analysisResult.keyFindings,
+                    
+                    // PRD-required four categories
+                    legalAnalysis: analysisResult.legalAnalysis,
+                    businessAnalysis: analysisResult.businessAnalysis,
+                    technicalAnalysis: analysisResult.technicalAnalysis,
+                    shariahAnalysis: analysisResult.shariahAnalysis,
+                    
+                    // Party perspective and jurisdiction
+                    partyPerspective: analysisResult.partyPerspective,
+                    language: analysisResult.language,
+                    jurisdiction: analysisResult.jurisdiction,
+                    
+                    // KSA compliance if present
+                    ksaCompliance: analysisResult.ksaCompliance,
+                    
+                    // Contract metadata
                     contractType: analysisResult.contractType,
                     parties: analysisResult.parties,
                     dates: analysisResult.dates,
                     paymentTerms: analysisResult.paymentTerms,
                     governingLaw: analysisResult.governingLaw,
+                    
+                    // Backward compatibility
+                    keyFindings: analysisResult.keyFindings,
+                    
+                    // Timestamp
                     analysisTimestamp: new Date().toISOString()
                   }
                 })
@@ -849,19 +894,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Continue without failing the upload
         }
 
-        // Include analysis results in response
+        // Include comprehensive analysis results in response
         res.status(201).json({
           message: "Contract uploaded successfully. Extraction completed.",
           contract,
           analysisResult: analysisResult ? {
+            // Core analysis
             riskLevel: analysisResult.riskLevel,
             riskSummary: analysisResult.riskSummary,
-            keyFindings: analysisResult.keyFindings,
+            
+            // PRD four categories with detailed analysis
+            legalAnalysis: analysisResult.legalAnalysis,
+            businessAnalysis: analysisResult.businessAnalysis,
+            technicalAnalysis: analysisResult.technicalAnalysis,
+            shariahAnalysis: analysisResult.shariahAnalysis,
+            
+            // Party perspective and jurisdiction
+            partyPerspective: analysisResult.partyPerspective,
+            language: analysisResult.language,
+            jurisdiction: analysisResult.jurisdiction,
+            
+            // KSA compliance
+            ksaCompliance: analysisResult.ksaCompliance,
+            
+            // Contract metadata
             contractType: analysisResult.contractType,
             parties: analysisResult.parties,
             dates: analysisResult.dates,
             paymentTerms: analysisResult.paymentTerms,
-            governingLaw: analysisResult.governingLaw
+            governingLaw: analysisResult.governingLaw,
+            
+            // Backward compatibility
+            keyFindings: analysisResult.keyFindings
           } : null
         });
       } catch (error) {

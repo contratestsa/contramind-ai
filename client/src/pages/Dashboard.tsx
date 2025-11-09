@@ -290,8 +290,12 @@ export default function Dashboard() {
 
     // Now process the actual upload
     const file = uploadedFile;
+    
+    // Map party selection for PRD compliance
+    // First party = provider/seller, Second party = buyer/client
+    const partyPerspective = party === "general" ? "neutral" : party;
     const partyType =
-      party === "first" ? "buyer" : party === "second" ? "vendor" : "general";
+      party === "first" ? "provider" : party === "second" ? "buyer" : "neutral";
 
     // Generate random risk level for demo
     const riskLevels: Array<"low" | "medium" | "high"> = [
@@ -308,18 +312,23 @@ export default function Dashboard() {
       contractTypes[Math.floor(Math.random() * contractTypes.length)];
 
     try {
-      // Create FormData for file upload
+      // Create FormData for file upload with PRD-compliant parameters
       const formData = new FormData();
       formData.append("file", file);
       formData.append("title", file.name.replace(/\.[^/.]+$/, "")); // Remove file extension
       formData.append(
         "partyName",
-        partyType === "buyer" ? "Buyer Corporation" : "Vendor LLC",
+        partyType === "provider" ? "Service Provider LLC" : 
+        partyType === "buyer" ? "Client Corporation" : "Contracting Parties",
       );
       formData.append("type", randomType);
       formData.append("status", "draft");
       formData.append("date", new Date().toISOString());
       formData.append("riskLevel", randomRisk);
+      
+      // Add PRD-required parameters
+      formData.append("partyPerspective", partyPerspective);
+      formData.append("jurisdiction", "KSA"); // Default to KSA for Saudi Arabian market
 
       // Upload contract with file
       const response = await fetch("/api/contracts/upload", {
@@ -424,48 +433,78 @@ export default function Dashboard() {
           let analysisMessage: Message;
           
           if (analysisData.analysisResult) {
-              // Real AI analysis results available
-              const { keyFindings } = analysisData.analysisResult;
-              const highRiskCount = keyFindings?.highRisks?.length || 0;
-              const mediumRiskCount = keyFindings?.mediumRisks?.length || 0;
-              const lowRiskCount = keyFindings?.lowRisks?.length || 0;
+              // Real AI analysis results available with four PRD categories
+              const analysis = analysisData.analysisResult;
+              const { legalAnalysis, businessAnalysis, technicalAnalysis, shariahAnalysis } = analysis;
               
-              let riskSummary = "";
-              if (highRiskCount > 0) {
-                riskSummary += t(
-                  `${highRiskCount} مخاطر عالية`,
-                  `${highRiskCount} high risk${highRiskCount > 1 ? 's' : ''}`
-                );
+              // Build comprehensive analysis summary
+              let analysisSummary = t(
+                `✅ تم اكتمال تحليل العقد بنجاح!`,
+                `✅ Contract analysis completed successfully!`
+              );
+              
+              analysisSummary += "\n\n";
+              
+              // Add party perspective info
+              const perspectiveText = analysis.partyPerspective === 'first' 
+                ? t("📋 منظور: الطرف الأول (المزود)", "📋 Perspective: First Party (Provider)")
+                : analysis.partyPerspective === 'second'
+                ? t("📋 منظور: الطرف الثاني (العميل)", "📋 Perspective: Second Party (Client)")  
+                : t("📋 منظور: محايد", "📋 Perspective: Neutral");
+              
+              analysisSummary += perspectiveText + "\n";
+              analysisSummary += t(`📊 مستوى المخاطر: ${analysis.riskLevel}`, `📊 Risk Level: ${analysis.riskLevel}`) + "\n\n";
+              
+              // Legal Analysis
+              if (legalAnalysis && legalAnalysis.risks?.length > 0) {
+                analysisSummary += t("⚖️ التحليل القانوني:", "⚖️ Legal Analysis:") + "\n";
+                analysisSummary += t(
+                  `• ${legalAnalysis.risks.length} مخاطر قانونية محددة`,
+                  `• ${legalAnalysis.risks.length} legal risks identified`
+                ) + "\n";
               }
-              if (mediumRiskCount > 0) {
-                if (riskSummary) riskSummary += t(" و", " and ");
-                riskSummary += t(
-                  `${mediumRiskCount} مخاطر متوسطة`,
-                  `${mediumRiskCount} medium risk${mediumRiskCount > 1 ? 's' : ''}`
-                );
+              
+              // Business Analysis
+              if (businessAnalysis && businessAnalysis.risks?.length > 0) {
+                analysisSummary += t("💼 التحليل التجاري:", "💼 Business Analysis:") + "\n";
+                analysisSummary += t(
+                  `• ${businessAnalysis.risks.length} مخاطر تجارية`,
+                  `• ${businessAnalysis.risks.length} business risks`
+                ) + "\n";
               }
-              if (lowRiskCount > 0) {
-                if (riskSummary) riskSummary += t(" و", " and ");
-                riskSummary += t(
-                  `${lowRiskCount} مخاطر منخفضة`,
-                  `${lowRiskCount} low risk${lowRiskCount > 1 ? 's' : ''}`
-                );
+              
+              // Technical Analysis
+              if (technicalAnalysis && technicalAnalysis.risks?.length > 0) {
+                analysisSummary += t("🔧 التحليل الفني:", "🔧 Technical Analysis:") + "\n";
+                analysisSummary += t(
+                  `• ${technicalAnalysis.risks.length} قضايا فنية`,
+                  `• ${technicalAnalysis.risks.length} technical issues`
+                ) + "\n";
               }
-
-              if (!riskSummary) {
-                riskSummary = t(
-                  "لم يتم العثور على مخاطر كبيرة",
-                  "No significant risks found"
-                );
+              
+              // Shariah Analysis
+              if (shariahAnalysis && shariahAnalysis.risks?.length > 0) {
+                analysisSummary += t("☪️ التحليل الشرعي:", "☪️ Shariah Analysis:") + "\n";
+                analysisSummary += t(
+                  `• ${shariahAnalysis.risks.length} ملاحظات شرعية`,
+                  `• ${shariahAnalysis.risks.length} Shariah concerns`
+                ) + "\n";
               }
+              
+              // KSA Compliance if present
+              if (analysis.ksaCompliance) {
+                analysisSummary += "\n" + t("🇸🇦 التوافق مع الأنظمة السعودية: ✓", "🇸🇦 KSA Compliance: ✓");
+              }
+              
+              analysisSummary += "\n\n" + t(
+                "💡 يمكنك الآن طرح أسئلة تفصيلية حول أي من هذه الفئات.",
+                "💡 You can now ask detailed questions about any of these categories."
+              );
 
               analysisMessage = {
                 id: "4",
                 type: "system",
-                content: t(
-                  `تم اكتمال التحليل! وجدت ${riskSummary}. يمكنك طرح أي أسئلة حول العقد.`,
-                  `Analysis complete! Found ${riskSummary}. You can ask any questions about the contract.`,
-                ),
+                content: analysisSummary,
                 timestamp: new Date(),
               };
 
@@ -501,47 +540,77 @@ export default function Dashboard() {
                   const retryData = await retryResponse.json();
                   
                   if (retryData.hasAnalysis && retryData.analysis) {
-                    const { keyFindings } = retryData.analysis;
-                    const highRiskCount = keyFindings?.highRisks?.length || 0;
-                    const mediumRiskCount = keyFindings?.mediumRisks?.length || 0;
-                    const lowRiskCount = keyFindings?.lowRisks?.length || 0;
+                    const analysis = retryData.analysis;
+                    const { legalAnalysis, businessAnalysis, technicalAnalysis, shariahAnalysis } = analysis;
                     
-                    let riskSummary = "";
-                    if (highRiskCount > 0) {
-                      riskSummary += t(
-                        `${highRiskCount} مخاطر عالية`,
-                        `${highRiskCount} high risk${highRiskCount > 1 ? 's' : ''}`
-                      );
+                    // Build comprehensive analysis summary
+                    let analysisSummary = t(
+                      `✅ تم اكتمال تحليل العقد بنجاح!`,
+                      `✅ Contract analysis completed successfully!`
+                    );
+                    
+                    analysisSummary += "\n\n";
+                    
+                    // Add party perspective info
+                    const perspectiveText = analysis.partyPerspective === 'first' 
+                      ? t("📋 منظور: الطرف الأول (المزود)", "📋 Perspective: First Party (Provider)")
+                      : analysis.partyPerspective === 'second'
+                      ? t("📋 منظور: الطرف الثاني (العميل)", "📋 Perspective: Second Party (Client)")  
+                      : t("📋 منظور: محايد", "📋 Perspective: Neutral");
+                    
+                    analysisSummary += perspectiveText + "\n";
+                    analysisSummary += t(`📊 مستوى المخاطر: ${analysis.riskLevel}`, `📊 Risk Level: ${analysis.riskLevel}`) + "\n\n";
+                    
+                    // Legal Analysis
+                    if (legalAnalysis && legalAnalysis.risks?.length > 0) {
+                      analysisSummary += t("⚖️ التحليل القانوني:", "⚖️ Legal Analysis:") + "\n";
+                      analysisSummary += t(
+                        `• ${legalAnalysis.risks.length} مخاطر قانونية محددة`,
+                        `• ${legalAnalysis.risks.length} legal risks identified`
+                      ) + "\n";
                     }
-                    if (mediumRiskCount > 0) {
-                      if (riskSummary) riskSummary += t(" و", " and ");
-                      riskSummary += t(
-                        `${mediumRiskCount} مخاطر متوسطة`,
-                        `${mediumRiskCount} medium risk${mediumRiskCount > 1 ? 's' : ''}`
-                      );
+                    
+                    // Business Analysis
+                    if (businessAnalysis && businessAnalysis.risks?.length > 0) {
+                      analysisSummary += t("💼 التحليل التجاري:", "💼 Business Analysis:") + "\n";
+                      analysisSummary += t(
+                        `• ${businessAnalysis.risks.length} مخاطر تجارية`,
+                        `• ${businessAnalysis.risks.length} business risks`
+                      ) + "\n";
                     }
-                    if (lowRiskCount > 0) {
-                      if (riskSummary) riskSummary += t(" و", " and ");
-                      riskSummary += t(
-                        `${lowRiskCount} مخاطر منخفضة`,
-                        `${lowRiskCount} low risk${lowRiskCount > 1 ? 's' : ''}`
-                      );
+                    
+                    // Technical Analysis
+                    if (technicalAnalysis && technicalAnalysis.risks?.length > 0) {
+                      analysisSummary += t("🔧 التحليل الفني:", "🔧 Technical Analysis:") + "\n";
+                      analysisSummary += t(
+                        `• ${technicalAnalysis.risks.length} قضايا فنية`,
+                        `• ${technicalAnalysis.risks.length} technical issues`
+                      ) + "\n";
                     }
-
-                    if (!riskSummary) {
-                      riskSummary = t(
-                        "لم يتم العثور على مخاطر كبيرة",
-                        "No significant risks found"
-                      );
+                    
+                    // Shariah Analysis
+                    if (shariahAnalysis && shariahAnalysis.risks?.length > 0) {
+                      analysisSummary += t("☪️ التحليل الشرعي:", "☪️ Shariah Analysis:") + "\n";
+                      analysisSummary += t(
+                        `• ${shariahAnalysis.risks.length} ملاحظات شرعية`,
+                        `• ${shariahAnalysis.risks.length} Shariah concerns`
+                      ) + "\n";
                     }
+                    
+                    // KSA Compliance if present
+                    if (analysis.ksaCompliance) {
+                      analysisSummary += "\n" + t("🇸🇦 التوافق مع الأنظمة السعودية: ✓", "🇸🇦 KSA Compliance: ✓");
+                    }
+                    
+                    analysisSummary += "\n\n" + t(
+                      "💡 يمكنك الآن طرح أسئلة تفصيلية حول أي من هذه الفئات.",
+                      "💡 You can now ask detailed questions about any of these categories."
+                    );
 
                     const finalAnalysisMessage: Message = {
                       id: "5",
                       type: "system",
-                      content: t(
-                        `تم اكتمال التحليل! وجدت ${riskSummary}. يمكنك طرح أي أسئلة حول العقد.`,
-                        `Analysis complete! Found ${riskSummary}. You can ask any questions about the contract.`,
-                      ),
+                      content: analysisSummary,
                       timestamp: new Date(),
                     };
 
