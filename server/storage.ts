@@ -324,19 +324,19 @@ export class DatabaseStorage implements IStorage {
         SELECT 
           id,
           user_id as "userId",
-          file_name as title,
-          parties as "partyName",
-          contract_type as type,
+          COALESCE(title, name) as title,
+          COALESCE(party_name, parties) as "partyName",
+          type,
           status,
-          contract_date as date,
+          start_date as date,
           risk_level as "riskLevel",
           file_path as "fileUrl",
           created_at as "createdAt",
           updated_at as "updatedAt",
-          updated_at as "lastViewedAt"
+          COALESCE(last_viewed_at, updated_at) as "lastViewedAt"
         FROM contracts
         WHERE user_id = ${userId}
-        ORDER BY updated_at DESC
+        ORDER BY COALESCE(last_viewed_at, updated_at) DESC
         LIMIT ${limit}
       `);
       

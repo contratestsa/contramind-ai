@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
+import { getAuthHeader } from '@/lib/auth';
 
 interface RecentContract {
   id: number;
@@ -18,7 +19,9 @@ export function useRecentContracts(limit = 5) {
     queryKey: ['/api/contracts/recent', limit],
     queryFn: async () => {
       const response = await fetch(`/api/contracts/recent?limit=${limit}`, {
-        credentials: 'include'
+        headers: {
+          ...getAuthHeader()
+        }
       });
       if (!response.ok) throw new Error('Failed to fetch recent contracts');
       return response.json();
@@ -31,8 +34,10 @@ export function useRecentContracts(limit = 5) {
     mutationFn: async (contractId: number) => {
       const response = await fetch('/api/contracts/touch', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getAuthHeader()
+        },
         body: JSON.stringify({ contractId })
       });
       
