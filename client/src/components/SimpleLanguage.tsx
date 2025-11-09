@@ -4,17 +4,21 @@ import {
   createContext,
   useCallback,
   useMemo,
+  useContext,
   type ReactNode,
 } from "react";
 import { Language, detectBrowserLanguage } from "@/utils/languageManager";
 
-// Language context
-const LanguageContext = createContext<{
+// Language context type
+interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (ar: string, en: string) => string;
   getDir: () => "rtl" | "ltr";
-} | null>(null);
+}
+
+// Export the context for use in hooks
+export const LanguageContext = createContext<LanguageContextType | null>(null);
 
 interface SimpleLanguageProviderProps {
   children: ReactNode;
@@ -23,9 +27,17 @@ interface SimpleLanguageProviderProps {
 export function SimpleLanguageProvider({
   children,
 }: SimpleLanguageProviderProps) {
-  const defaultLanguage: Language = detectBrowserLanguage() || "ar";
-
-  const [language, setLanguageState] = useState<Language>(defaultLanguage);
+  // Initialize language state with a lazy initializer to avoid SSR issues
+  const [language, setLanguageState] = useState<Language>(() => {
+    // Only call detectBrowserLanguage during initialization, not on every render
+    if (typeof window === "undefined") return "ar";
+    try {
+      return detectBrowserLanguage() || "ar";
+    } catch (error) {
+      console.warn("Error detecting browser language:", error);
+      return "ar";
+    }
+  });
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
@@ -74,4 +86,15 @@ export function SimpleLanguageProvider({
       {children}
     </LanguageContext.Provider>
   );
+}
+
+// Export hook to use the language context
+export function useSimpleLanguageContext() {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error(
+      "useSimpleLanguageContext must be used within a SimpleLanguageProvider"
+    );
+  }
+  return context;
 }
