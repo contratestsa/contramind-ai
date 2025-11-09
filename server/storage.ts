@@ -405,8 +405,8 @@ export class DatabaseStorage implements IStorage {
       }
       if (updates.partyName !== undefined) {
         updateFields.push(`parties = $${paramIndex++}`);
-        updateFields.push(`party_name = $${paramIndex++}`);
         values.push(updates.partyName);
+        updateFields.push(`party_name = $${paramIndex++}`);
         values.push(updates.partyName);
       }
       if (updates.date !== undefined) {
