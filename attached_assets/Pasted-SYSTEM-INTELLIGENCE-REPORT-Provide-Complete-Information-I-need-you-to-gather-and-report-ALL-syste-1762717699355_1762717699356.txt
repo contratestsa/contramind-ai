@@ -1,0 +1,122 @@
+SYSTEM INTELLIGENCE REPORT - Provide Complete Information
+
+I need you to gather and report ALL system information so I can 
+create a comprehensive autonomous fix prompt. Provide detailed 
+answers to everything below:
+
+=== 1. CURRENT SYSTEM STATE ===
+
+A. File Structure:
+   - List all backend files related to contract analysis
+   - List all frontend files that handle upload/display
+   - Show me the directory tree of: /server, /client/src/pages, 
+     /client/src/components
+
+B. Error Logs:
+   - Show me the LAST error that occurred when uploading a contract
+   - Check server logs for any Gemini API failures
+   - Show browser console errors from failed uploads
+   - Display any database errors from recent activity
+
+C. API Endpoints Status:
+   - List ALL contract-related endpoints (/api/contracts/*)
+   - Show which ones are working vs broken
+   - Display the exact code for /api/contracts/upload endpoint
+
+=== 2. AI ANALYSIS SYSTEM ===
+
+A. Current Gemini Prompt:
+   - Show me the EXACT prompt text being sent to Gemini API
+   - Where is this prompt defined? (file path + line number)
+   - Is it using real analysis or returning dummy data?
+
+B. File Extraction:
+   - What library extracts text from PDFs? (show package.json)
+   - What library extracts text from DOCX? (mammoth? docx?)
+   - Show me the extraction code (file + function name)
+   - Are these libraries actually installed and working?
+
+C. Analysis Flow:
+   - Trace the complete flow: Upload → Extract → Send to Gemini → 
+     Store → Display
+   - Show me each file involved in this chain
+   - Where could the process be failing?
+
+=== 3. SPECIFIC FAILURES ===
+
+A. Recent Upload Analysis:
+   - What happened when I uploaded "عقد بيع أسهم غير مصدرة.docx"?
+   - Did text extract successfully? Show me the extracted text.
+   - Was it sent to Gemini? Show the API request.
+   - What did Gemini return? Show the response.
+   - Why didn't I see specific results?
+
+B. Database:
+   - Show me the contracts table schema
+   - Show me the last 2 contracts I uploaded (full records)
+   - What's stored in the analysis_result field?
+   - Is it storing real analysis or placeholder text?
+
+=== 4. ENVIRONMENT & DEPENDENCIES ===
+
+A. API Keys:
+   - Is GOOGLE_API_KEY set? (show first 10 characters only)
+   - Are there any other missing environment variables?
+
+B. Installed Packages:
+   - Show relevant dependencies from package.json:
+     * PDF extraction libs
+     * DOCX parsing libs
+     * Google Gemini SDK version
+   - Are these packages actually in node_modules?
+
+C. Python Scripts:
+   - Is there a Python script for PDF processing?
+   - Is Python properly installed and accessible?
+   - Show requirements.txt
+
+=== 5. CODE INSPECTION ===
+
+Show me these specific code sections:
+
+A. Contract upload handler (server/routes.ts):
+   - The /api/contracts/upload endpoint (full code)
+   
+B. Analysis service (server/services/contractAnalysisService.ts):
+   - The analyzeContract function (full code)
+   - The prompt template being used
+
+C. Frontend upload (client/src/pages/Dashboard.tsx):
+   - The handleContractUpload function
+   - How it displays results
+
+=== OUTPUT FORMAT ===
+
+Organize your response as:
+
+## SECTION 1: FILE STRUCTURE
+[paste directory tree]
+
+## SECTION 2: ERROR LOGS
+[paste actual errors from logs]
+
+## SECTION 3: CURRENT GEMINI PROMPT
+[paste the exact prompt text]
+
+## SECTION 4: ANALYSIS FLOW TRACE
+[show each step with file paths]
+
+## SECTION 5: LAST UPLOAD DETAILS
+[what happened with my recent upload]
+
+## SECTION 6: DEPENDENCIES STATUS
+[list of installed vs missing packages]
+
+## SECTION 7: CRITICAL CODE SECTIONS
+[paste the key functions]
+
+## SECTION 8: ROOT CAUSE ANALYSIS
+[your assessment of why contract analysis isn't working]
+
+Provide ALL this information comprehensively. Be specific - paste 
+actual code, actual errors, actual data. Don't summarize.
