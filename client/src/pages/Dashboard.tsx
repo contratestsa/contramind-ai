@@ -336,7 +336,8 @@ export default function Dashboard() {
         throw new Error(errorData.message || "Failed to upload contract");
       }
 
-      const { contract } = await response.json();
+      const uploadData = await response.json();
+      const { contract, analysisResult } = uploadData;
 
       // Update local state with database contract
       const newContract: Contract = {
@@ -348,6 +349,7 @@ export default function Dashboard() {
         riskLevel: contract.riskLevel as "low" | "medium" | "high",
         date: contract.date,
         type: contract.type,
+        analysisResult: analysisResult, // Store the analysis result if available
       };
 
       setContracts([newContract, ...contracts]);
@@ -396,18 +398,174 @@ export default function Dashboard() {
 
       setMessages(initialMessages);
 
-      // Simulate analysis completion and update status in database
+      // Wait a bit for analysis to complete, then fetch or use real results
       setTimeout(async () => {
-        const analysisMessage: Message = {
-          id: "4",
-          type: "system",
-          content: t(
-            "تم اكتمال التحليل! وجدت 3 مخاطر عالية و5 متوسطة. يمكنك طرح أي أسئلة حول العقد.",
-            "Analysis complete! Found 3 high risks and 5 medium risks. You can ask any questions about the contract.",
-          ),
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, analysisMessage]);
+        try {
+          let analysisData = { analysisResult }; // Use result from upload if available
+          
+          // If no immediate results from upload, fetch from the analysis endpoint
+          if (!analysisResult) {
+            const analysisResponse = await fetch(`/api/contracts/${contract.id}/analysis`, {
+              method: "GET",
+              headers: {
+                ...getAuthHeader(), // Include JWT token for authentication
+              },
+            });
+
+            if (analysisResponse.ok) {
+              analysisData = await analysisResponse.json();
+              // Check if the response has the expected structure
+              if (analysisData.hasAnalysis && analysisData.analysis) {
+                analysisData = { analysisResult: analysisData.analysis };
+              }
+            }
+          }
+          
+          let analysisMessage: Message;
+          
+          if (analysisData.analysisResult) {
+              // Real AI analysis results available
+              const { keyFindings } = analysisData.analysisResult;
+              const highRiskCount = keyFindings?.highRisks?.length || 0;
+              const mediumRiskCount = keyFindings?.mediumRisks?.length || 0;
+              const lowRiskCount = keyFindings?.lowRisks?.length || 0;
+              
+              let riskSummary = "";
+              if (highRiskCount > 0) {
+                riskSummary += t(
+                  `${highRiskCount} مخاطر عالية`,
+                  `${highRiskCount} high risk${highRiskCount > 1 ? 's' : ''}`
+                );
+              }
+              if (mediumRiskCount > 0) {
+                if (riskSummary) riskSummary += t(" و", " and ");
+                riskSummary += t(
+                  `${mediumRiskCount} مخاطر متوسطة`,
+                  `${mediumRiskCount} medium risk${mediumRiskCount > 1 ? 's' : ''}`
+                );
+              }
+              if (lowRiskCount > 0) {
+                if (riskSummary) riskSummary += t(" و", " and ");
+                riskSummary += t(
+                  `${lowRiskCount} مخاطر منخفضة`,
+                  `${lowRiskCount} low risk${lowRiskCount > 1 ? 's' : ''}`
+                );
+              }
+
+              if (!riskSummary) {
+                riskSummary = t(
+                  "لم يتم العثور على مخاطر كبيرة",
+                  "No significant risks found"
+                );
+              }
+
+              analysisMessage = {
+                id: "4",
+                type: "system",
+                content: t(
+                  `تم اكتمال التحليل! وجدت ${riskSummary}. يمكنك طرح أي أسئلة حول العقد.`,
+                  `Analysis complete! Found ${riskSummary}. You can ask any questions about the contract.`,
+                ),
+                timestamp: new Date(),
+              };
+
+              // Store the full analysis results for later reference
+              setSelectedContract(prev => prev ? {
+                ...prev,
+                riskLevel: analysisData.analysisResult.riskLevel,
+                analysisResult: analysisData.analysisResult
+              } : prev);
+            } else {
+              // Analysis in progress or not available yet, retry after a delay
+              analysisMessage = {
+                id: "4",
+                type: "system",
+                content: t(
+                  "جاري استكمال التحليل التفصيلي... يرجى الانتظار.",
+                  "Completing detailed analysis... Please wait.",
+                ),
+                timestamp: new Date(),
+              };
+
+              // Retry fetching analysis after a delay
+              setTimeout(async () => {
+                // Try fetching analysis again
+                const retryResponse = await fetch(`/api/contracts/${contract.id}/analysis`, {
+                  method: "GET",
+                  headers: {
+                    ...getAuthHeader(),
+                  },
+                });
+
+                if (retryResponse.ok) {
+                  const retryData = await retryResponse.json();
+                  
+                  if (retryData.hasAnalysis && retryData.analysis) {
+                    const { keyFindings } = retryData.analysis;
+                    const highRiskCount = keyFindings?.highRisks?.length || 0;
+                    const mediumRiskCount = keyFindings?.mediumRisks?.length || 0;
+                    const lowRiskCount = keyFindings?.lowRisks?.length || 0;
+                    
+                    let riskSummary = "";
+                    if (highRiskCount > 0) {
+                      riskSummary += t(
+                        `${highRiskCount} مخاطر عالية`,
+                        `${highRiskCount} high risk${highRiskCount > 1 ? 's' : ''}`
+                      );
+                    }
+                    if (mediumRiskCount > 0) {
+                      if (riskSummary) riskSummary += t(" و", " and ");
+                      riskSummary += t(
+                        `${mediumRiskCount} مخاطر متوسطة`,
+                        `${mediumRiskCount} medium risk${mediumRiskCount > 1 ? 's' : ''}`
+                      );
+                    }
+                    if (lowRiskCount > 0) {
+                      if (riskSummary) riskSummary += t(" و", " and ");
+                      riskSummary += t(
+                        `${lowRiskCount} مخاطر منخفضة`,
+                        `${lowRiskCount} low risk${lowRiskCount > 1 ? 's' : ''}`
+                      );
+                    }
+
+                    if (!riskSummary) {
+                      riskSummary = t(
+                        "لم يتم العثور على مخاطر كبيرة",
+                        "No significant risks found"
+                      );
+                    }
+
+                    const finalAnalysisMessage: Message = {
+                      id: "5",
+                      type: "system",
+                      content: t(
+                        `تم اكتمال التحليل! وجدت ${riskSummary}. يمكنك طرح أي أسئلة حول العقد.`,
+                        `Analysis complete! Found ${riskSummary}. You can ask any questions about the contract.`,
+                      ),
+                      timestamp: new Date(),
+                    };
+
+                    setMessages((prev) => [...prev, finalAnalysisMessage]);
+                  }
+                }
+              }, 5000); // Retry after 5 seconds
+            }
+            
+            setMessages((prev) => [...prev, analysisMessage]);
+        } catch (error) {
+          console.error("Error fetching analysis:", error);
+          // Show generic success message on error
+          const analysisMessage: Message = {
+            id: "4",
+            type: "system",
+            content: t(
+              "تم رفع العقد بنجاح. يمكنك طرح أي أسئلة حول العقد.",
+              "Contract uploaded successfully. You can ask any questions about the contract.",
+            ),
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, analysisMessage]);
+        }
 
         // Update contract status in database
         await fetch(`/api/contracts/${contract.id}`, {

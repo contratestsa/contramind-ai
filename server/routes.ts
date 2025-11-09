@@ -39,6 +39,7 @@ import { contractExtractor } from "./contractExtractor";
 // >>> AI ANALYSIS START
 import { analyzeContract } from "./analysis/analyzer";
 import { PROMPTS } from "./analysis/prompts";
+import { ContractAnalysisService } from "./services/contractAnalysisService";
 // <<< AI ANALYSIS END
 
 // Define __dirname for ESM modules
@@ -769,50 +770,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           console.log(`Contract ${contract.id} extracted successfully`);
 
-          // Implement contract analysis with Gemini2.5 AI here
-          const contractSchema = {
-            type: "object",
-            properties: {
-              parties: {
-                type: "array",
-                items: { type: "string" },
-              },
-              jurisdiction: { type: "string" },
-              effectiveDate: { type: "string" },
-              terminationNotice: { type: "string" },
-              confidentialityPeriod: { type: "string" },
-              contractValue: { type: "string" },
-              risks: {
-                type: "array",
-                items: { type: "string" },
-              },
-              summary: { type: "string" },
-            },
-            required: [
-              "parties",
-              "jurisdiction",
-              "effectiveDate",
-              "terminationNotice",
-              "confidentialityPeriod",
-              "contractValue",
-              "risks",
-              "summary",
-            ],
-            additionalProperties: false,
-          };
+          // Perform AI analysis using ContractAnalysisService
+          let analysisResult = null;
+          try {
+            const contractAnalysisService = new ContractAnalysisService();
+            const language = extractedData.rawText.match(/[\u0600-\u06FF]/) ? "ar" : "en";
+            
+            console.log(`Starting Gemini AI analysis for ${language} contract...`);
+            analysisResult = await contractAnalysisService.analyzeContract(
+              extractedData.rawText,
+              language
+            );
+            
+            // Log analysis results
+            console.log(`AI Analysis completed for contract ${contract.id}:`, {
+              riskLevel: analysisResult.riskLevel,
+              highRisks: analysisResult.keyFindings.highRisks.length,
+              mediumRisks: analysisResult.keyFindings.mediumRisks.length,
+              lowRisks: analysisResult.keyFindings.lowRisks.length,
+              contractType: analysisResult.contractType,
+            });
 
-          const thinkingBudget = extractedData.rawText.length ?? 2048;
-          const result = await analyzeContract(extractedData.rawText, {
-            model: "gemini-2.5-pro",
-            system:
-              "You are legal counsel for the SERVICE RECIPIENT reviewing a technology services contract under KSA (Kingdom Saudi Arabia) law. Provide concise, actionable guidance.",
-            prompt: PROMPTS.LARGE_PROMPT,
-            responseType: "application/json",
-            responseSchema: contractSchema,
-            thinking: { thinkingBudget },
-          });
+            // Update contract with AI-determined risk level
+            await storage.updateContract(contract.id, {
+              riskLevel: analysisResult.riskLevel,
+              type: analysisResult.contractType === 'General Contract' ? 
+                extractedData.contractType : analysisResult.contractType.toLowerCase()
+            });
 
-          console.log(result);
+            // Store AI analysis results in contract details
+            const contractDetails = await storage.getContractDetails(contract.id);
+            if (contractDetails) {
+              const existingMetadata = contractDetails.extractionMetadata ? 
+                JSON.parse(contractDetails.extractionMetadata) : {};
+              
+              await storage.updateContractDetails(contract.id, {
+                extractionMetadata: JSON.stringify({
+                  ...existingMetadata,
+                  aiAnalysis: {
+                    riskLevel: analysisResult.riskLevel,
+                    riskSummary: analysisResult.riskSummary,
+                    keyFindings: analysisResult.keyFindings,
+                    contractType: analysisResult.contractType,
+                    parties: analysisResult.parties,
+                    dates: analysisResult.dates,
+                    paymentTerms: analysisResult.paymentTerms,
+                    governingLaw: analysisResult.governingLaw,
+                    analysisTimestamp: new Date().toISOString()
+                  }
+                })
+              });
+            }
+          } catch (analysisError) {
+            console.error(`Error performing AI analysis for contract ${contract.id}:`, analysisError);
+            // Don't fail the upload if AI analysis fails
+            analysisResult = null;
+          }
         } catch (extractError) {
           console.error(
             `Error extracting contract ${contract.id}:`,
@@ -821,9 +834,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Continue without failing the upload
         }
 
+        // Include analysis results in response
         res.status(201).json({
           message: "Contract uploaded successfully. Extraction completed.",
           contract,
+          analysisResult: analysisResult ? {
+            riskLevel: analysisResult.riskLevel,
+            riskSummary: analysisResult.riskSummary,
+            keyFindings: analysisResult.keyFindings,
+            contractType: analysisResult.contractType,
+            parties: analysisResult.parties,
+            dates: analysisResult.dates,
+            paymentTerms: analysisResult.paymentTerms,
+            governingLaw: analysisResult.governingLaw
+          } : null
         });
       } catch (error) {
         // Clean up uploaded file on error
@@ -893,6 +917,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Error creating contract chat:", error);
         res.status(500).json({ message: "Failed to create chat message" });
       }
+    }
+  });
+
+  // Get contract analysis results
+  app.get("/api/contracts/:id/analysis", authenticateToken, async (req, res) => {
+    try {
+      const contractId = parseInt(req.params.id);
+      const contract = await storage.getContract(contractId);
+
+      if (!contract) {
+        return res.status(404).json({ message: "Contract not found" });
+      }
+
+      if (contract.userId !== req.user!.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Get contract details with analysis results
+      const contractDetails = await storage.getContractDetails(contractId);
+      
+      if (!contractDetails || !contractDetails.extractionMetadata) {
+        return res.json({ 
+          hasAnalysis: false,
+          message: "No analysis results available yet" 
+        });
+      }
+
+      try {
+        const metadata = JSON.parse(contractDetails.extractionMetadata);
+        
+        if (metadata.aiAnalysis) {
+          return res.json({
+            hasAnalysis: true,
+            analysis: metadata.aiAnalysis
+          });
+        } else {
+          return res.json({ 
+            hasAnalysis: false,
+            message: "Analysis not completed yet" 
+          });
+        }
+      } catch (parseError) {
+        console.error("Error parsing extraction metadata:", parseError);
+        return res.json({ 
+          hasAnalysis: false,
+          message: "Error retrieving analysis results" 
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching contract analysis:", error);
+      res.status(500).json({ message: "Failed to fetch contract analysis" });
     }
   });
 
