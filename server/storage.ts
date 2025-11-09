@@ -394,75 +394,66 @@ export class DatabaseStorage implements IStorage {
     try {
       console.log('Updating contract:', id, updates);
       
-      // Map schema fields to database columns
-      const updateFields: string[] = [];
-      const values: any[] = [];
-      let paramIndex = 1;
-      
-      if (updates.title !== undefined) {
-        updateFields.push(`name = $${paramIndex++}`);
-        values.push(updates.title);
-      }
-      if (updates.partyName !== undefined) {
-        updateFields.push(`parties = $${paramIndex++}`);
-        values.push(updates.partyName);
-        updateFields.push(`party_name = $${paramIndex++}`);
-        values.push(updates.partyName);  // Push the value again for the second field
-      }
-      if (updates.date !== undefined) {
-        updateFields.push(`start_date = $${paramIndex++}`);
-        values.push(new Date(updates.date));
-      }
-      if (updates.type !== undefined) {
-        updateFields.push(`type = $${paramIndex++}`);
-        values.push(updates.type);
-      }
-      if (updates.status !== undefined) {
-        updateFields.push(`status = $${paramIndex++}`);
-        values.push(updates.status);
-      }
-      if (updates.riskLevel !== undefined) {
-        updateFields.push(`risk_level = $${paramIndex++}`);
-        values.push(updates.riskLevel);
-      }
-      if (updates.fileUrl !== undefined) {
-        updateFields.push(`file_path = $${paramIndex++}`);
-        values.push(updates.fileUrl);
-      }
-      
-      // Always update updated_at
-      updateFields.push(`updated_at = $${paramIndex++}`);
-      values.push(new Date());
-      
-      if (updateFields.length === 1) {
-        // Only updated_at, no actual updates
+      // Check if there are any actual updates
+      if (Object.keys(updates).length === 0) {
         const [contract] = await db.select().from(contracts).where(eq(contracts.id, id));
         return contract || undefined;
       }
       
-      // Add id to values last, after all update fields
-      values.push(id);
-      const idParamIndex = paramIndex;
+      // Build the UPDATE query using Drizzle's sql template literal - proven to work
+      // We'll build the SET clause dynamically based on what needs updating
+      const setClauses = [];
+      const values: any = {};
       
-      const query = sql.raw(`
-        UPDATE contracts
-        SET ${updateFields.join(', ')}
-        WHERE id = $${idParamIndex}
-        RETURNING 
-          id,
-          user_id as "userId",
-          name as title,
-          parties as "partyName",
-          type,
-          status,
-          start_date as date,
-          risk_level as "riskLevel",
-          file_path as "fileUrl",
-          created_at as "createdAt",
-          updated_at as "updatedAt"
-      `, values);
+      // Map schema fields to database columns
+      if (updates.title !== undefined) {
+        setClauses.push(sql`name = ${updates.title}`);
+      }
+      if (updates.partyName !== undefined) {
+        // Update both parties and party_name columns with the same value
+        setClauses.push(sql`parties = ${updates.partyName}`);
+        setClauses.push(sql`party_name = ${updates.partyName}`);
+      }
+      if (updates.date !== undefined) {
+        setClauses.push(sql`start_date = ${new Date(updates.date)}`);
+      }
+      if (updates.type !== undefined) {
+        setClauses.push(sql`type = ${updates.type}`);
+      }
+      if (updates.status !== undefined) {
+        setClauses.push(sql`status = ${updates.status}`);
+      }
+      if (updates.riskLevel !== undefined) {
+        setClauses.push(sql`risk_level = ${updates.riskLevel}`);
+      }
+      if (updates.fileUrl !== undefined) {
+        setClauses.push(sql`file_path = ${updates.fileUrl}`);
+      }
       
-      const result = await db.execute(query);
+      // Always update updated_at
+      setClauses.push(sql`updated_at = ${new Date()}`);
+      
+      // Execute the UPDATE query using proper SQL composition
+      // This approach uses Drizzle's SQL builder to properly handle parameterization
+      const result = await db.execute(
+        sql`
+          UPDATE contracts
+          SET ${sql.join(setClauses, sql`, `)}
+          WHERE id = ${id}
+          RETURNING 
+            id,
+            user_id as "userId",
+            name as title,
+            parties as "partyName",
+            type,
+            status,
+            start_date as date,
+            risk_level as "riskLevel",
+            file_path as "fileUrl",
+            created_at as "createdAt",
+            updated_at as "updatedAt"
+        `
+      );
       
       return result.rows[0] || undefined;
     } catch (error) {

@@ -46,21 +46,13 @@ export class ContractAnalysisService {
       console.log(`Starting AI analysis for ${language} contract...`);
       console.log(`Text length: ${extractedText.length} characters`);
 
-      // Create model
-      const model = this.geminiClient.models.generate({
-        model: 'gemini-2.0-flash-exp',
-      });
-
       // Prepare the prompt based on language
       const prompt = this.createAnalysisPrompt(extractedText, language);
       
-      // Call Gemini API
-      const response = await model.generateContent({
+      // Call Gemini API using the correct SDK method from @google/genai
+      const response = await this.geminiClient.models.generateContent({
+        model: 'gemini-2.0-flash-exp',
         contents: prompt,
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 2048,
-        },
       });
 
       console.log("Gemini API response received");
@@ -175,21 +167,14 @@ Focus on identifying:
       console.error("Error parsing analysis JSON:", error);
     }
 
-    // Fallback: Extract key information from plain text
-    const highRisks = this.extractRisks(analysisText, 'high');
-    const mediumRisks = this.extractRisks(analysisText, 'medium');
-    const lowRisks = this.extractRisks(analysisText, 'low');
-
-    const riskLevel = highRisks.length > 2 ? 'high' : 
-                      mediumRisks.length > 3 ? 'medium' : 'low';
-
+    // Fallback: Return neutral error message, no fake data
     return {
-      riskLevel,
-      riskSummary: `Found ${highRisks.length} high risks and ${mediumRisks.length} medium risks`,
+      riskLevel: 'medium',
+      riskSummary: 'Analysis could not be completed. Please try again.',
       keyFindings: {
-        highRisks,
-        mediumRisks,
-        lowRisks,
+        highRisks: [],
+        mediumRisks: [],
+        lowRisks: [],
       },
       contractType: 'Contract',
       parties: [],
