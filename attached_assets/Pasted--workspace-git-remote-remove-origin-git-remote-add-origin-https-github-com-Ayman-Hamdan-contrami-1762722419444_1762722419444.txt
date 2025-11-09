@@ -1,0 +1,56 @@
+~/workspace$ git remote remove origin
+git remote add origin https://github.com/Ayman-Hamdan/contramind-ai.git
+error: could not delete references: cannot lock ref 'refs/remotes/origin/hotfix/homepage-fix': Unable to create '/home/runner/workspace/.git/refs/remotes/origin/hotfix/homepage-fix.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+error: remote origin already exists.
+~/workspace$ git add .
+~/workspace$ git commit -m "Initial commit - ContraMind.ai before autonomous fixes"
+On branch hotfix/homepage-fix
+nothing to commit, working tree clean
+~/workspace$ git branch -M main
+git push -u origin main
+error: Unable to create '/home/runner/workspace/.git/packed-refs.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+error: unable to delete old refs/heads/hotfix/homepage-fix
+fatal: branch rename failed
+remote: Repository not found.
+fatal: repository 'https://github.com/contramindai/contramindPoC/' not found
+~/workspace$ rm -f /home/runner/workspace/.git/refs/remotes/origin/hotfix/homepage-fix.lock
+rm -f /home/runner/workspace/.git/packed-refs.lock
+rm -f /home/runner/workspace/.git/index.lock
+~/workspace$ git remote -v
+gitsafe-backup  git://gitsafe:5418/backup.git (fetch)
+gitsafe-backup  git://gitsafe:5418/backup.git (push)
+origin  https://github.com/contramindai/contramindPoC (fetch)
+origin  https://github.com/contramindai/contramindPoC (push)
+~/workspace$ git remote remove origin]
+error: No such remote: 'origin]'
+~/workspace$ git remote remove origin
+~/workspace$ git remote add origin https://github.com/Ayman-Hamdan/contramind-ai.git
+~/workspace$ git remote -v
+gitsafe-backup  git://gitsafe:5418/backup.git (fetch)
+gitsafe-backup  git://gitsafe:5418/backup.git (push)
+origin  https://github.com/Ayman-Hamdan/contramind-ai.git (fetch)
+origin  https://github.com/Ayman-Hamdan/contramind-ai.git (push)
+~/workspace$ git push -u origin hotfix/homepage-fix
+remote: Repository not found.
+fatal: repository 'https://github.com/Ayman-Hamdan/contramind-ai.git/' not found
+~/workspace$ git branch -M main
+git push -u origin main
+remote: Repository not found.
+fatal: repository 'https://github.com/Ayman-Hamdan/contramind-ai.git/' not found
+~/workspace$ git branch -M main
+git push -u origin main
+remote: Repository not found.
+fatal: repository 'https://github.com/Ayman-Hamdan/contramind-ai.git/' not found
+~/workspace$ 
