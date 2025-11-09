@@ -35,7 +35,7 @@ import iconImage from "@assets/Profile Picture - ContraMind (V001)-1_17524375301
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { storeTokens } from "@/lib/auth";
+import { storeTokens, getAuthHeader } from "@/lib/auth";
 import UploadModal from "@/components/UploadModal";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { queryClient } from "@/lib/queryClient";
@@ -324,8 +324,10 @@ export default function Dashboard() {
       // Upload contract with file
       const response = await fetch("/api/contracts/upload", {
         method: "POST",
+        headers: {
+          ...getAuthHeader(), // Include JWT token for authentication
+        },
         body: formData,
-        credentials: "include", // Include cookies for authentication
       });
 
       if (!response.ok) {
@@ -412,6 +414,7 @@ export default function Dashboard() {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            ...getAuthHeader(), // Include JWT token for authentication
           },
           body: JSON.stringify({
             status: "active",
