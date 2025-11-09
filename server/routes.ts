@@ -723,11 +723,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           userId: req.user.id,
         });
 
+        // Declare analysisResult in outer scope for later use
+        let analysisResult = null;
+        
         // Process the contract using JavaScript extractor
         try {
           const { contractExtractorJS } = await import("./contractExtractorJS");
+          
+          // Rename the uploaded file with proper extension for the extractor
+          const originalFilePath = req.file.path;
+          const filePathWithExt = `${originalFilePath}${fileExt}`;
+          fs.renameSync(originalFilePath, filePathWithExt);
+          
           const extractedData = await contractExtractorJS.extractContract(
-            req.file.path,
+            filePathWithExt,
           );
 
           // Store extracted data in contract_details table
@@ -771,7 +780,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log(`Contract ${contract.id} extracted successfully`);
 
           // Perform AI analysis using ContractAnalysisService
-          let analysisResult = null;
           try {
             const contractAnalysisService = new ContractAnalysisService();
             const language = extractedData.rawText.match(/[\u0600-\u06FF]/) ? "ar" : "en";
@@ -826,11 +834,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Don't fail the upload if AI analysis fails
             analysisResult = null;
           }
+          // Clean up the renamed file after extraction
+          fs.unlinkSync(filePathWithExt);
         } catch (extractError) {
           console.error(
             `Error extracting contract ${contract.id}:`,
             extractError,
           );
+          // Clean up the renamed file on error
+          const filePathWithExt = `${req.file.path}${fileExt}`;
+          if (fs.existsSync(filePathWithExt)) {
+            fs.unlinkSync(filePathWithExt);
+          }
           // Continue without failing the upload
         }
 
@@ -852,7 +867,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } catch (error) {
         // Clean up uploaded file on error
         if (req.file) {
-          fs.unlinkSync(req.file.path);
+          // Try to clean up both original and renamed file
+          const fileExt = path.extname(req.file.originalname).toLowerCase();
+          const filePathWithExt = `${req.file.path}${fileExt}`;
+          
+          if (fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+          }
+          if (fs.existsSync(filePathWithExt)) {
+            fs.unlinkSync(filePathWithExt);
+          }
         }
 
         console.error("Error uploading contract:", error);
