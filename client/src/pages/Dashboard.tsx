@@ -35,6 +35,7 @@ import iconImage from "@assets/Profile Picture - ContraMind (V001)-1_17524375301
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { storeTokens } from "@/lib/auth";
 import UploadModal from "@/components/UploadModal";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { queryClient } from "@/lib/queryClient";
@@ -156,6 +157,24 @@ export default function Dashboard() {
   });
 
   // No automatic redirect - users land on new chat welcome screen by default
+
+  // Handle OAuth tokens from URL parameters (OAuth redirects directly here)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("accessToken");
+    const refreshToken = urlParams.get("refreshToken");
+    
+    if (accessToken && refreshToken) {
+      // Store OAuth tokens
+      storeTokens({ accessToken, refreshToken });
+      
+      // Clean URL parameters
+      window.history.replaceState({}, "", "/dashboard");
+      
+      // Invalidate auth queries to fetch user data
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+    }
+  }, []); // Run only once on mount
 
   // Debug logging
   useEffect(() => {

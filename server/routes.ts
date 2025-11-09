@@ -424,7 +424,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get(
     "/api/auth/google/callback",
     passport.authenticate("google", {
-      failureRedirect: "/login?error=google_auth_failed",
+      failureRedirect: "/?authError=google_auth_failed",
     }),
     (req, res) => {
       // Generate JWT tokens for OAuth user
@@ -446,7 +446,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get(
     "/api/auth/microsoft/callback",
     passport.authenticate("microsoft", {
-      failureRedirect: "/login?error=microsoft_auth_failed",
+      failureRedirect: "/?authError=microsoft_auth_failed",
     }),
     (req, res) => {
       // Generate JWT tokens for OAuth user

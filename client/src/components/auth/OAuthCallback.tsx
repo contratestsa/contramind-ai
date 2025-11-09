@@ -15,8 +15,8 @@ export default function OAuthCallback() {
 
     if (error) {
       console.error('OAuth authentication failed:', error);
-      // Redirect to login with error message
-      setLocation('/login?error=' + error);
+      // Redirect to home with error message (no /login route exists)
+      setLocation('/?authError=' + error);
       return;
     }
 
@@ -34,8 +34,8 @@ export default function OAuthCallback() {
       window.history.replaceState({}, document.title, window.location.pathname);
       setLocation('/dashboard');
     } else {
-      // No tokens found, redirect to login
-      setLocation('/login');
+      // No tokens found, redirect to home
+      setLocation('/');
     }
   }, [setLocation]);
 

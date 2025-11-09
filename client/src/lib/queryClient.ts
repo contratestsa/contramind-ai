@@ -20,9 +20,9 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
     if (newTokens) {
       token = newTokens.accessToken;
     } else {
-      // Refresh failed, clear tokens and redirect to login
+      // Refresh failed, clear tokens and redirect to home
       clearTokens();
-      window.location.href = '/login';
+      window.location.href = '/';
       return {};
     }
   }
@@ -63,9 +63,9 @@ export async function apiRequest(
       await throwIfResNotOk(retryRes);
       return retryRes;
     } else {
-      // Refresh failed, clear tokens and redirect to login
+      // Refresh failed, clear tokens and redirect to home
       clearTokens();
-      window.location.href = '/login';
+      window.location.href = '/';
     }
   }
 
@@ -106,9 +106,9 @@ export const getQueryFn: <T>(options: {
         await throwIfResNotOk(retryRes);
         return await retryRes.json();
       } else {
-        // Refresh failed, clear tokens and redirect to login
+        // Refresh failed, clear tokens and redirect to home
         clearTokens();
-        window.location.href = '/login';
+        window.location.href = '/';
       }
     }
 
