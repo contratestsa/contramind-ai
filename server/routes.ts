@@ -339,7 +339,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/me", authenticateToken, async (req, res) => {
     try {
       // User is already verified by authenticateToken middleware
-      const user = await storage.getUser(req.user!.id);
+      if (!req.user) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      const user = await storage.getUser(req.user.id);
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });
@@ -470,12 +473,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send contact confirmation email
       const emailResult = await sendContactEmail({
         email: contact.email,
-        fullName: contact.fullName,
+        name: contact.name,
+        subject: contact.subject,
         message: contact.message,
       });
 
-      if (!emailResult.success) {
-        console.error("Failed to send contact email:", emailResult.error);
+      // sendContactEmail returns { toTeamEmail, toUserEmail }
+      const emailSuccess = emailResult.toTeamEmail && emailResult.toUserEmail;
+
+      if (!emailSuccess) {
+        console.error("Failed to send contact email:", emailResult);
         // Continue even if email fails
       }
 
@@ -485,7 +492,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: contact.id,
           createdAt: contact.createdAt,
         },
-        emailSent: emailResult.success,
+        emailSent: emailSuccess,
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -506,7 +513,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { companyNameEn, companyNameAr, country, contractRole } = req.body;
 
-      const updatedUser = await storage.updateUserOnboarding(req.user!.id, {
+      if (!req.user) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      const updatedUser = await storage.updateUserOnboarding(req.user.id, {
         companyNameEn,
         companyNameAr,
         country,
@@ -606,6 +616,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const validatedData = insertContractSchema.parse(dataWithDate);
+      
+      if (!req.user) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      
       const contract = await storage.createContract({
         ...validatedData,
         userId: req.user.id,
@@ -721,6 +736,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const partyPerspective = req.body.partyPerspective || 'neutral';
         const jurisdiction = req.body.jurisdiction || 'KSA';
 
+        // Check if user is authenticated
+        if (!req.user) {
+          // Clean up uploaded file
+          fs.unlinkSync(req.file.path);
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+        
         // Create contract record
         const contract = await storage.createContract({
           ...contractData,
@@ -809,25 +831,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
             console.log(`Starting Gemini AI analysis: language=${language}, perspective=${partyPerspective}, jurisdiction=${jurisdiction}`);
             analysisResult = await contractAnalysisService.analyzeContract(
               extractedData.rawText,
-              language,
-              partyPerspective,
+              language as any, // Type assertion for now
+              partyPerspective as any,
               jurisdiction
             );
             
-            // Log analysis results
+            // Log detailed analysis results to trace data flow
             console.log(`AI Analysis completed for contract ${contract.id}:`, {
               riskLevel: analysisResult.riskLevel,
-              highRisks: analysisResult.keyFindings.highRisks.length,
-              mediumRisks: analysisResult.keyFindings.mediumRisks.length,
-              lowRisks: analysisResult.keyFindings.lowRisks.length,
+              riskSummary: analysisResult.riskSummary ? analysisResult.riskSummary.substring(0, 100) : 'No summary',
+              legalAnalysis: {
+                risksCount: analysisResult.legalAnalysis?.risks?.length || 0,
+                recommendationsCount: analysisResult.legalAnalysis?.recommendations?.length || 0
+              },
+              businessAnalysis: {
+                risksCount: analysisResult.businessAnalysis?.risks?.length || 0,
+                recommendationsCount: analysisResult.businessAnalysis?.recommendations?.length || 0
+              },
+              technicalAnalysis: {
+                risksCount: analysisResult.technicalAnalysis?.risks?.length || 0,
+                recommendationsCount: analysisResult.technicalAnalysis?.recommendations?.length || 0
+              },
+              shariahAnalysis: {
+                risksCount: analysisResult.shariahAnalysis?.risks?.length || 0,
+                recommendationsCount: analysisResult.shariahAnalysis?.recommendations?.length || 0
+              },
               contractType: analysisResult.contractType,
+              parties: analysisResult.parties,
+              paymentTerms: analysisResult.paymentTerms,
+              dates: analysisResult.dates
             });
 
-            // Update contract with AI-determined risk level
+            // Update contract with AI-determined risk level and full analysis result
             await storage.updateContract(contract.id, {
               riskLevel: analysisResult.riskLevel,
               type: analysisResult.contractType === 'General Contract' ? 
-                extractedData.contractType : analysisResult.contractType.toLowerCase()
+                extractedData.contractType : analysisResult.contractType.toLowerCase(),
+              analysisResult: analysisResult // Store the complete analysis result in contracts table
             });
 
             // Store comprehensive AI analysis results including four categories
@@ -894,39 +934,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Continue without failing the upload
         }
 
+        // Log full analysis result for debugging
+        console.log(`[UPLOAD RESPONSE] Contract ${contract.id} - Returning analysis to frontend:`, {
+          hasAnalysis: !!analysisResult,
+          riskLevel: analysisResult?.riskLevel || 'not analyzed',
+          legalRisks: analysisResult?.legalAnalysis?.risks?.length || 0,
+          businessRisks: analysisResult?.businessAnalysis?.risks?.length || 0,
+          technicalRisks: analysisResult?.technicalAnalysis?.risks?.length || 0,
+          shariahRisks: analysisResult?.shariahAnalysis?.risks?.length || 0
+        });
+
+        // ALWAYS return consistent structure - never return null for analysisResult
+        const responseAnalysis = analysisResult || {
+          // Default structure when analysis fails
+          riskLevel: 'medium',
+          riskSummary: 'Analysis pending. Please refresh to see results.',
+          
+          // Empty but properly structured four categories
+          legalAnalysis: {
+            risks: [],
+            recommendations: [],
+            compliance: [],
+            severity: 'medium'
+          },
+          businessAnalysis: {
+            risks: [],
+            recommendations: [],
+            compliance: [],
+            severity: 'medium'
+          },
+          technicalAnalysis: {
+            risks: [],
+            recommendations: [],
+            compliance: [],
+            severity: 'medium'
+          },
+          shariahAnalysis: {
+            risks: [],
+            recommendations: [],
+            compliance: [],
+            severity: 'medium'
+          },
+          
+          // Default metadata
+          partyPerspective: partyPerspective || 'neutral',
+          language: 'english',
+          jurisdiction: jurisdiction || 'KSA',
+          ksaCompliance: null,
+          contractType: contractData.type || 'general',
+          parties: [],
+          dates: {},
+          paymentTerms: null,
+          governingLaw: null,
+          keyFindings: {
+            highRisks: [],
+            mediumRisks: [],
+            lowRisks: []
+          }
+        };
+
         // Include comprehensive analysis results in response
         res.status(201).json({
           message: "Contract uploaded successfully. Extraction completed.",
           contract,
-          analysisResult: analysisResult ? {
+          analysisResult: {
             // Core analysis
-            riskLevel: analysisResult.riskLevel,
-            riskSummary: analysisResult.riskSummary,
+            riskLevel: responseAnalysis.riskLevel,
+            riskSummary: responseAnalysis.riskSummary,
             
-            // PRD four categories with detailed analysis
-            legalAnalysis: analysisResult.legalAnalysis,
-            businessAnalysis: analysisResult.businessAnalysis,
-            technicalAnalysis: analysisResult.technicalAnalysis,
-            shariahAnalysis: analysisResult.shariahAnalysis,
+            // PRD four categories with detailed analysis - ALWAYS included
+            legalAnalysis: responseAnalysis.legalAnalysis,
+            businessAnalysis: responseAnalysis.businessAnalysis,
+            technicalAnalysis: responseAnalysis.technicalAnalysis,
+            shariahAnalysis: responseAnalysis.shariahAnalysis,
             
             // Party perspective and jurisdiction
-            partyPerspective: analysisResult.partyPerspective,
-            language: analysisResult.language,
-            jurisdiction: analysisResult.jurisdiction,
+            partyPerspective: responseAnalysis.partyPerspective,
+            language: responseAnalysis.language,
+            jurisdiction: responseAnalysis.jurisdiction,
             
             // KSA compliance
-            ksaCompliance: analysisResult.ksaCompliance,
+            ksaCompliance: responseAnalysis.ksaCompliance,
             
             // Contract metadata
-            contractType: analysisResult.contractType,
-            parties: analysisResult.parties,
-            dates: analysisResult.dates,
-            paymentTerms: analysisResult.paymentTerms,
-            governingLaw: analysisResult.governingLaw,
+            contractType: responseAnalysis.contractType,
+            parties: responseAnalysis.parties,
+            dates: responseAnalysis.dates,
+            paymentTerms: responseAnalysis.paymentTerms,
+            governingLaw: responseAnalysis.governingLaw,
             
             // Backward compatibility
-            keyFindings: analysisResult.keyFindings
-          } : null
+            keyFindings: responseAnalysis.keyFindings,
+            
+            // Flag to indicate if real analysis was performed
+            hasRealAnalysis: !!analysisResult
+          }
         });
       } catch (error) {
         // Clean up uploaded file on error
@@ -1012,23 +1114,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/contracts/:id/analysis", authenticateToken, async (req, res) => {
     try {
       const contractId = parseInt(req.params.id);
+      console.log(`[GET ANALYSIS] Fetching analysis for contract ${contractId}`);
+      
       const contract = await storage.getContract(contractId);
 
       if (!contract) {
+        console.log(`[GET ANALYSIS] Contract ${contractId} not found`);
         return res.status(404).json({ message: "Contract not found" });
       }
 
       if (contract.userId !== req.user!.id) {
+        console.log(`[GET ANALYSIS] Access denied for contract ${contractId}`);
         return res.status(403).json({ message: "Access denied" });
       }
 
-      // Get contract details with analysis results
+      // First check if analysis is stored directly in contract table
+      if (contract.analysisResult) {
+        console.log(`[GET ANALYSIS] Found analysis in contract table for ${contractId}:`, {
+          riskLevel: contract.analysisResult.riskLevel,
+          hasLegalAnalysis: !!contract.analysisResult.legalAnalysis,
+          hasBusinessAnalysis: !!contract.analysisResult.businessAnalysis,
+          hasTechnicalAnalysis: !!contract.analysisResult.technicalAnalysis,
+          hasShariahAnalysis: !!contract.analysisResult.shariahAnalysis
+        });
+        
+        return res.json({
+          hasAnalysis: true,
+          analysis: contract.analysisResult
+        });
+      }
+
+      // Get contract details with analysis results from separate table
       const contractDetails = await storage.getContractDetails(contractId);
       
       if (!contractDetails || !contractDetails.extractionMetadata) {
+        console.log(`[GET ANALYSIS] No analysis metadata found for contract ${contractId}`);
         return res.json({ 
           hasAnalysis: false,
-          message: "No analysis results available yet" 
+          message: "No analysis results available yet",
+          // Return empty structure to maintain consistency
+          analysis: {
+            riskLevel: 'medium',
+            riskSummary: 'Analysis pending',
+            legalAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+            businessAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+            technicalAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+            shariahAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+            contractType: 'Unknown',
+            parties: [],
+            dates: {},
+            keyFindings: { highRisks: [], mediumRisks: [], lowRisks: [] }
+          }
         });
       }
 
@@ -1036,14 +1172,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const metadata = JSON.parse(contractDetails.extractionMetadata);
         
         if (metadata.aiAnalysis) {
+          console.log(`[GET ANALYSIS] Found AI analysis in metadata for contract ${contractId}:`, {
+            riskLevel: metadata.aiAnalysis.riskLevel,
+            legalRisks: metadata.aiAnalysis.legalAnalysis?.risks?.length || 0,
+            businessRisks: metadata.aiAnalysis.businessAnalysis?.risks?.length || 0,
+            technicalRisks: metadata.aiAnalysis.technicalAnalysis?.risks?.length || 0,
+            shariahRisks: metadata.aiAnalysis.shariahAnalysis?.risks?.length || 0
+          });
+          
           return res.json({
             hasAnalysis: true,
             analysis: metadata.aiAnalysis
           });
         } else {
+          console.log(`[GET ANALYSIS] No AI analysis in metadata yet for contract ${contractId}`);
           return res.json({ 
             hasAnalysis: false,
-            message: "Analysis not completed yet" 
+            message: "Analysis not completed yet",
+            // Return consistent empty structure
+            analysis: {
+              riskLevel: 'medium',
+              riskSummary: 'Analysis pending',
+              legalAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+              businessAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+              technicalAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+              shariahAnalysis: { risks: [], recommendations: [], compliance: [], severity: 'medium' },
+              contractType: 'Unknown',
+              parties: [],
+              dates: {},
+              keyFindings: { highRisks: [], mediumRisks: [], lowRisks: [] }
+            }
           });
         }
       } catch (parseError) {
@@ -1160,6 +1318,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     authenticateToken,
     async (req, res) => {
       try {
+        if (!req.user) {
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+        
         const userId = req.user.id;
         const userContracts = await storage.getUserContracts(userId);
 

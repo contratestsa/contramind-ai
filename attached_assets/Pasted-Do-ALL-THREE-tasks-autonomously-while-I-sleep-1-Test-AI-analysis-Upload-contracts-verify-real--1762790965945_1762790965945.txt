@@ -1,0 +1,78 @@
+Do ALL THREE tasks autonomously while I sleep:
+
+1. Test AI analysis - Upload contracts, verify real analysis works 
+   with 4 PRD categories (Legal/Business/Technical/Shariah)
+
+2. Fix all 33 TypeScript errors - Clean compile with 0 errors
+
+3. Fix the core issue: AI analysis results not displaying in frontend
+
+COMPREHENSIVE AUTONOMOUS MODE:
+
+═══════════════════════════════════════════════════════════════
+CRITICAL FIXES NEEDED:
+═══════════════════════════════════════════════════════════════
+
+PRIORITY 1: Make AI Analysis Display in Frontend
+- Text extraction works ✅
+- Gemini API works ✅  
+- BUT results don't reach frontend ❌
+
+Fix server/routes.ts upload endpoint (lines 686-900):
+- Ensure response includes all 4 analysis categories
+- Verify frontend receives and displays them
+- Add logging to trace the data flow
+
+PRIORITY 2: Test with Real Contracts
+Create 3 test files:
+- Arabic contract with "150,000 ریال" and "12 شهر"
+- English contract with "$50,000" and "24 months"  
+- Bilingual contract with mixed content
+
+Upload each → Verify analysis mentions SPECIFIC details 
+(NOT generic "3 high, 5 medium")
+
+PRIORITY 3: Clean TypeScript Errors
+Fix all 33 LSP diagnostics:
+- Add missing type properties
+- Fix type mismatches
+- Run: npm run check → should show 0 errors
+
+PRIORITY 4: Fix Port Issues
+- Add port fallback if 5000 is taken
+- Ensure server starts reliably
+
+═══════════════════════════════════════════════════════════════
+SUCCESS CRITERIA (ALL MUST BE TRUE):
+═══════════════════════════════════════════════════════════════
+
+✅ Server starts without errors
+✅ Upload Arabic contract → See 4 categories with SPECIFIC findings
+✅ Upload English contract → See 4 categories with SPECIFIC findings
+✅ Analysis mentions actual contract content (amounts, dates, parties)
+✅ NO dummy data anywhere
+✅ TypeScript: 0 errors
+✅ All changes committed to GitHub with clear messages
+
+═══════════════════════════════════════════════════════════════
+GIT WORKFLOW:
+═══════════════════════════════════════════════════════════════
+
+After each major fix:
+git add [files]
+git commit -m "Fix: [description]"
+git push origin main
+
+═══════════════════════════════════════════════════════════════
+AUTONOMOUS RULES:
+═══════════════════════════════════════════════════════════════
+
+- Don't ask questions - make decisions
+- Create test contracts yourself  
+- Add detailed logging
+- Test thoroughly after each fix
+- Document what you did
+
+═══════════════════════════════════════════════════════════════
+BEGIN NOW - I return in 8 hours
+═══════════════════════════════════════════════════════════════

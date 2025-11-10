@@ -268,8 +268,32 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getContract(id: number): Promise<Contract | undefined> {
-    const [contract] = await db.select().from(contracts).where(eq(contracts.id, id));
-    return contract || undefined;
+    try {
+      const result = await db.execute(sql`
+        SELECT 
+          id,
+          user_id as "userId",
+          COALESCE(title, name) as title,
+          COALESCE(party_name, parties) as "partyName",
+          type,
+          status,
+          start_date as "startDate",
+          end_date as "endDate",
+          risk_level as "riskLevel",
+          file_path as "fileUrl",
+          analysis_result as "analysisResult",
+          created_at as "createdAt",
+          updated_at as "updatedAt",
+          last_viewed_at as "last_viewed_at"
+        FROM contracts
+        WHERE id = ${id}
+      `);
+      
+      return (result.rows[0] as Contract) || undefined;
+    } catch (error) {
+      console.error('Error getting contract:', error);
+      return undefined;
+    }
   }
 
   async getUserContracts(userId: number, filters?: { status?: string; type?: string; search?: string }): Promise<Contract[]> {
@@ -310,7 +334,7 @@ export class DatabaseStorage implements IStorage {
         ORDER BY created_at DESC
       `);
       
-      return result.rows || [];
+      return (result.rows as Contract[]) || [];
     } catch (error) {
       console.error('Error in getUserContracts:', error);
       return [];
@@ -414,8 +438,8 @@ export class DatabaseStorage implements IStorage {
         setClauses.push(sql`parties = ${updates.partyName}`);
         setClauses.push(sql`party_name = ${updates.partyName}`);
       }
-      if (updates.date !== undefined) {
-        setClauses.push(sql`start_date = ${new Date(updates.date)}`);
+      if (updates.startDate !== undefined) {
+        setClauses.push(sql`start_date = ${new Date(updates.startDate)}`);
       }
       if (updates.type !== undefined) {
         setClauses.push(sql`type = ${updates.type}`);
@@ -428,6 +452,9 @@ export class DatabaseStorage implements IStorage {
       }
       if (updates.fileUrl !== undefined) {
         setClauses.push(sql`file_path = ${updates.fileUrl}`);
+      }
+      if (updates.analysisResult !== undefined) {
+        setClauses.push(sql`analysis_result = ${JSON.stringify(updates.analysisResult)}`);
       }
       
       // Always update updated_at
@@ -450,12 +477,13 @@ export class DatabaseStorage implements IStorage {
             start_date as date,
             risk_level as "riskLevel",
             file_path as "fileUrl",
+            analysis_result as "analysisResult",
             created_at as "createdAt",
             updated_at as "updatedAt"
         `
       );
       
-      return result.rows[0] || undefined;
+      return (result.rows[0] as Contract) || undefined;
     } catch (error) {
       console.error('Error updating contract:', error);
       throw error;
@@ -464,7 +492,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteContract(id: number): Promise<boolean> {
     const result = await db.delete(contracts).where(eq(contracts.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
 
   // Contract chat methods implementation
@@ -556,7 +584,7 @@ export class DatabaseStorage implements IStorage {
           eq(savedPrompts.userId, userId)
         )!
       );
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
 
   // Contract details methods implementation

@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, date } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, date, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -49,6 +49,7 @@ export const contracts = pgTable("contracts", {
   endDate: date("end_date"),
   riskLevel: text("risk_level"), // 'low', 'medium', 'high'
   fileUrl: text("file_path"),
+  analysisResult: jsonb("analysis_result"), // Full Gemini analysis result with 4 categories
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   last_viewed_at: timestamp("last_viewed_at"),

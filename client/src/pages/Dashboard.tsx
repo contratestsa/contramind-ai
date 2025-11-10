@@ -73,6 +73,7 @@ interface Contract {
   riskLevel?: string;
   date: string;
   type?: string;
+  analysisResult?: any; // Full Gemini analysis result with 4 categories
 }
 
 interface Message {
@@ -424,7 +425,7 @@ export default function Dashboard() {
             if (analysisResponse.ok) {
               analysisData = await analysisResponse.json();
               // Check if the response has the expected structure
-              if (analysisData.hasAnalysis && analysisData.analysis) {
+              if ('hasAnalysis' in analysisData && analysisData.hasAnalysis && 'analysis' in analysisData && analysisData.analysis) {
                 analysisData = { analysisResult: analysisData.analysis };
               }
             }
@@ -432,18 +433,37 @@ export default function Dashboard() {
           
           let analysisMessage: Message;
           
+          // Log what Dashboard receives for debugging
+          console.log("[DASHBOARD] Received analysis data:", {
+            hasAnalysisResult: !!analysisData.analysisResult,
+            analysisResult: analysisData.analysisResult
+          });
+          
           if (analysisData.analysisResult) {
               // Real AI analysis results available with four PRD categories
               const analysis = analysisData.analysisResult;
               const { legalAnalysis, businessAnalysis, technicalAnalysis, shariahAnalysis } = analysis;
               
-              // Build comprehensive analysis summary
+              // Log detailed category data
+              console.log("[DASHBOARD] Processing 4 categories:", {
+                legalRisks: legalAnalysis?.risks?.length || 0,
+                businessRisks: businessAnalysis?.risks?.length || 0,
+                technicalRisks: technicalAnalysis?.risks?.length || 0,
+                shariahRisks: shariahAnalysis?.risks?.length || 0,
+              });
+              
+              // Build comprehensive analysis summary with ACTUAL FINDINGS
               let analysisSummary = t(
                 `✅ تم اكتمال تحليل العقد بنجاح!`,
                 `✅ Contract analysis completed successfully!`
               );
               
               analysisSummary += "\n\n";
+              
+              // Add risk summary if available
+              if (analysis.riskSummary) {
+                analysisSummary += "📄 " + analysis.riskSummary + "\n\n";
+              }
               
               // Add party perspective info
               const perspectiveText = analysis.partyPerspective === 'first' 
@@ -453,50 +473,196 @@ export default function Dashboard() {
                 : t("📋 منظور: محايد", "📋 Perspective: Neutral");
               
               analysisSummary += perspectiveText + "\n";
-              analysisSummary += t(`📊 مستوى المخاطر: ${analysis.riskLevel}`, `📊 Risk Level: ${analysis.riskLevel}`) + "\n\n";
+              analysisSummary += t(`📊 مستوى المخاطر: ${analysis.riskLevel?.toUpperCase() || 'MEDIUM'}`, `📊 Risk Level: ${analysis.riskLevel?.toUpperCase() || 'MEDIUM'}`) + "\n";
+              analysisSummary += t(`📝 نوع العقد: ${analysis.contractType || 'General'}`, `📝 Contract Type: ${analysis.contractType || 'General'}`) + "\n\n";
               
-              // Legal Analysis
-              if (legalAnalysis && legalAnalysis.risks?.length > 0) {
-                analysisSummary += t("⚖️ التحليل القانوني:", "⚖️ Legal Analysis:") + "\n";
-                analysisSummary += t(
-                  `• ${legalAnalysis.risks.length} مخاطر قانونية محددة`,
-                  `• ${legalAnalysis.risks.length} legal risks identified`
-                ) + "\n";
+              // Add parties if available
+              if (analysis.parties && analysis.parties.length > 0) {
+                analysisSummary += t("👥 الأطراف:", "👥 Parties:") + "\n";
+                analysis.parties.forEach((party: string) => {
+                  analysisSummary += `• ${party}\n`;
+                });
+                analysisSummary += "\n";
+              }
+
+              // LEGAL ANALYSIS - Show actual findings
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              analysisSummary += t("⚖️ التحليل القانوني", "⚖️ LEGAL ANALYSIS") + "\n";
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              
+              if (legalAnalysis) {
+                if (legalAnalysis.risks && legalAnalysis.risks.length > 0) {
+                  analysisSummary += t("🚨 المخاطر:", "🚨 Risks:") + "\n";
+                  legalAnalysis.risks.forEach((risk: string) => {
+                    analysisSummary += `• ${risk}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+                
+                if (legalAnalysis.recommendations && legalAnalysis.recommendations.length > 0) {
+                  analysisSummary += t("💡 التوصيات:", "💡 Recommendations:") + "\n";
+                  legalAnalysis.recommendations.forEach((rec: string) => {
+                    analysisSummary += `• ${rec}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+                
+                if (legalAnalysis.compliance && legalAnalysis.compliance.length > 0) {
+                  analysisSummary += t("✓ الامتثال:", "✓ Compliance:") + "\n";
+                  legalAnalysis.compliance.forEach((comp: string) => {
+                    analysisSummary += `• ${comp}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+              } else {
+                analysisSummary += t("لا توجد مخاطر قانونية محددة\n\n", "No specific legal risks identified\n\n");
               }
               
-              // Business Analysis
-              if (businessAnalysis && businessAnalysis.risks?.length > 0) {
-                analysisSummary += t("💼 التحليل التجاري:", "💼 Business Analysis:") + "\n";
-                analysisSummary += t(
-                  `• ${businessAnalysis.risks.length} مخاطر تجارية`,
-                  `• ${businessAnalysis.risks.length} business risks`
-                ) + "\n";
+              // BUSINESS ANALYSIS - Show actual findings
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              analysisSummary += t("💼 التحليل التجاري", "💼 BUSINESS ANALYSIS") + "\n";
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              
+              if (businessAnalysis) {
+                if (businessAnalysis.risks && businessAnalysis.risks.length > 0) {
+                  analysisSummary += t("🚨 المخاطر:", "🚨 Risks:") + "\n";
+                  businessAnalysis.risks.forEach((risk: string) => {
+                    analysisSummary += `• ${risk}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+                
+                if (businessAnalysis.recommendations && businessAnalysis.recommendations.length > 0) {
+                  analysisSummary += t("💡 التوصيات:", "💡 Recommendations:") + "\n";
+                  businessAnalysis.recommendations.forEach((rec: string) => {
+                    analysisSummary += `• ${rec}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+
+                if (businessAnalysis.compliance && businessAnalysis.compliance.length > 0) {
+                  analysisSummary += t("✓ الامتثال:", "✓ Compliance:") + "\n";
+                  businessAnalysis.compliance.forEach((comp: string) => {
+                    analysisSummary += `• ${comp}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+              } else {
+                analysisSummary += t("لا توجد مخاطر تجارية محددة\n\n", "No specific business risks identified\n\n");
               }
               
-              // Technical Analysis
-              if (technicalAnalysis && technicalAnalysis.risks?.length > 0) {
-                analysisSummary += t("🔧 التحليل الفني:", "🔧 Technical Analysis:") + "\n";
-                analysisSummary += t(
-                  `• ${technicalAnalysis.risks.length} قضايا فنية`,
-                  `• ${technicalAnalysis.risks.length} technical issues`
-                ) + "\n";
+              // TECHNICAL ANALYSIS - Show actual findings
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              analysisSummary += t("🔧 التحليل الفني", "🔧 TECHNICAL ANALYSIS") + "\n";
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              
+              if (technicalAnalysis) {
+                if (technicalAnalysis.risks && technicalAnalysis.risks.length > 0) {
+                  analysisSummary += t("🚨 المخاطر:", "🚨 Risks:") + "\n";
+                  technicalAnalysis.risks.forEach((risk: string) => {
+                    analysisSummary += `• ${risk}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+                
+                if (technicalAnalysis.recommendations && technicalAnalysis.recommendations.length > 0) {
+                  analysisSummary += t("💡 التوصيات:", "💡 Recommendations:") + "\n";
+                  technicalAnalysis.recommendations.forEach((rec: string) => {
+                    analysisSummary += `• ${rec}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+
+                if (technicalAnalysis.compliance && technicalAnalysis.compliance.length > 0) {
+                  analysisSummary += t("✓ الامتثال:", "✓ Compliance:") + "\n";
+                  technicalAnalysis.compliance.forEach((comp: string) => {
+                    analysisSummary += `• ${comp}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+              } else {
+                analysisSummary += t("لا توجد مشكلات فنية محددة\n\n", "No specific technical issues identified\n\n");
               }
               
-              // Shariah Analysis
-              if (shariahAnalysis && shariahAnalysis.risks?.length > 0) {
-                analysisSummary += t("☪️ التحليل الشرعي:", "☪️ Shariah Analysis:") + "\n";
-                analysisSummary += t(
-                  `• ${shariahAnalysis.risks.length} ملاحظات شرعية`,
-                  `• ${shariahAnalysis.risks.length} Shariah concerns`
-                ) + "\n";
+              // SHARIAH ANALYSIS - Show actual findings
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              analysisSummary += t("☪️ التحليل الشرعي", "☪️ SHARIAH ANALYSIS") + "\n";
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              
+              if (shariahAnalysis) {
+                if (shariahAnalysis.risks && shariahAnalysis.risks.length > 0) {
+                  analysisSummary += t("🚨 المخاطر:", "🚨 Risks:") + "\n";
+                  shariahAnalysis.risks.forEach((risk: string) => {
+                    analysisSummary += `• ${risk}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+                
+                if (shariahAnalysis.recommendations && shariahAnalysis.recommendations.length > 0) {
+                  analysisSummary += t("💡 التوصيات:", "💡 Recommendations:") + "\n";
+                  shariahAnalysis.recommendations.forEach((rec: string) => {
+                    analysisSummary += `• ${rec}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+
+                if (shariahAnalysis.compliance && shariahAnalysis.compliance.length > 0) {
+                  analysisSummary += t("✓ الامتثال:", "✓ Compliance:") + "\n";
+                  shariahAnalysis.compliance.forEach((comp: string) => {
+                    analysisSummary += `• ${comp}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+              } else {
+                analysisSummary += t("لا توجد ملاحظات شرعية محددة\n\n", "No specific Shariah concerns identified\n\n");
               }
               
               // KSA Compliance if present
               if (analysis.ksaCompliance) {
-                analysisSummary += "\n" + t("🇸🇦 التوافق مع الأنظمة السعودية: ✓", "🇸🇦 KSA Compliance: ✓");
+                analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+                analysisSummary += t("🇸🇦 التوافق مع الأنظمة السعودية", "🇸🇦 KSA COMPLIANCE") + "\n";
+                analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+                
+                if (analysis.ksaCompliance.vision2030Alignment && analysis.ksaCompliance.vision2030Alignment.length > 0) {
+                  analysisSummary += t("رؤية 2030:", "Vision 2030:") + "\n";
+                  analysis.ksaCompliance.vision2030Alignment.forEach((item: string) => {
+                    analysisSummary += `• ${item}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
+                
+                if (analysis.ksaCompliance.localRegulations && analysis.ksaCompliance.localRegulations.length > 0) {
+                  analysisSummary += t("الأنظمة المحلية:", "Local Regulations:") + "\n";
+                  analysis.ksaCompliance.localRegulations.forEach((item: string) => {
+                    analysisSummary += `• ${item}\n`;
+                  });
+                  analysisSummary += "\n";
+                }
               }
               
-              analysisSummary += "\n\n" + t(
+              // Payment Terms and Dates if available
+              if (analysis.paymentTerms || analysis.dates) {
+                analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+                analysisSummary += t("📅 تفاصيل العقد", "📅 CONTRACT DETAILS") + "\n";
+                analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+                
+                if (analysis.paymentTerms) {
+                  analysisSummary += t("💰 شروط الدفع: ", "💰 Payment Terms: ") + analysis.paymentTerms + "\n";
+                }
+                
+                if (analysis.dates) {
+                  if (analysis.dates.startDate) {
+                    analysisSummary += t("📅 تاريخ البداية: ", "📅 Start Date: ") + analysis.dates.startDate + "\n";
+                  }
+                  if (analysis.dates.endDate) {
+                    analysisSummary += t("📅 تاريخ الانتهاء: ", "📅 End Date: ") + analysis.dates.endDate + "\n";
+                  }
+                }
+                analysisSummary += "\n";
+              }
+              
+              analysisSummary += "━━━━━━━━━━━━━━━━━━━━\n";
+              analysisSummary += t(
                 "💡 يمكنك الآن طرح أسئلة تفصيلية حول أي من هذه الفئات.",
                 "💡 You can now ask detailed questions about any of these categories."
               );
@@ -514,6 +680,8 @@ export default function Dashboard() {
                 riskLevel: analysisData.analysisResult.riskLevel,
                 analysisResult: analysisData.analysisResult
               } : prev);
+              
+              console.log("[DASHBOARD] Analysis message created successfully");
             } else {
               // Analysis in progress or not available yet, retry after a delay
               analysisMessage = {
